@@ -1,0 +1,48 @@
+{
+  "name": "0xDemoDapp",
+  "version": "0.0.0",
+  "description": "Demo app demonstrating the core functionality of the 0x protocol",
+  "scripts": {
+    "dev": "webpack-dev-server --content-base app/public"
+  },
+  "author": "Fabio Berger",
+  "license": "",
+  "dependencies": {
+    "basscss": "^8.0.3",
+    "react": "15.4.x",
+    "react-dom": "15.4.x",
+    "react-tap-event-plugin": "^2.0.1",
+    "truffle": "3.1.9"
+  },
+  "devDependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/lodash": "^4.14.55",
+    "@types/material-ui": "^0.16.56",
+    "@types/react": "^15.0.15",
+    "@types/react-dom": "^0.14.23",
+    "@types/react-tap-event-plugin": "0.0.30",
+    "awesome-typescript-loader": "^3.1.2",
+    "babel-cli": "^6.22.2",
+    "babel-core": "6.7.x",
+    "babel-loader": "6.2.x",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "6.5.x",
+    "babel-preset-stage-2": "^6.22.0",
+    "babel-preset-stage-3": "^6.22.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "0.23.x",
+    "exports-loader": "0.6.x",
+    "imports-loader": "0.6.x",
+    "json-loader": "0.5.x",
+    "less-loader": "2.2.x",
+    "material-ui": "^0.17.0",
+    "source-map-loader": "^0.1.6",
+    "style-loader": "0.13.x",
+    "tslint": "^4.5.1",
+    "tslint-react": "^2.5.0",
+    "typescript": "^2.2.1",
+    "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.10.0",
+    "webpack-dev-server": "^2.3.0"
+  }
+}
