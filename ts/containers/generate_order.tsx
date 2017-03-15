@@ -5,27 +5,43 @@ import { Store as ReduxStore, Dispatch } from 'redux';
 import {ChooseAsset} from 'ts/components/generate_order/choose_asset';
 import {GrantAllowance} from 'ts/components/generate_order/grant_allowance';
 import {State} from 'ts/redux/reducer';
-import {generateOrderSteps} from 'ts/enums';
-import {updateGenerateOrderStep} from 'ts/redux/actions';
+import {generateOrderSteps, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
+import {
+    updateGenerateOrderStep,
+    updateChosenAssetTokenSymbol,
+    swapAssetTokenSymbols,
+} from 'ts/redux/actions';
 
 interface GenerateOrderProps {}
 
 interface ConnectedState {
   generateOrderStep: generateOrderSteps;
+  tokenBySymbol: TokenBySymbol;
+  sideToAssetToken: SideToAssetToken;
 }
 
 interface ConnectedDispatch {
   updateGenerateOrderStep: (step: generateOrderSteps) => void;
+  updateChosenAssetTokenSymbol: (token: AssetToken) => void;
+  swapAssetTokenSymbols: () => void;
 }
 
 const mapStateToProps = (state: State, ownProps: GenerateOrderProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
+    sideToAssetToken: state.sideToAssetToken,
+    tokenBySymbol: state.tokenBySymbol,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
-  updateGenerateOrderStep: (step: generateOrderSteps) => {
-      dispatch(updateGenerateOrderStep(step));
-  },
+    swapAssetTokenSymbols: () => {
+        dispatch(swapAssetTokenSymbols());
+    },
+    updateChosenAssetTokenSymbol: (token: AssetToken) => {
+        dispatch(updateChosenAssetTokenSymbol(token));
+    },
+    updateGenerateOrderStep: (step: generateOrderSteps) => {
+        dispatch(updateGenerateOrderStep(step));
+    },
 });
 
 class GenerateOrderComponent extends React.Component<GenerateOrderProps & ConnectedState & ConnectedDispatch, any> {
@@ -34,11 +50,17 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
         switch (generateOrderStep) {
             case generateOrderSteps.chooseAssets:
                 return (
-                    <ChooseAsset onContinueClick={this.props.updateGenerateOrderStep} />
+                    <ChooseAsset
+                        sideToAssetToken={this.props.sideToAssetToken}
+                        tokenBySymbol={this.props.tokenBySymbol}
+                        updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                        updateChosenAssetTokenSymbol={this.props.updateChosenAssetTokenSymbol}
+                        swapAssetTokenSymbols={this.props.swapAssetTokenSymbols}
+                    />
                 );
             case generateOrderSteps.grantAllowance:
                 return (
-                    <GrantAllowance />
+                    <GrantAllowance updateGenerateOrderStep={this.props.updateGenerateOrderStep} />
                 );
             default:
                 // tslint:disable
