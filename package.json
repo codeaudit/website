@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "Demo app demonstrating the core functionality of the 0x protocol",
   "scripts": {
-    "dev": "webpack-dev-server --content-base app/public"
+    "dev": "webpack-dev-server --content-base public",
+    "update_contracts": "cp -r ./../contracts/build/contracts/ ./public/contracts/"
   },
   "author": "Fabio Berger",
   "license": "MIT",
@@ -11,7 +12,10 @@
     "basscss": "^8.0.3",
     "react": "15.4.x",
     "react-dom": "15.4.x",
+    "react-inlinesvg": "^0.5.5",
+    "react-redux": "^5.0.3",
     "react-tap-event-plugin": "^2.0.1",
+    "redux": "^3.6.0",
     "truffle": "3.1.9"
   },
   "devDependencies": {
@@ -20,7 +24,9 @@
     "@types/material-ui": "^0.16.56",
     "@types/react": "^15.0.15",
     "@types/react-dom": "^0.14.23",
+    "@types/react-redux": "^4.4.37",
     "@types/react-tap-event-plugin": "0.0.30",
+    "@types/redux": "^3.6.0",
     "awesome-typescript-loader": "^3.1.2",
     "babel-cli": "^6.22.2",
     "babel-core": "6.7.x",
