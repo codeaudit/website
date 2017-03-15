@@ -60,7 +60,10 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                 );
             case generateOrderSteps.grantAllowance:
                 return (
-                    <GrantAllowance updateGenerateOrderStep={this.props.updateGenerateOrderStep} />
+                    <GrantAllowance
+                        sideToAssetToken={this.props.sideToAssetToken}
+                        updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                    />
                 );
             default:
                 // tslint:disable

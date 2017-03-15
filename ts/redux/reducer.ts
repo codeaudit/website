@@ -9,14 +9,14 @@ export interface State {
 };
 
 const INITIAL_STATE: State = {
-    generateOrderStep: generateOrderSteps.chooseAssets,
+    generateOrderStep: generateOrderSteps.grantAllowance,
     sideToAssetToken: {
         [Side.deposit]: {
-            amount: 0.0,
+            amount: 30.0,
             symbol: 'WETH',
         },
         [Side.receive]: {
-            amount: 0.0,
+            amount: 60.0,
             symbol: 'FDGX',
         },
     },
