@@ -58,7 +58,6 @@ export class Demo extends React.Component<DemoProps, undefined> {
                     </Tab>
                     <Tab
                       label="Settings"
-                      onActive={alert.bind(this, 'Clicked config!')}
                       buttonStyle={styles.button}
                     >
                         <div>
