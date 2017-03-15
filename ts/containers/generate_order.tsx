@@ -8,7 +8,7 @@ import {State} from 'ts/redux/reducer';
 import {generateOrderSteps, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
 import {
     updateGenerateOrderStep,
-    updateChosenAssetTokenSymbol,
+    updateChosenAssetToken,
     swapAssetTokenSymbols,
 } from 'ts/redux/actions';
 
@@ -22,7 +22,7 @@ interface ConnectedState {
 
 interface ConnectedDispatch {
   updateGenerateOrderStep: (step: generateOrderSteps) => void;
-  updateChosenAssetTokenSymbol: (token: AssetToken) => void;
+  updateChosenAssetToken: (side: Side, token: AssetToken) => void;
   swapAssetTokenSymbols: () => void;
 }
 
@@ -36,8 +36,8 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
     swapAssetTokenSymbols: () => {
         dispatch(swapAssetTokenSymbols());
     },
-    updateChosenAssetTokenSymbol: (token: AssetToken) => {
-        dispatch(updateChosenAssetTokenSymbol(token));
+    updateChosenAssetToken: (side: Side, token: AssetToken) => {
+        dispatch(updateChosenAssetToken(side, token));
     },
     updateGenerateOrderStep: (step: generateOrderSteps) => {
         dispatch(updateGenerateOrderStep(step));
@@ -54,7 +54,7 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                         sideToAssetToken={this.props.sideToAssetToken}
                         tokenBySymbol={this.props.tokenBySymbol}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
-                        updateChosenAssetTokenSymbol={this.props.updateChosenAssetTokenSymbol}
+                        updateChosenAssetToken={this.props.updateChosenAssetToken}
                         swapAssetTokenSymbols={this.props.swapAssetTokenSymbols}
                     />
                 );

@@ -21,7 +21,6 @@ export interface TokenBySymbol {
 };
 
 export interface AssetToken {
-    side: Side;
     symbol: string;
     amount: number;
 }

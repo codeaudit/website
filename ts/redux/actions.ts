@@ -8,8 +8,8 @@ export interface Action {
 
 export const actionTypes = utils.strEnum([
   'UPDATE_GENERATE_ORDER_STEP',
-  'UPDATE_CHOSEN_ASSET_TOKEN_SYMBOL',
-  'SWAP_ASSET_TOKEN_SYMBOLS',
+  'UPDATE_CHOSEN_ASSET_TOKEN',
+  'SWAP_ASSET_TOKENS',
 ]);
 export type actionTypes = keyof typeof actionTypes;
 
@@ -20,15 +20,18 @@ export function updateGenerateOrderStep(step: generateOrderSteps): Action {
     };
 };
 
-export function updateChosenAssetTokenSymbol(token: AssetToken): Action {
+export function updateChosenAssetToken(side: Side, token: AssetToken): Action {
     return {
-        data: token,
-        type: actionTypes.UPDATE_CHOSEN_ASSET_TOKEN_SYMBOL,
+        data: {
+            side,
+            token,
+        },
+        type: actionTypes.UPDATE_CHOSEN_ASSET_TOKEN,
     };
 };
 
 export function swapAssetTokenSymbols(): Action {
     return {
-        type: actionTypes.SWAP_ASSET_TOKEN_SYMBOLS,
+        type: actionTypes.SWAP_ASSET_TOKENS,
     };
 };

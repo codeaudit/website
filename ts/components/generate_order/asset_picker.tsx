@@ -6,8 +6,9 @@ import {TokenBySymbol, Token, Side, AssetToken} from 'ts/types';
 
 interface AssetPickerProps {
     isOpen: boolean;
+    side: Side;
     currentAssetToken: AssetToken;
-    onAssetChosen: (chosenAssetToken: AssetToken) => void;
+    onAssetChosen: (side: Side, chosenAssetToken: AssetToken) => void;
     tokenBySymbol: TokenBySymbol;
 }
 
@@ -48,7 +49,6 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
             const assetToken: AssetToken = {
                 symbol,
                 amount: 0.0,
-                side: this.props.currentAssetToken.side,
             };
             return (
                 <GridTile
@@ -63,9 +63,9 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
         });
     }
     private closeDialog() {
-        this.props.onAssetChosen(this.props.currentAssetToken);
+        this.props.onAssetChosen(this.props.side, this.props.currentAssetToken);
     }
     private chooseAssetAndClose(token: AssetToken) {
-        this.props.onAssetChosen(token);
+        this.props.onAssetChosen(this.props.side, token);
     }
 }
