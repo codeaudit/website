@@ -134,6 +134,9 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         this.setState({
             sideToAssetTokenState: newSideToAssetTokenAmount,
         });
+        if (isAmountNumeric) {
+            assetToken.amount = Number(amount);
+        }
         this.props.updateChosenAssetToken(side, assetToken);
     }
     private onAssetClicked(side: Side) {
