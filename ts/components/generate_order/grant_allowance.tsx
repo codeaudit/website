@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {RaisedButton, Slider} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {generateOrderSteps, SideToAssetToken, Side} from 'ts/types';
+import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import {VennDiagram} from 'ts/components/ui/venn_diagram';
 
 const PRECISION = 5;
@@ -10,10 +10,13 @@ const BALANCE = 134.56;
 
 interface GrantAllowanceProps {
     sideToAssetToken: SideToAssetToken;
-    updateGenerateOrderStep(step: generateOrderSteps): void;
+    updateGenerateOrderStep(direction: Direction): void;
+    updateChosenAssetToken(side: Side, token: AssetToken): void;
 }
 
 interface GrantAllowanceState {
+    initialDepositAmount: number;
+    initialReceiveAmount: number;
     depositAmount: number;
     receiveAmount: number;
 }
@@ -29,6 +32,8 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
         this.state = {
             depositAmount: depositAmount <= BALANCE ? depositAmount : BALANCE,
             receiveAmount,
+            initialDepositAmount: depositAmount,
+            initialReceiveAmount: receiveAmount,
         };
     }
     public render() {
@@ -39,7 +44,7 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 <div
                     className="absolute"
                     style={{left: 15, cursor: 'pointer'}}
-                    onClick={this.props.updateGenerateOrderStep.bind(this, generateOrderSteps.chooseAssets)}
+                    onClick={this.props.updateGenerateOrderStep.bind(this, Direction.backward)}
                 >
                     <i className="material-icons">arrow_back</i>
                 </div>
@@ -62,7 +67,7 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                     <RaisedButton
                         label="Grant access"
                         style={{margin: 12, width: '100%'}}
-                        onClick={this.props.updateGenerateOrderStep.bind(this, 'TODO')}
+                        onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
                     />
                 </div>
             </div>
@@ -78,13 +83,17 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
         );
     }
     private depositAmountChanged(depositAmount: number) {
-        const intialDepositAmount = this.props.sideToAssetToken[Side.deposit].amount;
-        const intialReceiveAmount = this.props.sideToAssetToken[Side.receive].amount;
-        const exchangeRate = intialReceiveAmount / intialDepositAmount;
+        const exchangeRate = this.state.initialReceiveAmount / this.state.initialDepositAmount;
         const receiveAmount = exchangeRate * depositAmount;
         this.setState({
             depositAmount,
             receiveAmount,
         });
+        const depositAssetToken = this.props.sideToAssetToken[Side.deposit];
+        depositAssetToken.amount = depositAmount;
+        const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
+        receiveAssetToken.amount = receiveAmount;
+        this.props.updateChosenAssetToken(Side.deposit, depositAssetToken);
+        this.props.updateChosenAssetToken(Side.receive, receiveAssetToken);
     }
 }

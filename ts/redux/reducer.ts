@@ -1,15 +1,22 @@
 import * as _ from 'lodash';
-import {generateOrderSteps, TokenBySymbol, AssetToken, Side, SideToAssetToken} from 'ts/types';
+import {
+    GenerateOrderSteps,
+    TokenBySymbol,
+    AssetToken,
+    Side,
+    SideToAssetToken,
+    Direction,
+} from 'ts/types';
 import {Action, actionTypes} from 'ts/redux/actions';
 
 export interface State {
-    generateOrderStep: generateOrderSteps;
+    generateOrderStep: GenerateOrderSteps;
     tokenBySymbol: TokenBySymbol;
     sideToAssetToken: SideToAssetToken;
 };
 
 const INITIAL_STATE: State = {
-    generateOrderStep: generateOrderSteps.grantAllowance,
+    generateOrderStep: GenerateOrderSteps.ChooseAssets,
     sideToAssetToken: {
         [Side.deposit]: {
             amount: 30.0,
@@ -44,8 +51,15 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
     case actionTypes.UPDATE_GENERATE_ORDER_STEP:
+        const direction = action.data;
+        let nextGenerateOrderStep = state.generateOrderStep;
+        if (direction === Direction.forward) {
+            nextGenerateOrderStep += 1;
+        } else if (state.generateOrderStep !== 0) {
+            nextGenerateOrderStep -= 1;
+        }
         return _.assign({}, state, {
-            generateOrderStep: action.data,
+            generateOrderStep: nextGenerateOrderStep,
         });
 
     case actionTypes.UPDATE_CHOSEN_ASSET_TOKEN:

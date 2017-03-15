@@ -1,5 +1,5 @@
 import {utils} from 'ts/utils/utils';
-import {generateOrderSteps, Side, AssetToken} from 'ts/types';
+import {Direction, Side, AssetToken} from 'ts/types';
 
 export interface Action {
     type: actionTypes;
@@ -13,9 +13,9 @@ export const actionTypes = utils.strEnum([
 ]);
 export type actionTypes = keyof typeof actionTypes;
 
-export function updateGenerateOrderStep(step: generateOrderSteps): Action {
+export function updateGenerateOrderStep(direction: Direction): Action {
     return {
-        data: step,
+        data: direction,
         type: actionTypes.UPDATE_GENERATE_ORDER_STEP,
     };
 };

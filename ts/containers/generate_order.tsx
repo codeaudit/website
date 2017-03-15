@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Store as ReduxStore, Dispatch } from 'redux';
 import {ChooseAsset} from 'ts/components/generate_order/choose_asset';
 import {GrantAllowance} from 'ts/components/generate_order/grant_allowance';
+import {RemainingConfigs} from 'ts/components/generate_order/remaining_configs';
 import {State} from 'ts/redux/reducer';
-import {generateOrderSteps, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
+import {GenerateOrderSteps, Direction, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
 import {
     updateGenerateOrderStep,
     updateChosenAssetToken,
@@ -15,13 +16,13 @@ import {
 interface GenerateOrderProps {}
 
 interface ConnectedState {
-  generateOrderStep: generateOrderSteps;
+  generateOrderStep: GenerateOrderSteps;
   tokenBySymbol: TokenBySymbol;
   sideToAssetToken: SideToAssetToken;
 }
 
 interface ConnectedDispatch {
-  updateGenerateOrderStep: (step: generateOrderSteps) => void;
+  updateGenerateOrderStep: (direction: Direction) => void;
   updateChosenAssetToken: (side: Side, token: AssetToken) => void;
   swapAssetTokenSymbols: () => void;
 }
@@ -39,8 +40,8 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
     updateChosenAssetToken: (side: Side, token: AssetToken) => {
         dispatch(updateChosenAssetToken(side, token));
     },
-    updateGenerateOrderStep: (step: generateOrderSteps) => {
-        dispatch(updateGenerateOrderStep(step));
+    updateGenerateOrderStep: (direction: Direction) => {
+        dispatch(updateGenerateOrderStep(direction));
     },
 });
 
@@ -48,7 +49,7 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
     public render() {
         const generateOrderStep = this.props.generateOrderStep;
         switch (generateOrderStep) {
-            case generateOrderSteps.chooseAssets:
+            case GenerateOrderSteps.ChooseAssets:
                 return (
                     <ChooseAsset
                         sideToAssetToken={this.props.sideToAssetToken}
@@ -58,11 +59,12 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                         swapAssetTokenSymbols={this.props.swapAssetTokenSymbols}
                     />
                 );
-            case generateOrderSteps.grantAllowance:
+            case GenerateOrderSteps.GrantAllowance:
                 return (
                     <GrantAllowance
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                        updateChosenAssetToken={this.props.updateChosenAssetToken}
                     />
                 );
             default:

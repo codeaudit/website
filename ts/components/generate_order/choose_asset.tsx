@@ -2,13 +2,13 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {generateOrderSteps, TokenBySymbol, AssetToken, Side, SideToAssetToken} from 'ts/types';
+import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
-    updateGenerateOrderStep(step: generateOrderSteps): void;
+    updateGenerateOrderStep(direction: Direction): void;
     updateChosenAssetToken(side: Side, token: AssetToken): void;
     swapAssetTokenSymbols(): void;
 }
@@ -61,7 +61,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                 <div className="flex">
                     <RaisedButton
                         label="Continue"
-                        onClick={this.props.updateGenerateOrderStep.bind(this, generateOrderSteps.grantAllowance)}
+                        onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
                         style={{margin: 12, width: '100%'}}
                     />
                 </div>
