@@ -3,6 +3,7 @@ import * as React from 'react';
 import {Tabs, Tab, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrder} from 'ts/containers/generate_order';
+import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 
 interface DemoProps {}
@@ -56,15 +57,10 @@ export class Demo extends React.Component<DemoProps, undefined> {
                       </div>
                     </Tab>
                     <Tab
-                      label="Settings"
+                      label="My test tokens"
                       buttonStyle={styles.button}
                     >
-                        <div>
-                            <h2 style={styles.headline}>Tab Three</h2>
-                            <div>
-                                This is a third example tab.
-                            </div>
-                        </div>
+                        <TokenBalances />
                     </Tab>
                 </Tabs>
             </Paper>
