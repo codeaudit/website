@@ -14,7 +14,6 @@ export interface State {
     generateOrderStep: GenerateOrderSteps;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
-    tokenBySymbol: TokenBySymbol;
     sideToAssetToken: SideToAssetToken;
 };
 
@@ -30,24 +29,6 @@ const INITIAL_STATE: State = {
         [Side.receive]: {
             amount: 60.0,
             symbol: 'FDGX',
-        },
-    },
-    tokenBySymbol: {
-        FBTC: {
-            iconUrl: '/images/token_icons/btc.png',
-            name: 'Fake BTC',
-        },
-        FDGX: {
-            iconUrl: '/images/token_icons/digixdao.png',
-            name: 'Fake DigixDao',
-        },
-        TA: {
-            iconUrl: '/images/token_icons/clams.png',
-            name: 'Token A',
-        },
-        WETH: {
-            iconUrl: '/images/token_icons/ether.png',
-            name: 'W-Ether',
         },
     },
 };

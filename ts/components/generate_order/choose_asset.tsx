@@ -2,12 +2,12 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {tokenBySymbol} from 'ts/tokenBySymbol';
 import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
-    tokenBySymbol: TokenBySymbol;
     updateGenerateOrderStep(direction: Direction): void;
     updateChosenAssetToken(side: Side, token: AssetToken): void;
     swapAssetTokenSymbols(): void;
@@ -75,7 +75,6 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     currentAssetToken={this.props.sideToAssetToken[this.state.pickerSide]}
                     onAssetChosen={this.onAssetChosen.bind(this)}
                     side={this.state.pickerSide}
-                    tokenBySymbol={this.props.tokenBySymbol}
                 />
             </div>
         );
@@ -83,7 +82,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
     private renderAsset(side: Side, assetToken: AssetToken) {
         const amount = this.state.sideToAssetTokenState[side].amount;
         const errMsg = this.state.sideToAssetTokenState[side].errMsg;
-        const token = this.props.tokenBySymbol[assetToken.symbol];
+        const token = tokenBySymbol[assetToken.symbol];
         return (
             <div>
                 <div className="pb2" style={{color: colors.grey500, textTransform: 'capitalize'}}>

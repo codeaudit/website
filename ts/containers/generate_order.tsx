@@ -23,7 +23,6 @@ interface ConnectedState {
     generateOrderStep: GenerateOrderSteps;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
-    tokenBySymbol: TokenBySymbol;
     sideToAssetToken: SideToAssetToken;
 }
 
@@ -40,7 +39,6 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderProps): ConnectedS
     orderExpiryTimestamp: state.orderExpiryTimestamp,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
-    tokenBySymbol: state.tokenBySymbol,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
@@ -69,7 +67,6 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                 return (
                     <ChooseAsset
                         sideToAssetToken={this.props.sideToAssetToken}
-                        tokenBySymbol={this.props.tokenBySymbol}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
                         updateChosenAssetToken={this.props.updateChosenAssetToken}
                         swapAssetTokenSymbols={this.props.swapAssetTokenSymbols}

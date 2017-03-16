@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {tokenBySymbol} from 'ts/tokenBySymbol';
 import {TokenBySymbol, Token, Side, AssetToken} from 'ts/types';
 
 interface AssetPickerProps {
@@ -9,7 +10,6 @@ interface AssetPickerProps {
     side: Side;
     currentAssetToken: AssetToken;
     onAssetChosen: (side: Side, chosenAssetToken: AssetToken) => void;
-    tokenBySymbol: TokenBySymbol;
 }
 
 const styles = {
@@ -45,7 +45,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
         );
     }
     private renderGridTiles() {
-        return _.map(this.props.tokenBySymbol, (token: Token, symbol: string) => {
+        return _.map(tokenBySymbol, (token: Token, symbol: string) => {
             const assetToken: AssetToken = {
                 symbol,
                 amount: this.props.currentAssetToken.amount,
