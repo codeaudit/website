@@ -3,6 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {BackButton} from 'ts/components/ui/back_button';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import jazzicon = require('jazzicon');
 
@@ -35,10 +36,9 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
             <div className="relative">
                 <div
                     className="absolute"
-                    style={{left: 15, cursor: 'pointer'}}
-                    onClick={this.props.updateGenerateOrderStep.bind(this, Direction.backward)}
+                    style={{left: 15}}
                 >
-                    <i className="material-icons">arrow_back</i>
+                    <BackButton onClick={this.onBackButtonClick.bind(this)} />
                 </div>
                 <h3 className="px4">
                     Confirm and sign your order
@@ -120,5 +120,8 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
         const addressWithoutPrefix = address.slice(2, 10);
         const numericanAddress = parseInt(addressWithoutPrefix, 16);
         return numericanAddress;
+    }
+    private onBackButtonClick() {
+        this.props.updateGenerateOrderStep(Direction.backward);
     }
 }

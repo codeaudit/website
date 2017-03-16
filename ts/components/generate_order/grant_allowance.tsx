@@ -3,6 +3,7 @@ import * as React from 'react';
 import {RaisedButton, Slider} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
+import {BackButton} from 'ts/components/ui/back_button';
 import {VennDiagram} from 'ts/components/ui/venn_diagram';
 
 const PRECISION = 5;
@@ -43,10 +44,9 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
             <div className="relative">
                 <div
                     className="absolute"
-                    style={{left: 15, cursor: 'pointer'}}
-                    onClick={this.props.updateGenerateOrderStep.bind(this, Direction.backward)}
+                    style={{left: 15}}
                 >
-                    <i className="material-icons">arrow_back</i>
+                    <BackButton onClick={this.onBackButtonClick.bind(this)} />
                 </div>
                 <h3 className="px4">
                     Grant the 0x smart contract access to your deposit
@@ -81,6 +81,9 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 <span style={{fontSize: 13}}>{' '}{symbol}</span>
             </div>
         );
+    }
+    private onBackButtonClick() {
+        this.props.updateGenerateOrderStep(Direction.backward);
     }
     private depositAmountChanged(depositAmount: number) {
         const exchangeRate = this.state.initialReceiveAmount / this.state.initialDepositAmount;

@@ -3,6 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {RaisedButton, DatePicker, TimePicker, Toggle, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {BackButton} from 'ts/components/ui/back_button';
 import {Direction, Side} from 'ts/types';
 
 interface RemainingConfigsProps {
@@ -37,10 +38,9 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
             <div className="relative">
                 <div
                     className="absolute"
-                    style={{left: 15, cursor: 'pointer'}}
-                    onClick={this.props.updateGenerateOrderStep.bind(this, Direction.backward)}
+                    style={{left: 15}}
                 >
-                    <i className="material-icons">arrow_back</i>
+                    <BackButton onClick={this.onBackButtonClick.bind(this)} />
                 </div>
                 <h3 className="px4">
                     Additional options
@@ -113,6 +113,9 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
         });
         const defaultDateTime = utils.initialOrderExpiryUnixTimestampSec();
         this.props.updateOrderExpiry(defaultDateTime);
+    }
+    private onBackButtonClick() {
+        this.props.updateGenerateOrderStep(Direction.backward);
     }
     private onOrderTakerAddressUpdated(e: any) {
         const orderTakerAddress = e.target.value;
