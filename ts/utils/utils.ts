@@ -22,4 +22,19 @@ export const utils = {
         const d = new Date('2050');
         return d.getTime() / 1000;
     },
+    convertToUnixTimestampSeconds(dateDate: Date, dateTime: Date) {
+        const finalDate = !_.isUndefined(dateDate) ? dateDate : new Date();
+        if (!_.isUndefined(dateTime)) {
+            const hrs = dateTime.getHours();
+            const mins = dateTime.getMinutes();
+            finalDate.setHours(dateTime.getHours());
+            finalDate.setMinutes(dateTime.getMinutes());
+        }
+        return finalDate.getTime() / 1000;
+    },
+    convertToDateTimeFromUnixTimestamp(unixTimestampSec: number) {
+        const unixTimestampMili = unixTimestampSec * 1000;
+        const d = new Date(unixTimestampMili);
+        return d;
+    },
 };

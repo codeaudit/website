@@ -23,7 +23,7 @@ interface RemainingConfigsState {
 export class RemainingConfigs extends React.Component<RemainingConfigsProps, RemainingConfigsState> {
     constructor(props: RemainingConfigsProps) {
         super(props);
-        const dateTime = this.convertToDateTimeFromUnixTimestamp(props.orderExpiryTimestamp);
+        const dateTime = utils.convertToDateTimeFromUnixTimestamp(props.orderExpiryTimestamp);
         const didUserSetExpiry = utils.initialOrderExpiryUnixTimestampSec() !== props.orderExpiryTimestamp;
         this.state = {
             date: didUserSetExpiry ? dateTime : undefined,
@@ -132,29 +132,14 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
         this.setState({
             date,
         });
-        const timestamp = this.convertToUnixTimestampSeconds(date, this.state.time);
+        const timestamp = utils.convertToUnixTimestampSeconds(date, this.state.time);
         this.props.updateOrderExpiry(timestamp);
     }
     private onTimeChanged(e: any, dateTime: Date) {
         this.setState({
             time: dateTime,
         });
-        const timestamp = this.convertToUnixTimestampSeconds(this.state.date, dateTime);
+        const timestamp = utils.convertToUnixTimestampSeconds(this.state.date, dateTime);
         this.props.updateOrderExpiry(timestamp);
-    }
-    private convertToUnixTimestampSeconds(dateDate: Date, dateTime: Date) {
-        const finalDate = !_.isUndefined(dateDate) ? dateDate : new Date();
-        if (!_.isUndefined(dateTime)) {
-            const hrs = dateTime.getHours();
-            const mins = dateTime.getMinutes();
-            finalDate.setHours(dateTime.getHours());
-            finalDate.setMinutes(dateTime.getMinutes());
-        }
-        return finalDate.getTime() / 1000;
-    }
-    private convertToDateTimeFromUnixTimestamp(unixTimestampSec: number) {
-        const unixTimestampMili = unixTimestampSec * 1000;
-        const d = new Date(unixTimestampMili);
-        return d;
     }
 }
