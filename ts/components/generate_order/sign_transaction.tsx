@@ -67,7 +67,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                     </div>
                 </div>
                 <div className="center pt1 pb2">
-                    Expires at: {expiryDate}
+                    Expires at: {expiryDate} UTC
                 </div>
                 <div className="flex">
                     <RaisedButton
