@@ -51,14 +51,21 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
                 amount: this.props.currentAssetToken.amount,
             };
             return (
-                <GridTile
+                <div
                     key={symbol}
-                    title={token.name}
+                    style={{cursor: 'pointer'}}
+                    onClick={this.chooseAssetAndClose.bind(this, assetToken)}
                 >
-                    <div style={{cursor: 'pointer'}} onClick={this.chooseAssetAndClose.bind(this, assetToken)}>
-                        <img style={{width: 100, position: 'absolute', left: '22%'}} src={token.iconUrl} />
-                    </div>
-                </GridTile>
+                    <GridTile
+                        title={token.name}
+                    >
+                        {/* Note: we keep this additional div here because GridTile treats img tag children */}
+                        {/* by applying additional transformations to the image that we do not want. */}
+                        <div>
+                            <img style={{width: 100, position: 'absolute', left: '22%'}} src={token.iconUrl} />
+                        </div>
+                    </GridTile>
+                </div>
             );
         });
     }
