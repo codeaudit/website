@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as dateFormat from 'dateformat';
 
 export const utils = {
     // Utility function to create a K:V from a list of strings
@@ -36,5 +37,10 @@ export const utils = {
         const unixTimestampMili = unixTimestampSec * 1000;
         const d = new Date(unixTimestampMili);
         return d;
+    },
+    convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: number): string {
+        const d = this.convertToDateTimeFromUnixTimestamp(unixTimestampSec);
+        const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
+        return formattedDate;
     },
 };

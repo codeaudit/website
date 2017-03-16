@@ -5,6 +5,7 @@ import { Store as ReduxStore, Dispatch } from 'redux';
 import {ChooseAsset} from 'ts/components/generate_order/choose_asset';
 import {GrantAllowance} from 'ts/components/generate_order/grant_allowance';
 import {RemainingConfigs} from 'ts/components/generate_order/remaining_configs';
+import {SignTransaction} from 'ts/components/generate_order/sign_transaction';
 import {State} from 'ts/redux/reducer';
 import {GenerateOrderSteps, Direction, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
 import {
@@ -90,6 +91,16 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                         updateOrderExpiry={this.props.updateOrderExpiry}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
                         updateOrderTakerAddress={this.props.updateOrderTakerAddress}
+                    />
+                );
+
+            case GenerateOrderSteps.SignTransaction:
+                return (
+                    <SignTransaction
+                        orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                        orderTakerAddress={this.props.orderTakerAddress}
+                        sideToAssetToken={this.props.sideToAssetToken}
+                        updateGenerateOrderStep={this.props.updateGenerateOrderStep}
                     />
                 );
             default:
