@@ -48,7 +48,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
         return _.map(this.props.tokenBySymbol, (token: Token, symbol: string) => {
             const assetToken: AssetToken = {
                 symbol,
-                amount: 0.0,
+                amount: this.props.currentAssetToken.amount,
             };
             return (
                 <GridTile
