@@ -3,6 +3,7 @@ import {utils} from 'ts/utils/utils';
 export enum GenerateOrderSteps {
   ChooseAssets,
   GrantAllowance,
+  RemainingConfigs,
 };
 
 export const Side = utils.strEnum([

@@ -14,4 +14,12 @@ export const utils = {
             throw new Error(message);
         }
     },
+    // This default unix timestamp is used for orders where the user does not specify an expiry date.
+    // It is a fixed constant so that both the redux store's INITIAL_STATE and components can check for
+    // whether a user has set an expiry date or not. It is set unrealistically high so as not to collide
+    // with actual values a user would select.
+    initialOrderExpiryUnixTimestampSec() {
+        const d = new Date('2050');
+        return d.getTime() / 1000;
+    },
 };

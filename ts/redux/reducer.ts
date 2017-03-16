@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import {utils} from 'ts/utils/utils';
 import {
     GenerateOrderSteps,
     TokenBySymbol,
@@ -11,12 +12,16 @@ import {Action, actionTypes} from 'ts/redux/actions';
 
 export interface State {
     generateOrderStep: GenerateOrderSteps;
+    orderExpiryTimestamp: number;
+    orderTakerAddress: string;
     tokenBySymbol: TokenBySymbol;
     sideToAssetToken: SideToAssetToken;
 };
 
 const INITIAL_STATE: State = {
-    generateOrderStep: GenerateOrderSteps.ChooseAssets,
+    generateOrderStep: GenerateOrderSteps.RemainingConfigs,
+    orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
+    orderTakerAddress: '',
     sideToAssetToken: {
         [Side.deposit]: {
             amount: 30.0,
@@ -77,6 +82,16 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         });
         return _.assign({}, state, {
             sideToAssetToken: newSideToAssetToken,
+        });
+
+    case actionTypes.UPDATE_ORDER_EXPIRY:
+        return _.assign({}, state, {
+            orderExpiryTimestamp: action.data,
+        });
+
+    case actionTypes.UPDATE_ORDER_TAKER_ADDRESS:
+        return _.assign({}, state, {
+            orderTakerAddress: action.data,
         });
 
     default:

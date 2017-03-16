@@ -8,27 +8,35 @@ import {RemainingConfigs} from 'ts/components/generate_order/remaining_configs';
 import {State} from 'ts/redux/reducer';
 import {GenerateOrderSteps, Direction, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
 import {
+    swapAssetTokenSymbols,
     updateGenerateOrderStep,
     updateChosenAssetToken,
-    swapAssetTokenSymbols,
+    updateOrderExpiry,
+    updateOrderTakerAddress,
 } from 'ts/redux/actions';
 
 interface GenerateOrderProps {}
 
 interface ConnectedState {
-  generateOrderStep: GenerateOrderSteps;
-  tokenBySymbol: TokenBySymbol;
-  sideToAssetToken: SideToAssetToken;
+    generateOrderStep: GenerateOrderSteps;
+    orderExpiryTimestamp: number;
+    orderTakerAddress: string;
+    tokenBySymbol: TokenBySymbol;
+    sideToAssetToken: SideToAssetToken;
 }
 
 interface ConnectedDispatch {
-  updateGenerateOrderStep: (direction: Direction) => void;
-  updateChosenAssetToken: (side: Side, token: AssetToken) => void;
-  swapAssetTokenSymbols: () => void;
+    swapAssetTokenSymbols: () => void;
+    updateGenerateOrderStep: (direction: Direction) => void;
+    updateChosenAssetToken: (side: Side, token: AssetToken) => void;
+    updateOrderExpiry: (unixTimestampSec: number) => void;
+    updateOrderTakerAddress: (taker: string) => void;
 }
 
 const mapStateToProps = (state: State, ownProps: GenerateOrderProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
+    orderExpiryTimestamp: state.orderExpiryTimestamp,
+    orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
     tokenBySymbol: state.tokenBySymbol,
 });
@@ -42,6 +50,12 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
     },
     updateGenerateOrderStep: (direction: Direction) => {
         dispatch(updateGenerateOrderStep(direction));
+    },
+    updateOrderExpiry: (unixTimestampSec: number) => {
+        dispatch(updateOrderExpiry(unixTimestampSec));
+    },
+    updateOrderTakerAddress: (taker: string) => {
+        dispatch(updateOrderTakerAddress(taker));
     },
 });
 
@@ -65,6 +79,17 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
                         updateChosenAssetToken={this.props.updateChosenAssetToken}
+                    />
+                );
+
+            case GenerateOrderSteps.RemainingConfigs:
+                return (
+                    <RemainingConfigs
+                        orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                        orderTakerAddress={this.props.orderTakerAddress}
+                        updateOrderExpiry={this.props.updateOrderExpiry}
+                        updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                        updateOrderTakerAddress={this.props.updateOrderTakerAddress}
                     />
                 );
             default:

@@ -9,6 +9,8 @@ export interface Action {
 export const actionTypes = utils.strEnum([
   'UPDATE_GENERATE_ORDER_STEP',
   'UPDATE_CHOSEN_ASSET_TOKEN',
+  'UPDATE_ORDER_TAKER_ADDRESS',
+  'UPDATE_ORDER_EXPIRY',
   'SWAP_ASSET_TOKENS',
 ]);
 export type actionTypes = keyof typeof actionTypes;
@@ -33,5 +35,19 @@ export function updateChosenAssetToken(side: Side, token: AssetToken): Action {
 export function swapAssetTokenSymbols(): Action {
     return {
         type: actionTypes.SWAP_ASSET_TOKENS,
+    };
+};
+
+export function updateOrderExpiry(unixTimestampSec: number): Action {
+    return {
+        data: unixTimestampSec,
+        type: actionTypes.UPDATE_ORDER_EXPIRY,
+    };
+};
+
+export function updateOrderTakerAddress(taker: string): Action {
+    return {
+        data: taker,
+        type: actionTypes.UPDATE_ORDER_TAKER_ADDRESS,
     };
 };
