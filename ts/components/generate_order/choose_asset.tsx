@@ -51,7 +51,12 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                             style={{top: 55, left: 15, cursor: 'pointer'}}
                             onClick={this.swapTokens.bind(this)}
                         >
-                            <img style={{width: 50}} src="/images/swap.png" />
+                            <i
+                                style={{color: colors.amber600, fontSize: 50}}
+                                className="material-icons"
+                            >
+                                swap_horiz
+                            </i>
                         </div>
                     </div>
                     <div className="col-5 center">
