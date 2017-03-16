@@ -5,6 +5,7 @@ export enum GenerateOrderSteps {
   GrantAllowance,
   RemainingConfigs,
   SignTransaction,
+  CopyAndShare,
 };
 
 export const Side = utils.strEnum([

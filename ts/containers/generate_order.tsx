@@ -6,6 +6,7 @@ import {ChooseAsset} from 'ts/components/generate_order/choose_asset';
 import {GrantAllowance} from 'ts/components/generate_order/grant_allowance';
 import {RemainingConfigs} from 'ts/components/generate_order/remaining_configs';
 import {SignTransaction} from 'ts/components/generate_order/sign_transaction';
+import {CopyAndShare} from 'ts/components/generate_order/copy_and_share';
 import {State} from 'ts/redux/reducer';
 import {GenerateOrderSteps, Direction, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
 import {
@@ -103,6 +104,17 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
                     />
                 );
+
+            case GenerateOrderSteps.CopyAndShare:
+                return (
+                    <CopyAndShare
+                        orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                        orderTakerAddress={this.props.orderTakerAddress}
+                        sideToAssetToken={this.props.sideToAssetToken}
+                        updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                    />
+                );
+
             default:
                 // tslint:disable
                 console.log('Unexpected `generateOrderStep` found: ', generateOrderStep);
