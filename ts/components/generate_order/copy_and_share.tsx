@@ -17,12 +17,8 @@ interface CopyAndShareState {}
 
 export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShareState> {
     public render() {
-        const transactionDetails = {
-            expiry: this.props.orderExpiryTimestamp,
-            taker: this.props.orderTakerAddress,
-            assetTokens: this.props.sideToAssetToken,
-            signedHash: 'TODO',
-        };
+        const transactionDetails = utils.generateOrderJSON(this.props.sideToAssetToken,
+            this.props.orderExpiryTimestamp, this.props.orderTakerAddress);
         return (
             <div className="relative">
                 <div
