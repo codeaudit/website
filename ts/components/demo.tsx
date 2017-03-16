@@ -3,6 +3,7 @@ import * as React from 'react';
 import {Tabs, Tab, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrder} from 'ts/containers/generate_order';
+import {FillOrder} from 'ts/components/fill_order';
 
 interface DemoProps {}
 
@@ -38,6 +39,7 @@ export class Demo extends React.Component<DemoProps, undefined> {
                 <Tabs
                     tabItemContainerStyle={styles.tabItemContainer}
                     inkBarStyle={styles.inkBar}
+                    initialSelectedIndex={1}
                 >
                     <Tab
                         label="Generate Order"
@@ -50,10 +52,7 @@ export class Demo extends React.Component<DemoProps, undefined> {
                         buttonStyle={styles.button}
                     >
                       <div>
-                        <h2 style={styles.headline}>Tab Two</h2>
-                        <div>
-                          This is another example tab.
-                        </div>
+                        <FillOrder />
                       </div>
                     </Tab>
                     <Tab
