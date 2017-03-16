@@ -50,7 +50,7 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
                         <TextField
                             id="orderJSON"
                             style={{width: 325}}
-                            value={JSON.stringify(transactionDetails, null, '\t')}
+                            value={transactionDetails}
                             multiLine={true}
                             rows={2}
                             rowsMax={8}
