@@ -31,7 +31,21 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
                     Order successfully generated!
                 </h3>
                 <div className="pt2 pb2 px4">
-                    <div className="pb2 mx4">Order JSON</div>
+                    <div className="pb2 mx4 flex">
+                        <div>Order JSON</div>
+                        <div
+                            className="pl1"
+                            style={{cursor: 'pointer'}}
+                            onClick={this.onOrderJSONCopy.bind(this)}
+                        >
+                            <i
+                                style={{fontSize: 15}}
+                                className="material-icons"
+                            >
+                                content_copy
+                            </i>
+                        </div>
+                    </div>
                     <Paper className="mx4 center">
                         <TextField
                             id="orderJSON"
@@ -52,6 +66,9 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
                 </div>
             </div>
         );
+    }
+    private onOrderJSONCopy() {
+        // TODO: Implement copy!
     }
     private onBackButtonClick() {
         this.props.updateGenerateOrderStep(Direction.backward);
