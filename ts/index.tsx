@@ -13,8 +13,8 @@ import 'basscss/css/basscss.css';
 const muiTheme = getMuiTheme({
     palette: {
         primary1Color: colors.amber600,
-        primary2Color: colors.grey600,
-        textColor: colors.grey700,
+        primary2Color: colors.blueGrey500,
+        textColor: colors.blueGrey600,
     },
 });
 

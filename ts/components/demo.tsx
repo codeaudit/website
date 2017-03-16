@@ -26,7 +26,7 @@ const styles: React.CSSProperties = {
         width: '100%',
     },
     tabItemContainer: {
-        background: colors.blueGrey400,
+        background: colors.blueGrey500,
         borderRadius: '4px 4px 0 0',
     },
 };
