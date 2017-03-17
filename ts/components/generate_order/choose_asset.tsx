@@ -53,7 +53,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         return (
             <div>
                 <Step
-                    title="Choose the tokens you want to trade"
+                    title="Choose which tokens to trade"
                     actionButtonText="Continue"
                     hasActionButton={true}
                     hasBackButton={false}
