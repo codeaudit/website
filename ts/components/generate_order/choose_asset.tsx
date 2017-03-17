@@ -35,7 +35,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                 swapIcon: false,
             },
             isPickerOpen: false,
-            pickerSide: 'deposit',
+            pickerSide: Side.deposit,
             sideToAssetTokenState: {
                 [Side.deposit]: {
                     amount: _.isUndefined(depositAssetTokenAmount) ? '' : depositAssetTokenAmount.toString(),
@@ -121,10 +121,11 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
             cursor: 'pointer',
             opacity: this.state.hovers[iconHoverId] ? 0.8 : 1,
         };
+        const title = side === Side.deposit ? 'I have' : 'I want';
         return (
             <div>
                 <div className="pb2" style={{color: colors.grey500, textTransform: 'capitalize'}}>
-                    {side}
+                    {title}
                 </div>
                 <img
                     style={{width: 100, height: 100, ...iconStyles}}
