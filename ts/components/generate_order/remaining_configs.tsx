@@ -5,6 +5,7 @@ import {RaisedButton, DatePicker, TimePicker, Toggle, TextField} from 'material-
 import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
 import {Direction, Side} from 'ts/types';
+import {HelpTooltip} from 'ts/components/ui/help_tooltip';
 
 interface RemainingConfigsProps {
     orderExpiryTimestamp: number;
@@ -34,6 +35,14 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
         };
     }
     public render() {
+        const pointToPointExplanationText = `Point-to-point orders allow two parties to directly
+                                            exchange tokens. By specifing a taker address, the order
+                                            is rendered useless to eavesdroppers or outside parties.`;
+        const pointToPointExplanation = (
+            <div style={{width: 300}}>
+                {pointToPointExplanationText}
+            </div>
+        );
         return (
             <Step
                 title="Additional options"
@@ -68,12 +77,19 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
                         </div>
                     </div>
                     <div className="pt4">
-                        <Toggle
-                            label="This is a point-to-point transaction"
-                            labelPosition="right"
-                            toggled={this.state.isPointToPoint}
-                            onToggle={this.onPointToPointToggled.bind(this)}
-                        />
+                        <div className="flex">
+                            <Toggle
+                                label="This is a point-to-point transaction"
+                                labelPosition="right"
+                                toggled={this.state.isPointToPoint}
+                                onToggle={this.onPointToPointToggled.bind(this)}
+                            />
+                            <div style={{paddingTop: 3}}>
+                                <HelpTooltip
+                                    explanation={pointToPointExplanation}
+                                />
+                            </div>
+                        </div>
                         {this.state.isPointToPoint && this.renderTakerInput()}
                     </div>
                 </div>

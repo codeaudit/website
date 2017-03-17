@@ -5,6 +5,7 @@ import {colors} from 'material-ui/styles';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import {Step} from 'ts/components/ui/step';
 import {VennDiagram} from 'ts/components/ui/venn_diagram';
+import {HelpTooltip} from 'ts/components/ui/help_tooltip';
 
 const PRECISION = 5;
 const BALANCE = 134.56;
@@ -42,9 +43,27 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
         const receiveSymbol = this.props.sideToAssetToken[Side.receive].symbol;
         const roundedDepositAmount = this.state.depositAmount.toFixed(2);
         const intersectionKey = `Deposit allowance (${roundedDepositAmount} ${depositSymbol})`;
+        const allowanceExplanationText = `In order for the 0x exchange smart contract to trade tokens
+                                        on your behalf, you must authorize it to move them when someone
+                                        fills the order. You can do this by setting an ERC20 standard
+                                        allowance for the contract. Until the order is filled, your deposit
+                                        remains in your account and under your control.`;
+        const allowanceExplanation = (
+            <div style={{width: 300}}>
+                {allowanceExplanationText}
+            </div>
+        );
+        const title = (
+            <div className="flex relative">
+                <div>Grant the 0x smart contract access to your deposit{' '}</div>
+                <div className="absolute" style={{right: 0, top: 2}}>
+                    <HelpTooltip explanation={allowanceExplanation} />
+                </div>
+            </div>
+        );
         return (
             <Step
-                title="Grant the 0x smart contract access to your deposit"
+                title={title}
                 actionButtonText="Grant allowance"
                 hasActionButton={true}
                 hasBackButton={true}
