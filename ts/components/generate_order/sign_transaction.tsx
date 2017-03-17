@@ -3,7 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {Step} from 'ts/components/step';
+import {Step} from 'ts/components/ui/step';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import jazzicon = require('jazzicon');
 

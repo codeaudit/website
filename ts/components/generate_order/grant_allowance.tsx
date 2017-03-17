@@ -3,7 +3,7 @@ import * as React from 'react';
 import {RaisedButton, Slider} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
-import {Step} from 'ts/components/step';
+import {Step} from 'ts/components/ui/step';
 import {VennDiagram} from 'ts/components/ui/venn_diagram';
 
 const PRECISION = 5;

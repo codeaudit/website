@@ -3,7 +3,7 @@ import * as React from 'react';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {tokenBySymbol} from 'ts/tokenBySymbol';
-import {Step} from 'ts/components/step';
+import {Step} from 'ts/components/ui/step';
 import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 
