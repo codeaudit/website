@@ -18,7 +18,7 @@ export interface State {
 };
 
 const INITIAL_STATE: State = {
-    generateOrderStep: GenerateOrderSteps.RemainingConfigs,
+    generateOrderStep: GenerateOrderSteps.ChooseAssets,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
     orderTakerAddress: '',
     sideToAssetToken: {

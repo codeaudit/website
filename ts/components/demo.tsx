@@ -23,6 +23,7 @@ const styles: React.CSSProperties = {
     },
     paper: {
         display: 'inline-block',
+        height: 486,
         position: 'relative',
         textAlign: 'center',
         width: '100%',
@@ -40,7 +41,7 @@ export class Demo extends React.Component<DemoProps, undefined> {
                 <Tabs
                     tabItemContainerStyle={styles.tabItemContainer}
                     inkBarStyle={styles.inkBar}
-                    initialSelectedIndex={1}
+                    initialSelectedIndex={0}
                 >
                     <Tab
                         label="Generate Order"
