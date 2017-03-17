@@ -3,7 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {TextField, Paper, RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {Step} from 'ts/components/step';
+import {Step} from 'ts/components/ui/step';
 import {tokenBySymbol} from 'ts/tokenBySymbol';
 import {Side, SideToAssetToken, AssetToken} from 'ts/types';
 
