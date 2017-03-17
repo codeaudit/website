@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "description": "Demo app demonstrating the core functionality of the 0x protocol",
   "scripts": {
+    "build": "webpack",
     "dev": "webpack-dev-server --content-base public",
-    "update_contracts": "cp -r ./../contracts/build/contracts/ ./public/contracts/"
+    "update_contracts": "cp -r ./../contracts/build/contracts/ ./public/contracts/",
+    "deploy": "npm run build; aws s3 sync ./public/. s3://0x-demo-dapp --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers"
   },
   "author": "Fabio Berger",
   "license": "MIT",
