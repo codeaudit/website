@@ -4,6 +4,7 @@ import {utils} from 'ts/utils/utils';
 import {TextField, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
+import {CopyIcon} from 'ts/components/ui/copy_icon';
 import {Direction, SideToAssetToken, AssetToken} from 'ts/types';
 
 interface CopyAndShareProps {
@@ -19,6 +20,10 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
     public render() {
         const transactionDetails = utils.generateOrderJSON(this.props.sideToAssetToken,
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress);
+        // Hack: Need to remove carriage returns from the transactionDetails.
+        // TODO: Find a safer way to do this
+        const transactionDetailsString = JSON.stringify(transactionDetails).replace(/\\n|\\t|\\|"{|}"/g, '');
+        const finalTransactionDetailsString = `{${transactionDetailsString}}`;
         return (
             <Step
                 title="Order successfully created and signed!"
@@ -28,18 +33,7 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
             >
                 <div className="pb2 mx4 flex">
                     <div>Order JSON</div>
-                    <div
-                        className="pl1"
-                        style={{cursor: 'pointer'}}
-                        onClick={this.onOrderJSONCopy.bind(this)}
-                    >
-                        <i
-                            style={{fontSize: 15}}
-                            className="material-icons"
-                        >
-                            content_copy
-                        </i>
-                    </div>
+                    <CopyIcon data={finalTransactionDetailsString}/>
                 </div>
                 <Paper className="mx4 center">
                     <TextField
@@ -60,8 +54,5 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
                 </div>
             </Step>
         );
-    }
-    private onOrderJSONCopy() {
-        // TODO: Implement copy!
     }
 }
