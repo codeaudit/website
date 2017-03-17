@@ -3,6 +3,7 @@ import * as React from 'react';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {tokenBySymbol} from 'ts/tokenBySymbol';
+import {Step} from 'ts/components/step';
 import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 
@@ -14,8 +15,9 @@ interface ChooseAssetProps {
 }
 
 interface ChooseAssetsState {
-    pickerSide: Side;
+    hovers: {[identifier: string]: boolean};
     isPickerOpen: boolean;
+    pickerSide: Side;
     sideToAssetTokenState: {[side: string]: {amount: number, errMsg: string}};
 }
 
@@ -23,6 +25,11 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
     public constructor(props: ChooseAssetProps) {
         super(props);
         this.state = {
+            hovers: {
+                depositIcon: false,
+                receiveIcon: false,
+                swapIcon: false,
+            },
             isPickerOpen: false,
             pickerSide: 'deposit',
             sideToAssetTokenState: {
@@ -38,38 +45,45 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         };
     }
     public render() {
+        const swapHoverId = 'swapIcon';
+        const swapStyles = {
+            color: this.state.hovers.swapIcon ? colors.amber600 : colors.amber800,
+            fontSize: 50,
+        };
         return (
             <div>
-                <h3 className="center">Choose the assets you want to trade</h3>
-                <div className="flex pt2 pb3 px4">
-                    <div className="col-5 center">
-                        {this.renderAsset(Side.deposit, this.props.sideToAssetToken[Side.deposit])}
-                    </div>
-                    <div className="col-2 center relative">
-                        <div
-                            className="absolute"
-                            style={{top: 55, left: 15, cursor: 'pointer'}}
-                            onClick={this.swapTokens.bind(this)}
-                        >
-                            <i
-                                style={{color: colors.amber600, fontSize: 50}}
-                                className="material-icons"
+                <Step
+                    title="Choose the tokens you want to trade"
+                    actionButtonText="Continue"
+                    hasActionButton={true}
+                    hasBackButton={false}
+                    updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                >
+                    <div className="flex">
+                        <div className="col-5 center">
+                            {this.renderAsset(Side.deposit, this.props.sideToAssetToken[Side.deposit])}
+                        </div>
+                        <div className="col-2 center relative">
+                            <div
+                                className="absolute"
+                                style={{top: 55, left: 15, cursor: 'pointer'}}
+                                onClick={this.swapTokens.bind(this)}
+                                onMouseEnter={this.onToggleHover.bind(this, swapHoverId, true)}
+                                onMouseLeave={this.onToggleHover.bind(this, swapHoverId, false)}
                             >
-                                swap_horiz
-                            </i>
+                                <i
+                                    style={swapStyles}
+                                    className="material-icons"
+                                >
+                                    swap_horiz
+                                </i>
+                            </div>
+                        </div>
+                        <div className="col-5 center">
+                            {this.renderAsset(Side.receive, this.props.sideToAssetToken[Side.receive])}
                         </div>
                     </div>
-                    <div className="col-5 center">
-                        {this.renderAsset(Side.receive, this.props.sideToAssetToken[Side.receive])}
-                    </div>
-                </div>
-                <div className="flex">
-                    <RaisedButton
-                        label="Continue"
-                        onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
-                        style={{margin: 12, width: '100%'}}
-                    />
-                </div>
+                </Step>
                 <AssetPicker
                     isOpen={this.state.isPickerOpen}
                     currentAssetToken={this.props.sideToAssetToken[this.state.pickerSide]}
@@ -83,26 +97,29 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         const amount = this.state.sideToAssetTokenState[side].amount;
         const errMsg = this.state.sideToAssetTokenState[side].errMsg;
         const token = tokenBySymbol[assetToken.symbol];
+        const iconHoverId = `${side}Icon`;
+        const iconStyles = {
+            cursor: 'pointer',
+            opacity: this.state.hovers[iconHoverId] ? 0.8 : 1,
+        };
         return (
             <div>
                 <div className="pb2" style={{color: colors.grey500, textTransform: 'capitalize'}}>
                     {side}
                 </div>
-                <div
-                    style={{cursor: 'pointer'}}
+                <img
+                    style={{width: 100, height: 100, ...iconStyles}}
+                    onMouseEnter={this.onToggleHover.bind(this, iconHoverId, true)}
+                    onMouseLeave={this.onToggleHover.bind(this, iconHoverId, false)}
                     onClick={this.onAssetClicked.bind(this, side)}
-                >
-                    <img
-                        style={{width: 100, height: 100}}
-                        src={token.iconUrl}
-                    />
-                </div>
+                    src={token.iconUrl}
+                />
                 <div className="pt2" style={{color: colors.grey500}}>
                     {token.name}
                 </div>
                 <div className="pt3">
                 <TextField
-                    style={{width: 115}}
+                    style={{width: 112}}
                     errorText={errMsg}
                     value={amount === 0 ? '' : amount}
                     inputStyle={{textAlign: 'center'}}
@@ -125,6 +142,14 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
     }
     private isNumeric(n: string) {
         return !isNaN(parseFloat(n)) && isFinite(Number(n));
+    }
+    private onToggleHover(identifier: string, isHovered: boolean) {
+        const hovers = _.assign({}, this.state.hovers, {
+            [identifier]: isHovered,
+        });
+        this.setState({
+            hovers,
+        });
     }
     private onUpdatedAssetAmount(side: Side, assetToken: AssetToken, e: any) {
         const amount: string = e.target.value;

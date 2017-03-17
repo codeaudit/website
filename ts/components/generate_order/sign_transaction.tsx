@@ -3,7 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {BackButton} from 'ts/components/ui/back_button';
+import {Step} from 'ts/components/step';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import jazzicon = require('jazzicon');
 
@@ -33,50 +33,35 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
         const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
         const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.props.orderExpiryTimestamp);
         return (
-            <div className="relative">
-                <div
-                    className="absolute"
-                    style={{left: 15}}
-                >
-                    <BackButton onClick={this.onBackButtonClick.bind(this)} />
+            <Step
+                title="Confirm and sign your order"
+                actionButtonText="Sign order"
+                hasActionButton={true}
+                hasBackButton={true}
+                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+            >
+                <div className="col col-5 center">
+                    {this.renderParty('Maker (you)', MAKER_ADDRESS)}
                 </div>
-                <h3 className="px4">
-                    Confirm and sign your order
-                </h3>
-                <div className="pt2 pb2 px4 flex">
-                    <div className="col col-5 center">
-                        {this.renderParty('Maker (you)', MAKER_ADDRESS)}
+                <div className="col col-2 center">
+                    {this.renderAmount(depositAssetToken)}
+                    <div>
+                        <i
+                            style={{fontSize: 60, transform: 'rotate(180deg)'}}
+                            className="material-icons"
+                        >
+                            keyboard_return
+                        </i>
                     </div>
-                    <div className="col col-2 center">
-                        {this.renderAmount(depositAssetToken)}
-                        <div>
-                            <i
-                                style={{fontSize: 60, transform: 'rotate(180deg)'}}
-                                className="material-icons"
-                            >
-                                keyboard_return
-                            </i>
-                        </div>
-                        <div>
-                            <i style={{fontSize: 60}} className="material-icons">keyboard_return</i>
-                        </div>
-                        {this.renderAmount(receiveAssetToken)}
+                    <div>
+                        <i style={{fontSize: 60}} className="material-icons">keyboard_return</i>
                     </div>
-                    <div className="col col-5 center">
-                        {this.renderParty('Taker', this.props.orderTakerAddress)}
-                    </div>
+                    {this.renderAmount(receiveAssetToken)}
                 </div>
-                <div className="center pt1 pb2">
-                    Expires at: {expiryDate} UTC
+                <div className="col col-5 center">
+                    {this.renderParty('Taker', this.props.orderTakerAddress)}
                 </div>
-                <div className="flex">
-                    <RaisedButton
-                        label="Sign order"
-                        style={{margin: 12, width: '100%'}}
-                        onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
-                    />
-                </div>
-            </div>
+            </Step>
         );
     }
     private renderAmount(assetToken: AssetToken) {
@@ -120,8 +105,5 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
         const addressWithoutPrefix = address.slice(2, 10);
         const numericanAddress = parseInt(addressWithoutPrefix, 16);
         return numericanAddress;
-    }
-    private onBackButtonClick() {
-        this.props.updateGenerateOrderStep(Direction.backward);
     }
 }

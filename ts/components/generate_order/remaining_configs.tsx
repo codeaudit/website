@@ -3,7 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {RaisedButton, DatePicker, TimePicker, Toggle, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {BackButton} from 'ts/components/ui/back_button';
+import {Step} from 'ts/components/step';
 import {Direction, Side} from 'ts/types';
 
 interface RemainingConfigsProps {
@@ -35,61 +35,49 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
     }
     public render() {
         return (
-            <div className="relative">
-                <div
-                    className="absolute"
-                    style={{left: 15}}
-                >
-                    <BackButton onClick={this.onBackButtonClick.bind(this)} />
-                </div>
-                <h3 className="px4">
-                    Additional options
-                </h3>
-                <div className="pt2 pb2 px4">
-                    <div>
-                        <div>Choose an order expiry date and time</div>
-                        <div className="flex">
-                            <DatePicker
-                                className="mr2"
-                                textFieldStyle={{width: 125}}
-                                hintText="Expiry date"
-                                mode="landscape"
-                                value={this.state.date}
-                                onChange={this.onDateChanged.bind(this)}
-                            />
-                            <TimePicker
-                                textFieldStyle={{width: 125}}
-                                hintText="time"
-                                autoOk={true}
-                                value={this.state.time}
-                                onChange={this.onTimeChanged.bind(this)}
-                            />
-                            <div
-                                onClick={this.clearDates.bind(this)}
-                                className="pt2 pl2"
-                            >
-                                <i style={{fontSize: 16, cursor: 'pointer'}} className="material-icons">clear</i>
-                            </div>
-                        </div>
-                        <div className="pt3">
-                            <Toggle
-                                label="This is a point-to-point transaction"
-                                labelPosition="right"
-                                toggled={this.state.isPointToPoint}
-                                onToggle={this.onPointToPointToggled.bind(this)}
-                            />
-                            {this.state.isPointToPoint && this.renderTakerInput()}
+            <Step
+                title="Additional options"
+                actionButtonText="Continue"
+                hasActionButton={true}
+                hasBackButton={true}
+                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+            >
+                <div className="mx-auto" style={{width: 295}}>
+                    <div>Choose an order expiry date and time</div>
+                    <div className="flex">
+                        <DatePicker
+                            className="mr2"
+                            textFieldStyle={{width: 125}}
+                            hintText="Expiry date"
+                            mode="landscape"
+                            value={this.state.date}
+                            onChange={this.onDateChanged.bind(this)}
+                        />
+                        <TimePicker
+                            textFieldStyle={{width: 125}}
+                            hintText="time"
+                            autoOk={true}
+                            value={this.state.time}
+                            onChange={this.onTimeChanged.bind(this)}
+                        />
+                        <div
+                            onClick={this.clearDates.bind(this)}
+                            className="pt2 pl2"
+                        >
+                            <i style={{fontSize: 16, cursor: 'pointer'}} className="material-icons">clear</i>
                         </div>
                     </div>
+                    <div className="pt3">
+                        <Toggle
+                            label="This is a point-to-point transaction"
+                            labelPosition="right"
+                            toggled={this.state.isPointToPoint}
+                            onToggle={this.onPointToPointToggled.bind(this)}
+                        />
+                        {this.state.isPointToPoint && this.renderTakerInput()}
+                    </div>
                 </div>
-                <div className="flex">
-                    <RaisedButton
-                        label="Continue"
-                        style={{margin: 12, width: '100%'}}
-                        onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
-                    />
-                </div>
-            </div>
+            </Step>
         );
     }
     private renderTakerInput() {

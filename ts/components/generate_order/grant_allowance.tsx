@@ -3,7 +3,7 @@ import * as React from 'react';
 import {RaisedButton, Slider} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
-import {BackButton} from 'ts/components/ui/back_button';
+import {Step} from 'ts/components/step';
 import {VennDiagram} from 'ts/components/ui/venn_diagram';
 
 const PRECISION = 5;
@@ -40,37 +40,28 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
     public render() {
         const depositSymbol = this.props.sideToAssetToken[Side.deposit].symbol;
         const receiveSymbol = this.props.sideToAssetToken[Side.receive].symbol;
+        const roundedDepositAmount = this.state.depositAmount.toFixed(2);
+        const intersectionKey = `Deposit allowance (${roundedDepositAmount} ${depositSymbol})`;
         return (
-            <div className="relative">
-                <div
-                    className="absolute"
-                    style={{left: 15}}
-                >
-                    <BackButton onClick={this.onBackButtonClick.bind(this)} />
+            <Step
+                title="Grant the 0x smart contract access to your deposit"
+                actionButtonText="Grant allowance"
+                hasActionButton={true}
+                hasBackButton={true}
+                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+            >
+                <VennDiagram
+                    total={BALANCE}
+                    amountSet={this.props.sideToAssetToken[Side.deposit].amount}
+                    onChange={this.depositAmountChanged.bind(this)}
+                    leftCircleKey="0x exchange smart contract"
+                    rightCircleKey={`Your balance (${BALANCE.toFixed(2)} ${depositSymbol})`}
+                    intersectionKey={intersectionKey}
+                />
+                <div className="center pt2">
+                    {this.renderAmount('You will receive', this.state.receiveAmount, receiveSymbol)}
                 </div>
-                <h3 className="px4">
-                    Grant the 0x smart contract access to your deposit
-                </h3>
-                <div className="pt2 pb2 px4">
-                    <VennDiagram
-                        total={BALANCE}
-                        amountSet={this.props.sideToAssetToken[Side.deposit].amount}
-                        onChange={this.depositAmountChanged.bind(this)}
-                    />
-                    <div className="mx-auto" style={{width: 185}}>
-                        {this.renderAmount('Deposit', this.state.depositAmount, depositSymbol)}
-                        {this.renderAmount('Receive', this.state.receiveAmount, receiveSymbol)}
-                        {this.renderAmount('Balance', BALANCE, depositSymbol)}
-                    </div>
-                </div>
-                <div className="flex">
-                    <RaisedButton
-                        label="Grant access"
-                        style={{margin: 12, width: '100%'}}
-                        onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
-                    />
-                </div>
-            </div>
+            </Step>
         );
     }
     private renderAmount(label: string, amount: number, symbol: string) {
@@ -81,9 +72,6 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 <span style={{fontSize: 13}}>{' '}{symbol}</span>
             </div>
         );
-    }
-    private onBackButtonClick() {
-        this.props.updateGenerateOrderStep(Direction.backward);
     }
     private depositAmountChanged(depositAmount: number) {
         const exchangeRate = this.state.initialReceiveAmount / this.state.initialDepositAmount;
