@@ -12,6 +12,10 @@ interface AssetPickerProps {
     onAssetChosen: (side: Side, chosenAssetToken: AssetToken) => void;
 }
 
+interface AssetPickerState {
+    hoveredSymbol: string | undefined;
+}
+
 const styles = {
     gridList: {
         overflowY: 'auto',
@@ -24,11 +28,17 @@ const styles = {
     },
 };
 
-export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
+export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerState> {
+    constructor(props: AssetPickerProps) {
+        super(props);
+        this.state = {
+            hoveredSymbol: undefined,
+        };
+    }
     public render() {
         return (
             <Dialog
-                title="Choose asset"
+                title="Choose a token"
                 modal={false}
                 open={this.props.isOpen}
                 onRequestClose={this.closeDialog.bind(this)}
@@ -50,11 +60,18 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
                 symbol,
                 amount: this.props.currentAssetToken.amount,
             };
+            const isHovered = this.state.hoveredSymbol === symbol;
+            const tileStyles = {
+                cursor: 'pointer',
+                opacity: isHovered ? 0.8 : 1,
+            };
             return (
                 <div
                     key={symbol}
-                    style={{cursor: 'pointer'}}
+                    style={tileStyles}
                     onClick={this.chooseAssetAndClose.bind(this, assetToken)}
+                    onMouseEnter={this.onToggleHover.bind(this, symbol, true)}
+                    onMouseLeave={this.onToggleHover.bind(this, symbol, false)}
                 >
                     <GridTile
                         title={token.name}
@@ -67,6 +84,12 @@ export class AssetPicker extends React.Component<AssetPickerProps, undefined> {
                     </GridTile>
                 </div>
             );
+        });
+    }
+    private onToggleHover(symbol: string, isHovered: boolean) {
+        const hoveredSymbol = isHovered ? symbol : undefined;
+        this.setState({
+            hoveredSymbol,
         });
     }
     private closeDialog() {
