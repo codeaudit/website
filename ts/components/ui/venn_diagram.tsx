@@ -15,14 +15,18 @@ const styles: React.CSSProperties = {
     },
     key: {
         height: KEY_SIZE,
+        opacity: 0.5,
         width: KEY_SIZE,
+    },
+    keyCombined: {
+        position: 'absolute',
     },
     keyContainer: {
         fontSize: 12,
     },
     leftCircle: {
-        background: colors.green100,
-        border: `1px solid ${colors.green300}`,
+        background: colors.amber100,
+        border: `1px solid ${colors.amber300}`,
     },
     rightCircle: {
         background: colors.cyan100,
@@ -34,6 +38,9 @@ interface VennDiagramProps {
     total: number;
     amountSet: number;
     onChange: (amountSet: number) => void;
+    leftCircleKey: string;
+    rightCircleKey: string;
+    intersectionKey: string;
 }
 
 interface VennDiagramState {
@@ -66,18 +73,24 @@ export class VennDiagram extends React.Component<VennDiagramProps, VennDiagramSt
                 <div>
                     <div className="flex mb1" style={styles.keyContainer}>
                         <div className="mr1" style={{...styles.key, ...styles.leftCircle}}/>
-                        0x smart contract
+                        {this.props.leftCircleKey}
+                    </div>
+                    <div className="flex mb1" style={styles.keyContainer}>
+                        <div className="mr1" style={{...styles.key, ...styles.rightCircle}}/>
+                        {this.props.rightCircleKey}
                     </div>
                     <div className="flex" style={styles.keyContainer}>
-                        <div className="mr1" style={{...styles.key, ...styles.rightCircle}}/>
-                        Your account
+                        <div style={{...styles.key, ...styles.rightCircle, ...styles.keyCombined}}/>
+                        <div style={{...styles.key, ...styles.leftCircle, ...styles.keyCombined}}/>
+                        <div className="mr1" style={{...styles.key}} />
+                        {this.props.intersectionKey}
                     </div>
                 </div>
-                <div className="relative mx-auto" style={{width: containerWidth, height: DIAMETER}}>
+                <div className="relative mx-auto pt2" style={{width: containerWidth, height: DIAMETER}}>
                     <div className="circle absolute" style={leftCircleStyles} />
                     <div className="circle absolute" style={rightCircleStyles} />
                 </div>
-                <div className="mx-auto" style={{width: (containerWidth - 60)}}>
+                <div className="mx-auto" style={{width: (containerWidth - 60), height: 18}}>
                     <Slider
                         defaultValue={DEFAULT_SLIDER_POSITION}
                         value={this.state.sliderPosition}
