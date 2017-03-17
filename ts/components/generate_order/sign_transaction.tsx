@@ -8,6 +8,7 @@ import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import jazzicon = require('jazzicon');
 
 const MAKER_ADDRESS = '0x75bE4F78AA3699B3A348c84bDB2a96c3Dbb5E2EF';
+const PRECISION = 5;
 
 const styles = {
     address: {
@@ -72,7 +73,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
     private renderAmount(assetToken: AssetToken) {
         return (
             <div style={{fontSize: 13}}>
-                {assetToken.amount} {assetToken.symbol}
+                {assetToken.amount.toFixed(PRECISION)} {assetToken.symbol}
             </div>
         );
     }
