@@ -57,9 +57,9 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     actionButtonText="Continue"
                     hasActionButton={true}
                     hasBackButton={false}
-                    updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                    onNavigateClick={this.props.updateGenerateOrderStep}
                 >
-                    <div className="flex">
+                    <div className="flex pt2">
                         <div className="col-5 center">
                             {this.renderAsset(Side.deposit, this.props.sideToAssetToken[Side.deposit])}
                         </div>
@@ -117,7 +117,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                 <div className="pt2" style={{color: colors.grey500}}>
                     {token.name}
                 </div>
-                <div className="pt3">
+                <div className="pt2">
                 <TextField
                     style={{width: 112}}
                     errorText={errMsg}

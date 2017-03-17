@@ -21,10 +21,10 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress);
         return (
             <Step
-                title="Order successfully generated!"
+                title="Order successfully created and signed!"
                 hasActionButton={false}
                 hasBackButton={true}
-                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                onNavigateClick={this.props.updateGenerateOrderStep}
             >
                 <div className="pb2 mx4 flex">
                     <div>Order JSON</div>

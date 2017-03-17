@@ -39,7 +39,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     public render() {
         return (
             <div>
-                <Table selectable={false}>
+                <h3 className="px4 center">Test tokens</h3>
+                <div className="px2 pb2">
+                    In order to try out the 0x protocol demo app, you can request test tokens below
+                </div>
+                <Table selectable={false} bodyStyle={{height: 289}}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>Token</TableHeaderColumn>

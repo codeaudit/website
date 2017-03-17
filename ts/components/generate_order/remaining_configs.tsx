@@ -40,9 +40,9 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
                 actionButtonText="Continue"
                 hasActionButton={true}
                 hasBackButton={true}
-                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                onNavigateClick={this.props.updateGenerateOrderStep}
             >
-                <div className="mx-auto" style={{width: 295}}>
+                <div className="mx-auto pt3" style={{width: 295}}>
                     <div>Choose an order expiry date and time</div>
                     <div className="flex">
                         <DatePicker
@@ -67,7 +67,7 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
                             <i style={{fontSize: 16, cursor: 'pointer'}} className="material-icons">clear</i>
                         </div>
                     </div>
-                    <div className="pt3">
+                    <div className="pt4">
                         <Toggle
                             label="This is a point-to-point transaction"
                             labelPosition="right"

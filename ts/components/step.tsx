@@ -10,7 +10,7 @@ interface StepProps {
     hasActionButton: boolean;
     hasBackButton: boolean;
     title: string;
-    updateGenerateOrderStep(direction: Direction): void;
+    onNavigateClick?(direction: Direction): void;
 }
 
 interface StepState {}
@@ -20,7 +20,7 @@ export class Step extends React.Component<StepProps, StepState> {
         return (
             <div className="relative" style={{height: 419}}>
                 {this.props.hasBackButton && this.renderBackButton()}
-                <h3 className="px4">
+                <h3 className="px4 center">
                     {this.props.title}
                 </h3>
                 <div className="pt2 pb2 px4 clearfix">
@@ -36,7 +36,7 @@ export class Step extends React.Component<StepProps, StepState> {
                 className="absolute"
                 style={{left: 15}}
             >
-                <BackButton onClick={this.onBackButtonClick.bind(this)} />
+                <BackButton onClick={this.onNavigateClick.bind(this, Direction.backward)} />
             </div>
         );
     }
@@ -46,12 +46,12 @@ export class Step extends React.Component<StepProps, StepState> {
                 <RaisedButton
                     label={this.props.actionButtonText}
                     style={{margin: 12, width: '100%'}}
-                    onClick={this.props.updateGenerateOrderStep.bind(this, Direction.forward)}
+                    onClick={this.onNavigateClick.bind(this, Direction.forward)}
                 />
             </div>
         );
     }
-    private onBackButtonClick() {
-        this.props.updateGenerateOrderStep(Direction.backward);
+    private onNavigateClick(direction: Direction) {
+        this.props.onNavigateClick(direction);
     }
 }

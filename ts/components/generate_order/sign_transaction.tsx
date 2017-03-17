@@ -38,28 +38,33 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 actionButtonText="Sign order"
                 hasActionButton={true}
                 hasBackButton={true}
-                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                onNavigateClick={this.props.updateGenerateOrderStep}
             >
-                <div className="col col-5 center">
-                    {this.renderParty('Maker (you)', MAKER_ADDRESS)}
-                </div>
-                <div className="col col-2 center">
-                    {this.renderAmount(depositAssetToken)}
-                    <div>
-                        <i
-                            style={{fontSize: 60, transform: 'rotate(180deg)'}}
-                            className="material-icons"
-                        >
-                            keyboard_return
-                        </i>
+                <div className="clearfix pt3">
+                    <div className="col col-5 center">
+                        {this.renderParty('Maker (you)', MAKER_ADDRESS)}
                     </div>
-                    <div>
-                        <i style={{fontSize: 60}} className="material-icons">keyboard_return</i>
+                    <div className="col col-2 center">
+                        {this.renderAmount(depositAssetToken)}
+                        <div>
+                            <i
+                                style={{fontSize: 60, transform: 'rotate(180deg)'}}
+                                className="material-icons"
+                            >
+                                keyboard_return
+                            </i>
+                        </div>
+                        <div>
+                            <i style={{fontSize: 60}} className="material-icons">keyboard_return</i>
+                        </div>
+                        {this.renderAmount(receiveAssetToken)}
                     </div>
-                    {this.renderAmount(receiveAssetToken)}
+                    <div className="col col-5 center">
+                        {this.renderParty('Taker', this.props.orderTakerAddress)}
+                    </div>
                 </div>
-                <div className="col col-5 center">
-                    {this.renderParty('Taker', this.props.orderTakerAddress)}
+                <div className="center pt3 pb2">
+                    Expires: {expiryDate} UTC
                 </div>
             </Step>
         );

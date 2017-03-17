@@ -3,6 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {TextField, Paper, RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {Step} from 'ts/components/step';
 import {tokenBySymbol} from 'ts/tokenBySymbol';
 import {Side, SideToAssetToken, AssetToken} from 'ts/types';
 
@@ -34,11 +35,13 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const hintOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
         const hintOrderJSON = utils.generateOrderJSON(hintSideToAssetToken, hintOrderExpiryTimestamp, '');
         return (
-            <div className="relative">
-                <h3 className="px4">
-                    Fill an order
-                </h3>
-                <div className="pt2 pb2 px4">
+            <Step
+                title="Fill an order"
+                actionButtonText="Fill order"
+                hasActionButton={true}
+                hasBackButton={false}
+            >
+                <div className="pt3">
                     <div className="pb2 px4">Order JSON</div>
                     <Paper className="mx4 center">
                         <TextField
@@ -54,14 +57,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         />
                     </Paper>
                 </div>
-                <div className="flex">
-                    <RaisedButton
-                        label="Fill order"
-                        style={{margin: 12, width: '100%'}}
-                        onClick={this.onFillOrderClick.bind(this)}
-                    />
-                </div>
-            </div>
+            </Step>
         );
     }
     private onFillOrderChanged(e: any) {

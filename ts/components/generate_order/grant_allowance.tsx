@@ -48,7 +48,7 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 actionButtonText="Grant allowance"
                 hasActionButton={true}
                 hasBackButton={true}
-                updateGenerateOrderStep={this.props.updateGenerateOrderStep}
+                onNavigateClick={this.props.updateGenerateOrderStep}
             >
                 <VennDiagram
                     total={BALANCE}
