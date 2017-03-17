@@ -6,6 +6,7 @@ import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import jazzicon = require('jazzicon');
+import ReactTooltip = require('react-tooltip');
 
 const MAKER_ADDRESS = '0x75bE4F78AA3699B3A348c84bDB2a96c3Dbb5E2EF';
 const PRECISION = 5;
@@ -78,6 +79,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
         );
     }
     private renderParty(party: string, address: string) {
+        const tooltipId = `${party}Tooltip`;
         return (
             <div>
                 <div className="pb1">{party}</div>
@@ -85,9 +87,12 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 <div
                     className="mx-auto pt1"
                     style={styles.address}
+                    data-tip={true}
+                    data-for={tooltipId}
                 >
                     {!_.isEmpty(address) ? address : 'Anybody'}
                 </div>
+                {!_.isEmpty(address) && <ReactTooltip id={tooltipId}>{address}</ReactTooltip>}
             </div>
         );
     }
