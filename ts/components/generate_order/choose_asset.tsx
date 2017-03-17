@@ -164,6 +164,10 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
     }
     private onAssetsChosen(direction: Direction) {
         let globalErrMsg = '';
+        const sideToAssetToken = this.props.sideToAssetToken;
+        if (sideToAssetToken[Side.deposit].symbol === sideToAssetToken[Side.receive].symbol) {
+            globalErrMsg = 'Cannot deposit and receive the same token';
+        }
         const sideToAssetTokenState = this.state.sideToAssetTokenState;
         _.each(sideToAssetTokenState, (assetTokenState, side) => {
             if (assetTokenState.amount === '') {
