@@ -70,20 +70,24 @@ export class VennDiagram extends React.Component<VennDiagramProps, VennDiagramSt
         };
         return (
             <div>
-                <div>
-                    <div className="flex mb1" style={styles.keyContainer}>
-                        <div className="mr1" style={{...styles.key, ...styles.leftCircle}}/>
-                        {this.props.leftCircleKey}
+                <div className="clearfix">
+                    <div className="col col-6">
+                        <div className="flex mb1" style={styles.keyContainer}>
+                            <div className="mr1" style={{...styles.key, ...styles.leftCircle}}/>
+                            {this.props.leftCircleKey}
+                        </div>
+                        <div className="flex mb1" style={styles.keyContainer}>
+                            <div className="mr1" style={{...styles.key, ...styles.rightCircle}}/>
+                            {this.props.rightCircleKey}
+                        </div>
                     </div>
-                    <div className="flex mb1" style={styles.keyContainer}>
-                        <div className="mr1" style={{...styles.key, ...styles.rightCircle}}/>
-                        {this.props.rightCircleKey}
-                    </div>
-                    <div className="flex" style={styles.keyContainer}>
-                        <div style={{...styles.key, ...styles.rightCircle, ...styles.keyCombined}}/>
-                        <div style={{...styles.key, ...styles.leftCircle, ...styles.keyCombined}}/>
-                        <div className="mr1" style={{...styles.key}} />
-                        {this.props.intersectionKey}
+                    <div className="col col-6">
+                        <div className="flex" style={styles.keyContainer}>
+                            <div style={{...styles.key, ...styles.rightCircle, ...styles.keyCombined}}/>
+                            <div style={{...styles.key, ...styles.leftCircle, ...styles.keyCombined}}/>
+                            <div className="mr1" style={{...styles.key}} />
+                            {this.props.intersectionKey}
+                        </div>
                     </div>
                 </div>
                 <div className="relative mx-auto pt2" style={{width: containerWidth, height: DIAMETER}}>
