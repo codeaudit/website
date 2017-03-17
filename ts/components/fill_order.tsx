@@ -40,6 +40,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 actionButtonText="Fill order"
                 hasActionButton={true}
                 hasBackButton={false}
+                onNavigateClick={this.onFillOrderClick.bind(this)}
             >
                 <div className="pt3">
                     <div className="pb2 px4">Order JSON</div>

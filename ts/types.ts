@@ -30,7 +30,7 @@ export interface TokenBySymbol {
 
 export interface AssetToken {
     symbol: string;
-    amount: number;
+    amount?: number;
 }
 
 export interface SideToAssetToken {

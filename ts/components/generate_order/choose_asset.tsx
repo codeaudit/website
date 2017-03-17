@@ -18,13 +18,17 @@ interface ChooseAssetsState {
     hovers: {[identifier: string]: boolean};
     isPickerOpen: boolean;
     pickerSide: Side;
-    sideToAssetTokenState: {[side: string]: {amount: number, errMsg: string}};
+    sideToAssetTokenState: {[side: string]: {amount: string, errMsg: string}};
+    globalErrMsg: string;
 }
 
 export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsState> {
     public constructor(props: ChooseAssetProps) {
         super(props);
+        const depositAssetTokenAmount = props.sideToAssetToken[Side.deposit].amount;
+        const depositReceiveTokenAmount = props.sideToAssetToken[Side.receive].amount;
         this.state = {
+            globalErrMsg: '',
             hovers: {
                 depositIcon: false,
                 receiveIcon: false,
@@ -34,11 +38,11 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
             pickerSide: 'deposit',
             sideToAssetTokenState: {
                 [Side.deposit]: {
-                    amount: props.sideToAssetToken[Side.deposit].amount,
+                    amount: _.isUndefined(depositAssetTokenAmount) ? '' : depositAssetTokenAmount.toString(),
                     errMsg: '',
                 },
                 [Side.receive]: {
-                    amount: props.sideToAssetToken[Side.receive].amount,
+                    amount: _.isUndefined(depositReceiveTokenAmount) ? '' : depositReceiveTokenAmount.toString(),
                     errMsg: '',
                 },
             },
@@ -57,9 +61,9 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     actionButtonText="Continue"
                     hasActionButton={true}
                     hasBackButton={false}
-                    onNavigateClick={this.props.updateGenerateOrderStep}
+                    onNavigateClick={this.onAssetsChosen.bind(this)}
                 >
-                    <div className="flex pt2">
+                    <div className="flex pt2 pb2">
                         <div className="col-5 center">
                             {this.renderAsset(Side.deposit, this.props.sideToAssetToken[Side.deposit])}
                         </div>
@@ -83,6 +87,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                             {this.renderAsset(Side.receive, this.props.sideToAssetToken[Side.receive])}
                         </div>
                     </div>
+                    {this.state.globalErrMsg && this.renderGlobalErrMsg()}
                 </Step>
                 <AssetPicker
                     isOpen={this.state.isPickerOpen}
@@ -90,6 +95,20 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     onAssetChosen={this.onAssetChosen.bind(this)}
                     side={this.state.pickerSide}
                 />
+            </div>
+        );
+    }
+    private renderGlobalErrMsg() {
+        const errMsgStyles = {
+            background: colors.red200,
+            color: 'white',
+            marginTop: 10,
+            padding: 4,
+            paddingLeft: 8,
+        };
+        return (
+            <div className="rounded" style={errMsgStyles}>
+                {this.state.globalErrMsg}
             </div>
         );
     }
@@ -119,11 +138,11 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                 </div>
                 <div className="pt2">
                 <TextField
-                    style={{width: 112}}
+                    style={{width: 120}}
                     errorText={errMsg}
-                    value={amount === 0 ? '' : amount}
+                    value={_.isUndefined(amount) ? '' : amount}
                     inputStyle={{textAlign: 'center'}}
-                    hintText="Deposit amount"
+                    hintText={<span style={{textTransform: 'capitalize'}}>{side} amount</span>}
                     onChange={this.onUpdatedAssetAmount.bind(this, side, assetToken)}
                 />
                 </div>
@@ -143,6 +162,25 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
     private isNumeric(n: string) {
         return !isNaN(parseFloat(n)) && isFinite(Number(n));
     }
+    private onAssetsChosen(direction: Direction) {
+        let globalErrMsg = '';
+        const sideToAssetTokenState = this.state.sideToAssetTokenState;
+        _.each(sideToAssetTokenState, (assetTokenState, side) => {
+            if (assetTokenState.amount === '') {
+                globalErrMsg = 'Amounts are required';
+            }
+            if (assetTokenState.errMsg !== '') {
+                globalErrMsg = 'Please fix the above amounts in order to proceed';
+            }
+        });
+        if (globalErrMsg !== '') {
+            this.setState({
+                globalErrMsg,
+            });
+        } else {
+            this.props.updateGenerateOrderStep(direction);
+        }
+    }
     private onToggleHover(identifier: string, isHovered: boolean) {
         const hovers = _.assign({}, this.state.hovers, {
             [identifier]: isHovered,
@@ -154,10 +192,14 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
     private onUpdatedAssetAmount(side: Side, assetToken: AssetToken, e: any) {
         const amount: string = e.target.value;
         const isAmountNumeric = this.isNumeric(amount);
+        let errMsg = isAmountNumeric || amount === '' ? '' : 'Must be a number';
+        if (amount === '0') {
+            errMsg = 'Cannot be zero';
+        }
         const newSideToAssetTokenAmount = _.assign({}, this.state.sideToAssetTokenState, {
             [side]: {
                 amount,
-                errMsg: isAmountNumeric || amount === '' ? '' : 'Must be a number',
+                errMsg,
             },
         });
         this.setState({

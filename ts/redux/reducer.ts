@@ -23,11 +23,9 @@ const INITIAL_STATE: State = {
     orderTakerAddress: '',
     sideToAssetToken: {
         [Side.deposit]: {
-            amount: 30.0,
             symbol: 'WETH',
         },
         [Side.receive]: {
-            amount: 60.0,
             symbol: 'FDGX',
         },
     },
