@@ -34,7 +34,7 @@ export class Step extends React.Component<StepProps, StepState> {
         return (
             <div
                 className="absolute"
-                style={{left: 15}}
+                style={{left: 15, top: -1}}
             >
                 <BackButton onClick={this.onNavigateClick.bind(this, Direction.backward)} />
             </div>
