@@ -21,6 +21,7 @@ interface GrantAllowanceState {
     initialReceiveAmount: number;
     depositAmount: number;
     receiveAmount: number;
+    globalErrMsg: string;
 }
 
 export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAllowanceState> {
@@ -33,21 +34,23 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
         }
         this.state = {
             depositAmount: depositAmount <= BALANCE ? depositAmount : BALANCE,
-            receiveAmount,
+            globalErrMsg: '',
             initialDepositAmount: depositAmount,
             initialReceiveAmount: receiveAmount,
+            receiveAmount,
         };
     }
     public render() {
         const depositSymbol = this.props.sideToAssetToken[Side.deposit].symbol;
         const receiveSymbol = this.props.sideToAssetToken[Side.receive].symbol;
         const roundedDepositAmount = this.state.depositAmount.toFixed(2);
-        const intersectionKey = `Deposit allowance (${roundedDepositAmount} ${depositSymbol})`;
+        const intersectionKey = `Allowance (${roundedDepositAmount} ${depositSymbol})`;
         const allowanceExplanationText = `In order for the 0x exchange smart contract to trade tokens
-                                        on your behalf, you must authorize it to move them when someone
-                                        fills the order. You can do this by setting an ERC20 standard
-                                        allowance for the contract. Until the order is filled, your deposit
-                                        remains in your account and under your control.`;
+                                        on your behalf, you must authorize it to move your tokens when
+                                        someone decides to fill your order. You do this by setting an
+                                        ERC20 standard allowance for the contract in this step. Until
+                                        this order is filled, your deposit remains in your account and
+                                        under your control.`;
         const allowanceExplanation = (
             <div style={{width: 300}}>
                 {allowanceExplanationText}
@@ -55,8 +58,8 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
         );
         const title = (
             <div className="flex relative">
-                <div>Grant the 0x smart contract access to your deposit{' '}</div>
-                <div className="absolute" style={{right: 0, top: 2}}>
+                <div>Grant the 0x smart contract access to your tokens{' '}</div>
+                <div className="absolute" style={{right: 5, top: 2}}>
                     <HelpTooltip explanation={allowanceExplanation} />
                 </div>
             </div>
@@ -67,20 +70,34 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 actionButtonText="Grant allowance"
                 hasActionButton={true}
                 hasBackButton={true}
-                onNavigateClick={this.props.updateGenerateOrderStep}
+                onNavigateClick={this.onGrantAllowanceClick.bind(this)}
             >
                 <VennDiagram
                     total={BALANCE}
                     amountSet={this.props.sideToAssetToken[Side.deposit].amount}
-                    onChange={this.depositAmountChanged.bind(this)}
+                    onChange={this.onDepositAmountChanged.bind(this)}
                     leftCircleKey="0x exchange smart contract"
-                    rightCircleKey={`Your balance (${BALANCE.toFixed(2)} ${depositSymbol})`}
+                    rightCircleKey={`Your account (${BALANCE.toFixed(2)} ${depositSymbol})`}
                     intersectionKey={intersectionKey}
                 />
                 <div className="center pt2">
                     {this.renderAmount('You will receive', this.state.receiveAmount, receiveSymbol)}
                 </div>
+                {this.state.globalErrMsg && this.renderGlobalErrMsg()}
             </Step>
+        );
+    }
+    private renderGlobalErrMsg() {
+        const errMsgStyles = {
+            background: colors.red200,
+            color: 'white',
+            padding: 4,
+            paddingLeft: 8,
+        };
+        return (
+            <div className="rounded" style={errMsgStyles}>
+                {this.state.globalErrMsg}
+            </div>
         );
     }
     private renderAmount(label: string, amount: number, symbol: string) {
@@ -92,7 +109,16 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
             </div>
         );
     }
-    private depositAmountChanged(depositAmount: number) {
+    private onGrantAllowanceClick(direction: Direction) {
+        if (this.state.depositAmount === 0) {
+            this.setState({
+                globalErrMsg: 'Allowance must be greater then zero',
+            });
+        } else {
+            this.props.updateGenerateOrderStep(direction);
+        }
+    }
+    private onDepositAmountChanged(depositAmount: number) {
         const exchangeRate = this.state.initialReceiveAmount / this.state.initialDepositAmount;
         const receiveAmount = exchangeRate * depositAmount;
         this.setState({
