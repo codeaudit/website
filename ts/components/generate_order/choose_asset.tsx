@@ -143,7 +143,8 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     errorText={errMsg}
                     value={_.isUndefined(amount) ? '' : amount}
                     inputStyle={{textAlign: 'center'}}
-                    hintText={<span style={{textTransform: 'capitalize'}}>{side} amount</span>}
+                    hintStyle={{left: 32}}
+                    hintText={<span style={{textTransform: 'capitalize'}}>amount</span>}
                     onChange={this.onUpdatedAssetAmount.bind(this, side, assetToken)}
                 />
                 </div>
@@ -167,7 +168,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         let globalErrMsg = '';
         const sideToAssetToken = this.props.sideToAssetToken;
         if (sideToAssetToken[Side.deposit].symbol === sideToAssetToken[Side.receive].symbol) {
-            globalErrMsg = 'Cannot deposit and receive the same token';
+            globalErrMsg = 'Cannot trade a token for itself';
         }
         const sideToAssetTokenState = this.state.sideToAssetTokenState;
         _.each(sideToAssetTokenState, (assetTokenState, side) => {
