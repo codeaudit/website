@@ -14,7 +14,9 @@
     "@types/dateformat": "^1.0.1",
     "@types/react-copy-to-clipboard": "^4.2.0",
     "basscss": "^8.0.3",
+    "bn.js": "^4.11.6",
     "dateformat": "^2.0.0",
+    "ethereumjs-util": "^5.1.1",
     "jazzicon": "^1.5.0",
     "react": "15.4.x",
     "react-copy-to-clipboard": "^4.2.3",
@@ -24,12 +26,16 @@
     "react-tap-event-plugin": "^2.0.1",
     "react-tooltip": "^3.2.7",
     "redux": "^3.6.0",
-    "truffle": "3.1.9"
+    "truffle": "3.1.9",
+    "truffle-contract": "^1.1.10",
+    "web3": "^0.18.2",
+    "web3-provider-engine": "^11.0.0"
   },
   "devDependencies": {
     "@types/es6-promise": "0.0.32",
     "@types/lodash": "^4.14.55",
     "@types/material-ui": "^0.16.56",
+    "@types/node": "^7.0.8",
     "@types/react": "^15.0.15",
     "@types/react-dom": "^0.14.23",
     "@types/react-redux": "^4.4.37",

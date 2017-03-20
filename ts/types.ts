@@ -14,6 +14,19 @@ export const Side = utils.strEnum([
 ]);
 export type Side = keyof typeof Side;
 
+export const BlockchainErrs = utils.strEnum([
+  'CONTRACT_NOT_DEPLOYED_ON_NETWORK',
+  'DISCONNECTED_FROM_ETHEREUM_NODE',
+  'UNHANDLED_ERROR',
+]);
+export type BlockchainErrs = keyof typeof BlockchainErrs;
+
+export const ProviderTypes = utils.strEnum([
+  'injectedWeb3',
+  'publicNode',
+]);
+export type ProviderTypes = keyof typeof ProviderTypes;
+
 export const Direction = utils.strEnum([
   'forward',
   'backward',
@@ -35,4 +48,11 @@ export interface AssetToken {
 
 export interface SideToAssetToken {
     [side: string]: AssetToken;
+};
+
+export interface SignatureData {
+    hash: string,
+    r: string;
+    s: string;
+    v: number;
 };

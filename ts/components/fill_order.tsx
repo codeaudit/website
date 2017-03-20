@@ -33,7 +33,14 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             },
         };
         const hintOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
-        const hintOrderJSON = utils.generateOrderJSON(hintSideToAssetToken, hintOrderExpiryTimestamp, '');
+        const hintSignatureData = {
+            hash: '0xf965a9978a0381ab58f5a2408ad967c28d7b10b336da9fafea21401d060a25a0',
+            r: '0xf01103f759e2289a28593eaf22e5820032e699740069944d8f8d7ce341f3d7',
+            s: '937862111edcba395f8a9e0cc1b2c5e12320ac992a73f232999907b5d71297aa',
+            v: 27,
+        };
+        const hintOrderJSON = utils.generateOrderJSON(hintSideToAssetToken, hintOrderExpiryTimestamp,
+                                                      '', hintSignatureData);
         return (
             <Step
                 title="Fill an order"
@@ -68,6 +75,6 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         });
     }
     private onFillOrderClick() {
-        // TODO: Validated submitted json
+        // TODO: Validate submitted json
     }
 }

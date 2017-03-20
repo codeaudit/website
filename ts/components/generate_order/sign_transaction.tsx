@@ -1,8 +1,11 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {Ox} from 'ts/utils/Ox';
+import {Blockchain} from 'ts/blockchain';
 import {Step} from 'ts/components/ui/step';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
 import jazzicon = require('jazzicon');
@@ -21,15 +24,26 @@ const styles = {
 };
 
 interface SignTransactionProps {
+    blockchain: Blockchain;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     updateGenerateOrderStep(direction: Direction): void;
 }
 
-interface SignTransactionState {}
+interface SignTransactionState {
+    isSigning: boolean;
+    signingErrMsg: string;
+}
 
 export class SignTransaction extends React.Component<SignTransactionProps, SignTransactionState> {
+    constructor(props: SignTransactionProps) {
+        super(props);
+        this.state = {
+            isSigning: false,
+            signingErrMsg: '',
+        };
+    }
     public render() {
         const depositAssetToken = this.props.sideToAssetToken[Side.deposit];
         const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
@@ -40,7 +54,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 actionButtonText="Sign order"
                 hasActionButton={true}
                 hasBackButton={true}
-                onNavigateClick={this.props.updateGenerateOrderStep}
+                onNavigateClick={this.onNavigationClickAsync.bind(this)}
             >
                 <div className="clearfix pt3">
                     <div className="col col-5 center">
@@ -68,6 +82,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 <div className="center pt3 pb2">
                     Expires: {expiryDate} UTC
                 </div>
+                <div>{this.state.isSigning && 'Signing...'}</div>
             </Step>
         );
     }
@@ -111,6 +126,44 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 />
             </div>
         );
+    }
+    private async onNavigationClickAsync(direction: Direction) {
+        if (direction === Direction.forward) {
+            const exchangeContractAddr = this.props.blockchain.getExchangeContractAddress();
+            const orderTakerAddress = this.props.orderTakerAddress !== '' ?
+                this.props.orderTakerAddress : constants.NULL_ADDRESS;
+            const depositTokenContractAddr = constants.NULL_ADDRESS; // TODO: get actual token contract addr
+            const receiveTokenContractAddr = constants.NULL_ADDRESS; // TODO: get actual token contract addr
+            const depositAmt = this.props.sideToAssetToken[Side.deposit].amount;
+            const receiveAmt = this.props.sideToAssetToken[Side.receive].amount;
+            const orderHash = Ox.getOrderHash(exchangeContractAddr, MAKER_ADDRESS, orderTakerAddress,
+                            depositTokenContractAddr, receiveTokenContractAddr, depositAmt,
+                            receiveAmt, this.props.orderExpiryTimestamp);
+
+            const feeRecipientAddr = constants.NULL_ADDRESS;
+            const makerFee = 0;
+            const takerFee = 0;
+            const msgHashHex = Ox.getMessageHash(orderHash, feeRecipientAddr, makerFee, takerFee);
+            this.setState({
+                isSigning: true,
+            });
+            let signingErrMsg = '';
+            try {
+                await this.props.blockchain.sendSignRequestFireAndForgetAsync(msgHashHex);
+            } catch (err) {
+                // TODO: translate this to a user friendly error message and display it in the UI
+                signingErrMsg = '' + err;
+            }
+            this.setState({
+                isSigning: false,
+                signingErrMsg,
+            });
+            if (signingErrMsg === '') {
+                this.props.updateGenerateOrderStep(direction);
+            }
+        } else {
+            this.props.updateGenerateOrderStep(direction);
+        }
     }
     private convertAddressToNumber(address: string): number {
         const addressWithoutPrefix = address.slice(2, 10);

@@ -6,8 +6,10 @@ import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
 import {Direction, Side} from 'ts/types';
 import {HelpTooltip} from 'ts/components/ui/help_tooltip';
+import {Blockchain} from 'ts/blockchain';
 
 interface RemainingConfigsProps {
+    blockchain: Blockchain;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
     updateGenerateOrderStep(direction: Direction): void;
@@ -19,6 +21,7 @@ interface RemainingConfigsState {
     date: Date;
     isPointToPoint: boolean;
     orderTakerAddress: string;
+    orderTakerAddressErrMsg: string;
     time: Date;
 }
 
@@ -31,6 +34,7 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
             date: didUserSetExpiry ? dateTime : undefined,
             isPointToPoint: !_.isEmpty(this.props.orderTakerAddress),
             orderTakerAddress: this.props.orderTakerAddress,
+            orderTakerAddressErrMsg: '',
             time: didUserSetExpiry ? dateTime : undefined,
         };
     }
@@ -102,8 +106,10 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
                 <TextField
                     style={{height: 60}}
                     floatingLabelStyle={{marginTop: -15}}
+                    errorStyle={{marginTop: 15}}
                     inputStyle={{marginTop: 0}}
                     floatingLabelText="Taker ethereum address"
+                    errorText={this.state.orderTakerAddressErrMsg}
                     value={this.state.orderTakerAddress}
                     onChange={this.onOrderTakerAddressUpdated.bind(this)}
                 />
@@ -123,10 +129,15 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
     }
     private onOrderTakerAddressUpdated(e: any) {
         const orderTakerAddress = e.target.value;
+        const isValidAddress = this.props.blockchain.isValidAddress(orderTakerAddress) ||
+            orderTakerAddress === '';
         this.setState({
             orderTakerAddress,
+            orderTakerAddressErrMsg: isValidAddress ? '' : 'Invalid ethereum address',
         });
-        this.props.updateOrderTakerAddress(orderTakerAddress);
+        if (isValidAddress) {
+            this.props.updateOrderTakerAddress(orderTakerAddress);
+        }
     }
     private onPointToPointToggled(e: any, isPointToPoint: boolean) {
         this.setState({

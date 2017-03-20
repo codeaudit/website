@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Demo} from 'ts/components/demo';
+import {Demo} from 'ts/containers/demo';
 
 interface AppProps {}
 

@@ -5,10 +5,11 @@ import {TextField, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
-import {Direction, SideToAssetToken, AssetToken} from 'ts/types';
+import {Direction, SideToAssetToken, AssetToken, SignatureData} from 'ts/types';
 
 interface CopyAndShareProps {
     orderExpiryTimestamp: number;
+    orderSignatureData: SignatureData;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     updateGenerateOrderStep(direction: Direction): void;
@@ -19,7 +20,7 @@ interface CopyAndShareState {}
 export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShareState> {
     public render() {
         const transactionDetails = utils.generateOrderJSON(this.props.sideToAssetToken,
-            this.props.orderExpiryTimestamp, this.props.orderTakerAddress);
+            this.props.orderExpiryTimestamp, this.props.orderTakerAddress, this.props.orderSignatureData);
         // Hack: Need to remove carriage returns from the transactionDetails.
         // TODO: Find a safer way to do this
         const transactionDetailsString = JSON.stringify(transactionDetails).replace(/\\n|\\t|\\|"{|}"/g, '');

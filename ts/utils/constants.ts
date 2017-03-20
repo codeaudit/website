@@ -1,0 +1,4 @@
+export const constants = {
+    MAINNET_ID: 1,
+    NULL_ADDRESS: '0x0000000000000000000000000000000000000000',
+};

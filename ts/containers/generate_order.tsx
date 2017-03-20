@@ -8,7 +8,16 @@ import {RemainingConfigs} from 'ts/components/generate_order/remaining_configs';
 import {SignTransaction} from 'ts/components/generate_order/sign_transaction';
 import {CopyAndShare} from 'ts/components/generate_order/copy_and_share';
 import {State} from 'ts/redux/reducer';
-import {GenerateOrderSteps, Direction, TokenBySymbol, Side, AssetToken, SideToAssetToken} from 'ts/types';
+import {Blockchain} from 'ts/blockchain';
+import {
+    GenerateOrderSteps,
+    Direction,
+    TokenBySymbol,
+    Side,
+    AssetToken,
+    SideToAssetToken,
+    SignatureData,
+} from 'ts/types';
 import {
     swapAssetTokenSymbols,
     updateGenerateOrderStep,
@@ -17,11 +26,14 @@ import {
     updateOrderTakerAddress,
 } from 'ts/redux/actions';
 
-interface GenerateOrderProps {}
+interface GenerateOrderProps {
+    blockchain: Blockchain;
+}
 
 interface ConnectedState {
     generateOrderStep: GenerateOrderSteps;
     orderExpiryTimestamp: number;
+    orderSignatureData: SignatureData;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
 }
@@ -37,6 +49,7 @@ interface ConnectedDispatch {
 const mapStateToProps = (state: State, ownProps: GenerateOrderProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
+    orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
 });
@@ -84,6 +97,7 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
             case GenerateOrderSteps.RemainingConfigs:
                 return (
                     <RemainingConfigs
+                        blockchain={this.props.blockchain}
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderTakerAddress={this.props.orderTakerAddress}
                         updateOrderExpiry={this.props.updateOrderExpiry}
@@ -95,6 +109,7 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
             case GenerateOrderSteps.SignTransaction:
                 return (
                     <SignTransaction
+                        blockchain={this.props.blockchain}
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderTakerAddress={this.props.orderTakerAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
@@ -106,6 +121,7 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                 return (
                     <CopyAndShare
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                        orderSignatureData={this.props.orderSignatureData}
                         orderTakerAddress={this.props.orderTakerAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}

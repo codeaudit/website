@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
-import {SideToAssetToken} from 'ts/types';
+import {SideToAssetToken, SignatureData} from 'ts/types';
 
 export const utils = {
     // Utility function to create a K:V from a list of strings
@@ -44,11 +44,12 @@ export const utils = {
         const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
         return formattedDate;
     },
-    generateOrderJSON(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number, orderTakerAddress: string) {
+    generateOrderJSON(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
+                      orderTakerAddress: string, signatureData: SignatureData) {
         const order = {
             assetTokens: sideToAssetToken,
             expiry: orderExpiryTimestamp,
-            signedHash: 'TODO',
+            signature: signatureData,
             taker: orderTakerAddress,
         };
         return JSON.stringify(order, null, '\t');
