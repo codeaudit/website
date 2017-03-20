@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node node_modules/webpack/bin/webpack.js",
     "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base public",
-    "update_contracts": "cp -r ./../contracts/build/contracts/ ./public/contracts/",
+    "update_contracts": "cp -r ./../contracts/build/contracts/ ./contracts/",
     "deploy": "npm run build; aws s3 sync ./public/. s3://0x-demo-dapp --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers"
   },
   "author": "Fabio Berger",
