@@ -12,7 +12,7 @@ interface AmountInputProps {
     inputStyle?: React.CSSProperties;
     assetToken: AssetToken;
     side: Side;
-    onToggleHasErrMsg: (hasErrMsg: boolean) => void;
+    shouldShowIncompleteErrs: boolean;
     updateChosenAssetToken: (side: Side, token: AssetToken) => void;
 }
 
@@ -43,13 +43,20 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         }
     }
     public render() {
+        let errText = '';
+        if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
+            errText = 'This field is required';
+        }
+        if (this.state.errMsg !== '') {
+            errText = this.state.errMsg;
+        }
         return (
             <TextField
                 floatingLabelText={_.isUndefined(this.props.label) ? '' : this.props.label}
                 floatingLabelFixed={true}
                 floatingLabelStyle={{color: colors.grey500}}
                 style={this.props.style ? this.props.style : {}}
-                errorText={this.state.errMsg}
+                errorText={errText}
                 value={_.isUndefined(this.state.amount) ? '' : this.state.amount}
                 inputStyle={this.props.inputStyle ? this.props.inputStyle : {}}
                 hintStyle={this.props.hintStyle ? this.props.hintStyle : {}}
@@ -59,19 +66,12 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         );
     }
     private onUpdatedAssetAmount(e: any) {
-        const prevErrMsg = this.state.errMsg;
         const amount: string = e.target.value;
         const isAmountNumeric = utils.isNumeric(amount);
-        const errMsg = this.getErrMsg(amount);
         this.setState({
             amount,
-            errMsg,
+            errMsg: this.getErrMsg(amount),
         });
-        if (prevErrMsg === '' && errMsg !== '') {
-            this.props.onToggleHasErrMsg(true);
-        } else if (prevErrMsg !== '' && errMsg === '') {
-            this.props.onToggleHasErrMsg(false);
-        }
         const assetToken = this.props.assetToken;
         if (isAmountNumeric) {
             assetToken.amount = Number(amount);

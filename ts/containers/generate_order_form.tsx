@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Store as ReduxStore, Dispatch } from 'redux';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {State} from 'ts/redux/reducer';
 import {Blockchain} from 'ts/blockchain';
 import {GenerateForm} from 'ts/components/generate_order_form/generate_form';
@@ -14,13 +15,6 @@ import {
     SideToAssetToken,
     SignatureData,
 } from 'ts/types';
-import {
-    swapAssetTokenSymbols,
-    updateGenerateOrderStep,
-    updateChosenAssetToken,
-    updateOrderExpiry,
-    updateOrderAddress,
-} from 'ts/redux/actions';
 
 interface GenerateOrderFormProps {
     blockchain: Blockchain;
@@ -37,11 +31,7 @@ interface ConnectedState {
 }
 
 interface ConnectedDispatch {
-    swapAssetTokenSymbols: () => void;
-    updateGenerateOrderStep: (direction: Direction) => void;
-    updateChosenAssetToken: (side: Side, token: AssetToken) => void;
-    updateOrderExpiry: (unixTimestampSec: number) => void;
-    updateOrderAddress: (side: Side, address: string) => void;
+    dispatcher: Dispatcher;
 }
 
 const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): ConnectedState => ({
@@ -55,21 +45,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
-    swapAssetTokenSymbols: () => {
-        dispatch(swapAssetTokenSymbols());
-    },
-    updateChosenAssetToken: (side: Side, token: AssetToken) => {
-        dispatch(updateChosenAssetToken(side, token));
-    },
-    updateGenerateOrderStep: (direction: Direction) => {
-        dispatch(updateGenerateOrderStep(direction));
-    },
-    updateOrderAddress: (side: Side, address: string) => {
-        dispatch(updateOrderAddress(side, address));
-    },
-    updateOrderExpiry: (unixTimestampSec: number) => {
-        dispatch(updateOrderExpiry(unixTimestampSec));
-    },
+    dispatcher: new Dispatcher(dispatch),
 });
 
 class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps & ConnectedState &
@@ -83,9 +59,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                 orderMakerAddress={this.props.orderMakerAddress}
                 orderTakerAddress={this.props.orderTakerAddress}
-                updateOrderExpiry={this.props.updateOrderExpiry}
-                updateOrderAddress={this.props.updateOrderAddress}
-                updateChosenAssetToken={this.props.updateChosenAssetToken}
+                dispatcher={this.props.dispatcher}
             />
         );
     }

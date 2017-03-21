@@ -3,7 +3,9 @@ import * as React from 'react';
 import {RaisedButton, Slider} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {Step} from 'ts/components/ui/step';
+import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {VennDiagram} from 'ts/components/ui/venn_diagram';
 import {HelpTooltip} from 'ts/components/ui/help_tooltip';
 
@@ -12,8 +14,7 @@ const BALANCE = 134.56;
 
 interface GrantAllowanceProps {
     sideToAssetToken: SideToAssetToken;
-    updateGenerateOrderStep(direction: Direction): void;
-    updateChosenAssetToken(side: Side, token: AssetToken): void;
+    dispatcher: Dispatcher;
 }
 
 interface GrantAllowanceState {
@@ -83,21 +84,8 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 <div className="center pt2">
                     {this.renderAmount('You will receive', this.state.receiveAmount, receiveSymbol)}
                 </div>
-                {this.state.globalErrMsg && this.renderGlobalErrMsg()}
+                {this.state.globalErrMsg && <ErrorAlert message={this.state.globalErrMsg} />}
             </Step>
-        );
-    }
-    private renderGlobalErrMsg() {
-        const errMsgStyles = {
-            background: colors.red200,
-            color: 'white',
-            padding: 4,
-            paddingLeft: 8,
-        };
-        return (
-            <div className="rounded" style={errMsgStyles}>
-                {this.state.globalErrMsg}
-            </div>
         );
     }
     private renderAmount(label: string, amount: number, symbol: string) {
@@ -115,7 +103,7 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
                 globalErrMsg: 'Allowance must be greater then zero',
             });
         } else {
-            this.props.updateGenerateOrderStep(direction);
+            this.props.dispatcher.updateGenerateOrderStep(direction);
         }
     }
     private onDepositAmountChanged(depositAmount: number) {
@@ -129,7 +117,7 @@ export class GrantAllowance extends React.Component<GrantAllowanceProps, GrantAl
         depositAssetToken.amount = depositAmount;
         const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
         receiveAssetToken.amount = receiveAmount;
-        this.props.updateChosenAssetToken(Side.deposit, depositAssetToken);
-        this.props.updateChosenAssetToken(Side.receive, receiveAssetToken);
+        this.props.dispatcher.updateChosenAssetToken(Side.deposit, depositAssetToken);
+        this.props.dispatcher.updateChosenAssetToken(Side.receive, receiveAssetToken);
     }
 }

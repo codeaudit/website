@@ -3,6 +3,8 @@ import * as React from 'react';
 import {Blockchain} from 'ts/blockchain';
 import {RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {Dispatcher} from 'ts/redux/dispatcher';
+import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
 import {MakerAddressInput} from 'ts/components/inputs/maker_address_input';
 import {TokenInput} from 'ts/components/inputs/token_input';
@@ -26,13 +28,24 @@ interface GenerateFormProps {
     orderMakerAddress: string;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
-    updateOrderAddress: (side: Side, address: string) => void;
-    updateChosenAssetToken: (side: Side, token: AssetToken) => void;
-    updateOrderExpiry: (unixTimestampSec: number) => void;
+    dispatcher: Dispatcher;
+}
+
+interface GenerateFormState {
+    globalErrMsg: string;
+    shouldShowIncompleteErrs: boolean;
 }
 
 export class GenerateForm extends React.Component<GenerateFormProps, any> {
+    constructor(props: GenerateFormProps) {
+        super(props);
+        this.state = {
+            globalErrMsg: '',
+            shouldShowIncompleteErrs: false,
+        };
+    }
     public render() {
+        const dispatcher = this.props.dispatcher;
         return (
             <div className="py2 mx-auto clearfix" style={{width: 600}}>
                 <h3 className="px3">Generate an order</h3>
@@ -43,7 +56,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 blockchain={this.props.blockchain}
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                                 initialMarketMakerAddress={this.props.orderMakerAddress}
-                                updateOrderAddress={this.props.updateOrderAddress}
+                                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
                             />
                         </div>
                         <div className="col col-6">
@@ -52,7 +65,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 label="Taker (address)"
                                 blockchain={this.props.blockchain}
                                 initialOrderAddress={this.props.orderTakerAddress}
-                                updateOrderAddress={this.props.updateOrderAddress}
+                                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
                             />
                         </div>
                     </div>
@@ -64,7 +77,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 label="Token to sell (address)"
                                 side={Side.deposit}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                updateChosenAssetToken={this.props.updateChosenAssetToken}
+                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                             />
                         </div>
                         <div className="col col-6">
@@ -72,7 +85,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 label="Token to receive (address)"
                                 side={Side.receive}
                                 assetToken={this.props.sideToAssetToken[Side.receive]}
-                                updateChosenAssetToken={this.props.updateChosenAssetToken}
+                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                             />
                         </div>
                     </div>
@@ -84,8 +97,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 label="Sell amount (uint)"
                                 side={Side.deposit}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                updateChosenAssetToken={this.props.updateChosenAssetToken}
-                                onToggleHasErrMsg={_.noop} // TODO: hook these up to global err system
+                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                             />
                         </div>
                         <div className="col col-6">
@@ -93,8 +106,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 label="Receive amount (uint)"
                                 side={Side.receive}
                                 assetToken={this.props.sideToAssetToken[Side.receive]}
-                                updateChosenAssetToken={this.props.updateChosenAssetToken}
-                                onToggleHasErrMsg={_.noop}
+                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                             />
                         </div>
                     </div>
@@ -104,7 +117,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
                         <ExpirationInput
                             orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                            updateOrderExpiry={this.props.updateOrderExpiry}
+                            updateOrderExpiry={dispatcher.updateOrderExpiry}
                         />
                     </div>
                 </div>
@@ -128,10 +141,25 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 </div>
                 <div className="px3 pt3">
                     <div className="mx-auto" style={{width: 112}}>
-                        <RaisedButton label="Sign hash" />
+                        <RaisedButton onClick={this.onSignClicked.bind(this)} label="Sign hash" />
                     </div>
+                    {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
                 </div>
             </div>
         );
+    }
+    private onSignClicked() {
+        // Check if all required inputs were supplied
+        const debitAmount = this.props.sideToAssetToken[Side.deposit].amount;
+        const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
+        if (!_.isUndefined(debitAmount) && !_.isUndefined(receiveAmount) && debitAmount > 0 &&
+            receiveAmount > 0) {
+            // TODO: Sign the transaction
+        } else {
+            this.setState({
+                globalErrMsg: 'You must fix the above errors in order to generate a valid order',
+                shouldShowIncompleteErrs: true,
+            });
+        }
     }
 }

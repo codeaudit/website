@@ -5,6 +5,7 @@ import {RaisedButton, DatePicker, TimePicker, Toggle, TextField} from 'material-
 import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
 import {Direction, Side} from 'ts/types';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {HelpTooltip} from 'ts/components/ui/help_tooltip';
 import {Blockchain} from 'ts/blockchain';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
@@ -14,9 +15,7 @@ interface RemainingConfigsProps {
     blockchain: Blockchain;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
-    updateGenerateOrderStep: (direction: Direction) => void;
-    updateOrderExpiry: (unixTimestampSec: number) => void;
-    updateOrderAddress: (side: Side, address: string) => void;
+    dispatcher: Dispatcher;
 }
 
 interface RemainingConfigsState {
@@ -39,19 +38,20 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
                 {pointToPointExplanationText}
             </div>
         );
+        const dispatcher = this.props.dispatcher;
         return (
             <Step
                 title="Additional options"
                 actionButtonText="Continue"
                 hasActionButton={true}
                 hasBackButton={true}
-                onNavigateClick={this.props.updateGenerateOrderStep}
+                onNavigateClick={dispatcher.updateGenerateOrderStep.bind(dispatcher)}
             >
                 <div className="mx-auto pt3" style={{width: 295}}>
                     <div>Choose an order expiry date and time</div>
                     <ExpirationInput
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                        updateOrderExpiry={this.props.updateOrderExpiry}
+                        updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
                     />
                     <div className="pt4">
                         <div className="flex">
@@ -74,23 +74,24 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
         );
     }
     private renderTakerInput() {
+        const dispatcher = this.props.dispatcher;
         return (
             <OrderAddressInput
                 side={Side.receive}
                 label="Taker ethereum address"
                 blockchain={this.props.blockchain}
                 initialOrderAddress={this.props.orderTakerAddress}
-                updateOrderAddress={this.props.updateOrderAddress}
+                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
             />
         );
     }
     private onBackButtonClick() {
-        this.props.updateGenerateOrderStep(Direction.backward);
+        this.props.dispatcher.updateGenerateOrderStep(Direction.backward);
     }
     private onPointToPointToggled(e: any, isPointToPoint: boolean) {
         this.setState({
             isPointToPoint,
         });
-        this.props.updateOrderAddress(Side.Receive, '');
+        this.props.dispatcher.updateOrderAddress(Side.Receive, '');
     }
 }

@@ -2,8 +2,10 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {tokenBySymbol} from 'ts/tokenBySymbol';
 import {Step} from 'ts/components/ui/step';
+import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {utils} from 'ts/utils/utils';
 import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
@@ -11,16 +13,14 @@ import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
-    updateGenerateOrderStep(direction: Direction): void;
-    updateChosenAssetToken(side: Side, token: AssetToken): void;
-    swapAssetTokenSymbols(): void;
+    dispatcher: Dispatcher;
 }
 
 interface ChooseAssetsState {
     hovers: {[identifier: string]: boolean};
     isPickerOpen: boolean;
     pickerSide: Side;
-    sideToHasErrMsg: {[side: string]: boolean};
+    shouldShowIncompleteErrs: boolean;
     globalErrMsg: string;
 }
 
@@ -36,10 +36,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
             },
             isPickerOpen: false,
             pickerSide: Side.deposit,
-            sideToHasErrMsg: {
-                [Side.deposit]: false,
-                [Side.receive]: false,
-            },
+            shouldShowIncompleteErrs: false,
         };
     }
     public render() {
@@ -81,7 +78,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                             {this.renderAsset(Side.receive, this.props.sideToAssetToken[Side.receive])}
                         </div>
                     </div>
-                    {this.state.globalErrMsg && this.renderGlobalErrMsg()}
+                    {this.state.globalErrMsg && <ErrorAlert message={this.state.globalErrMsg} />}
                 </Step>
                 <AssetPicker
                     isOpen={this.state.isPickerOpen}
@@ -89,20 +86,6 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     onAssetChosen={this.onAssetChosen.bind(this)}
                     side={this.state.pickerSide}
                 />
-            </div>
-        );
-    }
-    private renderGlobalErrMsg() {
-        const errMsgStyles = {
-            background: colors.red200,
-            color: 'white',
-            marginTop: 10,
-            padding: 4,
-            paddingLeft: 8,
-        };
-        return (
-            <div className="rounded" style={errMsgStyles}>
-                {this.state.globalErrMsg}
             </div>
         );
     }
@@ -114,6 +97,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
             opacity: this.state.hovers[iconHoverId] ? 0.8 : 1,
         };
         const title = side === Side.deposit ? 'I have' : 'I want';
+        const dispatcher = this.props.dispatcher;
         return (
             <div>
                 <div className="pb2" style={{color: colors.grey500, textTransform: 'capitalize'}}>
@@ -135,23 +119,16 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     hintStyle={{left: 32}}
                     inputStyle={{textAlign: 'center'}}
                     assetToken={assetToken}
-                    onToggleHasErrMsg={this.onToggleHasErrMsg.bind(this, side)}
+                    shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                     side={side}
-                    updateChosenAssetToken={this.props.updateChosenAssetToken}
+                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                 />
                 </div>
             </div>
         );
     }
-    private onToggleHasErrMsg(side: Side, hasErrMsg: boolean) {
-        const sideToHasErrMsg = this.state.sideToHasErrMsg;
-        sideToHasErrMsg[side] = hasErrMsg;
-        this.setState({
-            sideToHasErrMsg,
-        });
-    }
     private swapTokens() {
-        this.props.swapAssetTokenSymbols();
+        this.props.dispatcher.swapAssetTokenSymbols();
     }
     private onAssetsChosen(direction: Direction) {
         let globalErrMsg = '';
@@ -163,19 +140,17 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
             if (assetToken.amount === 0) {
                 globalErrMsg = 'Amounts are required';
             }
-        });
-        const sideToHasErrMsg = this.state.sideToHasErrMsg;
-        _.each(sideToHasErrMsg, (hasErrMsg, side) => {
-            if (hasErrMsg) {
+            if (_.isUndefined(assetToken.amount)) {
                 globalErrMsg = 'Please fix the above amounts in order to proceed';
             }
         });
         if (globalErrMsg !== '') {
             this.setState({
                 globalErrMsg,
+                shouldShowIncompleteErrs: true,
             });
         } else {
-            this.props.updateGenerateOrderStep(direction);
+            this.props.dispatcher.updateGenerateOrderStep(direction);
         }
     }
     private onToggleHover(identifier: string, isHovered: boolean) {
@@ -196,6 +171,6 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         this.setState({
             isPickerOpen: false,
         });
-        this.props.updateChosenAssetToken(side, assetToken);
+        this.props.dispatcher.updateChosenAssetToken(side, assetToken);
     }
 }
