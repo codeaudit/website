@@ -5,6 +5,7 @@ import {TextField, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
+import {OrderJSON} from 'ts/components/order_json';
 import {Direction, SideToAssetToken, AssetToken, SignatureData} from 'ts/types';
 
 interface CopyAndShareProps {
@@ -19,12 +20,6 @@ interface CopyAndShareState {}
 
 export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShareState> {
     public render() {
-        const transactionDetails = utils.generateOrderJSON(this.props.sideToAssetToken,
-            this.props.orderExpiryTimestamp, this.props.orderTakerAddress, this.props.orderSignatureData);
-        // Hack: Need to remove carriage returns from the transactionDetails.
-        // TODO: Find a safer way to do this
-        const transactionDetailsString = JSON.stringify(transactionDetails).replace(/\\n|\\t|\\|"{|}"/g, '');
-        const finalTransactionDetailsString = `{${transactionDetailsString}}`;
         return (
             <Step
                 title="Order successfully created and signed!"
@@ -32,27 +27,12 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
                 hasBackButton={true}
                 onNavigateClick={this.props.updateGenerateOrderStep}
             >
-                <div className="pb2 mx4 flex">
-                    <div>Order JSON</div>
-                    <CopyIcon data={finalTransactionDetailsString}/>
-                </div>
-                <Paper className="mx4 center">
-                    <TextField
-                        id="orderJSON"
-                        style={{width: 325}}
-                        value={transactionDetails}
-                        multiLine={true}
-                        rows={2}
-                        rowsMax={8}
-                        underlineStyle={{display: 'none'}}
-                    />
-                </Paper>
-                <div className="pt3 pb2 center">
-                    <div>Share your signed order with someone willing to fill it ;)</div>
-                    <div className="mx-auto pt2">
-                        <i className="material-icons">email</i>
-                    </div>
-                </div>
+                <OrderJSON
+                    orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                    orderSignatureData={this.props.orderSignatureData}
+                    orderTakerAddress={this.props.orderTakerAddress}
+                    sideToAssetToken={this.props.sideToAssetToken}
+                />
             </Step>
         );
     }
