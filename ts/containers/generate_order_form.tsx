@@ -58,6 +58,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 blockchain={this.props.blockchain}
                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                 sideToAssetToken={this.props.sideToAssetToken}
+                orderSignatureData={this.props.orderSignatureData}
                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                 orderMakerAddress={this.props.orderMakerAddress}
                 orderTakerAddress={this.props.orderTakerAddress}

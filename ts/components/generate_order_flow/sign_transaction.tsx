@@ -130,6 +130,9 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
     }
     private async onNavigationClickAsync(direction: Direction) {
         if (direction === Direction.forward) {
+            this.setState({
+                isSigning: true,
+            });
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddress();
             const hashData = this.props.hashData;
             const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
@@ -139,9 +142,6 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
 
             const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
                                                  hashData.takerFee);
-            this.setState({
-                isSigning: true,
-            });
             let signingErrMsg = '';
             try {
                 await this.props.blockchain.sendSignRequestFireAndForgetAsync(msgHashHex);
