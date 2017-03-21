@@ -22,6 +22,10 @@ export interface DemoAllProps {
     kind: string;
 }
 
+interface DemoAllState {
+    prevNetworkId: number;
+}
+
 const styles: React.CSSProperties = {
     button: {
         color: 'white',
@@ -47,10 +51,24 @@ const styles: React.CSSProperties = {
     },
 };
 
-export class Demo extends React.Component<DemoAllProps, undefined> {
+export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     private blockchain: Blockchain;
+    constructor(props: DemoAllProps) {
+        super(props);
+        this.state = {
+            prevNetworkId: this.props.networkId,
+        };
+    }
     public componentWillMount() {
         this.blockchain = new Blockchain(this.props.dispatch);
+    }
+    public componentWillReceiveProps(nextProps: DemoAllProps) {
+        if (nextProps.networkId !== this.state.prevNetworkId) {
+            this.blockchain.networkIdUpdatedFireAndForgetAsync(nextProps.networkId);
+            this.setState({
+                prevNetworkId: nextProps.networkId,
+            });
+        }
     }
     public render() {
         let finalPaperStyle = styles.paper;
@@ -64,7 +82,6 @@ export class Demo extends React.Component<DemoAllProps, undefined> {
                 maxWidth: 600,
             };
         }
-        this.blockchain.networkIdUpdatedFireAndForgetAsync(this.props.networkId);
         return (
             <Paper style={finalPaperStyle} zDepth={3}>
                 <Tabs
