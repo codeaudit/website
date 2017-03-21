@@ -7,11 +7,10 @@ import {colors} from 'material-ui/styles';
 import {Ox} from 'ts/utils/Ox';
 import {Blockchain} from 'ts/blockchain';
 import {Step} from 'ts/components/ui/step';
-import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
+import {Direction, SideToAssetToken, Side, AssetToken, HashData} from 'ts/types';
 import jazzicon = require('jazzicon');
 import ReactTooltip = require('react-tooltip');
 
-const MAKER_ADDRESS = '0x75bE4F78AA3699B3A348c84bDB2a96c3Dbb5E2EF';
 const PRECISION = 5;
 
 const styles = {
@@ -25,8 +24,10 @@ const styles = {
 
 interface SignTransactionProps {
     blockchain: Blockchain;
+    hashData: HashData;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
+    orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     updateGenerateOrderStep(direction: Direction): void;
 }
@@ -58,7 +59,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
             >
                 <div className="clearfix pt3">
                     <div className="col col-5 center">
-                        {this.renderParty('Maker (you)', MAKER_ADDRESS)}
+                        {this.renderParty('Maker (you)', this.props.orderMakerAddress)}
                     </div>
                     <div className="col col-2 center">
                         {this.renderAmount(depositAssetToken)}
@@ -130,20 +131,14 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
     private async onNavigationClickAsync(direction: Direction) {
         if (direction === Direction.forward) {
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddress();
-            const orderTakerAddress = this.props.orderTakerAddress !== '' ?
-                this.props.orderTakerAddress : constants.NULL_ADDRESS;
-            const depositTokenContractAddr = constants.NULL_ADDRESS; // TODO: get actual token contract addr
-            const receiveTokenContractAddr = constants.NULL_ADDRESS; // TODO: get actual token contract addr
-            const depositAmt = this.props.sideToAssetToken[Side.deposit].amount;
-            const receiveAmt = this.props.sideToAssetToken[Side.receive].amount;
-            const orderHash = Ox.getOrderHash(exchangeContractAddr, MAKER_ADDRESS, orderTakerAddress,
-                            depositTokenContractAddr, receiveTokenContractAddr, depositAmt,
-                            receiveAmt, this.props.orderExpiryTimestamp);
+            const hashData = this.props.hashData;
+            const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
+                            hashData.orderTakerAddress, hashData.depositTokenContractAddr,
+                            hashData.receiveTokenContractAddr, hashData.depositAmount,
+                            hashData.receiveAmount, hashData.orderExpiryTimestamp);
 
-            const feeRecipientAddr = constants.NULL_ADDRESS;
-            const makerFee = 0;
-            const takerFee = 0;
-            const msgHashHex = Ox.getMessageHash(orderHash, feeRecipientAddr, makerFee, takerFee);
+            const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
+                                                 hashData.takerFee);
             this.setState({
                 isSigning: true,
             });

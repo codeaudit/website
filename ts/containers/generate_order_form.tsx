@@ -14,10 +14,12 @@ import {
     AssetToken,
     SideToAssetToken,
     SignatureData,
+    HashData,
 } from 'ts/types';
 
 interface GenerateOrderFormProps {
     blockchain: Blockchain;
+    hashData: HashData;
 }
 
 interface ConnectedState {
@@ -60,6 +62,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 orderMakerAddress={this.props.orderMakerAddress}
                 orderTakerAddress={this.props.orderTakerAddress}
                 dispatcher={this.props.dispatcher}
+                hashData={this.props.hashData}
             />
         );
     }

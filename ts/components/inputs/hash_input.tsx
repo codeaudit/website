@@ -6,15 +6,17 @@ import {Blockchain} from 'ts/blockchain';
 import {constants} from 'ts/utils/constants';
 import {utils} from 'ts/utils/utils';
 import {Ox} from 'ts/utils/Ox';
-import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
+import {
+    TokenBySymbol,
+    Side,
+    Direction,
+    HashData,
+} from 'ts/types';
 
 interface HashInputProps {
     blockchain: Blockchain;
     blockchainIsLoaded: boolean;
-    orderTakerAddress: string;
-    orderMakerAddress: string;
-    sideToAssetToken: SideToAssetToken;
-    orderExpiryTimestamp: number;
+    hashData: HashData;
 }
 
 interface HashInputState {}
@@ -33,20 +35,14 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
     }
     private generateMessageHashHex() {
         const exchangeContractAddr = this.props.blockchain.getExchangeContractAddress();
-        const orderTakerAddress = this.props.orderTakerAddress !== '' ?
-            this.props.orderTakerAddress : constants.NULL_ADDRESS;
-        const depositTokenContractAddr = constants.NULL_ADDRESS; // TODO: get actual token contract addr
-        const receiveTokenContractAddr = constants.NULL_ADDRESS; // TODO: get actual token contract addr
-        const depositAmt = this.props.sideToAssetToken[Side.deposit].amount;
-        const receiveAmt = this.props.sideToAssetToken[Side.receive].amount;
-        const orderHash = Ox.getOrderHash(exchangeContractAddr, this.props.orderMakerAddress,
-                        orderTakerAddress, depositTokenContractAddr, receiveTokenContractAddr,
-                        depositAmt, receiveAmt, this.props.orderExpiryTimestamp);
+        const hashData = this.props.hashData;
+        const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
+                        hashData.orderTakerAddress, hashData.depositTokenContractAddr,
+                        hashData.receiveTokenContractAddr, hashData.depositAmount,
+                        hashData.receiveAmount, hashData.orderExpiryTimestamp);
 
-        const feeRecipientAddr = constants.NULL_ADDRESS;
-        const makerFee = 0;
-        const takerFee = 0;
-        const msgHashHex = Ox.getMessageHash(orderHash, feeRecipientAddr, makerFee, takerFee);
+        const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
+                                             hashData.takerFee);
         return msgHashHex;
     }
 }

@@ -9,6 +9,7 @@ import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
+import {HashData} from 'ts/types';
 
 export interface DemoPassedProps {
     kind: string;
@@ -17,6 +18,7 @@ export interface DemoPassedProps {
 export interface DemoAllProps {
     dispatch: Dispatch<State>;
     networkId: number;
+    hashData: HashData;
     kind: string;
 }
 
@@ -74,7 +76,10 @@ export class Demo extends React.Component<DemoAllProps, undefined> {
                         label="Generate Order"
                         buttonStyle={styles.button}
                     >
-                    <GenerateOrder blockchain={this.blockchain} />
+                    <GenerateOrder
+                        blockchain={this.blockchain}
+                        hashData={this.props.hashData}
+                    />
                     </Tab>
                     <Tab
                         label="Fill order"

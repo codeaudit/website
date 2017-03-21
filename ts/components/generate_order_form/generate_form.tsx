@@ -19,16 +19,18 @@ import {
     AssetToken,
     SideToAssetToken,
     SignatureData,
+    HashData,
 } from 'ts/types';
 
 interface GenerateFormProps {
     blockchain: Blockchain;
     blockchainIsLoaded: boolean;
+    dispatcher: Dispatcher;
+    hashData: HashData;
     orderExpiryTimestamp: number;
     orderMakerAddress: string;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
-    dispatcher: Dispatcher;
 }
 
 interface GenerateFormState {
@@ -132,10 +134,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         <HashInput
                             blockchain={this.props.blockchain}
                             blockchainIsLoaded={this.props.blockchainIsLoaded}
-                            orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                            sideToAssetToken={this.props.sideToAssetToken}
-                            orderTakerAddress={this.props.orderTakerAddress}
-                            orderMakerAddress={this.props.orderMakerAddress}
+                            hashData={this.props.hashData}
                         />
                     </div>
                 </div>

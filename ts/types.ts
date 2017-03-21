@@ -56,3 +56,16 @@ export interface SignatureData {
     s: string;
     v: number;
 };
+
+export interface HashData {
+    depositAmount: number;
+    depositTokenContractAddr: string;
+    feeRecipientAddress: string;
+    makerFee: number;
+    orderExpiryTimestamp: number;
+    orderMakerAddress: string;
+    orderTakerAddress: string;
+    receiveAmount: number;
+    receiveTokenContractAddr: string;
+    takerFee: number;
+}

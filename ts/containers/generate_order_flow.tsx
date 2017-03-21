@@ -18,10 +18,12 @@ import {
     AssetToken,
     SideToAssetToken,
     SignatureData,
+    HashData,
 } from 'ts/types';
 
 interface GenerateOrderFlowProps {
     blockchain: Blockchain;
+    hashData: HashData;
 }
 
 interface ConnectedState {
@@ -29,6 +31,7 @@ interface ConnectedState {
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
+    orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
 }
 
@@ -41,6 +44,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): Connec
     orderExpiryTimestamp: state.orderExpiryTimestamp,
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
+    orderMakerAddress: state.orderMakerAddress,
     sideToAssetToken: state.sideToAssetToken,
 });
 
@@ -83,8 +87,10 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                 return (
                     <SignTransaction
                         blockchain={this.props.blockchain}
+                        hashData={this.props.hashData}
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderTakerAddress={this.props.orderTakerAddress}
+                        orderMakerAddress={this.props.orderMakerAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={dispatcher.updateGenerateOrderStep.bind(dispatcher)}
                     />
