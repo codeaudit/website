@@ -51,7 +51,7 @@ export interface SideToAssetToken {
 };
 
 export interface SignatureData {
-    hash: string,
+    hash: string;
     r: string;
     s: string;
     v: number;
