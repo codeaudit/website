@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {utils} from 'ts/utils/utils';
+import {tokenBySymbol} from 'ts/token_by_symbol';
 import {
     GenerateOrderSteps,
     TokenBySymbol,

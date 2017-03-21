@@ -3,7 +3,7 @@ import * as React from 'react';
 import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {tokenBySymbol} from 'ts/tokenBySymbol';
+import {tokenBySymbol} from 'ts/token_by_symbol';
 import {Step} from 'ts/components/ui/step';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';

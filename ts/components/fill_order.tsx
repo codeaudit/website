@@ -4,7 +4,7 @@ import {utils} from 'ts/utils/utils';
 import {TextField, Paper, RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Step} from 'ts/components/ui/step';
-import {tokenBySymbol} from 'ts/tokenBySymbol';
+import {tokenBySymbol} from 'ts/token_by_symbol';
 import {Side, SideToAssetToken, AssetToken} from 'ts/types';
 
 interface FillOrderProps {}

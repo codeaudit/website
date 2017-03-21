@@ -10,7 +10,7 @@ import {
     TableHeaderColumn,
     TableRowColumn,
 } from 'material-ui';
-import {tokenBySymbol} from 'ts/tokenBySymbol';
+import {tokenBySymbol} from 'ts/token_by_symbol';
 import {Side, SideToAssetToken, AssetToken} from 'ts/types';
 
 interface Balance {

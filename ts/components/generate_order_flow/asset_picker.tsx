@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {tokenBySymbol} from 'ts/tokenBySymbol';
+import {tokenBySymbol} from 'ts/token_by_symbol';
 import {TokenBySymbol, Token, Side, AssetToken} from 'ts/types';
 
 interface AssetPickerProps {
