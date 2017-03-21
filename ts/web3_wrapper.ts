@@ -115,7 +115,7 @@ export class Web3Wrapper {
 
         let prevNetworkId = await this.getNetworkIdIfExists();
         this.dispatch(updateNetworkId(prevNetworkId));
-        this.watchNetworkIntervalId = setInterval(async () => {
+        this.watchNetworkIntervalId = window.setInterval(async () => {
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
