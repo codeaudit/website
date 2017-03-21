@@ -4,16 +4,20 @@ import {Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {Tabs, Tab, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {GenerateOrderForm} from 'ts/containers/generate_order_form';
 import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 
-export interface DemoFlowPassedProps {}
+export interface DemoPassedProps {
+    kind: string;
+}
 
-export interface DemoFlowAllProps {
+export interface DemoAllProps {
     dispatch: Dispatch<State>;
     networkId: number;
+    kind: string;
 }
 
 const styles: React.CSSProperties = {
@@ -31,10 +35,9 @@ const styles: React.CSSProperties = {
     },
     paper: {
         display: 'inline-block',
-        height: 486,
-        maxWidth: 600,
         position: 'relative',
         textAlign: 'center',
+        width: '100%',
     },
     tabItemContainer: {
         background: colors.blueGrey500,
@@ -42,15 +45,26 @@ const styles: React.CSSProperties = {
     },
 };
 
-export class DemoFlow extends React.Component<DemoFlowAllProps, undefined> {
+export class Demo extends React.Component<DemoAllProps, undefined> {
     private blockchain: Blockchain;
     public componentWillMount() {
         this.blockchain = new Blockchain(this.props.dispatch);
     }
     public render() {
+        let finalPaperStyle = styles.paper;
+        let GenerateOrder = GenerateOrderFlow;
+        if (this.props.kind === 'form') {
+            GenerateOrder = GenerateOrderForm;
+        } else {
+            finalPaperStyle = {
+                ...styles.paper,
+                height: 486,
+                maxWidth: 600,
+            };
+        }
         this.blockchain.networkIdUpdatedFireAndForgetAsync(this.props.networkId);
         return (
-            <Paper style={styles.paper} zDepth={3}>
+            <Paper style={finalPaperStyle} zDepth={3}>
                 <Tabs
                     tabItemContainerStyle={styles.tabItemContainer}
                     inkBarStyle={styles.inkBar}
@@ -60,7 +74,7 @@ export class DemoFlow extends React.Component<DemoFlowAllProps, undefined> {
                         label="Generate Order"
                         buttonStyle={styles.button}
                     >
-                    <GenerateOrderFlow blockchain={this.blockchain} />
+                    <GenerateOrder blockchain={this.blockchain} />
                     </Tab>
                     <Tab
                         label="Fill order"
