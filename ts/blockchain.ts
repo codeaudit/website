@@ -9,7 +9,7 @@ import {constants} from 'ts/utils/constants';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {
     encounteredBlockchainError,
-    updateBlockchainLoading,
+    updateBlockchainIsLoaded,
     updateSignatureData,
 } from 'ts/redux/actions';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
@@ -40,6 +40,10 @@ export class Blockchain {
     }
     public getExchangeContractAddress() {
         return this.exchange.address;
+    }
+    public async getFirstAccountIfExistsAsync() {
+        const accountAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
+        return accountAddress;
     }
     public isValidAddress(address: string) {
         const lowercaseAddress = address.toLowerCase();
@@ -73,6 +77,7 @@ export class Blockchain {
         this.web3Wrapper = new Web3Wrapper(web3Instance, this.dispatch);
     }
     private async instantiateContractAsync() {
+        this.dispatch(updateBlockchainIsLoaded(false));
         const doesNetworkExist = !_.isNull(this.prevNetworkId);
         if (doesNetworkExist) {
             const exchange = await contract(ExchangeArtifacts);
@@ -97,7 +102,7 @@ export class Blockchain {
             /* tslint:enable */
             this.dispatch(encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE));
         }
-        this.dispatch(updateBlockchainLoading(true));
+        this.dispatch(updateBlockchainIsLoaded(true));
     }
     private async onPageLoadAsync() {
         return new Promise((resolve, reject) => {

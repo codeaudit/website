@@ -76,7 +76,7 @@ export class CopyIcon extends React.Component<CopyIconProps, CopyIconState> {
         }
 
         const tooltipLifespanMs = 1000;
-        this.copyTooltipTimeoutId = setTimeout(() => {
+        this.copyTooltipTimeoutId = window.setTimeout(() => {
             this.hideTooltip();
         }, tooltipLifespanMs);
     }

@@ -8,11 +8,11 @@ export interface Action {
 
 export const actionTypes = utils.strEnum([
     'BLOCKCHAIN_ERR_ENCOUNTERED',
-    'UPDATE_BLOCKCHAIN_LOADING',
+    'UPDATE_BLOCKCHAIN_IS_LOADED',
     'UPDATE_NETWORK_ID',
     'UPDATE_GENERATE_ORDER_STEP',
     'UPDATE_CHOSEN_ASSET_TOKEN',
-    'UPDATE_ORDER_TAKER_ADDRESS',
+    'UPDATE_ORDER_ADDRESS',
     'UPDATE_ORDER_SIGNATURE_DATA',
     'UPDATE_ORDER_EXPIRY',
     'SWAP_ASSET_TOKENS',
@@ -37,10 +37,10 @@ export function encounteredBlockchainError(blockchainErr: BlockchainErrs): Actio
      };
 };
 
-export function updateBlockchainLoading(isLoaded: boolean): Action {
+export function updateBlockchainIsLoaded(isLoaded: boolean): Action {
     return {
          data: isLoaded,
-        type: actionTypes.UPDATE_BLOCKCHAIN_LOADING,
+        type: actionTypes.UPDATE_BLOCKCHAIN_IS_LOADED,
      };
 };
 
@@ -84,9 +84,12 @@ export function updateOrderExpiry(unixTimestampSec: number): Action {
     };
 };
 
-export function updateOrderTakerAddress(taker: string): Action {
+export function updateOrderAddress(side: Side, address: string): Action {
     return {
-        data: taker,
-        type: actionTypes.UPDATE_ORDER_TAKER_ADDRESS,
+        data: {
+            side,
+            address,
+        },
+        type: actionTypes.UPDATE_ORDER_ADDRESS,
     };
 };

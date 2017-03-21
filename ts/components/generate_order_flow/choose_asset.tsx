@@ -4,8 +4,10 @@ import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {tokenBySymbol} from 'ts/tokenBySymbol';
 import {Step} from 'ts/components/ui/step';
+import {AmountInput} from 'ts/components/inputs/amount_input';
+import {utils} from 'ts/utils/utils';
 import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
-import {AssetPicker} from 'ts/components/generate_order/asset_picker';
+import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
@@ -18,15 +20,13 @@ interface ChooseAssetsState {
     hovers: {[identifier: string]: boolean};
     isPickerOpen: boolean;
     pickerSide: Side;
-    sideToAssetTokenState: {[side: string]: {amount: string, errMsg: string}};
+    sideToHasErrMsg: {[side: string]: boolean};
     globalErrMsg: string;
 }
 
 export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsState> {
     public constructor(props: ChooseAssetProps) {
         super(props);
-        const depositAssetTokenAmount = props.sideToAssetToken[Side.deposit].amount;
-        const depositReceiveTokenAmount = props.sideToAssetToken[Side.receive].amount;
         this.state = {
             globalErrMsg: '',
             hovers: {
@@ -36,15 +36,9 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
             },
             isPickerOpen: false,
             pickerSide: Side.deposit,
-            sideToAssetTokenState: {
-                [Side.deposit]: {
-                    amount: _.isUndefined(depositAssetTokenAmount) ? '' : depositAssetTokenAmount.toString(),
-                    errMsg: '',
-                },
-                [Side.receive]: {
-                    amount: _.isUndefined(depositReceiveTokenAmount) ? '' : depositReceiveTokenAmount.toString(),
-                    errMsg: '',
-                },
+            sideToHasErrMsg: {
+                [Side.deposit]: false,
+                [Side.receive]: false,
             },
         };
     }
@@ -113,8 +107,6 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         );
     }
     private renderAsset(side: Side, assetToken: AssetToken) {
-        const amount = this.state.sideToAssetTokenState[side].amount;
-        const errMsg = this.state.sideToAssetTokenState[side].errMsg;
         const token = tokenBySymbol[assetToken.symbol];
         const iconHoverId = `${side}Icon`;
         const iconStyles = {
@@ -138,31 +130,28 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     {token.name}
                 </div>
                 <div className="pt2">
-                <TextField
+                <AmountInput
                     style={{width: 120}}
-                    errorText={errMsg}
-                    value={_.isUndefined(amount) ? '' : amount}
-                    inputStyle={{textAlign: 'center'}}
                     hintStyle={{left: 32}}
-                    hintText={<span style={{textTransform: 'capitalize'}}>amount</span>}
-                    onChange={this.onUpdatedAssetAmount.bind(this, side, assetToken)}
+                    inputStyle={{textAlign: 'center'}}
+                    assetToken={assetToken}
+                    onToggleHasErrMsg={this.onToggleHasErrMsg.bind(this, side)}
+                    side={side}
+                    updateChosenAssetToken={this.props.updateChosenAssetToken}
                 />
                 </div>
             </div>
         );
     }
-    private swapTokens() {
-        const newSideToAssetTokenState = {
-            [Side.deposit]: this.state.sideToAssetTokenState[Side.receive],
-            [Side.receive]: this.state.sideToAssetTokenState[Side.deposit],
-        };
+    private onToggleHasErrMsg(side: Side, hasErrMsg: boolean) {
+        const sideToHasErrMsg = this.state.sideToHasErrMsg;
+        sideToHasErrMsg[side] = hasErrMsg;
         this.setState({
-            sideToAssetTokenState: newSideToAssetTokenState,
+            sideToHasErrMsg,
         });
-        this.props.swapAssetTokenSymbols();
     }
-    private isNumeric(n: string) {
-        return !isNaN(parseFloat(n)) && isFinite(Number(n));
+    private swapTokens() {
+        this.props.swapAssetTokenSymbols();
     }
     private onAssetsChosen(direction: Direction) {
         let globalErrMsg = '';
@@ -170,12 +159,14 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         if (sideToAssetToken[Side.deposit].symbol === sideToAssetToken[Side.receive].symbol) {
             globalErrMsg = 'Cannot trade a token for itself';
         }
-        const sideToAssetTokenState = this.state.sideToAssetTokenState;
-        _.each(sideToAssetTokenState, (assetTokenState, side) => {
-            if (assetTokenState.amount === '') {
+        _.each(sideToAssetToken, (assetToken, side) => {
+            if (assetToken.amount === 0) {
                 globalErrMsg = 'Amounts are required';
             }
-            if (assetTokenState.errMsg !== '') {
+        });
+        const sideToHasErrMsg = this.state.sideToHasErrMsg;
+        _.each(sideToHasErrMsg, (hasErrMsg, side) => {
+            if (hasErrMsg) {
                 globalErrMsg = 'Please fix the above amounts in order to proceed';
             }
         });
@@ -194,27 +185,6 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
         this.setState({
             hovers,
         });
-    }
-    private onUpdatedAssetAmount(side: Side, assetToken: AssetToken, e: any) {
-        const amount: string = e.target.value;
-        const isAmountNumeric = this.isNumeric(amount);
-        let errMsg = isAmountNumeric || amount === '' ? '' : 'Must be a number';
-        if (amount === '0') {
-            errMsg = 'Cannot be zero';
-        }
-        const newSideToAssetTokenAmount = _.assign({}, this.state.sideToAssetTokenState, {
-            [side]: {
-                amount,
-                errMsg,
-            },
-        });
-        this.setState({
-            sideToAssetTokenState: newSideToAssetTokenAmount,
-        });
-        if (isAmountNumeric) {
-            assetToken.amount = Number(amount);
-        }
-        this.props.updateChosenAssetToken(side, assetToken);
     }
     private onAssetClicked(side: Side) {
         this.setState({

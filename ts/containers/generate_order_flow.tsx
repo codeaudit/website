@@ -2,11 +2,11 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Store as ReduxStore, Dispatch } from 'redux';
-import {ChooseAsset} from 'ts/components/generate_order/choose_asset';
-import {GrantAllowance} from 'ts/components/generate_order/grant_allowance';
-import {RemainingConfigs} from 'ts/components/generate_order/remaining_configs';
-import {SignTransaction} from 'ts/components/generate_order/sign_transaction';
-import {CopyAndShare} from 'ts/components/generate_order/copy_and_share';
+import {ChooseAsset} from 'ts/components/generate_order_flow/choose_asset';
+import {GrantAllowance} from 'ts/components/generate_order_flow/grant_allowance';
+import {RemainingConfigs} from 'ts/components/generate_order_flow/remaining_configs';
+import {SignTransaction} from 'ts/components/generate_order_flow/sign_transaction';
+import {CopyAndShare} from 'ts/components/generate_order_flow/copy_and_share';
 import {State} from 'ts/redux/reducer';
 import {Blockchain} from 'ts/blockchain';
 import {
@@ -23,10 +23,10 @@ import {
     updateGenerateOrderStep,
     updateChosenAssetToken,
     updateOrderExpiry,
-    updateOrderTakerAddress,
+    updateOrderAddress,
 } from 'ts/redux/actions';
 
-interface GenerateOrderProps {
+interface GenerateOrderFlowProps {
     blockchain: Blockchain;
 }
 
@@ -43,10 +43,10 @@ interface ConnectedDispatch {
     updateGenerateOrderStep: (direction: Direction) => void;
     updateChosenAssetToken: (side: Side, token: AssetToken) => void;
     updateOrderExpiry: (unixTimestampSec: number) => void;
-    updateOrderTakerAddress: (taker: string) => void;
+    updateOrderAddress: (side: Side, address: string) => void;
 }
 
-const mapStateToProps = (state: State, ownProps: GenerateOrderProps): ConnectedState => ({
+const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
     orderSignatureData: state.orderSignatureData,
@@ -64,15 +64,16 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
     updateGenerateOrderStep: (direction: Direction) => {
         dispatch(updateGenerateOrderStep(direction));
     },
+    updateOrderAddress: (side: Side, address: string) => {
+        dispatch(updateOrderAddress(side, address));
+    },
     updateOrderExpiry: (unixTimestampSec: number) => {
         dispatch(updateOrderExpiry(unixTimestampSec));
     },
-    updateOrderTakerAddress: (taker: string) => {
-        dispatch(updateOrderTakerAddress(taker));
-    },
 });
 
-class GenerateOrderComponent extends React.Component<GenerateOrderProps & ConnectedState & ConnectedDispatch, any> {
+class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps & ConnectedState &
+    ConnectedDispatch, any> {
     public render() {
         const generateOrderStep = this.props.generateOrderStep;
         switch (generateOrderStep) {
@@ -102,7 +103,7 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
                         orderTakerAddress={this.props.orderTakerAddress}
                         updateOrderExpiry={this.props.updateOrderExpiry}
                         updateGenerateOrderStep={this.props.updateGenerateOrderStep}
-                        updateOrderTakerAddress={this.props.updateOrderTakerAddress}
+                        updateOrderAddress={this.props.updateOrderAddress}
                     />
                 );
 
@@ -139,5 +140,5 @@ class GenerateOrderComponent extends React.Component<GenerateOrderProps & Connec
     }
 }
 
-export const GenerateOrder: React.ComponentClass<GenerateOrderProps> =
-  connect(mapStateToProps, mapDispatchToProps)(GenerateOrderComponent);
+export const GenerateOrderFlow: React.ComponentClass<GenerateOrderFlowProps> =
+  connect(mapStateToProps, mapDispatchToProps)(GenerateOrderFlowComponent);

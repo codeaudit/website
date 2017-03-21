@@ -16,6 +16,9 @@ export const utils = {
             throw new Error(message);
         }
     },
+    isNumeric(n: string) {
+        return !isNaN(parseFloat(n)) && isFinite(Number(n));
+    },
     // This default unix timestamp is used for orders where the user does not specify an expiry date.
     // It is a fixed constant so that both the redux store's INITIAL_STATE and components can check for
     // whether a user has set an expiry date or not. It is set unrealistically high so as not to collide

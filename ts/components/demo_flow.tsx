@@ -4,14 +4,14 @@ import {Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {Tabs, Tab, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {GenerateOrder} from 'ts/containers/generate_order';
+import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 
-export interface DemoPassedProps {}
+export interface DemoFlowPassedProps {}
 
-export interface DemoAllProps {
+export interface DemoFlowAllProps {
     dispatch: Dispatch<State>;
     networkId: number;
 }
@@ -32,9 +32,9 @@ const styles: React.CSSProperties = {
     paper: {
         display: 'inline-block',
         height: 486,
+        maxWidth: 600,
         position: 'relative',
         textAlign: 'center',
-        width: '100%',
     },
     tabItemContainer: {
         background: colors.blueGrey500,
@@ -42,7 +42,7 @@ const styles: React.CSSProperties = {
     },
 };
 
-export class Demo extends React.Component<DemoAllProps, undefined> {
+export class DemoFlow extends React.Component<DemoFlowAllProps, undefined> {
     private blockchain: Blockchain;
     public componentWillMount() {
         this.blockchain = new Blockchain(this.props.dispatch);
@@ -60,7 +60,7 @@ export class Demo extends React.Component<DemoAllProps, undefined> {
                         label="Generate Order"
                         buttonStyle={styles.button}
                     >
-                    <GenerateOrder blockchain={this.blockchain} />
+                    <GenerateOrderFlow blockchain={this.blockchain} />
                     </Tab>
                     <Tab
                         label="Fill order"

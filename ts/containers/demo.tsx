@@ -5,10 +5,10 @@ import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {Blockchain} from 'ts/blockchain';
 import {
-    Demo as DemoComponent,
-    DemoAllProps as DemoComponentAllProps,
-    DemoPassedProps as DemoComponentPassedProps,
-} from 'ts/components/demo';
+    DemoForm as DemoComponent,
+    DemoFormAllProps as DemoComponentAllProps,
+    DemoFormPassedProps as DemoComponentPassedProps,
+} from 'ts/components/demo_form';
 
 interface MapStateToProps {
     networkId: number;

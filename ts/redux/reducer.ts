@@ -18,6 +18,7 @@ export interface State {
     generateOrderStep: GenerateOrderSteps;
     networkId: number;
     orderExpiryTimestamp: number;
+    orderMakerAddress: string;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
     sideToAssetToken: SideToAssetToken;
@@ -26,9 +27,10 @@ export interface State {
 const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
-    generateOrderStep: GenerateOrderSteps.SignTransaction,
+    generateOrderStep: GenerateOrderSteps.ChooseAssets,
     networkId: null,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
+    orderMakerAddress: '',
     orderSignatureData: {
         hash: '',
         r: '',
@@ -56,7 +58,7 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 orderSignatureData: action.data,
             });
 
-        case actionTypes.UPDATE_BLOCKCHAIN_LOADING:
+        case actionTypes.UPDATE_BLOCKCHAIN_IS_LOADED:
             return _.assign({}, state, {
                 blockchainIsLoaded: action.data,
             });
@@ -105,10 +107,16 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 orderExpiryTimestamp: action.data,
             });
 
-        case actionTypes.UPDATE_ORDER_TAKER_ADDRESS:
-            return _.assign({}, state, {
-                orderTakerAddress: action.data,
-            });
+        case actionTypes.UPDATE_ORDER_ADDRESS:
+            if (action.data.side === Side.deposit) {
+                return _.assign({}, state, {
+                    orderMarketAddress: action.data.address,
+                });
+            } else {
+                return _.assign({}, state, {
+                    orderTakerAddress: action.data.address,
+                });
+            }
 
         default:
             return state;

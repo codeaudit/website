@@ -7,8 +7,8 @@ interface AppProps {}
 export class App extends React.Component<AppProps, undefined> {
     public render() {
         return (
-            <div className="mx-auto max-width-4 pt4">
-                <div className="mx-auto center" style={{maxWidth: 600}}>
+            <div className="mx-auto max-width-4">
+                <div className="mx-auto center">
                     <Demo />
                 </div>
             </div>
