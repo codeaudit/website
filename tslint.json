@@ -30,9 +30,9 @@
     "jsx-boolean-value": true,
     "jsx-curly-spacing": [true, "never"],
     "jsx-no-lambda": true,
-    "jsx-no-multiline-js": true,
+    "jsx-no-multiline-js": false,
     "jsx-no-string-ref": true,
     "jsx-self-close": true,
-    "jsx-wrap-multiline": true
+    "jsx-wrap-multiline": false
   }
 }
