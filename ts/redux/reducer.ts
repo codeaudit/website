@@ -25,6 +25,7 @@ export interface State {
     sideToAssetToken: SideToAssetToken;
 };
 
+const tokenSymbols = _.keys(tokenBySymbol);
 const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
@@ -41,10 +42,10 @@ const INITIAL_STATE: State = {
     orderTakerAddress: '',
     sideToAssetToken: {
         [Side.deposit]: {
-            symbol: 'WETH',
+            symbol: tokenSymbols[0],
         },
         [Side.receive]: {
-            symbol: 'FDGX',
+            symbol: tokenSymbols[1],
         },
     },
 };
