@@ -28,7 +28,7 @@ const styles = {
 };
 
 interface FakeTextFieldProps {
-    label?: string;
+    label?: React.ReactNode | string;
     children?: any;
 }
 

@@ -4,6 +4,7 @@ import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {AssetToken, Side} from 'ts/types';
+import {RequiredLabel} from 'ts/components/ui/required_label';
 
 interface AmountInputProps {
     label?: string;
@@ -50,9 +51,13 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         if (this.state.errMsg !== '') {
             errText = this.state.errMsg;
         }
+        let label: React.ReactNode | string = '';
+        if (!_.isUndefined(this.props.label)) {
+            label = <RequiredLabel label={this.props.label} />;
+        }
         return (
             <TextField
-                floatingLabelText={_.isUndefined(this.props.label) ? '' : this.props.label}
+                floatingLabelText={label}
                 floatingLabelFixed={true}
                 floatingLabelStyle={{color: colors.grey500}}
                 style={this.props.style ? this.props.style : {}}

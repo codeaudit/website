@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
+import {RequiredLabel} from 'ts/components/ui/required_label';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import {Side} from 'ts/types';
 import ReactTooltip = require('react-tooltip');
@@ -41,9 +42,10 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
         }
     }
     public render() {
+        const label = <RequiredLabel label="Maker (address)" />;
         return (
                 <div>
-                    <FakeTextField label="Maker (address)">
+                    <FakeTextField label={label}>
                         <div
                             style={styles.textField}
                             data-tip={true}

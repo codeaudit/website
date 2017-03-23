@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {tokenBySymbol} from 'ts/token_by_symbol';
+import {RequiredLabel} from 'ts/components/ui/required_label';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import {AssetToken, Side} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
@@ -26,9 +27,10 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
     }
     public render() {
         const token = tokenBySymbol[this.props.assetToken.symbol];
+        const label = <RequiredLabel label={this.props.label} />;
         return (
             <div>
-                <FakeTextField label={this.props.label}>
+                <FakeTextField label={label}>
                     <div
                         className="pt1"
                         style={{cursor: 'pointer'}}
