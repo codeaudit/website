@@ -196,7 +196,14 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         this.setState({
             isSigning: true,
         });
-        const exchangeContractAddr = this.props.blockchain.getExchangeContractAddress();
+        const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
+        if (_.isUndefined(exchangeContractAddr)) {
+            this.setState({
+                isSigning: false,
+                signingErrMsg: 'Exchange contract is not deployed on this network',
+            });
+            return;
+        }
         const hashData = this.props.hashData;
         const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,

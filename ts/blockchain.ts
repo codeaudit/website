@@ -34,8 +34,8 @@ export class Blockchain {
             await this.instantiateContractAsync();
         }
     }
-    public getExchangeContractAddress() {
-        return this.exchange.address;
+    public getExchangeContractAddressIfExists() {
+        return this.exchange ? this.exchange.address : undefined;
     }
     public async getFirstAccountIfExistsAsync() {
         const accountAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
