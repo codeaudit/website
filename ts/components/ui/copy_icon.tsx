@@ -21,7 +21,6 @@ export class CopyIcon extends React.Component<CopyIconProps, CopyIconState> {
         this.state = {
             isHovering: false,
         };
-        this.copyTooltipTimeoutId = null;
     }
     public componentDidUpdate() {
         // Remove tooltip if hover away

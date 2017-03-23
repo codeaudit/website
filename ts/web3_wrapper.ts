@@ -22,35 +22,32 @@ export class Web3Wrapper {
             'eth.getAccounts',
         ];
 
-        if (_.isUndefined(web3Instance) || _.isNull(web3Instance)) {
-            this.web3 = null;
-        } else {
+        if (!_.isUndefined(web3Instance) && !_.isNull(web3Instance)) {
             this.web3 = web3Instance;
         }
 
-        this.watchNetworkIntervalId = null;
         this.startEmittingNetworkConnectionStateAsync();
     }
     public doesExist() {
-        return !_.isNull(this.web3);
+        return !_.isUndefined(this.web3);
     }
     public async getFirstAccountIfExistsAsync() {
         const addresses = await this.callAsync('eth.getAccounts');
         if (_.isEmpty(addresses)) {
-            return null;
+            return undefined;
         }
         return (addresses as string[])[0];
     }
     public async getNetworkIdIfExists() {
         if (!this.doesExist()) {
-            return null;
+            return undefined;
         }
 
         try {
             const networkId = await this.callAsync('version.getNetwork');
             return Number(networkId);
         } catch (err) {
-            return null;
+            return undefined;
         }
     }
     // Note: since `sign` is overloaded to be both a sync and async method, it doesn't play nice
@@ -109,7 +106,7 @@ export class Web3Wrapper {
         this.stopEmittingNetworkConnectionStateAsync();
     }
     private async startEmittingNetworkConnectionStateAsync() {
-        if (!_.isNull(this.watchNetworkIntervalId)) {
+        if (!_.isUndefined(this.watchNetworkIntervalId)) {
             return; // we are already emitting the state
         }
 

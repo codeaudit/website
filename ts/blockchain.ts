@@ -21,13 +21,10 @@ export class Blockchain {
     private prevNetworkId: number;
     constructor(dispatch: Dispatch<State>) {
         this.dispatch = dispatch;
-        this.web3Wrapper = null;
-        this.provider = null;
-        this.prevNetworkId = null;
         this.onPageLoadInitFireAndForgetAsync();
     }
     public async networkIdUpdatedFireAndForgetAsync(networkId: number) {
-        const isConnected = !_.isNull(networkId);
+        const isConnected = !_.isUndefined(networkId);
         if (!isConnected) {
             this.prevNetworkId = networkId;
             this.dispatch(encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE));
@@ -50,9 +47,9 @@ export class Blockchain {
     }
     public async sendSignRequestFireAndForgetAsync(msgHashHex: string) {
         const makerAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
-        // If marketAddress is null, this means they have a web3 instance injected into their browser
+        // If marketAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
-        if (_.isNull(makerAddress)) {
+        if (_.isUndefined(makerAddress)) {
             throw new Error('Tried to send a sign request but user has no associated addresses');
         }
         const signData = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
@@ -77,7 +74,7 @@ export class Blockchain {
     }
     private async instantiateContractAsync() {
         this.dispatch(updateBlockchainIsLoaded(false));
-        const doesNetworkExist = !_.isNull(this.prevNetworkId);
+        const doesNetworkExist = !_.isUndefined(this.prevNetworkId);
         if (doesNetworkExist) {
             const exchange = await contract(ExchangeArtifacts);
             exchange.setProvider(this.provider.getProviderObj());
@@ -97,7 +94,7 @@ export class Blockchain {
             }
         } else {
             /* tslint:disable */
-            console.log('Notice: web3.version.getNetwork returned null');
+            console.log('Notice: web3.version.getNetwork returned undefined');
             /* tslint:enable */
             this.dispatch(encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE));
         }

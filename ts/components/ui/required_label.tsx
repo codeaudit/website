@@ -12,4 +12,4 @@ export const RequiredLabel = (props: RequiredLabelProps) => {
             <span style={{color: colors.red600}}>*</span>
         </span>
     );
-}
+};

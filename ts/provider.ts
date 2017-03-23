@@ -19,8 +19,7 @@ export class Provider {
         };
         // When a user switches from a local provider to the public node, we keep a copy of the unused
         // local provider in case they want to switch back to it later.
-        // Note: This is only set when they switch away from using the local provider and is otherwise null
-        this.unusedLocalWebProviderObj = null;
+        // Note: This is only set when they switch away from using the local provider and is otherwise undefined
 
         const rawWeb3 = (window as any).web3;
         // TODO: make this existence check more robust
@@ -66,7 +65,7 @@ export class Provider {
                 break;
             case ProviderTypes.injectedWeb3:
                 this.providerObj = this.unusedLocalWebProviderObj;
-                this.unusedLocalWebProviderObj = null;
+                this.unusedLocalWebProviderObj = undefined;
                 break;
             default: {
                 utils.assert(false, `Unexpected providerType encountered: ${newProviderType}`);

@@ -28,7 +28,7 @@ const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
     generateOrderStep: GenerateOrderSteps.ChooseAssets,
-    networkId: null,
+    networkId: undefined,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
     orderMakerAddress: '',
     orderSignatureData: {
