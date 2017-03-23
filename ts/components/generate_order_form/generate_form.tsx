@@ -144,7 +144,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                     </div>
                 </div>
                 <div className="px3 pt3">
-                    <div className="mx-auto" style={{width: 112}}>
+                    <div className="mx-auto center" style={{width: 112}}>
                         {this.renderSignButton(isSigned)}
                     </div>
                     {this.state.signingErrMsg !== '' && <ErrorAlert message={this.state.signingErrMsg} />}
