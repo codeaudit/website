@@ -9,7 +9,7 @@ export class App extends React.Component<AppProps, undefined> {
         return (
             <div className="mx-auto max-width-4">
                 <div className="mx-auto center">
-                    <Demo kind="form" />
+                    <Demo />
                 </div>
             </div>
         );
