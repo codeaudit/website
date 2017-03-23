@@ -71,6 +71,9 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
     }
     private async getMakerAddressesFireAndForgetAsync() {
         const orderMakerAddress = await this.props.blockchain.getFirstAccountIfExistsAsync();
+        if (!_.isUndefined(orderMakerAddress) && this.state.orderMakerAddress !== orderMakerAddress) {
+            this.props.updateOrderAddress(Side.deposit, orderMakerAddress);
+        }
         this.setState({
             orderMakerAddress,
         });

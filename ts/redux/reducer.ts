@@ -108,7 +108,7 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case actionTypes.UPDATE_ORDER_ADDRESS:
             if (action.data.side === Side.deposit) {
                 return _.assign({}, state, {
-                    orderMarketAddress: action.data.address,
+                    orderMakerAddress: action.data.address,
                 });
             } else {
                 return _.assign({}, state, {
