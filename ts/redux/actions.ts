@@ -1,5 +1,12 @@
 import {utils} from 'ts/utils/utils';
-import {Direction, Side, AssetToken, BlockchainErrs, SignatureData} from 'ts/types';
+import {
+    Direction,
+    Side,
+    AssetToken,
+    BlockchainErrs,
+    SignatureData,
+    Token,
+} from 'ts/types';
 
 export interface Action {
     type: actionTypes;
@@ -14,6 +21,7 @@ export const actionTypes = utils.strEnum([
     'UPDATE_CHOSEN_ASSET_TOKEN',
     'UPDATE_ORDER_ADDRESS',
     'UPDATE_ORDER_SIGNATURE_DATA',
+    'UPDATE_TOKEN_BY_SYMBOL',
     'UPDATE_ORDER_EXPIRY',
     'SWAP_ASSET_TOKENS',
 ]);
@@ -48,6 +56,13 @@ export function updateSignatureData(signatureData: SignatureData): Action {
     return {
          data: signatureData,
         type: actionTypes.UPDATE_ORDER_SIGNATURE_DATA,
+     };
+};
+
+export function updateTokenBySymbol(tokens: Token[]): Action {
+    return {
+         data: tokens,
+        type: actionTypes.UPDATE_TOKEN_BY_SYMBOL,
      };
 };
 

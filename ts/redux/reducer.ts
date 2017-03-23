@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
+import {Action, actionTypes} from 'ts/redux/actions';
 import {
     GenerateOrderSteps,
     Side,
@@ -10,7 +11,6 @@ import {
     SignatureData,
     TokenBySymbol,
 } from 'ts/types';
-import {Action, actionTypes} from 'ts/redux/actions';
 
 export interface State {
     blockchainErr: BlockchainErrs;
@@ -60,6 +60,19 @@ const INITIAL_STATE: State = {
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
+        case actionTypes.UPDATE_TOKEN_BY_SYMBOL:
+            const tokenBySymbol = state.tokenBySymbol;
+            _.each(action.data, (token) => {
+                const updatedToken = _.assign({}, tokenBySymbol[token.symbol], {
+                    address: token.address,
+                    name: token.name,
+                });
+                tokenBySymbol[token.symbol] = updatedToken;
+            });
+            return _.assign({}, state, {
+                tokenBySymbol,
+            });
+
         case actionTypes.UPDATE_ORDER_SIGNATURE_DATA:
             return _.assign({}, state, {
                 orderSignatureData: action.data,

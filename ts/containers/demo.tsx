@@ -24,16 +24,18 @@ interface ConnectedDispatch {
 }
 
 const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): ConnectedState => {
+    const receiveSymbol = state.sideToAssetToken[Side.receive].symbol;
+    const depositSymbol = state.sideToAssetToken[Side.deposit].symbol;
     const hashData = {
         depositAmount: state.sideToAssetToken[Side.deposit].amount,
-        depositTokenContractAddr: constants.NULL_ADDRESS,
+        depositTokenContractAddr: state.tokenBySymbol[depositSymbol].address,
         feeRecipientAddress: constants.NULL_ADDRESS,
         makerFee: 0,
         orderExpiryTimestamp: state.orderExpiryTimestamp,
         orderMakerAddress: state.orderMakerAddress,
         orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : constants.NULL_ADDRESS,
         receiveAmount: state.sideToAssetToken[Side.receive].amount,
-        receiveTokenContractAddr: constants.NULL_ADDRESS,
+        receiveTokenContractAddr: state.tokenBySymbol[receiveSymbol].address,
         takerFee: 0,
     };
     return {

@@ -15,7 +15,7 @@ export const Side = utils.strEnum([
 export type Side = keyof typeof Side;
 
 export const BlockchainErrs = utils.strEnum([
-  'CONTRACT_NOT_DEPLOYED_ON_NETWORK',
+  'A_CONTRACT_NOT_DEPLOYED_ON_NETWORK',
   'DISCONNECTED_FROM_ETHEREUM_NODE',
   'UNHANDLED_ERROR',
 ]);
@@ -34,8 +34,10 @@ export const Direction = utils.strEnum([
 export type Direction = keyof typeof Direction;
 
 export interface Token {
-    iconUrl: string;
-    name: string;
+    iconUrl?: string;
+    name?: string;
+    address?: string;
+    symbol?: string;
 };
 export interface TokenBySymbol {
     [symbol: string]: Token;

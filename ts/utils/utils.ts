@@ -38,8 +38,8 @@ export const utils = {
         return finalDate.getTime() / 1000;
     },
     convertToDateTimeFromUnixTimestamp(unixTimestampSec: number) {
-        const unixTimestampMili = unixTimestampSec * 1000;
-        const d = new Date(unixTimestampMili);
+        const unixTimestampMs = unixTimestampSec * 1000;
+        const d = new Date(unixTimestampMs);
         return d;
     },
     convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: number): string {
@@ -56,5 +56,9 @@ export const utils = {
             taker: orderTakerAddress,
         };
         return JSON.stringify(order, null, '\t');
+    },
+    convertByte32HexToString(byte32Hex: string) {
+        const buf = new Buffer(byte32Hex.substring(2), 'hex');
+        return buf.toString().replace(/\0/g, '');
     },
 };
