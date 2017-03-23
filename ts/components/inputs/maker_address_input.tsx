@@ -1,9 +1,19 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
+import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import {Side} from 'ts/types';
+import ReactTooltip = require('react-tooltip');
+
+const styles = {
+    textField: {
+        overflow: 'hidden',
+        paddingTop: 8,
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    },
+};
 
 interface MakerAddressInputProps {
     blockchain: Blockchain;
@@ -17,7 +27,6 @@ interface MakerAddressInputState {
     orderMakerAddressErrMsg: string;
 }
 
-// TODO: listen for networkId changes and re-fetch the list of account addresses when it changes
 export class MakerAddressInput extends React.Component<MakerAddressInputProps, MakerAddressInputState> {
     constructor(props: MakerAddressInputProps) {
         super(props);
@@ -33,16 +42,18 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
     }
     public render() {
         return (
-            <TextField
-                disabled={true}
-                style={{height: 60}}
-                floatingLabelFixed={true}
-                floatingLabelStyle={{marginTop: -15, color: colors.grey500}}
-                errorStyle={{marginTop: 15}}
-                inputStyle={{marginTop: 0}}
-                floatingLabelText="Maker (address)"
-                value={this.state.orderMakerAddress}
-            />
+                <div>
+                    <FakeTextField label="Maker (address)">
+                        <div
+                            style={styles.textField}
+                            data-tip={true}
+                            data-for="makerAddressTooltip"
+                        >
+                            {this.state.orderMakerAddress}
+                        </div>
+                    </FakeTextField>
+                    <ReactTooltip id="makerAddressTooltip">{this.state.orderMakerAddress}</ReactTooltip>
+                </div>
         );
     }
     private onSelectionChanged(e: any, index: number, value: string) {

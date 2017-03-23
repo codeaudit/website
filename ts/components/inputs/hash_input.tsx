@@ -3,9 +3,20 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {Blockchain} from 'ts/blockchain';
 import {Ox} from 'ts/utils/Ox';
+import {FakeTextField} from 'ts/components/ui/fake_text_field';
+import ReactTooltip = require('react-tooltip');
 import {
     HashData,
 } from 'ts/types';
+
+const styles = {
+    textField: {
+        overflow: 'hidden',
+        paddingTop: 8,
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    },
+};
 
 interface HashInputProps {
     blockchain: Blockchain;
@@ -19,12 +30,18 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
     public render() {
         const msgHashHex = this.props.blockchainIsLoaded ? this.generateMessageHashHex() : '';
         return (
-            <TextField
-                name="hash"
-                style={{height: 60}}
-                inputStyle={{marginTop: 0}}
-                value={msgHashHex}
-            />
+            <div>
+                <FakeTextField>
+                    <div
+                        style={styles.textField}
+                        data-tip={true}
+                        data-for="hashTooltip"
+                    >
+                        {msgHashHex}
+                    </div>
+                </FakeTextField>
+                <ReactTooltip id="hashTooltip">{msgHashHex}</ReactTooltip>
+            </div>
         );
     }
     private generateMessageHashHex() {
