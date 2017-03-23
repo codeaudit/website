@@ -7,11 +7,6 @@ import {State} from 'ts/redux/reducer';
 import {Blockchain} from 'ts/blockchain';
 import {GenerateForm} from 'ts/components/generate_order_form/generate_form';
 import {
-    GenerateOrderSteps,
-    Direction,
-    TokenBySymbol,
-    Side,
-    AssetToken,
     SideToAssetToken,
     SignatureData,
     HashData,
@@ -24,7 +19,6 @@ interface GenerateOrderFormProps {
 
 interface ConnectedState {
     blockchainIsLoaded: boolean;
-    generateOrderStep: GenerateOrderSteps;
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
     orderMakerAddress: string;
@@ -38,7 +32,6 @@ interface ConnectedDispatch {
 
 const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): ConnectedState => ({
     blockchainIsLoaded: state.blockchainIsLoaded,
-    generateOrderStep: state.generateOrderStep,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
     orderMakerAddress: state.orderMakerAddress,
     orderSignatureData: state.orderSignatureData,

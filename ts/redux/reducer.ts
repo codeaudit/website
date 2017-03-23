@@ -3,8 +3,6 @@ import {utils} from 'ts/utils/utils';
 import {tokenBySymbol} from 'ts/token_by_symbol';
 import {
     GenerateOrderSteps,
-    TokenBySymbol,
-    AssetToken,
     Side,
     SideToAssetToken,
     Direction,

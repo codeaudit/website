@@ -1,9 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
-import {RaisedButton, TextField} from 'material-ui';
-import {colors} from 'material-ui/styles';
 import {Ox} from 'ts/utils/Ox';
 import {Blockchain} from 'ts/blockchain';
 import {Step} from 'ts/components/ui/step';

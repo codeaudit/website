@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
-import {Blockchain} from 'ts/blockchain';
 import {Side, HashData} from 'ts/types';
 import {
     Demo as DemoComponent,

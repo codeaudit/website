@@ -2,10 +2,8 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {TextField, Paper} from 'material-ui';
-import {colors} from 'material-ui/styles';
-import {Step} from 'ts/components/ui/step';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
-import {Direction, SideToAssetToken, AssetToken, SignatureData} from 'ts/types';
+import {SideToAssetToken, SignatureData} from 'ts/types';
 
 interface OrderJSONProps {
     orderExpiryTimestamp: number;
@@ -30,7 +28,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                     <div>Order JSON</div>
                     <CopyIcon data={finalTransactionDetailsString}/>
                 </div>
-                <Paper className="mx4 px1 center">
+                <Paper className="mx4 center">
                     <TextField
                         id="orderJSON"
                         style={{width: 325}}

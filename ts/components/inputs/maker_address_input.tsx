@@ -3,8 +3,7 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
-import {utils} from 'ts/utils/utils';
-import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
+import {Side} from 'ts/types';
 
 interface MakerAddressInputProps {
     blockchain: Blockchain;

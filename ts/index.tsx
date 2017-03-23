@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, Store as ReduxStore } from 'redux';
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
+import {createStore, Store as ReduxStore} from 'redux';
 import {App} from 'ts/components/app';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Direction} from 'ts/types';
 
 interface BackButtonProps {
     onClick(): void;

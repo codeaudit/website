@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {utils} from 'ts/utils/utils';
 import {tokenBySymbol} from 'ts/token_by_symbol';
 import {AssetToken, Side} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';

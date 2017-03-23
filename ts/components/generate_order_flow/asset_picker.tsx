@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
-import {colors} from 'material-ui/styles';
 import {tokenBySymbol} from 'ts/token_by_symbol';
-import {TokenBySymbol, Token, Side, AssetToken} from 'ts/types';
+import {Token, Side, AssetToken} from 'ts/types';
 
 interface AssetPickerProps {
     isOpen: boolean;
@@ -79,7 +78,10 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                         {/* Note: we keep this additional div here because GridTile treats img tag children */}
                         {/* by applying additional transformations to the image that we do not want. */}
                         <div>
-                            <img style={{width: 100, position: 'absolute', left: '22%'}} src={token.iconUrl} />
+                            <img
+                                style={{width: 100, position: 'absolute', left: '22%'}}
+                                src={token.iconUrl}
+                            />
                         </div>
                     </GridTile>
                 </div>

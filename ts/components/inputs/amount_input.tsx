@@ -3,7 +3,7 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
-import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
+import {AssetToken, Side} from 'ts/types';
 
 interface AmountInputProps {
     label?: string;

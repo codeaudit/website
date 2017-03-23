@@ -12,10 +12,6 @@ import {State} from 'ts/redux/reducer';
 import {Blockchain} from 'ts/blockchain';
 import {
     GenerateOrderSteps,
-    Direction,
-    TokenBySymbol,
-    Side,
-    AssetToken,
     SideToAssetToken,
     SignatureData,
     HashData,
@@ -42,9 +38,9 @@ interface ConnectedDispatch {
 const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
+    orderMakerAddress: state.orderMakerAddress,
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
-    orderMakerAddress: state.orderMakerAddress,
     sideToAssetToken: state.sideToAssetToken,
 });
 

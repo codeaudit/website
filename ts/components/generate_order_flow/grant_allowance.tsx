@@ -1,8 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {RaisedButton, Slider} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
+import {Direction, SideToAssetToken, Side} from 'ts/types';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Step} from 'ts/components/ui/step';
 import {ErrorAlert} from 'ts/components/ui/error_alert';

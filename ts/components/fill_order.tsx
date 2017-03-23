@@ -1,11 +1,10 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
-import {TextField, Paper, RaisedButton} from 'material-ui';
-import {colors} from 'material-ui/styles';
+import {TextField, Paper} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
 import {tokenBySymbol} from 'ts/token_by_symbol';
-import {Side, SideToAssetToken, AssetToken} from 'ts/types';
+import {Side} from 'ts/types';
 
 interface FillOrderProps {}
 

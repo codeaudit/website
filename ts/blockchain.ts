@@ -5,7 +5,6 @@ import contract = require('truffle-contract');
 import {State} from 'ts/redux/reducer';
 import {Provider} from 'ts/provider';
 import {BlockchainErrs} from 'ts/types';
-import {constants} from 'ts/utils/constants';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {
     encounteredBlockchainError,

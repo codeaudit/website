@@ -1,14 +1,12 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {RaisedButton, TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {tokenBySymbol} from 'ts/token_by_symbol';
 import {Step} from 'ts/components/ui/step';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
-import {utils} from 'ts/utils/utils';
-import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
+import {AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface ChooseAssetProps {

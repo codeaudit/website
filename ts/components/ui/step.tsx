@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {RaisedButton} from 'material-ui';
-import {utils} from 'ts/utils/utils';
 import {BackButton} from 'ts/components/ui/back_button';
 import {Direction} from 'ts/types';
 

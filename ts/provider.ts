@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import Web3 = require('web3');
 import {utils} from 'ts/utils/utils';
 import {configs} from 'ts/utils/configs';
-import {constants} from 'ts/utils/constants';
 import {ProviderTypes} from 'ts/types';
 import ProviderEngine = require('web3-provider-engine');
 import FilterSubprovider = require('web3-provider-engine/subproviders/filters');

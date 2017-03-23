@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {DatePicker, TimePicker} from 'material-ui';
 import {utils} from 'ts/utils/utils';
-import {TokenBySymbol, AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
 
 interface ExpirationInputProps {
     orderExpiryTimestamp: number;

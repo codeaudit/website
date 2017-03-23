@@ -1,15 +1,9 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {TextField} from 'material-ui';
-import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
-import {constants} from 'ts/utils/constants';
-import {utils} from 'ts/utils/utils';
 import {Ox} from 'ts/utils/Ox';
 import {
-    TokenBySymbol,
-    Side,
-    Direction,
     HashData,
 } from 'ts/types';
 

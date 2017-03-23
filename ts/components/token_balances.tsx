@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {utils} from 'ts/utils/utils';
 import {
     RaisedButton,
     Table,
@@ -11,7 +10,6 @@ import {
     TableRowColumn,
 } from 'material-ui';
 import {tokenBySymbol} from 'ts/token_by_symbol';
-import {Side, SideToAssetToken, AssetToken} from 'ts/types';
 
 interface Balance {
     allowance: number;

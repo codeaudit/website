@@ -14,11 +14,7 @@ import {AmountInput} from 'ts/components/inputs/amount_input';
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {
-    GenerateOrderSteps,
-    Direction,
-    TokenBySymbol,
     Side,
-    AssetToken,
     SideToAssetToken,
     SignatureData,
     HashData,
