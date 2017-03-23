@@ -3,10 +3,11 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {TextField, Paper} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
-import {tokenBySymbol} from 'ts/token_by_symbol';
-import {Side} from 'ts/types';
+import {Side, TokenBySymbol} from 'ts/types';
 
-interface FillOrderProps {}
+interface FillOrderProps {
+    tokenBySymbol: TokenBySymbol;
+}
 
 interface FillOrderState {
     orderJSON: string;
@@ -20,7 +21,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         };
     }
     public render() {
-        const symbols = _.keys(tokenBySymbol);
+        const symbols = _.keys(this.props.tokenBySymbol);
         const hintSideToAssetToken = {
             [Side.deposit]: {
                 amount: 35,

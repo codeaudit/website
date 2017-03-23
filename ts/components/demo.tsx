@@ -9,7 +9,7 @@ import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
-import {HashData} from 'ts/types';
+import {HashData, TokenBySymbol} from 'ts/types';
 
 export interface DemoPassedProps {}
 
@@ -18,6 +18,7 @@ export interface DemoAllProps {
     networkId: number;
     hashData: HashData;
     kind: string;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface DemoAllState {
@@ -115,14 +116,16 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                             buttonStyle={styles.button}
                         >
                           <div>
-                            <FillOrder />
+                            <FillOrder
+                                tokenBySymbol={this.props.tokenBySymbol}
+                            />
                           </div>
                         </Tab>
                         <Tab
                           label="My test tokens"
                           buttonStyle={styles.button}
                         >
-                            <TokenBalances />
+                            <TokenBalances tokenBySymbol={this.props.tokenBySymbol}/>
                         </Tab>
                     </Tabs>
                 </Paper>

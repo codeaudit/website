@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {TokenBySymbol} from 'ts/types';
 import {
     RaisedButton,
     Table,
@@ -9,7 +10,6 @@ import {
     TableHeaderColumn,
     TableRowColumn,
 } from 'material-ui';
-import {tokenBySymbol} from 'ts/token_by_symbol';
 
 interface Balance {
     allowance: number;
@@ -17,23 +17,21 @@ interface Balance {
     iconUrl: string;
     symbol: string;
 }
-const DUMMY_BALANCES: Balance[] = [];
-_.each(tokenBySymbol, (token, symbol) => {
-    const balance = Math.random() * 100;
-    DUMMY_BALANCES.push({
-        allowance: Math.random() * balance,
-        balance,
-        iconUrl: token.iconUrl,
-        symbol,
-    });
-});
+
 const PRECISION = 5;
 
-interface TokenBalancesProps {}
+interface TokenBalancesProps {
+    tokenBySymbol: TokenBySymbol;
+}
 
 interface TokenBalancesState {}
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
+    private dummyBalances: Balance[];
+    constructor(props: TokenBalancesProps) {
+        super(props);
+        this.dummyBalances = this.generateDummyBalances();
+    }
     public render() {
         return (
             <div>
@@ -59,7 +57,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private renderTableRows() {
         const iconDimension = 40;
-        return _.map(DUMMY_BALANCES, (balance: Balance) => {
+        return _.map(this.dummyBalances, (balance: Balance) => {
             return (
                 <TableRow key={balance.symbol}>
                     <TableRowColumn>
@@ -80,6 +78,19 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 </TableRow>
             );
         });
+    }
+    private generateDummyBalances(): Balance[] {
+        const dummyBalances: Balance[] = [];
+        _.each(this.props.tokenBySymbol, (token, symbol) => {
+            const balance = Math.random() * 100;
+            dummyBalances.push({
+                allowance: Math.random() * balance,
+                balance,
+                iconUrl: token.iconUrl,
+                symbol,
+            });
+        });
+        return dummyBalances;
     }
     private onSendTestToken(symbol: string) {
         // TODO: send some test tokens to account

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
-import {Side, HashData} from 'ts/types';
+import {Side, HashData, TokenBySymbol} from 'ts/types';
 import {
     Demo as DemoComponent,
     DemoAllProps as DemoComponentAllProps,
@@ -14,6 +14,7 @@ import {
 interface MapStateToProps {
     hashData: HashData;
     networkId: number;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface ConnectedState {}
@@ -38,6 +39,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
     return {
         networkId: state.networkId,
         hashData,
+        tokenBySymbol: state.tokenBySymbol,
     };
 };
 

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {utils} from 'ts/utils/utils';
-import {tokenBySymbol} from 'ts/token_by_symbol';
+import {constants} from 'ts/utils/constants';
 import {
     GenerateOrderSteps,
     Side,
@@ -8,6 +8,7 @@ import {
     Direction,
     BlockchainErrs,
     SignatureData,
+    TokenBySymbol,
 } from 'ts/types';
 import {Action, actionTypes} from 'ts/redux/actions';
 
@@ -21,9 +22,16 @@ export interface State {
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
     sideToAssetToken: SideToAssetToken;
+    tokenBySymbol: TokenBySymbol;
 };
 
-const tokenSymbols = _.keys(tokenBySymbol);
+const tokenSymbols = _.keys(constants.iconUrlBySymbol);
+const initialTokenBySymbol = _.reduce(constants.iconUrlBySymbol, (result, iconUrl, symbol) => {
+    result[symbol] = {
+        iconUrl,
+    };
+    return result;
+}, Object.create(null));
 const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
@@ -46,6 +54,7 @@ const INITIAL_STATE: State = {
             symbol: tokenSymbols[1],
         },
     },
+    tokenBySymbol: initialTokenBySymbol,
 };
 
 export function reducer(state: State = INITIAL_STATE, action: Action) {

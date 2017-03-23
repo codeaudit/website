@@ -2,19 +2,19 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {tokenBySymbol} from 'ts/token_by_symbol';
 import {Step} from 'ts/components/ui/step';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
-import {AssetToken, Side, SideToAssetToken, Direction} from 'ts/types';
+import {AssetToken, Side, SideToAssetToken, Direction, TokenBySymbol} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
     dispatcher: Dispatcher;
+    tokenBySymbol: TokenBySymbol;
 }
 
-interface ChooseAssetsState {
+interface ChooseAssetState {
     hovers: {[identifier: string]: boolean};
     isPickerOpen: boolean;
     pickerSide: Side;
@@ -22,7 +22,7 @@ interface ChooseAssetsState {
     globalErrMsg: string;
 }
 
-export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsState> {
+export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetState> {
     public constructor(props: ChooseAssetProps) {
         super(props);
         this.state = {
@@ -83,12 +83,13 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetsS
                     currentAssetToken={this.props.sideToAssetToken[this.state.pickerSide]}
                     onAssetChosen={this.onAssetChosen.bind(this)}
                     side={this.state.pickerSide}
+                    tokenBySymbol={this.props.tokenBySymbol}
                 />
             </div>
         );
     }
     private renderAsset(side: Side, assetToken: AssetToken) {
-        const token = tokenBySymbol[assetToken.symbol];
+        const token = this.props.tokenBySymbol[assetToken.symbol];
         const iconHoverId = `${side}Icon`;
         const iconStyles = {
             cursor: 'pointer',

@@ -1,14 +1,14 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
-import {tokenBySymbol} from 'ts/token_by_symbol';
-import {Token, Side, AssetToken} from 'ts/types';
+import {Token, Side, AssetToken, TokenBySymbol} from 'ts/types';
 
 interface AssetPickerProps {
     isOpen: boolean;
     side: Side;
     currentAssetToken: AssetToken;
     onAssetChosen: (side: Side, chosenAssetToken: AssetToken) => void;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface AssetPickerState {
@@ -54,7 +54,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
         );
     }
     private renderGridTiles() {
-        return _.map(tokenBySymbol, (token: Token, symbol: string) => {
+        return _.map(this.props.tokenBySymbol, (token: Token, symbol: string) => {
             const assetToken: AssetToken = {
                 symbol,
                 amount: this.props.currentAssetToken.amount,

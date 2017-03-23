@@ -18,6 +18,7 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
+    TokenBySymbol,
 } from 'ts/types';
 
 interface GenerateFormProps {
@@ -30,6 +31,7 @@ interface GenerateFormProps {
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface GenerateFormState {
@@ -85,6 +87,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 side={Side.deposit}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                tokenBySymbol={this.props.tokenBySymbol}
                             />
                         </div>
                         <div className="col col-6">
@@ -93,6 +96,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 side={Side.receive}
                                 assetToken={this.props.sideToAssetToken[Side.receive]}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                tokenBySymbol={this.props.tokenBySymbol}
                             />
                         </div>
                     </div>

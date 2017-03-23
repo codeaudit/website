@@ -10,6 +10,7 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
+    TokenBySymbol,
 } from 'ts/types';
 
 interface GenerateOrderFormProps {
@@ -24,6 +25,7 @@ interface ConnectedState {
     orderMakerAddress: string;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface ConnectedDispatch {
@@ -37,6 +39,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
+    tokenBySymbol: state.tokenBySymbol,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
@@ -57,6 +60,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 orderTakerAddress={this.props.orderTakerAddress}
                 dispatcher={this.props.dispatcher}
                 hashData={this.props.hashData}
+                tokenBySymbol={this.props.tokenBySymbol}
             />
         );
     }

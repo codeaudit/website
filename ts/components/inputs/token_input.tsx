@@ -1,10 +1,9 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
-import {tokenBySymbol} from 'ts/token_by_symbol';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
-import {AssetToken, Side} from 'ts/types';
+import {AssetToken, Side, TokenBySymbol} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface TokenInputProps {
@@ -12,6 +11,7 @@ interface TokenInputProps {
     side: Side;
     assetToken: AssetToken;
     updateChosenAssetToken: (side: Side, token: AssetToken) => void;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface TokenInputState {
@@ -26,7 +26,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         };
     }
     public render() {
-        const token = tokenBySymbol[this.props.assetToken.symbol];
+        const token = this.props.tokenBySymbol[this.props.assetToken.symbol];
         const label = <RequiredLabel label={this.props.label} />;
         return (
             <div>
@@ -49,6 +49,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
                     currentAssetToken={this.props.assetToken}
                     onAssetChosen={this.onAssetChosen.bind(this)}
                     side={this.props.side}
+                    tokenBySymbol={this.props.tokenBySymbol}
                 />
             </div>
         );

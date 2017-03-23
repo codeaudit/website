@@ -15,6 +15,7 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
+    TokenBySymbol,
 } from 'ts/types';
 
 interface GenerateOrderFlowProps {
@@ -29,6 +30,7 @@ interface ConnectedState {
     orderTakerAddress: string;
     orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface ConnectedDispatch {
@@ -42,6 +44,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): Connec
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
+    tokenBySymbol: state.tokenBySymbol,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
@@ -59,6 +62,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                     <ChooseAsset
                         sideToAssetToken={this.props.sideToAssetToken}
                         dispatcher={dispatcher}
+                        tokenBySymbol={this.props.tokenBySymbol}
                     />
                 );
             case GenerateOrderSteps.GrantAllowance:
