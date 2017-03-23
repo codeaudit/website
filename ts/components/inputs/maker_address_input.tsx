@@ -45,6 +45,7 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
         const hasMakerAddress = !_.isUndefined(this.state.orderMakerAddress);
         const errorText = this.props.shouldShowIncompleteErrs && !hasMakerAddress ?
             'Didn\'t find any accounts via web3.eth.accounts' : '';
+        const value = hasMakerAddress ? this.state.orderMakerAddress : '';
         return (
             <div>
                 <div
@@ -61,18 +62,12 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
                         errorStyle={{marginTop: 15}}
                         inputStyle={{marginTop: 0}}
                         floatingLabelText={label}
-                        value={this.state.orderMakerAddress}
+                        value={value}
                     />
                 </div>
                 <ReactTooltip id="makerAddressTooltip">{this.state.orderMakerAddress}</ReactTooltip>
             </div>
         );
-    }
-    private onSelectionChanged(e: any, index: number, value: string) {
-        this.setState({
-            orderMakerAddress: value,
-        });
-        this.props.updateOrderAddress(Side.deposit, value);
     }
     private async getMakerAddressesFireAndForgetAsync() {
         const orderMakerAddress = await this.props.blockchain.getFirstAccountIfExistsAsync();
