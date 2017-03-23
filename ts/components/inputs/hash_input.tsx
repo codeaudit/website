@@ -45,7 +45,7 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
         );
     }
     private generateMessageHashHex() {
-        const exchangeContractAddr = this.props.blockchain.getExchangeContractAddress();
+        const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
         const hashData = this.props.hashData;
         const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,

@@ -30,7 +30,7 @@ const INITIAL_STATE: State = {
     generateOrderStep: GenerateOrderSteps.ChooseAssets,
     networkId: undefined,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
-    orderMakerAddress: '',
+    orderMakerAddress: undefined,
     orderSignatureData: {
         hash: '',
         r: '',

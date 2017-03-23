@@ -1,18 +1,16 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {RequiredLabel} from 'ts/components/ui/required_label';
-import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import {Side} from 'ts/types';
 import ReactTooltip = require('react-tooltip');
 
 const styles = {
-    textField: {
-        overflow: 'hidden',
-        paddingTop: 8,
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
+    underlineDisabled: {
+        borderBottom: `1px solid ${colors.grey300}`,
+        borderColor: colors.grey300,
     },
 };
 
@@ -21,6 +19,7 @@ interface MakerAddressInputProps {
     blockchainIsLoaded: boolean;
     initialMarketMakerAddress: string;
     updateOrderAddress: (side: Side, address: string) => void;
+    shouldShowIncompleteErrs: boolean;
 }
 
 interface MakerAddressInputState {
@@ -43,19 +42,30 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
     }
     public render() {
         const label = <RequiredLabel label="Maker (address)" />;
+        const hasMakerAddress = !_.isUndefined(this.state.orderMakerAddress);
+        const errorText = this.props.shouldShowIncompleteErrs && !hasMakerAddress ?
+            'Didn\'t find any accounts via web3.eth.accounts' : '';
         return (
-                <div>
-                    <FakeTextField label={label}>
-                        <div
-                            style={styles.textField}
-                            data-tip={true}
-                            data-for="makerAddressTooltip"
-                        >
-                            {this.state.orderMakerAddress}
-                        </div>
-                    </FakeTextField>
-                    <ReactTooltip id="makerAddressTooltip">{this.state.orderMakerAddress}</ReactTooltip>
+            <div>
+                <div
+                    data-tip={true}
+                    data-for="makerAddressTooltip"
+                >
+                    <TextField
+                        disabled={true}
+                        style={{height: 60}}
+                        errorText={errorText}
+                        floatingLabelFixed={true}
+                        floatingLabelStyle={{marginTop: -15, color: colors.grey500}}
+                        underlineDisabledStyle={styles.underlineDisabled}
+                        errorStyle={{marginTop: 15}}
+                        inputStyle={{marginTop: 0}}
+                        floatingLabelText={label}
+                        value={this.state.orderMakerAddress}
+                    />
                 </div>
+                <ReactTooltip id="makerAddressTooltip">{this.state.orderMakerAddress}</ReactTooltip>
+            </div>
         );
     }
     private onSelectionChanged(e: any, index: number, value: string) {

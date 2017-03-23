@@ -63,6 +63,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                                 initialMarketMakerAddress={this.props.orderMakerAddress}
                                 updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
+                                shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                             />
                         </div>
                         <div className="col col-6">
@@ -179,15 +180,20 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const debitAmount = this.props.sideToAssetToken[Side.deposit].amount;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitAmount) && !_.isUndefined(receiveAmount) && debitAmount > 0 &&
-            receiveAmount > 0) {
+            receiveAmount > 0 && !_.isUndefined(this.props.orderMakerAddress)) {
             this.signTransactionAsync();
             this.setState({
                 globalErrMsg: '',
                 shouldShowIncompleteErrs: false,
             });
         } else {
+            let globalErrMsg = 'You must fix the above errors in order to generate a valid order';
+            if (_.isUndefined(this.props.orderMakerAddress)) {
+                globalErrMsg = 'You must enable wallet communication and make sure you have at least \
+                                one account address in order to sign an order';
+            }
             this.setState({
-                globalErrMsg: 'You must fix the above errors in order to generate a valid order',
+                globalErrMsg,
                 shouldShowIncompleteErrs: true,
             });
         }
