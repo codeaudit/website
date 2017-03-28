@@ -6,7 +6,7 @@ import {Tabs, Tab, Paper, RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrderForm} from 'ts/containers/generate_order_form';
 import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
-import {TokenBalances} from 'ts/components/token_balances';
+import {TokenBalances} from 'ts/components/token_balances/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 import {HashData, TokenBySymbol} from 'ts/types';
@@ -14,10 +14,12 @@ import {HashData, TokenBySymbol} from 'ts/types';
 export interface DemoPassedProps {}
 
 export interface DemoAllProps {
+    blockchainErr: string;
+    blockchainIsLoaded: boolean;
     dispatch: Dispatch<State>;
-    networkId: number;
     hashData: HashData;
     kind: string;
+    networkId: number;
     tokenBySymbol: TokenBySymbol;
 }
 
@@ -125,7 +127,12 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                           label="My test tokens"
                           buttonStyle={styles.button}
                         >
-                            <TokenBalances tokenBySymbol={this.props.tokenBySymbol}/>
+                            <TokenBalances
+                                blockchain={this.blockchain}
+                                blockchainErr={this.props.blockchainErr}
+                                blockchainIsLoaded={this.props.blockchainIsLoaded}
+                                tokenBySymbol={this.props.tokenBySymbol}
+                            />
                         </Tab>
                     </Tabs>
                 </Paper>

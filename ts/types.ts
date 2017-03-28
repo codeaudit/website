@@ -38,6 +38,8 @@ export interface Token {
     name?: string;
     address?: string;
     symbol?: string;
+    balance?: number;
+    allowance?: number;
 };
 export interface TokenBySymbol {
     [symbol: string]: Token;

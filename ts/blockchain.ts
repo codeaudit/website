@@ -13,14 +13,20 @@ import {
     updateSignatureData,
     updateTokenBySymbol,
 } from 'ts/redux/actions';
+import * as ProxyArtifacts from '../contracts/Proxy.json';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
+import * as TokenArtifacts from '../contracts/Token.json';
+import * as MintableArtifacts from '../contracts/Mintable.json';
+
+const MINT_AMOUNT = 100;
 
 export class Blockchain {
     private dispatch: Dispatch<State>;
     private web3Wrapper: Web3Wrapper;
     private provider: Provider;
     private exchange: any; // TODO: add type definition for Contract
+    private proxy: any;
     private tokenRegistry: any;
     private prevNetworkId: number;
     constructor(dispatch: Dispatch<State>) {
@@ -40,21 +46,6 @@ export class Blockchain {
     }
     public getExchangeContractAddressIfExists() {
         return this.exchange ? this.exchange.address : undefined;
-    }
-    public async getTokenRegistryEntriesAsync() {
-        if (this.tokenRegistry) {
-            const [addresses, symbols, names] = await this.tokenRegistry.getTokens.call();
-            const tokens = _.map(addresses, (address: string, index) => {
-                return {
-                    address,
-                    name: utils.convertByte32HexToString(names[index]),
-                    symbol: utils.convertByte32HexToString(symbols[index]),
-                };
-            });
-            this.dispatch(updateTokenBySymbol(tokens));
-        } else {
-            return [];
-        }
     }
     public async getFirstAccountIfExistsAsync() {
         const accountAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
@@ -81,6 +72,47 @@ export class Blockchain {
         };
         this.dispatch(updateSignatureData(signatureData));
     }
+    public async mintTestTokensAsync(token: Token) {
+        const userAddress = await this.getFirstAccountIfExistsAsync();
+        if (_.isUndefined(userAddress)) {
+            throw new Error('User has no associated addresses');
+        }
+        const mintableContract = await this.instantiateContractAsync(MintableArtifacts, token.address);
+        await mintableContract.mint(MINT_AMOUNT, {
+            from: userAddress,
+        });
+        const tokens = [_.assign({}, token, {
+            balance: token.balance + MINT_AMOUNT,
+        })];
+        this.dispatch(updateTokenBySymbol(tokens));
+    }
+    private async getTokenRegistryTokensAsync() {
+        if (this.tokenRegistry) {
+            const userAddress = await this.getFirstAccountIfExistsAsync();
+            const [addresses, symbols, names] = await this.tokenRegistry.getTokens.call();
+            const tokens = [];
+            for (let i = 0; i < addresses.length; i++) {
+                const address = addresses[i];
+                const token = await this.instantiateContractAsync(TokenArtifacts, address);
+                let balance;
+                let allowance;
+                if (!_.isUndefined(userAddress)) {
+                    balance = await token.balanceOf.call(userAddress);
+                    allowance = await token.allowance.call(userAddress, this.proxy.address);
+                }
+                tokens.push({
+                    address,
+                    allowance: _.isUndefined(allowance) ? 0 : allowance.toNumber(),
+                    balance: _.isUndefined(balance) ? 0 : balance.toNumber(),
+                    name: utils.convertByte32HexToString(names[i]),
+                    symbol: utils.convertByte32HexToString(symbols[i]),
+                });
+            }
+            this.dispatch(updateTokenBySymbol(tokens));
+        } else {
+            return [];
+        }
+    }
     private async onPageLoadInitFireAndForgetAsync() {
         await this.onPageLoadAsync(); // wait for page to load
 
@@ -97,7 +129,8 @@ export class Blockchain {
         if (doesNetworkExist) {
             this.exchange = await this.instantiateContractAsync(ExchangeArtifacts);
             this.tokenRegistry = await this.instantiateContractAsync(TokenRegistryArtifacts);
-            this.getTokenRegistryEntriesAsync();
+            this.proxy = await this.instantiateContractAsync(ProxyArtifacts);
+            await this.getTokenRegistryTokensAsync();
         } else {
             /* tslint:disable */
             console.log('Notice: web3.version.getNetwork returned undefined');
@@ -106,21 +139,26 @@ export class Blockchain {
         }
         this.dispatch(updateBlockchainIsLoaded(true));
     }
-    private async instantiateContractAsync(artifact: object) {
+    private async instantiateContractAsync(artifact: object, address?: string) {
         const c = await contract(artifact);
         c.setProvider(this.provider.getProviderObj());
         try {
-            const contractInstance = await c.deployed();
+            let contractInstance;
+            if (_.isUndefined(address)) {
+                contractInstance = await c.deployed();
+            } else {
+                contractInstance = await c.at(address);
+            }
             return contractInstance;
         } catch (err) {
             const errMsg = `${err}`;
+            /* tslint:disable */
+            console.log('Notice: Error encountered: ', err);
+            /* tslint:enable */
             if (_.includes(errMsg, 'not been deployed to detected network')) {
                 this.dispatch(encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK));
             } else {
                 // We show a generic message for other possible caught errors
-                /* tslint:disable */
-                console.log('Notice: Unhandled error encountered: ', err);
-                /* tslint:enable */
                 this.dispatch(encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR));
             }
         }

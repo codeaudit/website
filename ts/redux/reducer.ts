@@ -63,10 +63,7 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case actionTypes.UPDATE_TOKEN_BY_SYMBOL:
             const tokenBySymbol = state.tokenBySymbol;
             _.each(action.data, (token) => {
-                const updatedToken = _.assign({}, tokenBySymbol[token.symbol], {
-                    address: token.address,
-                    name: token.name,
-                });
+                const updatedToken = _.assign({}, tokenBySymbol[token.symbol], token);
                 tokenBySymbol[token.symbol] = updatedToken;
             });
             return _.assign({}, state, {

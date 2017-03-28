@@ -1,8 +1,10 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {TokenBySymbol} from 'ts/types';
+import {TokenBySymbol, Token} from 'ts/types';
+import {Blockchain} from 'ts/blockchain';
+import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
+import {MintButton} from 'ts/components/token_balances/mint_button';
 import {
-    RaisedButton,
     Table,
     TableHeader,
     TableBody,
@@ -11,26 +13,25 @@ import {
     TableRowColumn,
 } from 'material-ui';
 
-interface Balance {
-    allowance: number;
-    balance: number;
-    iconUrl: string;
-    symbol: string;
-}
-
 const PRECISION = 5;
 
 interface TokenBalancesProps {
+    blockchain: Blockchain;
+    blockchainErr: string;
+    blockchainIsLoaded: boolean;
     tokenBySymbol: TokenBySymbol;
 }
 
-interface TokenBalancesState {}
+interface TokenBalancesState {
+    isEnableWalletDialogOpen: boolean;
+}
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
-    private dummyBalances: Balance[];
     constructor(props: TokenBalancesProps) {
         super(props);
-        this.dummyBalances = this.generateDummyBalances();
+        this.state = {
+            isEnableWalletDialogOpen: false,
+        };
     }
     public render() {
         return (
@@ -45,54 +46,50 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <TableHeaderColumn>Token</TableHeaderColumn>
                             <TableHeaderColumn>Balance</TableHeaderColumn>
                             <TableHeaderColumn>0x allowance</TableHeaderColumn>
-                            <TableHeaderColumn>Get free test tokens</TableHeaderColumn>
+                            <TableHeaderColumn>Mint test tokens</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                         {this.renderTableRows()}
                     </TableBody>
                 </Table>
+                <EnableWalletDialog
+                    isOpen={this.state.isEnableWalletDialogOpen}
+                    toggleDialogFn={this.toggleEnableWalletDialog.bind(this)}
+                />
             </div>
         );
     }
     private renderTableRows() {
+        if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
+            return '';
+        }
         const iconDimension = 40;
-        return _.map(this.dummyBalances, (balance: Balance) => {
+        return _.map(this.props.tokenBySymbol, (token: Token) => {
             return (
-                <TableRow key={balance.symbol}>
+                <TableRow key={token.symbol}>
                     <TableRowColumn>
                         <img
                             style={{width: iconDimension, height: iconDimension}}
-                            src={balance.iconUrl}
+                            src={token.iconUrl}
                         />
                     </TableRowColumn>
-                    <TableRowColumn>{balance.balance.toFixed(PRECISION)} {balance.symbol}</TableRowColumn>
-                    <TableRowColumn>{balance.allowance.toFixed(PRECISION)} {balance.symbol}</TableRowColumn>
+                    <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
+                    <TableRowColumn>{token.allowance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
                     <TableRowColumn>
-                        <RaisedButton
-                            label="Get"
-                            style={{margin: 12, width: '100%'}}
-                            onClick={this.onSendTestToken.bind(this, balance.symbol)}
+                        <MintButton
+                            blockchain={this.props.blockchain}
+                            token={token}
+                            toggleEnableWalletDialog={this.toggleEnableWalletDialog.bind(this)}
                         />
                     </TableRowColumn>
                 </TableRow>
             );
         });
     }
-    private generateDummyBalances(): Balance[] {
-        const dummyBalances: Balance[] = [];
-        _.each(this.props.tokenBySymbol, (token, symbol) => {
-            const balance = Math.random() * 100;
-            dummyBalances.push({
-                allowance: Math.random() * balance,
-                balance,
-                iconUrl: token.iconUrl,
-                symbol,
-            });
+    private toggleEnableWalletDialog(isOpen: boolean) {
+        this.setState({
+            isEnableWalletDialogOpen: isOpen,
         });
-        return dummyBalances;
-    }
-    private onSendTestToken(symbol: string) {
-        // TODO: send some test tokens to account
     }
 }

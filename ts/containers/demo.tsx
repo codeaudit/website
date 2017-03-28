@@ -12,6 +12,8 @@ import {
 } from 'ts/components/demo';
 
 interface MapStateToProps {
+    blockchainErr: string;
+    blockchainIsLoaded: boolean;
     hashData: HashData;
     networkId: number;
     tokenBySymbol: TokenBySymbol;
@@ -39,6 +41,8 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         takerFee: 0,
     };
     return {
+        blockchainErr: state.blockchainErr,
+        blockchainIsLoaded: state.blockchainIsLoaded,
         networkId: state.networkId,
         hashData,
         tokenBySymbol: state.tokenBySymbol,
