@@ -61,4 +61,9 @@ export const utils = {
         const buf = new Buffer(byte32Hex.substring(2), 'hex');
         return buf.toString().replace(/\0/g, '');
     },
+    consoleLog(message: string) {
+        /* tslint:disable */
+        console.log(message);
+        /* tslint:enable */
+    },
 };

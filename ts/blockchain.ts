@@ -132,9 +132,7 @@ export class Blockchain {
             this.proxy = await this.instantiateContractAsync(ProxyArtifacts);
             await this.getTokenRegistryTokensAsync();
         } else {
-            /* tslint:disable */
-            console.log('Notice: web3.version.getNetwork returned undefined');
-            /* tslint:enable */
+            utils.consoleLog('Notice: web3.version.getNetwork returned undefined');
             this.dispatch(encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE));
         }
         this.dispatch(updateBlockchainIsLoaded(true));
@@ -152,9 +150,7 @@ export class Blockchain {
             return contractInstance;
         } catch (err) {
             const errMsg = `${err}`;
-            /* tslint:disable */
-            console.log('Notice: Error encountered: ', err);
-            /* tslint:enable */
+            utils.consoleLog(`Notice: Error encountered: ${err}`);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
                 this.dispatch(encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK));
             } else {

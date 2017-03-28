@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {utils} from 'ts/utils/utils';
 import {Token} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
@@ -51,9 +52,7 @@ export class MintButton extends React.Component<MintButtonProps, MintButtonState
                 const isOpen = true;
                 this.props.toggleEnableWalletDialog(isOpen);
             }
-            /* tslint:disable */
-            console.log('Unexpected error encountered: ', err);
-            /* tslint:enable */
+            utils.consoleLog(`Unexpected error encountered: ${err}`);
         }
         this.setState({
             isMinting: false,
