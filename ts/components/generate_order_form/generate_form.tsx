@@ -225,7 +225,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
 
         let signingErrMsg = '';
         try {
-            await this.props.blockchain.sendSignRequestFireAndForgetAsync(msgHashHex);
+            await this.props.blockchain.sendSignRequestAsync(msgHashHex);
         } catch (err) {
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User denied message')) {

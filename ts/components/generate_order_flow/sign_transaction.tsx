@@ -148,7 +148,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                                                  hashData.takerFee);
             let signingErrMsg = '';
             try {
-                await this.props.blockchain.sendSignRequestFireAndForgetAsync(msgHashHex);
+                await this.props.blockchain.sendSignRequestAsync(msgHashHex);
             } catch (err) {
                 // TODO: translate this to a user friendly error message and display it in the UI
                 signingErrMsg = '' + err;

@@ -64,7 +64,7 @@ export class Blockchain {
         const lowercaseAddress = address.toLowerCase();
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
-    public async sendSignRequestFireAndForgetAsync(msgHashHex: string) {
+    public async sendSignRequestAsync(msgHashHex: string) {
         const makerAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
         // If marketAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
