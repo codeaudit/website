@@ -172,7 +172,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 <div className="px3 pt3">
                     <div className="mx-auto center" style={{width: 112}}>
                         <LifeCycleRaisedButton
-                            hideOnComplete={true}
+                            isHidden={this.state.signingState === SigningState.SIGNED}
                             labelReady="Sign hash"
                             labelLoading="Signing..."
                             labelComplete="Hash signed!"
