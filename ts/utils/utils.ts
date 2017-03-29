@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
 import {SideToAssetToken, SignatureData} from 'ts/types';
+import deepEqual = require('deep-equal');
 
 export const utils = {
     // Utility function to create a K:V from a list of strings
@@ -68,5 +69,8 @@ export const utils = {
     },
     sleepAsync(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));
+    },
+    deepEqual(actual: any, expected: any, opts?: {strict: boolean}) {
+        return deepEqual(actual, expected, opts);
     },
 };

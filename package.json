@@ -16,6 +16,7 @@
     "basscss": "^8.0.3",
     "bn.js": "^4.11.6",
     "dateformat": "^2.0.0",
+    "deep-equal": "^1.0.1",
     "ethereumjs-util": "^5.1.1",
     "jazzicon": "^1.5.0",
     "react": "15.4.x",
@@ -33,6 +34,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
+    "@types/deep-equal": "^1.0.0",
     "@types/es6-promise": "0.0.32",
     "@types/lodash": "^4.14.55",
     "@types/material-ui": "^0.16.56",

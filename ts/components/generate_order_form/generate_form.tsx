@@ -4,6 +4,7 @@ import {Blockchain} from 'ts/blockchain';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Ox} from 'ts/utils/Ox';
+import {utils} from 'ts/utils/utils';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderJSON} from 'ts/components/order_json';
 import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
@@ -21,6 +22,12 @@ import {
     TokenBySymbol,
 } from 'ts/types';
 
+enum SigningState {
+    UNSIGNED,
+    SIGNING,
+    SIGNED,
+}
+
 interface GenerateFormProps {
     blockchain: Blockchain;
     blockchainIsLoaded: boolean;
@@ -37,7 +44,7 @@ interface GenerateFormProps {
 interface GenerateFormState {
     globalErrMsg: string;
     shouldShowIncompleteErrs: boolean;
-    isSigning: boolean;
+    signingState: SigningState;
     signingErrMsg: string;
 }
 
@@ -46,13 +53,19 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         super(props);
         this.state = {
             globalErrMsg: '',
-            isSigning: false,
             shouldShowIncompleteErrs: false,
             signingErrMsg: '',
+            signingState: SigningState.UNSIGNED,
         };
     }
+    public componentWillReceiveProps(newProps: GenerateFormProps) {
+        if (!utils.deepEqual(newProps.hashData, this.props.hashData)) {
+            this.setState({
+                signingState: SigningState.UNSIGNED,
+            });
+        }
+    }
     public render() {
-        const isSigned = this.props.orderSignatureData.hash !== '';
         const dispatcher = this.props.dispatcher;
         return (
             <div className="py2 mx-auto clearfix" style={{width: 600}}>
@@ -148,14 +161,20 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 </div>
                 <div className="px3 pt3">
                     <div className="mx-auto center" style={{width: 112}}>
-                        {this.renderSignButton(isSigned)}
+                        <LifeCycleRaisedButton
+                            hideOnComplete={true}
+                            labelReady="Sign hash"
+                            labelLoading="Signing..."
+                            labelComplete="Hash signed!"
+                            onClickAsyncFn={this.onSignClickedAsync.bind(this)}
+                        />
                     </div>
                     {this.state.signingErrMsg !== '' && <ErrorAlert message={this.state.signingErrMsg} />}
                     {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
                 </div>
                 <div className="px3 pt3">
                     <div className="mx-auto" style={{width: 465}}>
-                        {isSigned &&
+                        {this.state.signingState === SigningState.SIGNED &&
                             <OrderJSON
                                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                                 orderSignatureData={this.props.orderSignatureData}
@@ -167,20 +186,6 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 </div>
             </div>
         );
-    }
-    private renderSignButton(isSigned: boolean) {
-        if (isSigned) {
-            return ''; // Hide button
-        } else {
-            return (
-                <LifeCycleRaisedButton
-                    labelReady="Sign hash"
-                    labelLoading="Signing..."
-                    labelComplete="Hash signed!"
-                    onClickAsyncFn={this.onSignClickedAsync.bind(this)}
-                />
-            );
-        }
     }
     private async onSignClickedAsync() {
         // Check if all required inputs were supplied
@@ -207,7 +212,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
     }
     private async signTransactionAsync() {
         this.setState({
-            isSigning: true,
+            signingState: SigningState.SIGNING,
         });
         const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
         if (_.isUndefined(exchangeContractAddr)) {
@@ -238,7 +243,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             }
         }
         this.setState({
-            isSigning: false,
+            signingState: signingErrMsg === '' ? SigningState.SIGNED : SigningState.UNSIGNED,
             signingErrMsg,
         });
     }

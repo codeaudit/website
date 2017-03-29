@@ -17,6 +17,7 @@ enum ButtonState {
 };
 
 interface LifeCycleRaisedButtonProps {
+    hideOnComplete?: boolean;
     labelReady: string;
     labelLoading: string;
     labelComplete: string;
@@ -40,6 +41,10 @@ export class LifeCycleRaisedButton extends
         clearTimeout(this.buttonTimeoutId);
     }
     public render() {
+        if (this.props.hideOnComplete && this.state.buttonState === ButtonState.COMPLETE) {
+            return <span />;
+        }
+
         let label;
         switch (this.state.buttonState) {
             case ButtonState.READY:
