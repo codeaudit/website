@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Blockchain} from 'ts/blockchain';
-import {RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Ox} from 'ts/utils/Ox';
@@ -13,6 +12,7 @@ import {TokenInput} from 'ts/components/inputs/token_input';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
+import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {
     Side,
     SideToAssetToken,
@@ -172,20 +172,24 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
     private renderSignButton(isSigned: boolean) {
         if (isSigned) {
             return ''; // Hide button
-        } else if (this.state.isSigning) {
-            return 'Signing...';
         } else {
-            return <RaisedButton onClick={this.onSignClicked.bind(this)} label="Sign hash" />;
+            return (
+                <LifeCycleRaisedButton
+                    labelReady="Sign hash"
+                    labelLoading="Signing..."
+                    labelComplete="Hash signed!"
+                    onClickAsyncFn={this.onSignClickedAsync.bind(this)}
+                />
+            );
         }
     }
-
-    private onSignClicked() {
+    private async onSignClickedAsync() {
         // Check if all required inputs were supplied
         const debitAmount = this.props.sideToAssetToken[Side.deposit].amount;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitAmount) && !_.isUndefined(receiveAmount) && debitAmount > 0 &&
             receiveAmount > 0 && !_.isUndefined(this.props.orderMakerAddress)) {
-            this.signTransactionAsync();
+            await this.signTransactionAsync();
             this.setState({
                 globalErrMsg: '',
                 shouldShowIncompleteErrs: false,
