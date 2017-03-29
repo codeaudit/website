@@ -11,11 +11,13 @@ import {
     SignatureData,
     HashData,
     TokenBySymbol,
+    TabValue,
 } from 'ts/types';
 
 interface GenerateOrderFormProps {
     blockchain: Blockchain;
     hashData: HashData;
+    triggerTabChange: (tabValue: TabValue) => void;
 }
 
 interface ConnectedState {
@@ -61,6 +63,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 dispatcher={this.props.dispatcher}
                 hashData={this.props.hashData}
                 tokenBySymbol={this.props.tokenBySymbol}
+                triggerTabChange={this.props.triggerTabChange}
             />
         );
     }

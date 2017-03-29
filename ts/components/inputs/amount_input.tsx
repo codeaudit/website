@@ -3,7 +3,7 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
-import {AssetToken, Side} from 'ts/types';
+import {AssetToken, Side, Token, TabValue} from 'ts/types';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 
 interface AmountInputProps {
@@ -14,12 +14,14 @@ interface AmountInputProps {
     assetToken: AssetToken;
     side: Side;
     shouldShowIncompleteErrs: boolean;
+    token: Token;
     updateChosenAssetToken: (side: Side, token: AssetToken) => void;
+    triggerTabChange: (tabValue: TabValue) => void;
 }
 
 interface AmountInputState {
     amount: string;
-    errMsg: string;
+    errMsg: React.ReactNode | string;
 }
 
 export class AmountInput extends React.Component<AmountInputProps, AmountInputState> {
@@ -39,12 +41,12 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             const amount = _.isUndefined(newAmount) ? '' : newAmount.toString();
             this.setState({
                 amount,
-                errMsg: this.getErrMsg(amount),
+                errMsg: this.getErrMsg(nextProps.token.balance, amount),
             });
         }
     }
     public render() {
-        let errText = '';
+        let errText: (string | React.ReactNode) = '';
         if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
             errText = 'This field is required';
         }
@@ -75,7 +77,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         const isAmountNumeric = utils.isNumeric(amount);
         this.setState({
             amount,
-            errMsg: this.getErrMsg(amount),
+            errMsg: this.getErrMsg(this.props.token.balance, amount),
         });
         const assetToken = this.props.assetToken;
         if (isAmountNumeric) {
@@ -85,11 +87,25 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         }
         this.props.updateChosenAssetToken(this.props.side, assetToken);
     }
-    private getErrMsg(amount: string): string {
+    private getErrMsg(balance: number, amount: string): (string | React.ReactNode) {
         const isAmountNumeric = utils.isNumeric(amount);
-        let errMsg = isAmountNumeric || amount === '' ? '' : 'Must be a number';
-        if (amount === '0') {
+        let errMsg: (string | React.ReactNode) = '';
+        if (!isAmountNumeric && amount !== '') {
+            errMsg = 'Must be a number';
+        } else if (amount === '0') {
             errMsg = 'Cannot be zero';
+        } else if (this.props.side === Side.deposit && balance < Number(amount)) {
+            errMsg = (
+                <span>
+                    Insuffient balance. Mint tokens{' '}
+                    <a
+                        style={{cursor: 'pointer', color: colors.blueGrey500}}
+                        onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
+                    >
+                        here
+                    </a>
+                </span>
+            );
         }
         return errMsg;
     }

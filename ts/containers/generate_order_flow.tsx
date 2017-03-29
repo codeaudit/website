@@ -16,11 +16,13 @@ import {
     SignatureData,
     HashData,
     TokenBySymbol,
+    TabValue,
 } from 'ts/types';
 
 interface GenerateOrderFlowProps {
     blockchain: Blockchain;
     hashData: HashData;
+    triggerTabChange: (tabValue: TabValue) => void;
 }
 
 interface ConnectedState {
@@ -63,6 +65,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                         sideToAssetToken={this.props.sideToAssetToken}
                         dispatcher={dispatcher}
                         tokenBySymbol={this.props.tokenBySymbol}
+                        triggerTabChange={this.props.triggerTabChange}
                     />
                 );
             case GenerateOrderSteps.GrantAllowance:

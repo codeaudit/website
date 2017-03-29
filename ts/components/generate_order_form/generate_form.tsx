@@ -19,6 +19,7 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
+    TabValue,
     TokenBySymbol,
 } from 'ts/types';
 
@@ -39,6 +40,7 @@ interface GenerateFormProps {
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
+    triggerTabChange: (tabValue: TabValue) => void;
 }
 
 interface GenerateFormState {
@@ -67,6 +69,10 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
     }
     public render() {
         const dispatcher = this.props.dispatcher;
+        const depositTokenSymbol = this.props.sideToAssetToken[Side.deposit].symbol;
+        const depositToken = this.props.tokenBySymbol[depositTokenSymbol];
+        const receiveTokenSymbol = this.props.sideToAssetToken[Side.receive].symbol;
+        const receiveToken = this.props.tokenBySymbol[receiveTokenSymbol];
         return (
             <div className="py2 mx-auto clearfix" style={{width: 600}}>
                 <h3 className="px3">Generate an order</h3>
@@ -119,18 +125,22 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                             <AmountInput
                                 label="Sell amount (uint)"
                                 side={Side.deposit}
+                                token={depositToken}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                triggerTabChange={this.props.triggerTabChange}
                             />
                         </div>
                         <div className="col col-6">
                             <AmountInput
                                 label="Receive amount (uint)"
                                 side={Side.receive}
+                                token={receiveToken}
                                 assetToken={this.props.sideToAssetToken[Side.receive]}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                triggerTabChange={this.props.triggerTabChange}
                             />
                         </div>
                     </div>
@@ -189,10 +199,12 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
     }
     private async onSignClickedAsync() {
         // Check if all required inputs were supplied
-        const debitAmount = this.props.sideToAssetToken[Side.deposit].amount;
+        const debitToken = this.props.sideToAssetToken[Side.deposit];
+        const debitBalance = this.props.tokenBySymbol[debitToken.symbol].balance;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
-        if (!_.isUndefined(debitAmount) && !_.isUndefined(receiveAmount) && debitAmount > 0 &&
-            receiveAmount > 0 && !_.isUndefined(this.props.orderMakerAddress)) {
+        if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
+            debitToken.amount > 0 && receiveAmount > 0 &&
+            !_.isUndefined(this.props.orderMakerAddress) && debitBalance > debitToken.amount) {
             await this.signTransactionAsync();
             this.setState({
                 globalErrMsg: '',
@@ -237,7 +249,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         } catch (err) {
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User denied message')) {
-                signingErrMsg = ''; // We simply return to the unsigned state
+                signingErrMsg = 'User denied sign request';
             } else {
                 signingErrMsg = 'An unexpected error occured. Please try refreshing the page';
             }

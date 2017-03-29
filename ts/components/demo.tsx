@@ -116,6 +116,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         <GenerateOrder
                             blockchain={this.blockchain}
                             hashData={this.props.hashData}
+                            triggerTabChange={this.triggerTabChange.bind(this)}
                         />
                         </Tab>
                         <Tab

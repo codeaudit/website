@@ -5,13 +5,21 @@ import {Dispatcher} from 'ts/redux/dispatcher';
 import {Step} from 'ts/components/ui/step';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
-import {AssetToken, Side, SideToAssetToken, Direction, TokenBySymbol} from 'ts/types';
+import {
+    AssetToken,
+    Side,
+    SideToAssetToken,
+    Direction,
+    TokenBySymbol,
+    TabValue,
+} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
     dispatcher: Dispatcher;
     tokenBySymbol: TokenBySymbol;
+    triggerTabChange: (tabValue: TabValue) => void;
 }
 
 interface ChooseAssetState {
@@ -120,7 +128,9 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetSt
                     assetToken={assetToken}
                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                     side={side}
+                    token={token}
                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                    triggerTabChange={this.props.triggerTabChange}
                 />
                 </div>
             </div>
