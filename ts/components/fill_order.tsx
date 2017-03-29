@@ -4,19 +4,26 @@ import {utils} from 'ts/utils/utils';
 import {TextField, Paper} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
 import {Side, TokenBySymbol} from 'ts/types';
+import {ErrorAlert} from 'ts/components/ui/error_alert';
+import {Validator} from 'ts/schemas/validator';
+import {orderSchema} from 'ts/schemas/order_schema';
 
 interface FillOrderProps {
     tokenBySymbol: TokenBySymbol;
 }
 
 interface FillOrderState {
+    errMsg: string;
     orderJSON: string;
 }
 
 export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
+    private validator: Validator;
     constructor(props: FillOrderProps) {
         super(props);
+        this.validator = new Validator();
         this.state = {
+            errMsg: '',
             orderJSON: '',
         };
     }
@@ -34,9 +41,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         };
         const hintOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
         const hintSignatureData = {
-            hash: '0xf965a9978a0381ab58f5a2408ad967c28d7b10b336da9fafea21401d060a25a0',
-            r: '0xf01103f759e2289a28593eaf22e5820032e699740069944d8f8d7ce341f3d7',
-            s: '937862111edcba395f8a9e0cc1b2c5e12320ac992a73f232999907b5d71297aa',
+            hash: '0xf965a9978a0381ab58f5a2408ad967c...',
+            r: '0xf01103f759e2289a28593eaf22e5820032...',
+            s: '937862111edcba395f8a9e0cc1b2c5e12320...',
             v: 27,
         };
         const hintOrderJSON = utils.generateOrderJSON(hintSideToAssetToken, hintOrderExpiryTimestamp,
@@ -54,7 +61,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                     <Paper className="mx4 center">
                         <TextField
                             id="orderJSON"
-                            style={{width: 325}}
+                            style={{width: 745}}
                             value={this.state.orderJSON}
                             onChange={this.onFillOrderChanged.bind(this)}
                             hintText={hintOrderJSON}
@@ -63,6 +70,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                             rowsMax={8}
                             underlineStyle={{display: 'none'}}
                         />
+                        {this.state.errMsg !== '' &&
+                            <ErrorAlert message={this.state.errMsg} />
+                        }
                     </Paper>
                 </div>
             </Step>
@@ -70,8 +80,21 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     }
     private onFillOrderChanged(e: any) {
         const orderJSON = e.target.value;
+        let errMsg = '';
+        try {
+            const order = JSON.parse(orderJSON);
+            const validationResult = this.validator.validate(order, orderSchema);
+            if (validationResult.errors.length > 0) {
+                errMsg = 'Submitted order JSON is not a valid order';
+            }
+        } catch (err) {
+            if (orderJSON !== '') {
+                errMsg = 'Submitted order JSON is not valid JSON';
+            }
+        }
         this.setState({
             orderJSON,
+            errMsg,
         });
     }
     private onFillOrderClick() {
