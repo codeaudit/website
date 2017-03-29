@@ -1,5 +1,11 @@
 import {utils} from 'ts/utils/utils';
 
+export enum TabValue {
+    generate,
+    fill,
+    setup,
+}
+
 export enum GenerateOrderSteps {
   ChooseAssets,
   GrantAllowance,
