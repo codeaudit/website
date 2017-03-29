@@ -66,4 +66,7 @@ export const utils = {
         console.log(message);
         /* tslint:enable */
     },
+    sleepAsync(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    },
 };

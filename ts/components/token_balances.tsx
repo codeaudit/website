@@ -5,7 +5,7 @@ import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
-import {MintButton} from 'ts/components/token_balances/mint_button';
+import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {
     RaisedButton,
     Table,
@@ -18,6 +18,7 @@ import {
 
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
+const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
@@ -29,7 +30,6 @@ interface TokenBalancesProps {
 
 interface TokenBalancesState {
     isEnableWalletDialogOpen: boolean;
-    isRequestingEther: boolean;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
@@ -37,7 +37,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         super(props);
         this.state = {
             isEnableWalletDialogOpen: false,
-            isRequestingEther: false,
         };
     }
     public render() {
@@ -69,14 +68,12 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <TableRowColumn>{this.props.userEtherBalance.toFixed(PRECISION)} ETH</TableRowColumn>
                             <TableRowColumn />
                             <TableRowColumn>
-                                {!this.state.isRequestingEther ?
-                                    <RaisedButton
-                                        label="Request"
-                                        style={{margin: 12, width: '100%'}}
-                                        onClick={this.requestEtherAsync.bind(this)}
-                                    /> :
-                                    <div>Requesting...</div>
-                                }
+                                <LifeCycleRaisedButton
+                                    labelReady="Request"
+                                    labelLoading="Requesting..."
+                                    labelComplete="Request sent!"
+                                    onClickAsyncFn={this.requestEtherAsync.bind(this)}
+                                />
                             </TableRowColumn>
                         </TableRow>
                     </TableBody>
@@ -121,20 +118,32 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
                     <TableRowColumn>{token.allowance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
                     <TableRowColumn>
-                        <MintButton
-                            blockchain={this.props.blockchain}
-                            token={token}
-                            toggleEnableWalletDialog={this.toggleEnableWalletDialog.bind(this)}
+                        <LifeCycleRaisedButton
+                            labelReady="Mint"
+                            labelLoading="Minting..."
+                            labelComplete="Tokens minted!"
+                            onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
                         />
                     </TableRowColumn>
                 </TableRow>
             );
         });
     }
+    private async onMintTestTokensAsync(token: Token) {
+        try {
+            await this.props.blockchain.mintTestTokensAsync(token);
+        } catch (err) {
+            const errMsg = '' + err;
+            if (_.includes(errMsg, 'User has no associated addresses')) {
+                const isOpen = true;
+                this.toggleEnableWalletDialog(isOpen);
+            }
+            utils.consoleLog(`Unexpected error encountered: ${err}`);
+        }
+    }
     private async requestEtherAsync() {
-        this.setState({
-            isRequestingEther: true,
-        });
+        await utils.sleepAsync(ARTIFICIAL_ETHER_REQUEST_DELAY);
+
         const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();
         if (_.isUndefined(userAddressIfExists)) {
             const isOpen = true;
@@ -149,9 +158,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
             return;
         }
-        this.setState({
-            isRequestingEther: false,
-        });
     }
     private toggleEnableWalletDialog(isOpen: boolean) {
         this.setState({

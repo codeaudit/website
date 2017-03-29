@@ -6,7 +6,7 @@ import {Tabs, Tab, Paper, RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrderForm} from 'ts/containers/generate_order_form';
 import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
-import {TokenBalances} from 'ts/components/token_balances/token_balances';
+import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 import {HashData, TokenBySymbol} from 'ts/types';
