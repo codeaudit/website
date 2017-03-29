@@ -63,8 +63,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                             <MakerAddressInput
                                 blockchain={this.props.blockchain}
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
-                                initialMarketMakerAddress={this.props.orderMakerAddress}
-                                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
+                                orderMakerAddress={this.props.orderMakerAddress}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                             />
                         </div>
@@ -137,7 +136,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         <i className="material-icons" style={{fontSize: 60}}>keyboard_arrow_down</i>
                     </div>
                 </div>
-                <div className="px3 pt3">
+                <div className="px3 pt1">
                     <div className="mx-auto" style={{width: 256}}>
                         <div style={{fontSize: 12, color: colors.grey500}}>Hash (byte32)</div>
                         <HashInput

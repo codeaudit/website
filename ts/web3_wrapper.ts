@@ -3,7 +3,12 @@ import Web3 = require('web3');
 import {Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {utils} from 'ts/utils/utils';
-import {updateNetworkId, updateUserEtherBalance} from 'ts/redux/actions';
+import {Side} from 'ts/types';
+import {
+    updateNetworkId,
+    updateUserEtherBalance,
+    updateOrderAddress,
+} from 'ts/redux/actions';
 import BigNumber = require('bignumber.js');
 
 export class Web3Wrapper {
@@ -125,18 +130,25 @@ export class Web3Wrapper {
             return; // we are already emitting the state
         }
 
-        let prevNetworkId = await this.getNetworkIdIfExists();
+        let prevNetworkId: number;
         let prevUserEtherBalanceInWei = 0;
+        let prevUserAddress: string;
         this.dispatch(updateNetworkId(prevNetworkId));
         this.watchNetworkAndBalanceIntervalId = window.setInterval(async () => {
+            const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
             // Check for network state changes
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
                 this.dispatch(updateNetworkId(currentNetworkId));
+
+                // Update makerAddress on network change
+                if (prevUserAddress !== userAddressIfExists) {
+                    prevUserAddress = userAddressIfExists;
+                    this.dispatch(updateOrderAddress(Side.deposit, userAddressIfExists));
+                }
             }
             // Check for user ether balance changes
-            const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
             if (!_.isUndefined(userAddressIfExists)) {
                 const balance = await this.getBalanceInEthAsync(userAddressIfExists);
                 if (balance !== prevUserEtherBalanceInWei) {

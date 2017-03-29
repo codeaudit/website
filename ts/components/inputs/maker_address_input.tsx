@@ -17,13 +17,11 @@ const styles = {
 interface MakerAddressInputProps {
     blockchain: Blockchain;
     blockchainIsLoaded: boolean;
-    initialMarketMakerAddress: string;
-    updateOrderAddress: (side: Side, address: string) => void;
+    orderMakerAddress: string;
     shouldShowIncompleteErrs: boolean;
 }
 
 interface MakerAddressInputState {
-    orderMakerAddress: string;
     orderMakerAddressErrMsg: string;
 }
 
@@ -31,21 +29,15 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
     constructor(props: MakerAddressInputProps) {
         super(props);
         this.state = {
-            orderMakerAddress: this.props.initialMarketMakerAddress,
             orderMakerAddressErrMsg: '',
         };
     }
-    public componentWillReceiveProps(nextProps: MakerAddressInputProps) {
-        if (nextProps.blockchainIsLoaded) {
-            this.getMakerAddressesFireAndForgetAsync();
-        }
-    }
     public render() {
         const label = <RequiredLabel label="Maker (address)" />;
-        const hasMakerAddress = !_.isUndefined(this.state.orderMakerAddress);
+        const hasMakerAddress = !_.isUndefined(this.props.orderMakerAddress);
         const errorText = this.props.shouldShowIncompleteErrs && !hasMakerAddress ?
             'Didn\'t find any accounts via web3.eth.accounts' : '';
-        const value = hasMakerAddress ? this.state.orderMakerAddress : '';
+        const value = hasMakerAddress ? this.props.orderMakerAddress : '';
         return (
             <div>
                 <div
@@ -65,17 +57,8 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
                         value={value}
                     />
                 </div>
-                <ReactTooltip id="makerAddressTooltip">{this.state.orderMakerAddress}</ReactTooltip>
+                <ReactTooltip id="makerAddressTooltip">{this.props.orderMakerAddress}</ReactTooltip>
             </div>
         );
-    }
-    private async getMakerAddressesFireAndForgetAsync() {
-        const orderMakerAddress = await this.props.blockchain.getFirstAccountIfExistsAsync();
-        if (!_.isUndefined(orderMakerAddress) && this.state.orderMakerAddress !== orderMakerAddress) {
-            this.props.updateOrderAddress(Side.deposit, orderMakerAddress);
-        }
-        this.setState({
-            orderMakerAddress,
-        });
     }
 }
