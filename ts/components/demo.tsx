@@ -21,6 +21,7 @@ export interface DemoAllProps {
     kind: string;
     networkId: number;
     tokenBySymbol: TokenBySymbol;
+    userEtherBalance: number;
 }
 
 interface DemoAllState {
@@ -132,6 +133,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 blockchainErr={this.props.blockchainErr}
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                                 tokenBySymbol={this.props.tokenBySymbol}
+                                userEtherBalance={this.props.userEtherBalance}
                             />
                         </Tab>
                     </Tabs>

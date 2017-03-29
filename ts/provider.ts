@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import Web3 = require('web3');
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {ProviderTypes} from 'ts/types';
 import ProviderEngine = require('web3-provider-engine');
@@ -81,7 +82,7 @@ export class Provider {
     }
     // Defaults to Infura.io Testnet
     private getPublicNodeProvider() {
-        const providerObj = this.getClientSideFilteringProvider(configs.INFURA_TESTNET_URL);
+        const providerObj = this.getClientSideFilteringProvider(constants.INFURA_TESTNET_URL);
         return providerObj;
     }
     private getClientSideFilteringProvider(rpcUrl: string) {

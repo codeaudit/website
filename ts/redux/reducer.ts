@@ -23,6 +23,7 @@ export interface State {
     orderSignatureData: SignatureData;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
+    userEtherBalance: number;
 };
 
 const tokenSymbols = _.keys(constants.iconUrlBySymbol);
@@ -55,11 +56,17 @@ const INITIAL_STATE: State = {
         },
     },
     tokenBySymbol: initialTokenBySymbol,
+    userEtherBalance: 0,
 };
 
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
+        case actionTypes.UPDATE_USER_ETHER_BALANCE:
+            return _.assign({}, state, {
+                userEtherBalance: action.data,
+            });
+
         case actionTypes.UPDATE_TOKEN_BY_SYMBOL:
             const tokenBySymbol = state.tokenBySymbol;
             _.each(action.data, (token) => {

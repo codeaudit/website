@@ -17,6 +17,7 @@ interface MapStateToProps {
     hashData: HashData;
     networkId: number;
     tokenBySymbol: TokenBySymbol;
+    userEtherBalance: number;
 }
 
 interface ConnectedState {}
@@ -46,6 +47,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         networkId: state.networkId,
         hashData,
         tokenBySymbol: state.tokenBySymbol,
+        userEtherBalance: state.userEtherBalance,
     };
 };
 

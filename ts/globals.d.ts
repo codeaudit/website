@@ -6,6 +6,7 @@ declare module 'ethereumjs-util';
 declare module 'keccak';
 declare module 'bn.js';
 declare module 'web3-provider-engine';
+declare module 'whatwg-fetch';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 
@@ -65,7 +66,7 @@ declare module 'web3' {
             contract(abi: IAbiDefinition[]): IContract;
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethgetbalance
-            getBalance(addressHexString: string, defaultBlock?: number|string,
+            getBalance(addressHexString: string,
                 callback?: (err: any, result: BigNumber) => void): BigNumber;
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter
@@ -74,6 +75,8 @@ declare module 'web3' {
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3setprovider
         public setProvider(provider: providers.IProvider): void;
+
+        public fromWei(amount: BigNumber, unit: string): BigNumber;
     }
 
     // I usally start interface namesby an I but do as you want

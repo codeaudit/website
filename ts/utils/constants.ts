@@ -1,4 +1,6 @@
 export const constants = {
+    ETHER_FAUCET_ENDPOINT: 'http://127.0.0.1:3000/rain',
+    INFURA_TESTNET_URL: 'https://ropsten.infura.io/T5WSC8cautR4KXyYgsRs',
     MAINNET_ID: 1,
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',

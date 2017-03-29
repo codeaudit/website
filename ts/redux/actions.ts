@@ -24,6 +24,7 @@ export const actionTypes = utils.strEnum([
     'UPDATE_TOKEN_BY_SYMBOL',
     'UPDATE_ORDER_EXPIRY',
     'SWAP_ASSET_TOKENS',
+    'UPDATE_USER_ETHER_BALANCE',
 ]);
 export type actionTypes = keyof typeof actionTypes;
 
@@ -35,6 +36,13 @@ export function updateNetworkId(networkId: number): Action {
     return {
          data: networkId,
         type: actionTypes.UPDATE_NETWORK_ID,
+     };
+};
+
+export function updateUserEtherBalance(balance: number): Action {
+    return {
+         data: balance,
+        type: actionTypes.UPDATE_USER_ETHER_BALANCE,
      };
 };
 

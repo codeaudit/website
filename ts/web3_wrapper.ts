@@ -3,19 +3,22 @@ import Web3 = require('web3');
 import {Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {utils} from 'ts/utils/utils';
-import {updateNetworkId} from 'ts/redux/actions';
+import {updateNetworkId, updateUserEtherBalance} from 'ts/redux/actions';
+import BigNumber = require('bignumber.js');
 
 export class Web3Wrapper {
     private dispatch: Dispatch<State>;
     private syncMethods: string[];
     private callbackMethods: string[];
     private web3: Web3;
-    private watchNetworkIntervalId: number;
+    private watchNetworkAndBalanceIntervalId: number;
     constructor(web3Instance: Web3, dispatch: Dispatch<State>) {
         this.dispatch = dispatch;
         this.syncMethods = [
             'isAddress',
             'toWei',
+            'eth.getBalance',
+            'fromWei',
         ];
         this.callbackMethods = [
             'version.getNetwork',
@@ -26,7 +29,7 @@ export class Web3Wrapper {
             this.web3 = web3Instance;
         }
 
-        this.startEmittingNetworkConnectionStateAsync();
+        this.startEmittingNetworkConnectionAndUserBalanceStateAsync();
     }
     public doesExist() {
         return !_.isUndefined(this.web3);
@@ -49,6 +52,18 @@ export class Web3Wrapper {
         } catch (err) {
             return undefined;
         }
+    }
+    public getBalanceInEthAsync(owner: string): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.web3.eth.getBalance(owner, (err: Error, balanceInWei: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const balanceEth = this.call('fromWei', [(balanceInWei as BigNumber), 'ether']);
+                    resolve(balanceEth.toNumber());
+                }
+            });
+        });
     }
     // Note: since `sign` is overloaded to be both a sync and async method, it doesn't play nice
     // with our callAsync method. We therefore handle it here as a special case.
@@ -103,20 +118,31 @@ export class Web3Wrapper {
         });
     }
     public destroy() {
-        this.stopEmittingNetworkConnectionStateAsync();
+        this.stopEmittingNetworkConnectionAndUserBalanceStateAsync();
     }
-    private async startEmittingNetworkConnectionStateAsync() {
-        if (!_.isUndefined(this.watchNetworkIntervalId)) {
+    private async startEmittingNetworkConnectionAndUserBalanceStateAsync() {
+        if (!_.isUndefined(this.watchNetworkAndBalanceIntervalId)) {
             return; // we are already emitting the state
         }
 
         let prevNetworkId = await this.getNetworkIdIfExists();
+        let prevUserEtherBalanceInWei = 0;
         this.dispatch(updateNetworkId(prevNetworkId));
-        this.watchNetworkIntervalId = window.setInterval(async () => {
+        this.watchNetworkAndBalanceIntervalId = window.setInterval(async () => {
+            // Check for network state changes
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
                 this.dispatch(updateNetworkId(currentNetworkId));
+            }
+            // Check for user ether balance changes
+            const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
+            if (!_.isUndefined(userAddressIfExists)) {
+                const balance = await this.getBalanceInEthAsync(userAddressIfExists);
+                if (balance !== prevUserEtherBalanceInWei) {
+                    prevUserEtherBalanceInWei = balance;
+                    this.dispatch(updateUserEtherBalance(balance));
+                }
             }
         }, 1000);
     }
@@ -131,7 +157,7 @@ export class Web3Wrapper {
         const methodInstance = web3SubObj[methodName];
         return {methodInstance, web3SubObj};
     }
-    private stopEmittingNetworkConnectionStateAsync() {
-        clearInterval(this.watchNetworkIntervalId);
+    private stopEmittingNetworkConnectionAndUserBalanceStateAsync() {
+        clearInterval(this.watchNetworkAndBalanceIntervalId);
     }
 }
