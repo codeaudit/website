@@ -67,7 +67,7 @@ export class Web3Wrapper {
     }
     // Note: since `sign` is overloaded to be both a sync and async method, it doesn't play nice
     // with our callAsync method. We therefore handle it here as a special case.
-    public async signTransactionAsync(address: string, message: string) {
+    public signTransactionAsync(address: string, message: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this.web3.eth.sign(address, message, (err: Error, signData: string) => {
                 if (err) {

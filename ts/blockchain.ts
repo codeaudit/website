@@ -62,8 +62,7 @@ export class Blockchain {
         if (_.isUndefined(makerAddress)) {
             throw new Error('Tried to send a sign request but user has no associated addresses');
         }
-        const signData = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
-        const signature: string = signData as string;
+        const signature = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
         const signatureData = {
             hash: msgHashHex,
             r: signature.substring(0, 64),
