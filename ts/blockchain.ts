@@ -2,9 +2,11 @@ import * as _ from 'lodash';
 import * as Web3 from 'web3';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import contract = require('truffle-contract');
+import BigNumber = require('bignumber.js');
 import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
-import {BlockchainErrs, Token} from 'ts/types';
+import {constants} from 'ts/utils/constants';
+import {BlockchainErrs, Token, SignatureData} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import * as ProxyArtifacts from '../contracts/Proxy.json';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
@@ -36,6 +38,48 @@ export class Blockchain {
             this.dispatcher.encounteredBlockchainError('');
             await this.instantiateContractsAsync();
         }
+    }
+    public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
+                                takerTokenAddress: string, makerTokenAmount: number,
+                                takerTokenAmount: number, expirationUnixTimestampSec: number,
+                                fillAmount: number, signatureData: SignatureData) {
+        const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
+        if (_.isUndefined(userAddressIfExists)) {
+            throw new Error('Cannot fill order if no user accounts accessible');
+        }
+
+        taker = taker === '' ? '0x0' : taker;
+        const feeRecipient = '0x0';
+        const feeAmount = '0';
+        const shouldCheckTransfer = false;
+        const makerTokenAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(makerTokenAmount), 'ether']);
+        const takerTokenAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(takerTokenAmount), 'ether']);
+        const fillAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(fillAmount), 'ether']);
+        const fill = {
+            expiration: expirationUnixTimestampSec,
+            fees: [feeAmount, feeAmount],
+            feeRecipient,
+            fillValueM: fillAmountInWei,
+            rs: [signatureData.r, signatureData.s],
+            tokens: [makerTokenAddress, takerTokenAddress],
+            traders: [maker, taker],
+            shouldCheckTransfer,
+            v: signatureData.v,
+            values: [makerTokenAmountInWei, takerTokenAmountInWei],
+        };
+        // console.log('fill', JSON.stringify(fill))
+        await this.exchange.fill(fill.traders,
+                                 fill.tokens,
+                                 fill.feeRecipient,
+                                 fill.shouldCheckTransfer,
+                                 fill.values,
+                                 fill.fees,
+                                 fill.expiration,
+                                 fill.fillValueM,
+                                 fill.v,
+                                 fill.rs, {
+                                      from: userAddressIfExists,
+                                  });
     }
     public getExchangeContractAddressIfExists() {
         return this.exchange ? this.exchange.address : undefined;

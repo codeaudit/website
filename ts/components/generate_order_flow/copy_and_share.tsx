@@ -8,6 +8,7 @@ interface CopyAndShareProps {
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
+    orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     updateGenerateOrderStep(direction: Direction): void;
 }
@@ -27,6 +28,7 @@ export class CopyAndShare extends React.Component<CopyAndShareProps, CopyAndShar
                     orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                     orderSignatureData={this.props.orderSignatureData}
                     orderTakerAddress={this.props.orderTakerAddress}
+                    orderMakerAddress={this.props.orderMakerAddress}
                     sideToAssetToken={this.props.sideToAssetToken}
                 />
             </Step>

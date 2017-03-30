@@ -79,3 +79,11 @@ export interface HashData {
     receiveTokenContractAddr: string;
     takerFee: number;
 }
+
+export interface Order {
+    assetTokens: SideToAssetToken;
+    expiry: number;
+    signature: SignatureData;
+    maker: string;
+    taker: string;
+}

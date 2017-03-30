@@ -25,6 +25,7 @@ export const actionTypes = utils.strEnum([
     'UPDATE_ORDER_EXPIRY',
     'SWAP_ASSET_TOKENS',
     'UPDATE_USER_ETHER_BALANCE',
+    'UPDATE_ORDER_FILL_AMOUNT',
 ]);
 export type actionTypes = keyof typeof actionTypes;
 
@@ -116,3 +117,14 @@ export function updateOrderAddress(side: Side, address: string): Action {
         type: actionTypes.UPDATE_ORDER_ADDRESS,
     };
 };
+
+/*
+ * Order Fill action creators
+ */
+
+ export function updateOrderFillAmount(amount: number): Action {
+     return {
+         data: amount,
+         type: actionTypes.UPDATE_ORDER_FILL_AMOUNT,
+     };
+ };

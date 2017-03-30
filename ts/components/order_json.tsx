@@ -9,6 +9,7 @@ interface OrderJSONProps {
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
+    orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
 }
 
@@ -17,7 +18,8 @@ interface OrderJSONState {}
 export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
     public render() {
         const transactionDetails = utils.generateOrderJSON(this.props.sideToAssetToken,
-            this.props.orderExpiryTimestamp, this.props.orderTakerAddress, this.props.orderSignatureData);
+            this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
+            this.props.orderMakerAddress, this.props.orderSignatureData);
         // Hack: Need to remove carriage returns from the transactionDetails.
         // TODO: Find a safer way to do this
         const transactionDetailsString = JSON.stringify(transactionDetails).replace(/\\n|\\t|\\|"{|}"/g, '');

@@ -3,18 +3,33 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {TextField, Paper} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
-import {Side, TokenBySymbol} from 'ts/types';
+import {Side, TokenBySymbol, Order, TabValue, AssetToken} from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
+import {AmountInput} from 'ts/components/inputs/amount_input';
+import {VisualOrder} from 'ts/components/visual_order';
+import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
+import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
+import {Dispatcher} from 'ts/redux/dispatcher';
+import {Blockchain} from 'ts/blockchain';
 
 interface FillOrderProps {
+    orderFillAmount: number;
+    orderMakerAddress: string;
     tokenBySymbol: TokenBySymbol;
+    triggerTabChange: (tabValue: TabValue) => void;
+    dispatcher: Dispatcher;
+    blockchain: Blockchain;
 }
 
 interface FillOrderState {
-    errMsg: string;
+    isEnableWalletDialogOpen: boolean;
+    isValidOrder: boolean;
+    globalErrMsg: string;
     orderJSON: string;
+    orderJSONErrMsg: string;
+    parsedOrder: Order;
 }
 
 export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
@@ -23,8 +38,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         super(props);
         this.validator = new Validator();
         this.state = {
-            errMsg: '',
+            globalErrMsg: '',
+            isEnableWalletDialogOpen: false,
+            isValidOrder: false,
             orderJSON: '',
+            orderJSONErrMsg: '',
+            parsedOrder: undefined,
         };
     }
     public render() {
@@ -47,57 +66,152 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             v: 27,
         };
         const hintOrderJSON = utils.generateOrderJSON(hintSideToAssetToken, hintOrderExpiryTimestamp,
-                                                      '', hintSignatureData);
+                              '', '', hintSignatureData);
         return (
-            <Step
-                title="Fill an order"
-                actionButtonText="Fill order"
-                hasActionButton={true}
-                hasBackButton={false}
-                onNavigateClick={this.onFillOrderClick.bind(this)}
-            >
-                <div className="pt3">
-                    <div className="pb2 px4">Order JSON</div>
-                    <Paper className="mx4 center">
-                        <TextField
-                            id="orderJSON"
-                            style={{width: 745}}
-                            value={this.state.orderJSON}
-                            onChange={this.onFillOrderChanged.bind(this)}
-                            hintText={hintOrderJSON}
-                            multiLine={true}
-                            rows={4}
-                            rowsMax={8}
-                            underlineStyle={{display: 'none'}}
-                        />
-                        {this.state.errMsg !== '' &&
-                            <ErrorAlert message={this.state.errMsg} />
-                        }
-                    </Paper>
+            <div className="py3 clearfix" style={{minHeight: 600}}>
+                <h3 className="center">Fill an order</h3>
+                <div className="pb2 px4">Order JSON</div>
+                <Paper className="mx4 center">
+                    <TextField
+                        id="orderJSON"
+                        style={{width: 745}}
+                        value={this.state.orderJSON}
+                        onChange={this.onFillOrderChanged.bind(this)}
+                        hintText={hintOrderJSON}
+                        multiLine={true}
+                        rows={4}
+                        rowsMax={8}
+                        underlineStyle={{display: 'none'}}
+                    />
+                </Paper>
+                <div className="px4">
+                    {this.state.orderJSONErrMsg !== '' &&
+                        <ErrorAlert message={this.state.orderJSONErrMsg} />
+                    }
+                    {!_.isUndefined(this.state.parsedOrder) && this.renderVisualOrder()}
                 </div>
-            </Step>
+                <EnableWalletDialog
+                    isOpen={this.state.isEnableWalletDialogOpen}
+                    toggleDialogFn={this.toggleEnableWalletDialog.bind(this)}
+                />
+            </div>
         );
+    }
+    private renderVisualOrder() {
+        const assetToken = {
+            amount: this.props.orderFillAmount,
+            symbol: this.state.parsedOrder.assetTokens[Side.receive].symbol,
+        };
+        const token = this.props.tokenBySymbol[assetToken.symbol];
+        return (
+            <div className="pt2 pb1">
+                <VisualOrder
+                    orderExpiryTimestamp={this.state.parsedOrder.expiry}
+                    orderTakerAddress={this.props.orderMakerAddress}
+                    orderMakerAddress={this.state.parsedOrder.maker}
+                    sideToAssetToken={this.state.parsedOrder.assetTokens}
+                />
+                <div className="center">
+                    <AmountInput
+                        label="Fill amount"
+                        side={Side.receive}
+                        assetToken={assetToken}
+                        shouldCheckBalance={true}
+                        shouldShowIncompleteErrs={false} // TODO
+                        token={token}
+                        triggerTabChange={this.props.triggerTabChange}
+                        updateChosenAssetToken={this.onFillAmountUpdated.bind(this)}
+                    />
+                </div>
+                <div>
+                    <LifeCycleRaisedButton
+                        labelReady="Fill order"
+                        labelLoading="Filling order..."
+                        labelComplete="Order filled!"
+                        onClickAsyncFn={this.onFillOrderClickAsync.bind(this)}
+                    />
+                    {this.state.globalErrMsg !== '' &&
+                        <ErrorAlert message={this.state.globalErrMsg} />
+                    }
+                </div>
+            </div>
+        );
+    }
+    private onFillAmountUpdated(side: Side, assetToken: AssetToken) {
+        this.props.dispatcher.updateOrderFillAmount(assetToken.amount);
     }
     private onFillOrderChanged(e: any) {
         const orderJSON = e.target.value;
-        let errMsg = '';
+        let orderJSONErrMsg = '';
+        let parsedOrder;
         try {
             const order = JSON.parse(orderJSON);
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
-                errMsg = 'Submitted order JSON is not a valid order';
+                orderJSONErrMsg = 'Submitted order JSON is not a valid order';
+            } else {
+                parsedOrder = order;
             }
         } catch (err) {
             if (orderJSON !== '') {
-                errMsg = 'Submitted order JSON is not valid JSON';
+                orderJSONErrMsg = 'Submitted order JSON is not valid JSON';
             }
         }
         this.setState({
             orderJSON,
-            errMsg,
+            orderJSONErrMsg,
+            parsedOrder,
         });
     }
-    private onFillOrderClick() {
-        // TODO: Validate submitted json
+    private async onFillOrderClickAsync(): Promise<boolean> {
+        // TODO: add fillAmount < allowance check
+        // TODO: get amount of order already filled, and don't let them try to fill more then whats left
+        // TODO: validate that takerAddress (if specified) is same as users address
+        const depositToken = this.state.parsedOrder.assetTokens[Side.deposit];
+        const receiveToken = this.state.parsedOrder.assetTokens[Side.receive];
+        const fillAmount = this.props.orderFillAmount;
+        const takerAddress = this.props.orderMakerAddress;
+        const takerToken = this.props.tokenBySymbol[receiveToken.symbol];
+        if (_.isUndefined(takerAddress)) {
+            this.toggleEnableWalletDialog(true);
+            return false;
+        }
+        let globalErrMsg = '';
+        if (fillAmount > receiveToken.amount) {
+            globalErrMsg = `Cannot fill more then order limit of ${receiveToken.amount} ${receiveToken.symbol}`;
+        } else if (fillAmount < 0 || fillAmount > takerToken.balance) {
+            globalErrMsg = 'You must fix the above errors in order to fill this order';
+        }
+        if (globalErrMsg !== '') {
+            this.setState({
+                globalErrMsg,
+            });
+            return false;
+        }
+
+        try {
+            await this.props.blockchain.fillOrderAsync(this.state.parsedOrder.maker,
+                                                       this.state.parsedOrder.taker,
+                                                       this.props.tokenBySymbol[depositToken.symbol].address,
+                                                       this.props.tokenBySymbol[receiveToken.symbol].address,
+                                                       depositToken.amount,
+                                                       receiveToken.amount,
+                                                       this.state.parsedOrder.expiry,
+                                                       this.props.orderFillAmount,
+                                                       this.state.parsedOrder.signature,
+                                                   );
+            return true;
+        } catch (err) {
+            utils.consoleLog(`${err}`);
+            this.setState({
+                globalErrMsg: 'Failed to fill order, please refresh and try again',
+            });
+            return false;
+        }
+    }
+    private toggleEnableWalletDialog(isOpen: boolean) {
+        this.setState({
+            isEnableWalletDialogOpen: isOpen,
+        });
     }
 }

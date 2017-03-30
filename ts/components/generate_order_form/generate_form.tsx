@@ -127,9 +127,10 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 side={Side.deposit}
                                 token={depositToken}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                shouldCheckBalance={true}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                                 triggerTabChange={this.props.triggerTabChange}
+                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                             />
                         </div>
                         <div className="col col-6">
@@ -189,6 +190,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                                 orderSignatureData={this.props.orderSignatureData}
                                 orderTakerAddress={this.props.orderTakerAddress}
+                                orderMakerAddress={this.props.orderMakerAddress}
                                 sideToAssetToken={this.props.sideToAssetToken}
                             />
                         }

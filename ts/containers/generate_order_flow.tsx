@@ -97,6 +97,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderSignatureData={this.props.orderSignatureData}
                         orderTakerAddress={this.props.orderTakerAddress}
+                        orderMakerAddress={this.props.orderMakerAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={dispatcher.updateGenerateOrderStep.bind(dispatcher)}
                     />

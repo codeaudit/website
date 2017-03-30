@@ -17,8 +17,10 @@ interface MapStateToProps {
     blockchainIsLoaded: boolean;
     hashData: HashData;
     networkId: number;
+    orderFillAmount: number;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
+    orderMakerAddress: string;
 }
 
 interface ConnectedState {}
@@ -46,6 +48,8 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         blockchainErr: state.blockchainErr,
         blockchainIsLoaded: state.blockchainIsLoaded,
         networkId: state.networkId,
+        orderFillAmount: state.orderFillAmount,
+        orderMakerAddress: state.orderMakerAddress,
         hashData,
         tokenBySymbol: state.tokenBySymbol,
         userEtherBalance: state.userEtherBalance,

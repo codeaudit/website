@@ -49,10 +49,12 @@ export const utils = {
         return formattedDate;
     },
     generateOrderJSON(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
-                      orderTakerAddress: string, signatureData: SignatureData) {
+                      orderTakerAddress: string, orderMakerAddress: string,
+                      signatureData: SignatureData) {
         const order = {
             assetTokens: sideToAssetToken,
             expiry: orderExpiryTimestamp,
+            maker: orderMakerAddress,
             signature: signatureData,
             taker: orderTakerAddress,
         };

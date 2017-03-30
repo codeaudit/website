@@ -20,8 +20,10 @@ export interface DemoAllProps {
     hashData: HashData;
     kind: string;
     networkId: number;
+    orderFillAmount: number;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
+    orderMakerAddress: string;
 }
 
 interface DemoAllState {
@@ -62,7 +64,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         this.state = {
             kind: 'form',
             prevNetworkId: this.props.networkId,
-            selectedTab: TabValue.generate,
+            selectedTab: TabValue.fill,
         };
     }
     public componentWillMount() {
@@ -127,7 +129,12 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         >
                           <div>
                             <FillOrder
+                                blockchain={this.blockchain}
+                                orderFillAmount={this.props.orderFillAmount}
+                                orderMakerAddress={this.props.orderMakerAddress}
                                 tokenBySymbol={this.props.tokenBySymbol}
+                                triggerTabChange={this.triggerTabChange.bind(this)}
+                                dispatcher={this.props.dispatcher}
                             />
                           </div>
                         </Tab>

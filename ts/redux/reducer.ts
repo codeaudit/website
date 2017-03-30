@@ -18,6 +18,7 @@ export interface State {
     generateOrderStep: GenerateOrderSteps;
     networkId: number;
     orderExpiryTimestamp: number;
+    orderFillAmount: number;
     orderMakerAddress: string;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
@@ -39,6 +40,7 @@ const INITIAL_STATE: State = {
     generateOrderStep: GenerateOrderSteps.ChooseAssets,
     networkId: undefined,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
+    orderFillAmount: undefined,
     orderMakerAddress: undefined,
     orderSignatureData: {
         hash: '',
@@ -62,6 +64,11 @@ const INITIAL_STATE: State = {
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
+        case actionTypes.UPDATE_ORDER_FILL_AMOUNT:
+            return _.assign({}, state, {
+                orderFillAmount: action.data,
+            });
+
         case actionTypes.UPDATE_USER_ETHER_BALANCE:
             return _.assign({}, state, {
                 userEtherBalance: action.data,

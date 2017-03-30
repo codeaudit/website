@@ -13,10 +13,11 @@ interface AmountInputProps {
     inputStyle?: React.CSSProperties;
     assetToken: AssetToken;
     side: Side;
+    shouldCheckBalance?: boolean;
     shouldShowIncompleteErrs: boolean;
     token: Token;
-    updateChosenAssetToken: (side: Side, token: AssetToken) => void;
     triggerTabChange: (tabValue: TabValue) => void;
+    updateChosenAssetToken: (side: Side, token: AssetToken) => void;
 }
 
 interface AmountInputState {
@@ -94,7 +95,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             errMsg = 'Must be a number';
         } else if (amount === '0') {
             errMsg = 'Cannot be zero';
-        } else if (this.props.side === Side.deposit && balance < Number(amount)) {
+        } else if (this.props.shouldCheckBalance && balance < Number(amount)) {
             errMsg = (
                 <span>
                     Insuffient balance. Mint tokens{' '}
