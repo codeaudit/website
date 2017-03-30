@@ -121,7 +121,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     <TableRowColumn>
                         <div className="pl3">
                             <Toggle
-                                toggled={token.allowance !== 0}
+                                toggled={this.isAllowanceSet(token)}
                                 onToggle={this.onToggleAllowanceAsync.bind(this, token)}
                             />
                         </div>
@@ -140,9 +140,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private async onToggleAllowanceAsync(assetToken: Token) {
         // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
+        // Any edits to this hack should include changes to the `isAllowanceSet` method below
         // TODO: Investigate root cause for why allowance cannot be set to 0
         let newAllowanceAmount = 1;
-        if (assetToken.allowance === 0) {
+        if (!this.isAllowanceSet(assetToken)) {
             newAllowanceAmount = DEFAULT_ALLOWANCE_AMOUNT;
         }
         const token = this.props.tokenBySymbol[assetToken.symbol];
@@ -151,6 +152,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         } catch (err) {
             utils.consoleLog(`Unexpected error encountered: ${err}`);
         }
+    }
+    private isAllowanceSet(token: Token) {
+        return token.allowance !== 0 && token.allowance !== 1;
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
