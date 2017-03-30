@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Toggle} from 'material-ui';
 import {TokenBySymbol, Token} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
@@ -19,6 +20,7 @@ import {
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
 const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
+const DEFAULT_ALLOWANCE_AMOUNT = 1000000;
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
@@ -87,7 +89,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         <TableRow>
                             <TableHeaderColumn>Token</TableHeaderColumn>
                             <TableHeaderColumn>Balance</TableHeaderColumn>
-                            <TableHeaderColumn>0x allowance</TableHeaderColumn>
+                            <TableHeaderColumn>0x exchange allowance</TableHeaderColumn>
                             <TableHeaderColumn>Mint test tokens</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
@@ -116,7 +118,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         />
                     </TableRowColumn>
                     <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
-                    <TableRowColumn>{token.allowance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
+                    <TableRowColumn>
+                        <div className="pl3">
+                            <Toggle
+                                toggled={token.allowance !== 0}
+                                onToggle={this.onToggleAllowanceAsync.bind(this, token)}
+                            />
+                        </div>
+                    </TableRowColumn>
                     <TableRowColumn>
                         <LifeCycleRaisedButton
                             labelReady="Mint"
@@ -128,6 +137,20 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 </TableRow>
             );
         });
+    }
+    private async onToggleAllowanceAsync(assetToken: Token) {
+        // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
+        // TODO: Investigate root cause for why allowance cannot be set to 0
+        let newAllowanceAmount = 1;
+        if (assetToken.allowance === 0) {
+            newAllowanceAmount = DEFAULT_ALLOWANCE_AMOUNT;
+        }
+        const token = this.props.tokenBySymbol[assetToken.symbol];
+        try {
+            await this.props.blockchain.setExchangeAllowanceAsync(token, newAllowanceAmount);
+        } catch (err) {
+            utils.consoleLog(`Unexpected error encountered: ${err}`);
+        }
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {

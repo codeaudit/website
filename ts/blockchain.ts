@@ -39,6 +39,21 @@ export class Blockchain {
             await this.instantiateContractsAsync();
         }
     }
+    public async setExchangeAllowanceAsync(token: Token, amount: number) {
+        if (!this.isValidAddress(token.address)) {
+            throw new Error('tokenAddress is not a valid address');
+        }
+        const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
+        if (_.isUndefined(userAddressIfExists)) {
+            throw new Error('Cannot set allowance if no user accounts accessible');
+        }
+        const tokenContract = await this.instantiateContractAsync(TokenArtifacts, token.address);
+        await tokenContract.approve(this.proxy.address, amount, {
+            from: userAddressIfExists,
+        });
+        token.allowance = amount;
+        this.dispatcher.updateTokenBySymbol([token]);
+    }
     public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
                                 takerTokenAddress: string, makerTokenAmount: number,
                                 takerTokenAmount: number, expirationUnixTimestampSec: number,
@@ -88,7 +103,7 @@ export class Blockchain {
         const accountAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
         return accountAddress;
     }
-    public isValidAddress(address: string) {
+    public isValidAddress(address: string): boolean {
         const lowercaseAddress = address.toLowerCase();
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
