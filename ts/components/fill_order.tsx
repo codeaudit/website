@@ -179,7 +179,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         let globalErrMsg = '';
         if (fillAmount > receiveToken.amount) {
             globalErrMsg = `Cannot fill more then order limit of ${receiveToken.amount} ${receiveToken.symbol}`;
-        } else if (fillAmount < 0 || fillAmount > takerToken.balance) {
+        } else if (fillAmount < 0 || fillAmount > takerToken.balance || fillAmount > takerToken.allowance) {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         }
         if (globalErrMsg !== '') {
