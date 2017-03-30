@@ -63,10 +63,10 @@ export class Blockchain {
             throw new Error('Cannot fill order if no user accounts accessible');
         }
 
-        taker = taker === '' ? '0x0' : taker;
-        const feeRecipient = '0x0';
+        taker = taker === '' ? constants.NULL_ADDRESS : taker;
+        const feeRecipient = constants.NULL_ADDRESS;
         const feeAmount = '0';
-        const shouldCheckTransfer = false;
+        const shouldCheckTransfer = true;
         const makerTokenAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(makerTokenAmount), 'ether']);
         const takerTokenAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(takerTokenAmount), 'ether']);
         const fillAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(fillAmount), 'ether']);
