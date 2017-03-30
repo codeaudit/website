@@ -4,6 +4,9 @@ import {
     Direction,
     Side,
     AssetToken,
+    BlockchainErrs,
+    Token,
+    SignatureData,
 } from 'ts/types';
 import {
     swapAssetTokenSymbols,
@@ -11,6 +14,13 @@ import {
     updateChosenAssetToken,
     updateOrderExpiry,
     updateOrderAddress,
+    encounteredBlockchainError,
+    updateBlockchainIsLoaded,
+    updateTokenBySymbol,
+    updateSignatureData,
+    updateUserEtherBalance,
+    updateNetworkId,
+    updateOrderFillAmount,
 } from 'ts/redux/actions';
 
 export class Dispatcher {
@@ -32,5 +42,26 @@ export class Dispatcher {
     }
     public updateOrderExpiry(unixTimestampSec: number) {
         this.dispatch(updateOrderExpiry(unixTimestampSec));
+    }
+    public encounteredBlockchainError(err: BlockchainErrs) {
+        this.dispatch(encounteredBlockchainError(err));
+    }
+    public updateBlockchainIsLoaded(isLoaded: boolean) {
+        this.dispatch(updateBlockchainIsLoaded(isLoaded));
+    }
+    public updateTokenBySymbol(tokens: Token[]) {
+        this.dispatch(updateTokenBySymbol(tokens));
+    }
+    public updateSignatureData(signatureData: SignatureData) {
+        this.dispatch(updateSignatureData(signatureData));
+    }
+    public updateUserEtherBalance(balance: number) {
+        this.dispatch(updateUserEtherBalance(balance));
+    }
+    public updateNetworkId(networkId: number) {
+        this.dispatch(updateNetworkId(networkId));
+    }
+    public updateOrderFillAmount(amount: number) {
+        this.dispatch(updateOrderFillAmount(amount));
     }
 }

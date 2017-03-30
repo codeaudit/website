@@ -23,6 +23,7 @@ interface GenerateOrderFlowProps {
     blockchain: Blockchain;
     hashData: HashData;
     triggerTabChange: (tabValue: TabValue) => void;
+    dispatcher: Dispatcher;
 }
 
 interface ConnectedState {
@@ -35,10 +36,6 @@ interface ConnectedState {
     tokenBySymbol: TokenBySymbol;
 }
 
-interface ConnectedDispatch {
-    dispatcher: Dispatcher;
-}
-
 const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
@@ -49,12 +46,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): Connec
     tokenBySymbol: state.tokenBySymbol,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
-    dispatcher: new Dispatcher(dispatch),
-});
-
-class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps & ConnectedState &
-    ConnectedDispatch, any> {
+class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps & ConnectedState, any> {
     public render() {
         const dispatcher = this.props.dispatcher;
         const generateOrderStep = this.props.generateOrderStep;
@@ -122,4 +114,4 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
 }
 
 export const GenerateOrderFlow: React.ComponentClass<GenerateOrderFlowProps> =
-  connect(mapStateToProps, mapDispatchToProps)(GenerateOrderFlowComponent);
+  connect(mapStateToProps)(GenerateOrderFlowComponent);

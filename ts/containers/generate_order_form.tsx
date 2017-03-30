@@ -18,6 +18,7 @@ interface GenerateOrderFormProps {
     blockchain: Blockchain;
     hashData: HashData;
     triggerTabChange: (tabValue: TabValue) => void;
+    dispatcher: Dispatcher;
 }
 
 interface ConnectedState {
@@ -30,10 +31,6 @@ interface ConnectedState {
     tokenBySymbol: TokenBySymbol;
 }
 
-interface ConnectedDispatch {
-    dispatcher: Dispatcher;
-}
-
 const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): ConnectedState => ({
     blockchainIsLoaded: state.blockchainIsLoaded,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
@@ -44,12 +41,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     tokenBySymbol: state.tokenBySymbol,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
-    dispatcher: new Dispatcher(dispatch),
-});
-
-class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps & ConnectedState &
-    ConnectedDispatch, any> {
+class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps & ConnectedState, any> {
     public render() {
         return (
             <GenerateForm
@@ -70,4 +62,4 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
 }
 
 export const GenerateOrderForm: React.ComponentClass<GenerateOrderFormProps> =
-  connect(mapStateToProps, mapDispatchToProps)(GenerateOrderFormComponent);
+  connect(mapStateToProps)(GenerateOrderFormComponent);

@@ -1,18 +1,11 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
-import {Dispatch} from 'redux';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import contract = require('truffle-contract');
-import {State} from 'ts/redux/reducer';
 import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {BlockchainErrs, Token} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
-import {
-    encounteredBlockchainError,
-    updateBlockchainIsLoaded,
-    updateSignatureData,
-    updateTokenBySymbol,
-} from 'ts/redux/actions';
 import * as ProxyArtifacts from '../contracts/Proxy.json';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
@@ -22,25 +15,25 @@ import * as MintableArtifacts from '../contracts/Mintable.json';
 const MINT_AMOUNT = 100;
 
 export class Blockchain {
-    private dispatch: Dispatch<State>;
+    private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private provider: Provider;
     private exchange: any; // TODO: add type definition for Contract
     private proxy: any;
     private tokenRegistry: any;
     private prevNetworkId: number;
-    constructor(dispatch: Dispatch<State>) {
-        this.dispatch = dispatch;
+    constructor(dispatcher: Dispatcher) {
+        this.dispatcher = dispatcher;
         this.onPageLoadInitFireAndForgetAsync();
     }
     public async networkIdUpdatedFireAndForgetAsync(networkId: number) {
         const isConnected = !_.isUndefined(networkId);
         if (!isConnected) {
             this.prevNetworkId = networkId;
-            this.dispatch(encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE));
+            this.dispatcher.encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE);
         } else if (this.prevNetworkId !== networkId) {
             this.prevNetworkId = networkId;
-            this.dispatch(encounteredBlockchainError(''));
+            this.dispatcher.encounteredBlockchainError('');
             await this.instantiateContractsAsync();
         }
     }
@@ -69,7 +62,7 @@ export class Blockchain {
             s: signature.substring(64, 128),
             v: _.parseInt(signature.substring(128, 130)) + 27,
         };
-        this.dispatch(updateSignatureData(signatureData));
+        this.dispatcher.updateSignatureData(signatureData);
     }
     public async mintTestTokensAsync(token: Token) {
         const userAddress = await this.getFirstAccountIfExistsAsync();
@@ -83,7 +76,7 @@ export class Blockchain {
         const tokens = [_.assign({}, token, {
             balance: token.balance + MINT_AMOUNT,
         })];
-        this.dispatch(updateTokenBySymbol(tokens));
+        this.dispatcher.updateTokenBySymbol(tokens);
     }
     private async getTokenRegistryTokensAsync() {
         if (this.tokenRegistry) {
@@ -107,7 +100,7 @@ export class Blockchain {
                     symbol: utils.convertByte32HexToString(symbols[i]),
                 });
             }
-            this.dispatch(updateTokenBySymbol(tokens));
+            this.dispatcher.updateTokenBySymbol(tokens);
         } else {
             return [];
         }
@@ -120,10 +113,10 @@ export class Blockchain {
 
         const web3Instance = new Web3();
         web3Instance.setProvider(this.provider.getProviderObj());
-        this.web3Wrapper = new Web3Wrapper(web3Instance, this.dispatch);
+        this.web3Wrapper = new Web3Wrapper(web3Instance, this.dispatcher);
     }
     private async instantiateContractsAsync() {
-        this.dispatch(updateBlockchainIsLoaded(false));
+        this.dispatcher.updateBlockchainIsLoaded(false);
         const doesNetworkExist = !_.isUndefined(this.prevNetworkId);
         if (doesNetworkExist) {
             this.exchange = await this.instantiateContractAsync(ExchangeArtifacts);
@@ -132,9 +125,9 @@ export class Blockchain {
             await this.getTokenRegistryTokensAsync();
         } else {
             utils.consoleLog('Notice: web3.version.getNetwork returned undefined');
-            this.dispatch(encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE));
+            this.dispatcher.encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE);
         }
-        this.dispatch(updateBlockchainIsLoaded(true));
+        this.dispatcher.updateBlockchainIsLoaded(true);
     }
     private async instantiateContractAsync(artifact: object, address?: string) {
         const c = await contract(artifact);
@@ -151,10 +144,10 @@ export class Blockchain {
             const errMsg = `${err}`;
             utils.consoleLog(`Notice: Error encountered: ${err}`);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
-                this.dispatch(encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK));
+                this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
             } else {
                 // We show a generic message for other possible caught errors
-                this.dispatch(encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR));
+                this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);
             }
         }
     }

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {Side, HashData, TokenBySymbol} from 'ts/types';
 import {
     Demo as DemoComponent,
@@ -23,7 +24,7 @@ interface MapStateToProps {
 interface ConnectedState {}
 
 interface ConnectedDispatch {
-    dispatch: Dispatch<State>;
+    dispatcher: Dispatcher;
 }
 
 const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): ConnectedState => {
@@ -51,11 +52,9 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => {
-    return {
-        dispatch,
-    };
-};
+const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
+    dispatcher: new Dispatcher(dispatch),
+});
 
 export const Demo: React.ComponentClass<DemoComponentPassedProps> =
   connect(mapStateToProps, mapDispatchToProps)(DemoComponent);

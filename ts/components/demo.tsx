@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Dispatch} from 'redux';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {State} from 'ts/redux/reducer';
 import {Tabs, Tab, Paper, RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
@@ -16,7 +16,7 @@ export interface DemoPassedProps {}
 export interface DemoAllProps {
     blockchainErr: string;
     blockchainIsLoaded: boolean;
-    dispatch: Dispatch<State>;
+    dispatcher: Dispatcher;
     hashData: HashData;
     kind: string;
     networkId: number;
@@ -66,7 +66,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         };
     }
     public componentWillMount() {
-        this.blockchain = new Blockchain(this.props.dispatch);
+        this.blockchain = new Blockchain(this.props.dispatcher);
     }
     public componentWillReceiveProps(nextProps: DemoAllProps) {
         if (nextProps.networkId !== this.state.prevNetworkId) {
@@ -117,6 +117,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                             blockchain={this.blockchain}
                             hashData={this.props.hashData}
                             triggerTabChange={this.triggerTabChange.bind(this)}
+                            dispatcher={this.props.dispatcher}
                         />
                         </Tab>
                         <Tab
