@@ -13,7 +13,7 @@ interface AmountInputProps {
     inputStyle?: React.CSSProperties;
     assetToken: AssetToken;
     side: Side;
-    shouldCheckBalance?: boolean;
+    shouldCheckBalanceAndAllowance?: boolean;
     shouldShowIncompleteErrs: boolean;
     token: Token;
     triggerTabChange: (tabValue: TabValue) => void;
@@ -42,7 +42,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             const amount = _.isUndefined(newAmount) ? '' : newAmount.toString();
             this.setState({
                 amount,
-                errMsg: this.getErrMsg(nextProps.token.balance, amount),
+                errMsg: this.getErrMsg(nextProps.token.balance, nextProps.token.allowance, amount),
             });
         }
     }
@@ -78,7 +78,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         const isAmountNumeric = utils.isNumeric(amount);
         this.setState({
             amount,
-            errMsg: this.getErrMsg(this.props.token.balance, amount),
+            errMsg: this.getErrMsg(this.props.token.balance, this.props.token.allowance, amount),
         });
         const assetToken = this.props.assetToken;
         if (isAmountNumeric) {
@@ -88,17 +88,29 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         }
         this.props.updateChosenAssetToken(this.props.side, assetToken);
     }
-    private getErrMsg(balance: number, amount: string): (string | React.ReactNode) {
+    private getErrMsg(balance: number, allowance: number, amount: string): (string | React.ReactNode) {
         const isAmountNumeric = utils.isNumeric(amount);
         let errMsg: (string | React.ReactNode) = '';
         if (!isAmountNumeric && amount !== '') {
             errMsg = 'Must be a number';
         } else if (amount === '0') {
             errMsg = 'Cannot be zero';
-        } else if (this.props.shouldCheckBalance && balance < Number(amount)) {
+        } else if (this.props.shouldCheckBalanceAndAllowance && balance < Number(amount)) {
             errMsg = (
                 <span>
                     Insuffient balance. Mint tokens{' '}
+                    <a
+                        style={{cursor: 'pointer', color: colors.blueGrey500}}
+                        onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
+                    >
+                        here
+                    </a>
+                </span>
+            );
+        } else if (this.props.shouldCheckBalanceAndAllowance && allowance < Number(amount)) {
+            errMsg = (
+                <span>
+                    Insuffient allowance. Set allowance{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
                         onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}

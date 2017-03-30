@@ -127,7 +127,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 side={Side.deposit}
                                 token={depositToken}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                shouldCheckBalance={true}
+                                shouldCheckBalanceAndAllowance={true}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                                 triggerTabChange={this.props.triggerTabChange}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
@@ -203,10 +203,12 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         // Check if all required inputs were supplied
         const debitToken = this.props.sideToAssetToken[Side.deposit];
         const debitBalance = this.props.tokenBySymbol[debitToken.symbol].balance;
+        const debitAllowance = this.props.tokenBySymbol[debitToken.symbol].allowance;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
             debitToken.amount > 0 && receiveAmount > 0 &&
-            !_.isUndefined(this.props.orderMakerAddress) && debitBalance >= debitToken.amount) {
+            !_.isUndefined(this.props.orderMakerAddress) &&
+            debitBalance >= debitToken.amount && debitAllowance >= debitToken.amount) {
             await this.signTransactionAsync();
             this.setState({
                 globalErrMsg: '',

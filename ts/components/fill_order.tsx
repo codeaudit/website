@@ -116,7 +116,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         label="Fill amount"
                         side={Side.receive}
                         assetToken={assetToken}
-                        shouldCheckBalance={true}
+                        shouldCheckBalanceAndAllowance={true}
                         shouldShowIncompleteErrs={false} // TODO
                         token={token}
                         triggerTabChange={this.props.triggerTabChange}
