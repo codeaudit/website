@@ -197,19 +197,20 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             </div>
         );
     }
-    private async onSignClickedAsync() {
+    private async onSignClickedAsync(): Promise<boolean> {
         // Check if all required inputs were supplied
         const debitToken = this.props.sideToAssetToken[Side.deposit];
         const debitBalance = this.props.tokenBySymbol[debitToken.symbol].balance;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
             debitToken.amount > 0 && receiveAmount > 0 &&
-            !_.isUndefined(this.props.orderMakerAddress) && debitBalance > debitToken.amount) {
+            !_.isUndefined(this.props.orderMakerAddress) && debitBalance >= debitToken.amount) {
             await this.signTransactionAsync();
             this.setState({
                 globalErrMsg: '',
                 shouldShowIncompleteErrs: false,
             });
+            return true;
         } else {
             let globalErrMsg = 'You must fix the above errors in order to generate a valid order';
             if (_.isUndefined(this.props.orderMakerAddress)) {
@@ -220,6 +221,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 globalErrMsg,
                 shouldShowIncompleteErrs: true,
             });
+            return false;
         }
     }
     private async signTransactionAsync() {

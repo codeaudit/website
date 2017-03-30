@@ -129,9 +129,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             );
         });
     }
-    private async onMintTestTokensAsync(token: Token) {
+    private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
             await this.props.blockchain.mintTestTokensAsync(token);
+            return true;
         } catch (err) {
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User has no associated addresses')) {
@@ -139,16 +140,17 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 this.toggleEnableWalletDialog(isOpen);
             }
             utils.consoleLog(`Unexpected error encountered: ${err}`);
+            return false;
         }
     }
-    private async requestEtherAsync() {
+    private async requestEtherAsync(): Promise<boolean> {
         await utils.sleepAsync(ARTIFICIAL_ETHER_REQUEST_DELAY);
 
         const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();
         if (_.isUndefined(userAddressIfExists)) {
             const isOpen = true;
             this.toggleEnableWalletDialog(isOpen);
-            return;
+            return false;
         }
 
         const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${userAddressIfExists}`);
@@ -156,7 +158,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         if (response.status !== 200) {
             // TODO: Show error message in UI
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
-            return;
+            return false;
         }
     }
     private toggleEnableWalletDialog(isOpen: boolean) {

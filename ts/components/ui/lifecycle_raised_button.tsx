@@ -21,7 +21,7 @@ interface LifeCycleRaisedButtonProps {
     labelReady: string;
     labelLoading: string;
     labelComplete: string;
-    onClickAsyncFn: () => void;
+    onClickAsyncFn: () => boolean;
 }
 
 interface LifeCycleRaisedButtonState {
@@ -72,14 +72,20 @@ export class LifeCycleRaisedButton extends
         this.setState({
             buttonState: ButtonState.LOADING,
         });
-        await this.props.onClickAsyncFn();
-        this.setState({
-            buttonState: ButtonState.COMPLETE,
-        });
-        this.buttonTimeoutId = window.setTimeout(() => {
+        const didSucceed = await this.props.onClickAsyncFn();
+        if (didSucceed) {
+            this.setState({
+                buttonState: ButtonState.COMPLETE,
+            });
+            this.buttonTimeoutId = window.setTimeout(() => {
+                this.setState({
+                    buttonState: ButtonState.READY,
+                });
+            }, COMPLETE_STATE_SHOW_LENGTH_MS);
+        } else {
             this.setState({
                 buttonState: ButtonState.READY,
             });
-        }, COMPLETE_STATE_SHOW_LENGTH_MS);
+        }
     }
 }
