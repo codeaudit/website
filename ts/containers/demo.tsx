@@ -35,14 +35,14 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
     const hashData = {
         depositAmount: state.sideToAssetToken[Side.deposit].amount,
         depositTokenContractAddr: state.tokenBySymbol[depositSymbol].address,
-        feeRecipientAddress: constants.NULL_ADDRESS,
-        makerFee: 0,
+        feeRecipientAddress: constants.FEE_RECIPIENT_ADDRESS,
+        makerFee: constants.MAKER_FEE,
         orderExpiryTimestamp: state.orderExpiryTimestamp,
         orderMakerAddress: state.orderMakerAddress,
         orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : constants.NULL_ADDRESS,
         receiveAmount: state.sideToAssetToken[Side.receive].amount,
         receiveTokenContractAddr: state.tokenBySymbol[receiveSymbol].address,
-        takerFee: 0,
+        takerFee: constants.TAKER_FEE,
     };
     return {
         blockchainErr: state.blockchainErr,

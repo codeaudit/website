@@ -64,25 +64,19 @@ export class Blockchain {
         }
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
-        const feeRecipient = constants.NULL_ADDRESS;
-        const feeAmount = '0';
-        const shouldCheckTransfer = true;
-        const makerTokenAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(makerTokenAmount), 'ether']);
-        const takerTokenAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(takerTokenAmount), 'ether']);
-        const fillAmountInWei = this.web3Wrapper.call('toWei', [new BigNumber(fillAmount), 'ether']);
+        const shouldCheckTransfer = false;
         const fill = {
             expiration: expirationUnixTimestampSec,
-            fees: [feeAmount, feeAmount],
-            feeRecipient,
-            fillValueM: fillAmountInWei,
+            feeRecipient: constants.FEE_RECIPIENT_ADDRESS,
+            fees: [constants.MAKER_FEE, constants.TAKER_FEE],
+            fillValueM: fillAmount.toString(),
             rs: [signatureData.r, signatureData.s],
             tokens: [makerTokenAddress, takerTokenAddress],
             traders: [maker, taker],
             shouldCheckTransfer,
             v: signatureData.v,
-            values: [makerTokenAmountInWei, takerTokenAmountInWei],
+            values: [makerTokenAmount.toString(), takerTokenAmount.toString()],
         };
-        // console.log('fill', JSON.stringify(fill))
         await this.exchange.fill(fill.traders,
                                  fill.tokens,
                                  fill.feeRecipient,
@@ -117,9 +111,9 @@ export class Blockchain {
         const signature = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
         const signatureData = {
             hash: msgHashHex,
-            r: signature.substring(0, 64),
-            s: signature.substring(64, 128),
-            v: _.parseInt(signature.substring(128, 130)) + 27,
+            r: `0x${signature.substring(2, 66)}`,
+            s: `0x${signature.substring(66, 130)}`,
+            v: _.parseInt(signature.substring(130, 132)) + 27,
         };
         this.dispatcher.updateSignatureData(signatureData);
         return signatureData;
