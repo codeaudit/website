@@ -262,7 +262,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';
-                utils.consoleLog(`Unexpected error occured: Invalid signatureData received: ${signatureData}`);
+                utils.consoleLog(`Unexpected error occured: Invalid signatureData received:
+                                  ${JSON.stringify(signatureData)}`);
             }
         } catch (err) {
             const errMsg = '' + err;
