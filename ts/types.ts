@@ -71,13 +71,13 @@ export interface HashData {
     depositAmount: number;
     depositTokenContractAddr: string;
     feeRecipientAddress: string;
-    makerFee: number;
+    makerFee: string;
     orderExpiryTimestamp: number;
     orderMakerAddress: string;
     orderTakerAddress: string;
     receiveAmount: number;
     receiveTokenContractAddr: string;
-    takerFee: number;
+    takerFee: string;
 }
 
 export interface Order {

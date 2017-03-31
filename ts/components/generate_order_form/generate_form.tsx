@@ -5,6 +5,7 @@ import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Ox} from 'ts/utils/Ox';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
@@ -246,15 +247,13 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const hashData = this.props.hashData;
         const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
-                        hashData.receiveTokenContractAddr, hashData.depositAmount,
-                        hashData.receiveAmount, hashData.orderExpiryTimestamp);
-
-        const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
-                                             hashData.takerFee);
+                        hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
+                        hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
+                        hashData.takerFee, hashData.orderExpiryTimestamp);
 
         let globalErrMsg = '';
         try {
-            const signatureData = await this.props.blockchain.sendSignRequestAsync(msgHashHex);
+            const signatureData = await this.props.blockchain.sendSignRequestAsync(orderHash);
             const order = utils.generateOrder(this.props.sideToAssetToken,
                                                   this.props.orderExpiryTimestamp,
                                                   this.props.orderTakerAddress,

@@ -4,32 +4,26 @@ import ethUtil = require('ethereumjs-util');
 
 export const Ox = {
     getOrderHash(exchangeContractAddr: string, makerAddr: string, takerAddr: string,
-                 depositTokenAddr: string, receiveTokenAddr: string, depositAmt: number,
-                 receiveAmt: number, expiration: number): Buffer {
+                 depositTokenAddr: string, receiveTokenAddr: string, feeRecipient: string,
+                 depositAmt: number, receiveAmt: number, makerFee: string, takerFee: string,
+                 expiration: number): string {
         const orderParts = [
             exchangeContractAddr,
             makerAddr,
             takerAddr,
             depositTokenAddr,
             receiveTokenAddr,
+            feeRecipient,
             depositAmt,
             receiveAmt,
+            makerFee,
+            takerFee,
             expiration,
         ];
         const buffHash = this.sha3(orderParts);
-        return buffHash;
-    },
-    getMessageHash(orderHash: Buffer, feeRecipientAddress: string, makerFee: number, takerFee: number) {
-        const message = [
-            orderHash,
-            feeRecipientAddress,
-            makerFee,
-            takerFee,
-        ];
-        const messageHash = this.sha3(message);
-        const personalMessageHash = ethUtil.hashPersonalMessage(messageHash);
-        const personalMessageHashHex = ethUtil.bufferToHex(personalMessageHash);
-        return personalMessageHashHex;
+        const personalOrderHash = ethUtil.hashPersonalMessage(buffHash);
+        const personalOrderHashHex = ethUtil.bufferToHex(personalOrderHash);
+        return personalOrderHashHex;
     },
     sha3(params: Array<(string | number | Buffer)>) {
         const messageBuffs = _.map(params, (param) => {

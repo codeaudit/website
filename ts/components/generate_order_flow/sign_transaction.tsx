@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {Ox} from 'ts/utils/Ox';
 import {Blockchain} from 'ts/blockchain';
 import {Step} from 'ts/components/ui/step';
@@ -76,14 +77,13 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
             const hashData = this.props.hashData;
             const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                             hashData.orderTakerAddress, hashData.depositTokenContractAddr,
-                            hashData.receiveTokenContractAddr, hashData.depositAmount,
-                            hashData.receiveAmount, hashData.orderExpiryTimestamp);
+                            hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
+                            hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
+                            hashData.takerFee, hashData.orderExpiryTimestamp);
 
-            const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
-                                                 hashData.takerFee);
             let signingErrMsg = '';
             try {
-                await this.props.blockchain.sendSignRequestAsync(msgHashHex);
+                await this.props.blockchain.sendSignRequestAsync(orderHash);
             } catch (err) {
                 // TODO: translate this to a user friendly error message and display it in the UI
                 signingErrMsg = '' + err;

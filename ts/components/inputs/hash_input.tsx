@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {TextField} from 'material-ui';
 import {Blockchain} from 'ts/blockchain';
+import {constants} from 'ts/utils/constants';
 import {Ox} from 'ts/utils/Ox';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import ReactTooltip = require('react-tooltip');
@@ -49,11 +50,10 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
         const hashData = this.props.hashData;
         const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
-                        hashData.receiveTokenContractAddr, hashData.depositAmount,
-                        hashData.receiveAmount, hashData.orderExpiryTimestamp);
+                        hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
+                        hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
+                        hashData.takerFee, hashData.orderExpiryTimestamp);
 
-        const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
-                                             hashData.takerFee);
-        return msgHashHex;
+        return orderHash;
     }
 }
