@@ -5,6 +5,8 @@ import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Ox} from 'ts/utils/Ox';
 import {utils} from 'ts/utils/utils';
+import {Validator} from 'ts/schemas/validator';
+import {orderSchema} from 'ts/schemas/order_schema';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderJSON} from 'ts/components/order_json';
 import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
@@ -47,18 +49,18 @@ interface GenerateFormState {
     globalErrMsg: string;
     shouldShowIncompleteErrs: boolean;
     signingState: SigningState;
-    signingErrMsg: string;
 }
 
 export class GenerateForm extends React.Component<GenerateFormProps, any> {
+    private validator: Validator;
     constructor(props: GenerateFormProps) {
         super(props);
         this.state = {
             globalErrMsg: '',
             shouldShowIncompleteErrs: false,
-            signingErrMsg: '',
             signingState: SigningState.UNSIGNED,
         };
+        this.validator = new Validator();
     }
     public componentWillReceiveProps(newProps: GenerateFormProps) {
         if (!utils.deepEqual(newProps.hashData, this.props.hashData)) {
@@ -180,7 +182,6 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                             onClickAsyncFn={this.onSignClickedAsync.bind(this)}
                         />
                     </div>
-                    {this.state.signingErrMsg !== '' && <ErrorAlert message={this.state.signingErrMsg} />}
                     {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
                 </div>
                 <div className="px3 pt3">
@@ -209,12 +210,14 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             debitToken.amount > 0 && receiveAmount > 0 &&
             !_.isUndefined(this.props.orderMakerAddress) &&
             debitBalance >= debitToken.amount && debitAllowance >= debitToken.amount) {
-            await this.signTransactionAsync();
-            this.setState({
-                globalErrMsg: '',
-                shouldShowIncompleteErrs: false,
-            });
-            return true;
+            const didSignSuccessfully = await this.signTransactionAsync();
+            if (didSignSuccessfully) {
+                this.setState({
+                    globalErrMsg: '',
+                    shouldShowIncompleteErrs: false,
+                });
+            }
+            return didSignSuccessfully;
         } else {
             let globalErrMsg = 'You must fix the above errors in order to generate a valid order';
             if (_.isUndefined(this.props.orderMakerAddress)) {
@@ -228,17 +231,17 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             return false;
         }
     }
-    private async signTransactionAsync() {
+    private async signTransactionAsync(): Promise<boolean> {
         this.setState({
             signingState: SigningState.SIGNING,
         });
         const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
         if (_.isUndefined(exchangeContractAddr)) {
             this.setState({
+                globalErrMsg: 'Exchange contract is not deployed on this network',
                 isSigning: false,
-                signingErrMsg: 'Exchange contract is not deployed on this network',
             });
-            return;
+            return false;
         }
         const hashData = this.props.hashData;
         const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
@@ -249,20 +252,31 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const msgHashHex = Ox.getMessageHash(orderHash, hashData.feeRecipientAddress, hashData.makerFee,
                                              hashData.takerFee);
 
-        let signingErrMsg = '';
+        let globalErrMsg = '';
         try {
-            await this.props.blockchain.sendSignRequestAsync(msgHashHex);
+            const signatureData = await this.props.blockchain.sendSignRequestAsync(msgHashHex);
+            const order = utils.generateOrder(this.props.sideToAssetToken,
+                                                  this.props.orderExpiryTimestamp,
+                                                  this.props.orderTakerAddress,
+                                                  this.props.orderMakerAddress, signatureData);
+            const validationResult = this.validator.validate(order, orderSchema);
+            if (validationResult.errors.length > 0) {
+                globalErrMsg = 'Order signing failed. Please refresh and try again';
+                utils.consoleLog(`Unexpected error occured: Invalid signatureData received: ${signatureData}`);
+            }
         } catch (err) {
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User denied message')) {
-                signingErrMsg = 'User denied sign request';
+                globalErrMsg = 'User denied sign request';
             } else {
-                signingErrMsg = 'An unexpected error occured. Please try refreshing the page';
+                globalErrMsg = 'An unexpected error occured. Please try refreshing the page';
+                utils.consoleLog(`Unexpected error occured: ${err}`);
             }
         }
         this.setState({
-            signingState: signingErrMsg === '' ? SigningState.SIGNED : SigningState.UNSIGNED,
-            signingErrMsg,
+            signingState: globalErrMsg === '' ? SigningState.SIGNED : SigningState.UNSIGNED,
+            globalErrMsg,
         });
+        return globalErrMsg === '';
     }
 }

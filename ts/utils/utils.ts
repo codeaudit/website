@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
-import {SideToAssetToken, SignatureData} from 'ts/types';
+import {SideToAssetToken, SignatureData, Order} from 'ts/types';
 import deepEqual = require('deep-equal');
 
 export const utils = {
@@ -48,9 +48,9 @@ export const utils = {
         const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
         return formattedDate;
     },
-    generateOrderJSON(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
-                      orderTakerAddress: string, orderMakerAddress: string,
-                      signatureData: SignatureData) {
+    generateOrder(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
+                  orderTakerAddress: string, orderMakerAddress: string,
+                  signatureData: SignatureData): Order {
         const order = {
             assetTokens: sideToAssetToken,
             expiry: orderExpiryTimestamp,
@@ -58,6 +58,13 @@ export const utils = {
             signature: signatureData,
             taker: orderTakerAddress,
         };
+        return order;
+    },
+    generateOrderJSON(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
+                      orderTakerAddress: string, orderMakerAddress: string,
+                      signatureData: SignatureData): string {
+        const order = this.generateOrder(sideToAssetToken, orderExpiryTimestamp, orderTakerAddress,
+                                         orderMakerAddress, signatureData);
         return JSON.stringify(order, null, '\t');
     },
     convertByte32HexToString(byte32Hex: string) {

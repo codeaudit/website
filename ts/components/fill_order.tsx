@@ -36,7 +36,6 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     private validator: Validator;
     constructor(props: FillOrderProps) {
         super(props);
-        this.validator = new Validator();
         this.state = {
             globalErrMsg: '',
             isEnableWalletDialogOpen: false,
@@ -45,6 +44,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             orderJSONErrMsg: '',
             parsedOrder: undefined,
         };
+        this.validator = new Validator();
     }
     public render() {
         const symbols = _.keys(this.props.tokenBySymbol);
@@ -149,6 +149,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 orderJSONErrMsg = 'Submitted order JSON is not a valid order';
+                utils.consoleLog(`Unexpected order JSON validation error: ${validationResult.errors.join(', ')}`);
             } else {
                 parsedOrder = order;
             }

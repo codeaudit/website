@@ -107,7 +107,7 @@ export class Blockchain {
         const lowercaseAddress = address.toLowerCase();
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
-    public async sendSignRequestAsync(msgHashHex: string) {
+    public async sendSignRequestAsync(msgHashHex: string): Promise<SignatureData> {
         const makerAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
         // If marketAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
@@ -122,6 +122,7 @@ export class Blockchain {
             v: _.parseInt(signature.substring(128, 130)) + 27,
         };
         this.dispatcher.updateSignatureData(signatureData);
+        return signatureData;
     }
     public async mintTestTokensAsync(token: Token) {
         const userAddress = await this.getFirstAccountIfExistsAsync();
