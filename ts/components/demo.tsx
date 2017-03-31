@@ -64,7 +64,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         this.state = {
             kind: 'form',
             prevNetworkId: this.props.networkId,
-            selectedTab: TabValue.fill,
+            selectedTab: TabValue.generate,
         };
     }
     public componentWillMount() {
