@@ -73,13 +73,14 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                     onMouseLeave={this.onToggleHover.bind(this, symbol, false)}
                 >
                     <GridTile
+                        style={{height: 160}}
                         title={token.name}
                     >
-                        {/* Note: we keep this additional div here because GridTile treats img tag children */}
-                        {/* by applying additional transformations to the image that we do not want. */}
+                        {/* Note: we keep this additional div here because GridTile applies additional */}
+                        {/* transformations to img tag children that we do not want. */}
                         <div>
                             <img
-                                style={{width: 100, position: 'absolute', left: '22%'}}
+                                style={{width: 100, height: 100, position: 'absolute', left: '22%'}}
                                 src={token.iconUrl}
                             />
                         </div>
