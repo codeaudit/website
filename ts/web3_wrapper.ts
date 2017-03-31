@@ -129,19 +129,20 @@ export class Web3Wrapper {
         let prevUserAddress: string;
         this.dispatcher.updateNetworkId(prevNetworkId);
         this.watchNetworkAndBalanceIntervalId = window.setInterval(async () => {
-            const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
             // Check for network state changes
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
                 this.dispatcher.updateNetworkId(currentNetworkId);
-
-                // Update makerAddress on network change
-                if (prevUserAddress !== userAddressIfExists) {
-                    prevUserAddress = userAddressIfExists;
-                    this.dispatcher.updateOrderAddress(Side.deposit, userAddressIfExists);
-                }
             }
+
+            const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
+            // Update makerAddress on network change
+            if (prevUserAddress !== userAddressIfExists) {
+                prevUserAddress = userAddressIfExists;
+                this.dispatcher.updateOrderAddress(Side.deposit, userAddressIfExists);
+            }
+
             // Check for user ether balance changes
             if (!_.isUndefined(userAddressIfExists)) {
                 const balance = await this.getBalanceInEthAsync(userAddressIfExists);
