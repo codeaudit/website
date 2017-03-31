@@ -1,5 +1,6 @@
 import {Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
+import {actionTypes} from 'ts/redux/actions';
 import {
     Direction,
     Side,
@@ -8,20 +9,6 @@ import {
     Token,
     SignatureData,
 } from 'ts/types';
-import {
-    swapAssetTokenSymbols,
-    updateGenerateOrderStep,
-    updateChosenAssetToken,
-    updateOrderExpiry,
-    updateOrderAddress,
-    encounteredBlockchainError,
-    updateBlockchainIsLoaded,
-    updateTokenBySymbol,
-    updateSignatureData,
-    updateUserEtherBalance,
-    updateNetworkId,
-    updateOrderFillAmount,
-} from 'ts/redux/actions';
 
 export class Dispatcher {
     private dispatch: Dispatch<State>;
@@ -29,39 +16,80 @@ export class Dispatcher {
         this.dispatch = dispatch;
     }
     public swapAssetTokenSymbols() {
-        this.dispatch(swapAssetTokenSymbols());
+        this.dispatch({
+            type: actionTypes.SWAP_ASSET_TOKENS,
+        });
     }
     public updateGenerateOrderStep(direction: Direction) {
-        this.dispatch(updateGenerateOrderStep(direction));
+        this.dispatch({
+            data: direction,
+            type: actionTypes.UPDATE_GENERATE_ORDER_STEP,
+        });
     }
     public updateChosenAssetToken(side: Side, token: AssetToken) {
-        this.dispatch(updateChosenAssetToken(side, token));
+        this.dispatch({
+            data: {
+                side,
+                token,
+            },
+            type: actionTypes.UPDATE_CHOSEN_ASSET_TOKEN,
+        });
     }
     public updateOrderAddress(side: Side, address: string) {
-        this.dispatch(updateOrderAddress(side, address));
+        this.dispatch({
+            data: {
+                side,
+                address,
+            },
+            type: actionTypes.UPDATE_ORDER_ADDRESS,
+        });
     }
     public updateOrderExpiry(unixTimestampSec: number) {
-        this.dispatch(updateOrderExpiry(unixTimestampSec));
+        this.dispatch({
+            data: unixTimestampSec,
+            type: actionTypes.UPDATE_ORDER_EXPIRY,
+        });
     }
     public encounteredBlockchainError(err: BlockchainErrs) {
-        this.dispatch(encounteredBlockchainError(err));
+        this.dispatch({
+             data: err,
+            type: actionTypes.BLOCKCHAIN_ERR_ENCOUNTERED,
+         });
     }
     public updateBlockchainIsLoaded(isLoaded: boolean) {
-        this.dispatch(updateBlockchainIsLoaded(isLoaded));
+        this.dispatch({
+             data: isLoaded,
+            type: actionTypes.UPDATE_BLOCKCHAIN_IS_LOADED,
+         });
     }
     public updateTokenBySymbol(tokens: Token[]) {
-        this.dispatch(updateTokenBySymbol(tokens));
+        this.dispatch({
+             data: tokens,
+            type: actionTypes.UPDATE_TOKEN_BY_SYMBOL,
+         });
     }
     public updateSignatureData(signatureData: SignatureData) {
-        this.dispatch(updateSignatureData(signatureData));
+        this.dispatch({
+             data: signatureData,
+            type: actionTypes.UPDATE_ORDER_SIGNATURE_DATA,
+         });
     }
     public updateUserEtherBalance(balance: number) {
-        this.dispatch(updateUserEtherBalance(balance));
+        this.dispatch({
+             data: balance,
+            type: actionTypes.UPDATE_USER_ETHER_BALANCE,
+         });
     }
     public updateNetworkId(networkId: number) {
-        this.dispatch(updateNetworkId(networkId));
+        this.dispatch({
+             data: networkId,
+            type: actionTypes.UPDATE_NETWORK_ID,
+         });
     }
     public updateOrderFillAmount(amount: number) {
-        this.dispatch(updateOrderFillAmount(amount));
+        this.dispatch({
+            data: amount,
+            type: actionTypes.UPDATE_ORDER_FILL_AMOUNT,
+        });
     }
 }
