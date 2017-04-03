@@ -102,7 +102,7 @@ export class Blockchain {
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
     public async sendSignRequestAsync(msgHashHex: string): Promise<SignatureData> {
-        const makerAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
+        const makerAddress = await this.getFirstAccountIfExistsAsync();
         // If makerAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
         if (_.isUndefined(makerAddress)) {
