@@ -189,6 +189,7 @@ export class Blockchain {
             const doesContractExist = await this.web3Wrapper.doesContractExistAtAddressAsync(contractAddress);
             if (!doesContractExist) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
+                this.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
                 return;
             }
         }
@@ -206,6 +207,7 @@ export class Blockchain {
             utils.consoleLog(`Notice: Error encountered: ${err}`);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
+                this.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
             } else {
                 // We show a generic message for other possible caught errors
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);

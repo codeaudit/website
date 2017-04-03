@@ -69,6 +69,10 @@ declare module 'web3' {
             getBalance(addressHexString: string,
                 callback?: (err: any, result: BigNumber) => void): BigNumber;
 
+            // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethgetcode
+            getCode(addressHexString: string,
+                callback?: (err: any, code: string) => void): string;
+
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter
             filter(value: string|IFilterObject): IFilterResult;
         };

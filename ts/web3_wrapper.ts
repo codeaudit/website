@@ -64,6 +64,17 @@ export class Web3Wrapper {
             });
         });
     }
+    public doesContractExistAtAddressAsync(address: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.web3.eth.getCode(address, (err: Error, code: string) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(code !== '0x0');
+                }
+            });
+        });
+    }
     // Note: since `sign` is overloaded to be both a sync and async method, it doesn't play nice
     // with our callAsync method. We therefore handle it here as a special case.
     public signTransactionAsync(address: string, message: string): Promise<string> {
