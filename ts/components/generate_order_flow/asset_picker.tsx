@@ -68,7 +68,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                 <div
                     key={symbol}
                     style={tileStyles}
-                    onTouchTap={this.chooseAssetAndClose.bind(this, assetToken)}
+                    onClick={this.chooseAssetAndClose.bind(this, assetToken)}
                     onMouseEnter={this.onToggleHover.bind(this, symbol, true)}
                     onMouseLeave={this.onToggleHover.bind(this, symbol, false)}
                 >

@@ -34,7 +34,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
                     <div
                         className="pt1"
                         style={{cursor: 'pointer'}}
-                        onTouchTap={this.onInputClick.bind(this)}
+                        onClick={this.onInputClick.bind(this)}
                     >
                         <div className="flex" style={{width: '100%'}}>
                             <div className="pr1">

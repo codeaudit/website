@@ -68,7 +68,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetSt
                             <div
                                 className="absolute"
                                 style={{top: 55, left: 15, cursor: 'pointer'}}
-                                onTouchTap={this.swapTokens.bind(this)}
+                                onClick={this.swapTokens.bind(this)}
                                 onMouseEnter={this.onToggleHover.bind(this, swapHoverId, true)}
                                 onMouseLeave={this.onToggleHover.bind(this, swapHoverId, false)}
                             >
@@ -114,7 +114,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetSt
                     style={{width: 100, height: 100, ...iconStyles}}
                     onMouseEnter={this.onToggleHover.bind(this, iconHoverId, true)}
                     onMouseLeave={this.onToggleHover.bind(this, iconHoverId, false)}
-                    onTouchTap={this.onAssetClicked.bind(this, side)}
+                    onClick={this.onAssetClicked.bind(this, side)}
                     src={token.iconUrl}
                 />
                 <div className="pt2" style={{color: colors.grey500}}>

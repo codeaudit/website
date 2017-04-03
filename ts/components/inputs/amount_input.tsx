@@ -101,7 +101,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     Insuffient balance. Mint tokens{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
-                        onTouchTap={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
+                        onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
                     >
                         here
                     </a>
@@ -113,7 +113,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     Insuffient allowance. Set allowance{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
-                        onTouchTap={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
+                        onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
                     >
                         here
                     </a>
