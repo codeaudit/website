@@ -17,24 +17,24 @@ import * as MintableArtifacts from '../contracts/Mintable.json';
 const MINT_AMOUNT = 100;
 
 export class Blockchain {
+    public networkId: number;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private provider: Provider;
     private exchange: any; // TODO: add type definition for Contract
     private proxy: any;
     private tokenRegistry: any;
-    private prevNetworkId: number;
     constructor(dispatcher: Dispatcher) {
         this.dispatcher = dispatcher;
         this.onPageLoadInitFireAndForgetAsync();
     }
-    public async networkIdUpdatedFireAndForgetAsync(networkId: number) {
-        const isConnected = !_.isUndefined(networkId);
+    public async networkIdUpdatedFireAndForgetAsync(newNetworkId: number) {
+        const isConnected = !_.isUndefined(newNetworkId);
         if (!isConnected) {
-            this.prevNetworkId = networkId;
+            this.networkId = newNetworkId;
             this.dispatcher.encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE);
-        } else if (this.prevNetworkId !== networkId) {
-            this.prevNetworkId = networkId;
+        } else if (this.networkId !== newNetworkId) {
+            this.networkId = newNetworkId;
             this.dispatcher.encounteredBlockchainError('');
             await this.instantiateContractsAsync();
         }
@@ -170,22 +170,29 @@ export class Blockchain {
         this.web3Wrapper = new Web3Wrapper(web3Instance, this.dispatcher);
     }
     private async instantiateContractsAsync() {
+        utils.assert(!_.isUndefined(this.networkId),
+                     'Cannot call instantiateContractsAsync if disconnected from Ethereum node');
+
         this.dispatcher.updateBlockchainIsLoaded(false);
-        const doesNetworkExist = !_.isUndefined(this.prevNetworkId);
-        if (doesNetworkExist) {
-            this.exchange = await this.instantiateContractAsync(ExchangeArtifacts);
-            this.tokenRegistry = await this.instantiateContractAsync(TokenRegistryArtifacts);
-            this.proxy = await this.instantiateContractAsync(ProxyArtifacts);
-            await this.getTokenRegistryTokensAsync();
-        } else {
-            utils.consoleLog('Notice: web3.version.getNetwork returned undefined');
-            this.dispatcher.encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE);
-        }
+        this.exchange = await this.instantiateContractAsync(ExchangeArtifacts);
+        this.tokenRegistry = await this.instantiateContractAsync(TokenRegistryArtifacts);
+        this.proxy = await this.instantiateContractAsync(ProxyArtifacts);
+        await this.getTokenRegistryTokensAsync();
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
-    private async instantiateContractAsync(artifact: object, address?: string) {
+    private async instantiateContractAsync(artifact: any, address?: string) {
         const c = await contract(artifact);
         c.setProvider(this.provider.getProviderObj());
+
+        const contractAddress = !_.isUndefined(address) ? address : artifact.networks[this.networkId].address;
+        if (!_.isUndefined(contractAddress)) {
+            const doesContractExist = await this.web3Wrapper.doesContractExistAtAddressAsync(contractAddress);
+            if (!doesContractExist) {
+                this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
+                return;
+            }
+        }
+
         try {
             let contractInstance;
             if (_.isUndefined(address)) {
