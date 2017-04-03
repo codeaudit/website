@@ -12,6 +12,7 @@ import {
     HashData,
     TokenBySymbol,
     TabValue,
+    BlockchainErrs,
 } from 'ts/types';
 
 interface GenerateOrderFormProps {
@@ -22,6 +23,7 @@ interface GenerateOrderFormProps {
 }
 
 interface ConnectedState {
+    blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
@@ -32,6 +34,7 @@ interface ConnectedState {
 }
 
 const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): ConnectedState => ({
+    blockchainErr: state.blockchainErr,
     blockchainIsLoaded: state.blockchainIsLoaded,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
     orderMakerAddress: state.orderMakerAddress,
@@ -46,6 +49,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
         return (
             <GenerateForm
                 blockchain={this.props.blockchain}
+                blockchainErr={this.props.blockchainErr}
                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                 sideToAssetToken={this.props.sideToAssetToken}
                 orderSignatureData={this.props.orderSignatureData}
