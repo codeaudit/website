@@ -159,7 +159,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         });
     }
     private async onFillOrderClickAsync(): Promise<boolean> {
-        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+        if (this.props.blockchainErr !== '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }

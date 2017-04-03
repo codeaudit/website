@@ -45,6 +45,8 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
             return '0x smart contracts not found';
         } else if (!hasWalletAddress) {
             return 'Enable wallet communication';
+        } else if (this.props.blockchainErr === BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE) {
+            return 'Disconnected from Ethereum network';
         } else {
             return 'Unexpected error';
         }
@@ -54,9 +56,22 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
             return this.renderContractsNotDeployedExplanation();
         } else if (!hasWalletAddress) {
             return this.renderNoWalletFoundExplanation();
+        } else if (this.props.blockchainErr === BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE) {
+            return this.renderDisconnectedFromNode();
         } else {
             return this.renderUnexpectedErrorExplanation();
         }
+    }
+    private renderDisconnectedFromNode() {
+        return (
+            <div>
+                You were disconnected from the backing Ethereum node.
+                {' '}If using <a href={constants.METAMASK_CHROME_STORE_URL} target="_blank">
+                    Metamask
+                </a> or <a href={constants.MIST_DOWNLOAD_URL} target="_blank">Mist</a> try refreshing
+                {' '}the page. If using a locally hosted Ethereum node, make sure it's still running.
+            </div>
+        );
     }
     private renderUnexpectedErrorExplanation() {
         return (

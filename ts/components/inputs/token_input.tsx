@@ -58,7 +58,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         );
     }
     private onInputClick() {
-        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+        if (this.props.blockchainErr !== '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return;
         }

@@ -164,7 +164,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private async requestEtherAsync(): Promise<boolean> {
         const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();
         if (_.isUndefined(userAddressIfExists) ||
-            this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+            this.props.blockchainErr !== '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }

@@ -208,7 +208,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         );
     }
     private async onSignClickedAsync(): Promise<boolean> {
-        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+        if (this.props.blockchainErr !== '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }

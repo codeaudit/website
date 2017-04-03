@@ -33,6 +33,7 @@ export class Blockchain {
         if (!isConnected) {
             this.networkId = newNetworkId;
             this.dispatcher.encounteredBlockchainError(BlockchainErrs.DISCONNECTED_FROM_ETHEREUM_NODE);
+            this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
         } else if (this.networkId !== newNetworkId) {
             this.networkId = newNetworkId;
             this.dispatcher.encounteredBlockchainError('');
