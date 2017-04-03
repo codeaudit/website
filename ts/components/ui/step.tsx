@@ -35,7 +35,7 @@ export class Step extends React.Component<StepProps, StepState> {
                 className="absolute"
                 style={{left: 15, top: -1}}
             >
-                <BackButton onClick={this.onNavigateClick.bind(this, Direction.backward)} />
+                <BackButton onTouchTap={this.onNavigateClick.bind(this, Direction.backward)} />
             </div>
         );
     }
@@ -45,7 +45,7 @@ export class Step extends React.Component<StepProps, StepState> {
                 <RaisedButton
                     label={this.props.actionButtonText}
                     style={{margin: 12, width: '100%'}}
-                    onClick={this.onNavigateClick.bind(this, Direction.forward)}
+                    onTouchTap={this.onNavigateClick.bind(this, Direction.forward)}
                 />
             </div>
         );

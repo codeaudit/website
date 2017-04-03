@@ -42,7 +42,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                     onChange={this.onTimeChanged.bind(this)}
                 />
                 <div
-                    onClick={this.clearDates.bind(this)}
+                    onTouchTap={this.clearDates.bind(this)}
                     className="pt2 pl2"
                 >
                     <i style={{fontSize: 16, cursor: 'pointer'}} className="material-icons">clear</i>

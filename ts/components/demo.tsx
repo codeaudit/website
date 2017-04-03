@@ -96,11 +96,11 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     <RaisedButton
                         className="mr2"
                         label="Form"
-                        onClick={this.onChangeUIClick.bind(this, 'form')}
+                        onTouchTap={this.onChangeUIClick.bind(this, 'form')}
                     />
                     <RaisedButton
                         label="Flow"
-                        onClick={this.onChangeUIClick.bind(this, 'flow')}
+                        onTouchTap={this.onChangeUIClick.bind(this, 'flow')}
                     />
                 </div>
                 <Paper style={finalPaperStyle} zDepth={3}>

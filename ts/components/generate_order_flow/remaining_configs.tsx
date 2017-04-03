@@ -83,9 +83,6 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
             />
         );
     }
-    private onBackButtonClick() {
-        this.props.dispatcher.updateGenerateOrderStep(Direction.backward);
-    }
     private onPointToPointToggled(e: any, isPointToPoint: boolean) {
         this.setState({
             isPointToPoint,
