@@ -36,15 +36,17 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
     }
     public componentWillReceiveProps(nextProps: AmountInputProps) {
         const newAmount = nextProps.assetToken.amount;
+        const amount = _.isUndefined(newAmount) ? '' : newAmount.toString();
         const isCurrentAmountNumeric = utils.isNumeric(this.state.amount);
         if (isCurrentAmountNumeric && newAmount !== Number(this.state.amount) ||
             !isCurrentAmountNumeric && !_.isUndefined(newAmount)) {
-            const amount = _.isUndefined(newAmount) ? '' : newAmount.toString();
             this.setState({
                 amount,
-                errMsg: this.getErrMsg(nextProps.token.balance, nextProps.token.allowance, amount),
             });
         }
+        this.setState({
+            errMsg: this.getErrMsg(nextProps.token.balance, nextProps.token.allowance, amount),
+        });
     }
     public render() {
         let errText: (string | React.ReactNode) = '';
