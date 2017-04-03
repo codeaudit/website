@@ -47,8 +47,11 @@ export class Blockchain {
         if (_.isUndefined(userAddressIfExists)) {
             throw new Error('Cannot set allowance if no user accounts accessible');
         }
-        const tokenContract = await this.instantiateContractAsync(TokenArtifacts, token.address);
-        await tokenContract.approve(this.proxy.address, amount, {
+        const tokenContractIfExists = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
+        if (_.isUndefined(tokenContractIfExists)) {
+            throw new Error('Cannot set allowance if token contract no deployed on network');
+        }
+        await tokenContractIfExists.approve(this.proxy.address, amount, {
             from: userAddressIfExists,
         });
         token.allowance = amount;
@@ -123,8 +126,11 @@ export class Blockchain {
         if (_.isUndefined(userAddress)) {
             throw new Error('User has no associated addresses');
         }
-        const mintableContract = await this.instantiateContractAsync(MintableArtifacts, token.address);
-        await mintableContract.mint(MINT_AMOUNT, {
+        const mintableContractIfExists = await this.instantiateContractIfExistsAsync(MintableArtifacts, token.address);
+        if (_.isUndefined(mintableContractIfExists)) {
+            throw new Error('Cannot mint tokens if token contract no deployed on network');
+        }
+        await mintableContractIfExists.mint(MINT_AMOUNT, {
             from: userAddress,
         });
         const tokens = [_.assign({}, token, {
@@ -139,12 +145,12 @@ export class Blockchain {
             const tokens = [];
             for (let i = 0; i < addresses.length; i++) {
                 const address = addresses[i];
-                const token = await this.instantiateContractAsync(TokenArtifacts, address);
+                const tokenContractIfExists = await this.instantiateContractIfExistsAsync(TokenArtifacts, address);
                 let balance;
                 let allowance;
-                if (!_.isUndefined(userAddress)) {
-                    balance = await token.balanceOf.call(userAddress);
-                    allowance = await token.allowance.call(userAddress, this.proxy.address);
+                if (!_.isUndefined(tokenContractIfExists) && !_.isUndefined(userAddress)) {
+                    balance = await tokenContractIfExists.balanceOf.call(userAddress);
+                    allowance = await tokenContractIfExists.allowance.call(userAddress, this.proxy.address);
                 }
                 tokens.push({
                     address,
@@ -174,13 +180,13 @@ export class Blockchain {
                      'Cannot call instantiateContractsAsync if disconnected from Ethereum node');
 
         this.dispatcher.updateBlockchainIsLoaded(false);
-        this.exchange = await this.instantiateContractAsync(ExchangeArtifacts);
-        this.tokenRegistry = await this.instantiateContractAsync(TokenRegistryArtifacts);
-        this.proxy = await this.instantiateContractAsync(ProxyArtifacts);
+        this.exchange = await this.instantiateContractIfExistsAsync(ExchangeArtifacts);
+        this.tokenRegistry = await this.instantiateContractIfExistsAsync(TokenRegistryArtifacts);
+        this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
         await this.getTokenRegistryTokensAsync();
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
-    private async instantiateContractAsync(artifact: any, address?: string) {
+    private async instantiateContractIfExistsAsync(artifact: any, address?: string) {
         const c = await contract(artifact);
         c.setProvider(this.provider.getProviderObj());
 
@@ -190,7 +196,7 @@ export class Blockchain {
             if (!doesContractExist) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
                 this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
-                return;
+                return undefined;
             }
         }
 
@@ -212,6 +218,7 @@ export class Blockchain {
                 // We show a generic message for other possible caught errors
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);
             }
+            return undefined;
         }
     }
     private async onPageLoadAsync() {
