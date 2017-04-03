@@ -14,8 +14,13 @@ interface ExpirationInputState {
 }
 
 export class ExpirationInput extends React.Component<ExpirationInputProps, ExpirationInputState> {
+    private earliestPickerableDateMs: number;
     constructor(props: ExpirationInputProps) {
         super(props);
+        // Set the earliest pickable date to today at 00:00, so users can only pick the current or later dates
+        const earliestPickableDate = new Date();
+        earliestPickableDate.setHours(0, 0, 0, 0);
+        this.earliestPickerableDateMs = Date.parse(earliestPickableDate.toISOString());
         const dateTime = utils.convertToDateTimeFromUnixTimestamp(props.orderExpiryTimestamp);
         const didUserSetExpiry = utils.initialOrderExpiryUnixTimestampSec() !== props.orderExpiryTimestamp;
         this.state = {
@@ -33,6 +38,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                     mode="landscape"
                     value={this.state.date}
                     onChange={this.onDateChanged.bind(this)}
+                    shouldDisableDate={this.shouldDisableDate.bind(this)}
                 />
                 <TimePicker
                     textFieldStyle={{width: 125}}
@@ -49,6 +55,10 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                 </div>
             </div>
         );
+    }
+    private shouldDisableDate(date: Date): boolean {
+        const unixTimestampMs = Date.parse(date.toISOString());
+        return unixTimestampMs < this.earliestPickerableDateMs;
     }
     private clearDates() {
         this.setState({
