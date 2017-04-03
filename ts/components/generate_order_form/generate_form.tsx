@@ -24,6 +24,7 @@ import {
     HashData,
     TabValue,
     TokenBySymbol,
+    BlockchainErrs,
 } from 'ts/types';
 
 enum SigningState {
@@ -34,6 +35,7 @@ enum SigningState {
 
 interface GenerateFormProps {
     blockchain: Blockchain;
+    blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
     hashData: HashData;
@@ -104,6 +106,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                     <div className="mx-auto clearfix">
                         <div className="col col-6 pr3">
                             <TokenInput
+                                blockchainErr={this.props.blockchainErr}
+                                dispatcher={this.props.dispatcher}
                                 label="Token to sell (address)"
                                 side={Side.deposit}
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
@@ -113,6 +117,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         </div>
                         <div className="col col-6">
                             <TokenInput
+                                blockchainErr={this.props.blockchainErr}
+                                dispatcher={this.props.dispatcher}
                                 label="Token to receive (address)"
                                 side={Side.receive}
                                 assetToken={this.props.sideToAssetToken[Side.receive]}
@@ -202,6 +208,11 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         );
     }
     private async onSignClickedAsync(): Promise<boolean> {
+        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
+            return false;
+        }
+
         // Check if all required inputs were supplied
         const debitToken = this.props.sideToAssetToken[Side.deposit];
         const debitBalance = this.props.tokenBySymbol[debitToken.symbol].balance;

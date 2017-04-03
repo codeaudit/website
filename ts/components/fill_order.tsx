@@ -3,7 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {TextField, Paper} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
-import {Side, TokenBySymbol, Order, TabValue, AssetToken} from 'ts/types';
+import {Side, TokenBySymbol, Order, TabValue, AssetToken, BlockchainErrs} from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {VisualOrder} from 'ts/components/visual_order';
@@ -15,12 +15,13 @@ import {Dispatcher} from 'ts/redux/dispatcher';
 import {Blockchain} from 'ts/blockchain';
 
 interface FillOrderProps {
+    blockchain: Blockchain;
+    blockchainErr: BlockchainErrs;
     orderFillAmount: number;
     orderMakerAddress: string;
     tokenBySymbol: TokenBySymbol;
     triggerTabChange: (tabValue: TabValue) => void;
     dispatcher: Dispatcher;
-    blockchain: Blockchain;
 }
 
 interface FillOrderState {
@@ -165,6 +166,11 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         });
     }
     private async onFillOrderClickAsync(): Promise<boolean> {
+        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
+            return;
+        }
+
         // TODO: add fillAmount < allowance check
         // TODO: get amount of order already filled, and don't let them try to fill more then whats left
         // TODO: validate that takerAddress (if specified) is same as users address

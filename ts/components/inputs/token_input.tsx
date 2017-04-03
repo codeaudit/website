@@ -1,12 +1,15 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
+import {Dispatcher} from 'ts/redux/dispatcher';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
-import {AssetToken, Side, TokenBySymbol} from 'ts/types';
+import {AssetToken, Side, TokenBySymbol, BlockchainErrs} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
 
 interface TokenInputProps {
+    blockchainErr: BlockchainErrs;
+    dispatcher: Dispatcher;
     label: string;
     side: Side;
     assetToken: AssetToken;
@@ -55,6 +58,11 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         );
     }
     private onInputClick() {
+        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
+            return;
+        }
+
         this.setState({
             isPickerOpen: true,
         });

@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Toggle} from 'material-ui';
-import {TokenBySymbol, Token} from 'ts/types';
+import {Dispatcher} from 'ts/redux/dispatcher';
+import {TokenBySymbol, Token, BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
@@ -24,8 +25,9 @@ const DEFAULT_ALLOWANCE_AMOUNT = 1000000;
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
-    blockchainErr: string;
+    blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
+    dispatcher: Dispatcher;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
 }
@@ -110,7 +112,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
         return _.map(this.props.tokenBySymbol, (token: Token) => {
             return (
-                <TableRow key={token.symbol}>
+                <TableRow key={token.iconUrl}>
                     <TableRowColumn>
                         <img
                             style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
@@ -151,6 +153,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             await this.props.blockchain.setExchangeAllowanceAsync(token, newAllowanceAmount);
         } catch (err) {
             utils.consoleLog(`Unexpected error encountered: ${err}`);
+            utils.consoleLog(err.stack);
         }
     }
     private isAllowanceSet(token: Token) {
@@ -167,10 +170,16 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 this.toggleEnableWalletDialog(isOpen);
             }
             utils.consoleLog(`Unexpected error encountered: ${err}`);
+            utils.consoleLog(err.stack);
             return false;
         }
     }
     private async requestEtherAsync(): Promise<boolean> {
+        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
+            return false;
+        }
+
         await utils.sleepAsync(ARTIFICIAL_ETHER_REQUEST_DELAY);
 
         const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();

@@ -26,6 +26,12 @@ export class Dispatcher {
             type: actionTypes.UPDATE_GENERATE_ORDER_STEP,
         });
     }
+    public updateShouldNotDeployedDialogBeOpen(shouldBeOpen: boolean) {
+        this.dispatch({
+            data: shouldBeOpen,
+            type: actionTypes.UPDATE_SHOULD_NOT_DEPLOYED_DIALOG_BE_OPEN,
+        });
+    }
     public updateChosenAssetToken(side: Side, token: AssetToken) {
         this.dispatch({
             data: {

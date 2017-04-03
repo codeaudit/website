@@ -9,12 +9,13 @@ import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
-import {HashData, TokenBySymbol, TabValue} from 'ts/types';
+import {HashData, TokenBySymbol, TabValue, BlockchainErrs} from 'ts/types';
+import {ContractsNotDeployedDialog} from 'ts/components/contracts_not_deployed_dialog';
 
 export interface DemoPassedProps {}
 
 export interface DemoAllProps {
-    blockchainErr: string;
+    blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
     hashData: HashData;
@@ -24,6 +25,7 @@ export interface DemoAllProps {
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
     orderMakerAddress: string;
+    shouldNotDeployedDialogBeOpen: boolean;
 }
 
 interface DemoAllState {
@@ -90,6 +92,8 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 maxWidth: 600,
             };
         }
+        const updateShouldNotDeployedDialogBeOpen = this.props.dispatcher
+                .updateShouldNotDeployedDialogBeOpen.bind(this.props.dispatcher);
         return (
             <div>
                 <div className="flex pb2">
@@ -130,6 +134,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                           <div>
                             <FillOrder
                                 blockchain={this.blockchain}
+                                blockchainErr={this.props.blockchainErr}
                                 orderFillAmount={this.props.orderFillAmount}
                                 orderMakerAddress={this.props.orderMakerAddress}
                                 tokenBySymbol={this.props.tokenBySymbol}
@@ -147,12 +152,18 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 blockchain={this.blockchain}
                                 blockchainErr={this.props.blockchainErr}
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
+                                dispatcher={this.props.dispatcher}
                                 tokenBySymbol={this.props.tokenBySymbol}
                                 userEtherBalance={this.props.userEtherBalance}
                             />
                         </Tab>
                     </Tabs>
                 </Paper>
+                <ContractsNotDeployedDialog
+                    blockchain={this.blockchain}
+                    isOpen={this.props.shouldNotDeployedDialogBeOpen}
+                    toggleDialogFn={updateShouldNotDeployedDialogBeOpen}
+                />
             </div>
         );
     }
