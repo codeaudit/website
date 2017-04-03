@@ -97,11 +97,13 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             symbol: this.state.parsedOrder.assetTokens[Side.receive].symbol,
         };
         const token = this.props.tokenBySymbol[assetToken.symbol];
+        const orderTaker = this.state.parsedOrder.taker !== '' ? this.state.parsedOrder.taker :
+                           this.props.orderMakerAddress;
         return (
             <div className="pt2 pb1">
                 <VisualOrder
                     orderExpiryTimestamp={this.state.parsedOrder.expiry}
-                    orderTakerAddress={this.props.orderMakerAddress}
+                    orderTakerAddress={orderTaker}
                     orderMakerAddress={this.state.parsedOrder.maker}
                     sideToAssetToken={this.state.parsedOrder.assetTokens}
                 />
@@ -166,9 +168,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
 
         // TODO: add fillAmount < allowance check
         // TODO: get amount of order already filled, and don't let them try to fill more then whats left
-        // TODO: validate that takerAddress (if specified) is same as users address
         const depositToken = this.state.parsedOrder.assetTokens[Side.deposit];
         const receiveToken = this.state.parsedOrder.assetTokens[Side.receive];
+        const specifiedTakerAddressIfExists = this.state.parsedOrder.taker;
         const fillAmount = this.props.orderFillAmount;
         const takerAddress = this.props.orderMakerAddress;
         const takerToken = this.props.tokenBySymbol[receiveToken.symbol];
@@ -181,6 +183,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = `Cannot fill more then order limit of ${receiveToken.amount} ${receiveToken.symbol}`;
         } else if (fillAmount < 0 || fillAmount > takerToken.balance || fillAmount > takerToken.allowance) {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
+        } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
+            globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;
         }
         if (globalErrMsg !== '') {
             this.setState({
