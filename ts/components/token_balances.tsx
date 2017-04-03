@@ -6,7 +6,6 @@ import {TokenBySymbol, Token, BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {
     RaisedButton,
@@ -32,17 +31,9 @@ interface TokenBalancesProps {
     userEtherBalance: number;
 }
 
-interface TokenBalancesState {
-    isEnableWalletDialogOpen: boolean;
-}
+interface TokenBalancesState {}
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
-    constructor(props: TokenBalancesProps) {
-        super(props);
-        this.state = {
-            isEnableWalletDialogOpen: false,
-        };
-    }
     public render() {
         const etherIconUrl = this.props.tokenBySymbol.WETH.iconUrl;
         return (
@@ -99,10 +90,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         {this.renderTableRows()}
                     </TableBody>
                 </Table>
-                <EnableWalletDialog
-                    isOpen={this.state.isEnableWalletDialogOpen}
-                    toggleDialogFn={this.toggleEnableWalletDialog.bind(this)}
-                />
             </div>
         );
     }
@@ -166,8 +153,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         } catch (err) {
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User has no associated addresses')) {
-                const isOpen = true;
-                this.toggleEnableWalletDialog(isOpen);
+                this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+                return false;
             }
             utils.consoleLog(`Unexpected error encountered: ${err}`);
             utils.consoleLog(err.stack);
@@ -175,19 +162,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
     }
     private async requestEtherAsync(): Promise<boolean> {
-        if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
-            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
+        const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();
+        if (_.isUndefined(userAddressIfExists) ||
+            this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
+            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
 
         await utils.sleepAsync(ARTIFICIAL_ETHER_REQUEST_DELAY);
-
-        const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();
-        if (_.isUndefined(userAddressIfExists)) {
-            const isOpen = true;
-            this.toggleEnableWalletDialog(isOpen);
-            return false;
-        }
 
         const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${userAddressIfExists}`);
         const responseBody = await response.text();
@@ -196,10 +178,5 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
             return false;
         }
-    }
-    private toggleEnableWalletDialog(isOpen: boolean) {
-        this.setState({
-            isEnableWalletDialogOpen: isOpen,
-        });
     }
 }

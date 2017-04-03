@@ -21,7 +21,7 @@ interface MapStateToProps {
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
     orderMakerAddress: string;
-    shouldNotDeployedDialogBeOpen: boolean;
+    shouldBlockchainErrDialogBeOpen: boolean;
 }
 
 interface ConnectedState {}
@@ -52,7 +52,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         orderFillAmount: state.orderFillAmount,
         orderMakerAddress: state.orderMakerAddress,
         hashData,
-        shouldNotDeployedDialogBeOpen: state.shouldNotDeployedDialogBeOpen,
+        shouldBlockchainErrDialogBeOpen: state.shouldBlockchainErrDialogBeOpen,
         tokenBySymbol: state.tokenBySymbol,
         userEtherBalance: state.userEtherBalance,
     };

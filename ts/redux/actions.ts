@@ -26,6 +26,6 @@ export const actionTypes = utils.strEnum([
     'SWAP_ASSET_TOKENS',
     'UPDATE_USER_ETHER_BALANCE',
     'UPDATE_ORDER_FILL_AMOUNT',
-    'UPDATE_SHOULD_NOT_DEPLOYED_DIALOG_BE_OPEN',
+    'UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN',
 ]);
 export type actionTypes = keyof typeof actionTypes;

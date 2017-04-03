@@ -7,7 +7,6 @@ import {Side, TokenBySymbol, Order, TabValue, AssetToken, BlockchainErrs} from '
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {VisualOrder} from 'ts/components/visual_order';
-import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
@@ -25,7 +24,6 @@ interface FillOrderProps {
 }
 
 interface FillOrderState {
-    isEnableWalletDialogOpen: boolean;
     isValidOrder: boolean;
     globalErrMsg: string;
     orderJSON: string;
@@ -39,7 +37,6 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         super(props);
         this.state = {
             globalErrMsg: '',
-            isEnableWalletDialogOpen: false,
             isValidOrder: false,
             orderJSON: '',
             orderJSONErrMsg: '',
@@ -91,10 +88,6 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                     }
                     {!_.isUndefined(this.state.parsedOrder) && this.renderVisualOrder()}
                 </div>
-                <EnableWalletDialog
-                    isOpen={this.state.isEnableWalletDialogOpen}
-                    toggleDialogFn={this.toggleEnableWalletDialog.bind(this)}
-                />
             </div>
         );
     }
@@ -167,8 +160,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     }
     private async onFillOrderClickAsync(): Promise<boolean> {
         if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
-            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
-            return;
+            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+            return false;
         }
 
         // TODO: add fillAmount < allowance check
@@ -180,7 +173,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const takerAddress = this.props.orderMakerAddress;
         const takerToken = this.props.tokenBySymbol[receiveToken.symbol];
         if (_.isUndefined(takerAddress)) {
-            this.toggleEnableWalletDialog(true);
+            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
         let globalErrMsg = '';
@@ -215,10 +208,5 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             });
             return false;
         }
-    }
-    private toggleEnableWalletDialog(isOpen: boolean) {
-        this.setState({
-            isEnableWalletDialogOpen: isOpen,
-        });
     }
 }

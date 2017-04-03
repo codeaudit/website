@@ -22,7 +22,7 @@ export interface State {
     orderMakerAddress: string;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
-    shouldNotDeployedDialogBeOpen: boolean;
+    shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
@@ -50,7 +50,7 @@ const INITIAL_STATE: State = {
         v: 27,
     },
     orderTakerAddress: '',
-    shouldNotDeployedDialogBeOpen: false,
+    shouldBlockchainErrDialogBeOpen: false,
     sideToAssetToken: {
         [Side.deposit]: {
             symbol: tokenSymbols[0],
@@ -71,9 +71,9 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 orderFillAmount: action.data,
             });
 
-        case actionTypes.UPDATE_SHOULD_NOT_DEPLOYED_DIALOG_BE_OPEN:
+        case actionTypes.UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN:
             return _.assign({}, state, {
-                shouldNotDeployedDialogBeOpen: action.data,
+                shouldBlockchainErrDialogBeOpen: action.data,
             });
 
         case actionTypes.UPDATE_USER_ETHER_BALANCE:

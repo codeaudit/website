@@ -209,7 +209,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
     }
     private async onSignClickedAsync(): Promise<boolean> {
         if (this.props.blockchainErr === BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK) {
-            this.props.dispatcher.updateShouldNotDeployedDialogBeOpen(true);
+            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
 
@@ -249,8 +249,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         });
         const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
         if (_.isUndefined(exchangeContractAddr)) {
+            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             this.setState({
-                globalErrMsg: 'Exchange contract is not deployed on this network',
                 isSigning: false,
             });
             return false;

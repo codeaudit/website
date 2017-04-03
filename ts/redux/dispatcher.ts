@@ -26,10 +26,10 @@ export class Dispatcher {
             type: actionTypes.UPDATE_GENERATE_ORDER_STEP,
         });
     }
-    public updateShouldNotDeployedDialogBeOpen(shouldBeOpen: boolean) {
+    public updateShouldBlockchainErrDialogBeOpen(shouldBeOpen: boolean) {
         this.dispatch({
             data: shouldBeOpen,
-            type: actionTypes.UPDATE_SHOULD_NOT_DEPLOYED_DIALOG_BE_OPEN,
+            type: actionTypes.UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN,
         });
     }
     public updateChosenAssetToken(side: Side, token: AssetToken) {

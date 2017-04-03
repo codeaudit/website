@@ -10,7 +10,7 @@ import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 import {HashData, TokenBySymbol, TabValue, BlockchainErrs} from 'ts/types';
-import {ContractsNotDeployedDialog} from 'ts/components/contracts_not_deployed_dialog';
+import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 
 export interface DemoPassedProps {}
 
@@ -25,7 +25,7 @@ export interface DemoAllProps {
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
     orderMakerAddress: string;
-    shouldNotDeployedDialogBeOpen: boolean;
+    shouldBlockchainErrDialogBeOpen: boolean;
 }
 
 interface DemoAllState {
@@ -92,8 +92,8 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 maxWidth: 600,
             };
         }
-        const updateShouldNotDeployedDialogBeOpen = this.props.dispatcher
-                .updateShouldNotDeployedDialogBeOpen.bind(this.props.dispatcher);
+        const updateShouldBlockchainErrDialogBeOpen = this.props.dispatcher
+                .updateShouldBlockchainErrDialogBeOpen.bind(this.props.dispatcher);
         return (
             <div>
                 <div className="flex pb2">
@@ -159,10 +159,12 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         </Tab>
                     </Tabs>
                 </Paper>
-                <ContractsNotDeployedDialog
+                <BlockchainErrDialog
                     blockchain={this.blockchain}
-                    isOpen={this.props.shouldNotDeployedDialogBeOpen}
-                    toggleDialogFn={updateShouldNotDeployedDialogBeOpen}
+                    blockchainErr={this.props.blockchainErr}
+                    isOpen={this.props.shouldBlockchainErrDialogBeOpen}
+                    orderMakerAddress={this.props.orderMakerAddress}
+                    toggleDialogFn={updateShouldBlockchainErrDialogBeOpen}
                 />
             </div>
         );

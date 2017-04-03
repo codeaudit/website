@@ -3,7 +3,6 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {Token} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
-import {EnableWalletDialog} from 'ts/components/enable_wallet_dialog';
 import {
     RaisedButton,
 } from 'material-ui';
