@@ -17,24 +17,21 @@ interface OrderJSONState {}
 
 export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
     public render() {
-        const transactionDetails = utils.generateOrderJSON(this.props.sideToAssetToken,
+        const transactionDetails = utils.generateOrder(this.props.sideToAssetToken,
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
             this.props.orderMakerAddress, this.props.orderSignatureData);
-        // Hack: Need to remove carriage returns from the transactionDetails.
-        // TODO: Find a safer way to do this
-        const transactionDetailsString = JSON.stringify(transactionDetails).replace(/\\n|\\t|\\|"{|}"/g, '');
-        const finalTransactionDetailsString = `{${transactionDetailsString}}`;
+        const transactionDetailsString = JSON.stringify(transactionDetails);
         return (
             <div>
                 <div className="pb2 mx4 flex">
                     <div>Order JSON</div>
-                    <CopyIcon data={finalTransactionDetailsString}/>
+                    <CopyIcon data={transactionDetailsString}/>
                 </div>
                 <Paper className="mx4 center">
                     <TextField
                         id="orderJSON"
                         style={{width: 325}}
-                        value={transactionDetails}
+                        value={JSON.stringify(transactionDetails, null, '\t')}
                         multiLine={true}
                         rows={2}
                         rowsMax={8}

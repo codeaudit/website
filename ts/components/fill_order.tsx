@@ -63,8 +63,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             s: '937862111edcba395f8a9e0cc1b2c5e12320...',
             v: 27,
         };
-        const hintOrderJSON = utils.generateOrderJSON(hintSideToAssetToken, hintOrderExpiryTimestamp,
+        const hintOrder = utils.generateOrder(hintSideToAssetToken, hintOrderExpiryTimestamp,
                               '', '', hintSignatureData);
+        const hintOrderJSON = JSON.stringify(hintOrder, null, '\t');
         return (
             <div className="py3 clearfix" style={{minHeight: 600}}>
                 <h3 className="center">Fill an order</h3>

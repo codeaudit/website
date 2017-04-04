@@ -60,13 +60,6 @@ export const utils = {
         };
         return order;
     },
-    generateOrderJSON(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
-                      orderTakerAddress: string, orderMakerAddress: string,
-                      signatureData: SignatureData): string {
-        const order = this.generateOrder(sideToAssetToken, orderExpiryTimestamp, orderTakerAddress,
-                                         orderMakerAddress, signatureData);
-        return JSON.stringify(order, null, '\t');
-    },
     convertByte32HexToString(byte32Hex: string) {
         const buf = new Buffer(byte32Hex.substring(2), 'hex');
         return buf.toString().replace(/\0/g, '');
