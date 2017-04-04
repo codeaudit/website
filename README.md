@@ -26,4 +26,8 @@ npm install
 npm run dev
 ```
 
-Visit: [http://0xproject.dev:8080](http://0xproject.dev:8080) in your browser. 
+Visit: [http://0xproject.dev:8080](http://0xproject.dev:8080) in your browser.
+
+### Resources
+
+- [Icon set](http://zavoloklom.github.io/material-design-iconic-font/icons.html#directional)
