@@ -10,7 +10,7 @@ export function BackButton(props: BackButtonProps) {
             style={{cursor: 'pointer'}}
             onClick={props.onClick.bind(this)}
         >
-            <i className="material-icons">arrow_back</i>
+            <i style={{fontSize: 24}} className="zmdi zmdi-arrow-left" />
         </div>
     );
 }

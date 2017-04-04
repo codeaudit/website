@@ -165,8 +165,8 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                     </div>
                 </div>
                 <div className="px3 pt1">
-                    <div className="mx-auto" style={{width: 60}}>
-                        <i className="material-icons" style={{fontSize: 60}}>keyboard_arrow_down</i>
+                    <div className="mx-auto" style={{width: 33}}>
+                        <i className="zmdi zmdi-caret-down" style={{fontSize: 80}} />
                     </div>
                 </div>
                 <div className="px3 pt1">

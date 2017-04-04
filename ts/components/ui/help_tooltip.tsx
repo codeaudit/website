@@ -12,12 +12,7 @@ export const HelpTooltip = (props: HelpTooltipProps) => {
             data-tip={true}
             data-for="helpTooltip"
         >
-            <i
-                style={{fontSize: 16}}
-                className="material-icons"
-            >
-                help
-            </i>
+            <i style={{fontSize: 16}} className="zmdi zmdi-help" />
             <ReactTooltip id="helpTooltip">{props.explanation}</ReactTooltip>
         </div>
     );

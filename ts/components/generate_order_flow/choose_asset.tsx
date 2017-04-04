@@ -74,10 +74,8 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetSt
                             >
                                 <i
                                     style={swapStyles}
-                                    className="material-icons"
-                                >
-                                    swap_horiz
-                                </i>
+                                    className="zmdi zmdi-swap"
+                                />
                             </div>
                         </div>
                         <div className="col-5 center">

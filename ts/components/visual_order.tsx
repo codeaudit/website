@@ -34,23 +34,18 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
         const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
         const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.props.orderExpiryTimestamp);
         return (
-            <div>
-                <div className="clearfix pt3">
+            <div className="px4">
+                <div className="clearfix pt3 px4">
                     <div className="col col-5 center">
                         {this.renderParty('Maker', this.props.orderMakerAddress)}
                     </div>
                     <div className="col col-2 center">
                         {this.renderAmount(depositAssetToken)}
                         <div>
-                            <i
-                                style={{fontSize: 60, transform: 'rotate(180deg)'}}
-                                className="material-icons"
-                            >
-                                keyboard_return
-                            </i>
+                            <i style={{fontSize: 60}} className="zmdi zmdi-redo" />
                         </div>
                         <div>
-                            <i style={{fontSize: 60}} className="material-icons">keyboard_return</i>
+                            <i style={{fontSize: 60, transform: 'rotate(180deg)'}} className="zmdi zmdi-redo" />
                         </div>
                         {this.renderAmount(receiveAssetToken)}
                     </div>

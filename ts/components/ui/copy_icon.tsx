@@ -48,12 +48,7 @@ export class CopyIcon extends React.Component<CopyIconProps, CopyIconState> {
                                 className="inline-block absolute"
                                 style={{top: '1px'}}
                             >
-                                <i
-                                    style={{fontSize: 15}}
-                                    className="material-icons"
-                                >
-                                    content_copy
-                                </i>
+                                <i style={{fontSize: 15}} className="zmdi zmdi-copy" />
                             </div>
                         </div>
                     </CopyToClipboard>

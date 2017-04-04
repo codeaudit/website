@@ -102,7 +102,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const orderTaker = this.state.parsedOrder.taker !== '' ? this.state.parsedOrder.taker :
                            this.props.orderMakerAddress;
         return (
-            <div className="pt2 pb1">
+            <div className="pt2 pb1 px4">
                 <VisualOrder
                     orderExpiryTimestamp={this.state.parsedOrder.expiry}
                     orderTakerAddress={orderTaker}

@@ -51,7 +51,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                     onClick={this.clearDates.bind(this)}
                     className="pt2 pl2"
                 >
-                    <i style={{fontSize: 16, cursor: 'pointer'}} className="material-icons">clear</i>
+                    <i style={{fontSize: 16, cursor: 'pointer'}} className="zmdi zmdi-close" />
                 </div>
             </div>
         );
