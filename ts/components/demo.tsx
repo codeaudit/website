@@ -9,7 +9,9 @@ import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
-import {HashData, TokenBySymbol, TabValue, BlockchainErrs} from 'ts/types';
+import {Validator} from 'ts/schemas/validator';
+import {orderSchema} from 'ts/schemas/order_schema';
+import {HashData, TokenBySymbol, TabValue, BlockchainErrs, Order} from 'ts/types';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 
 export interface DemoPassedProps {}
@@ -61,12 +63,18 @@ const styles: React.CSSProperties = {
 
 export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     private blockchain: Blockchain;
+    private sharedOrderIfExists: Order;
     constructor(props: DemoAllProps) {
         super(props);
+        let selectedTab = TabValue.generate;
+        this.sharedOrderIfExists = this.getSharedOrderIfExists();
+        if (!_.isUndefined(this.sharedOrderIfExists)) {
+            selectedTab = TabValue.fill;
+        }
         this.state = {
             kind: 'form',
             prevNetworkId: this.props.networkId,
-            selectedTab: TabValue.generate,
+            selectedTab,
         };
     }
     public componentWillMount() {
@@ -135,6 +143,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                             <FillOrder
                                 blockchain={this.blockchain}
                                 blockchainErr={this.props.blockchainErr}
+                                initialOrder={this.sharedOrderIfExists}
                                 orderFillAmount={this.props.orderFillAmount}
                                 orderMakerAddress={this.props.orderMakerAddress}
                                 tokenBySymbol={this.props.tokenBySymbol}
@@ -178,5 +187,31 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         this.setState({
             kind,
         });
+    }
+    private getSharedOrderIfExists(): Order {
+        const queryString = window.location.search;
+        if (queryString.length === 0) {
+            return;
+        }
+        const queryParams = queryString.substring(1).split('&');
+        const orderQueryParam = _.find(queryParams, (queryParam) => {
+            const queryPair = queryParam.split('=');
+            return queryPair[0] === 'order';
+        });
+        if (_.isUndefined(orderQueryParam)) {
+            return;
+        }
+        const orderPair = orderQueryParam.split('=');
+        if (orderPair.length !== 2) {
+            return;
+        }
+
+        const validator = new Validator();
+        const order = JSON.parse(decodeURIComponent(orderPair[1]));
+        const validationResult = validator.validate(order, orderSchema);
+        if (validationResult.errors.length > 0) {
+            return;
+        }
+        return order;
     }
 }

@@ -20,6 +20,7 @@ interface FillOrderProps {
     orderMakerAddress: string;
     tokenBySymbol: TokenBySymbol;
     triggerTabChange: (tabValue: TabValue) => void;
+    initialOrder: Order;
     dispatcher: Dispatcher;
 }
 
@@ -38,9 +39,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         this.state = {
             globalErrMsg: '',
             isValidOrder: false,
-            orderJSON: '',
+            orderJSON: _.isUndefined(this.props.initialOrder) ? '' : JSON.stringify(this.props.initialOrder),
             orderJSONErrMsg: '',
-            parsedOrder: undefined,
+            parsedOrder: this.props.initialOrder,
         };
         this.validator = new Validator();
     }

@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {Ox} from 'ts/utils/Ox';
 import {Step} from 'ts/components/ui/step';
 import {Direction, SideToAssetToken, Side, AssetToken} from 'ts/types';
@@ -89,6 +90,9 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
         );
     }
     private renderIdenticon(address: string) {
+        if (_.isUndefined(address)) {
+            address = constants.NULL_ADDRESS;
+        }
         const diameter = 100;
         const numericalAddress = this.convertAddressToNumber(address);
         const jazzIcon = jazzicon(diameter, numericalAddress);
