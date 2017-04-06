@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Toggle} from 'material-ui';
+import {Toggle, FlatButton, Dialog} from 'material-ui';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {TokenBySymbol, Token, BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
@@ -22,6 +22,9 @@ const PRECISION = 5;
 const ICON_DIMENSION = 40;
 const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const DEFAULT_ALLOWANCE_AMOUNT = 1000000;
+enum errorTypes {
+  incorrectNetworkForFaucet,
+};
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
@@ -32,11 +35,28 @@ interface TokenBalancesProps {
     userEtherBalance: number;
 }
 
-interface TokenBalancesState {}
+interface TokenBalancesState {
+    errorType: errorTypes;
+    isErrorDialogOpen: boolean;
+}
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
+    public constructor(props: TokenBalancesProps) {
+        super(props);
+        this.state = {
+            errorType: undefined,
+            isErrorDialogOpen: false,
+        };
+    }
     public render() {
         const etherIconUrl = this.props.tokenBySymbol.WETH.iconUrl;
+        const errorDialogActions = [
+            <FlatButton
+                label="Ok"
+                primary={true}
+                onTouchTap={this.onErrorDialogToggle.bind(this, false)}
+            />,
+        ];
         return (
             <div>
                 <h3 className="px4 pt2 center">Test ether</h3>
@@ -91,8 +111,34 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         {this.renderTableRows()}
                     </TableBody>
                 </Table>
+                <Dialog
+                    title="Oh oh. Something went wrong"
+                    actions={errorDialogActions}
+                    open={this.state.isErrorDialogOpen}
+                    onRequestClose={this.onErrorDialogToggle.bind(this, false)}
+                >
+                    {this.renderErrorDialogBody()}
+                </Dialog>
             </div>
         );
+    }
+    private renderErrorDialogBody() {
+        switch (this.state.errorType) {
+            case errorTypes.incorrectNetworkForFaucet:
+                return (
+                    <div>
+                        Our faucet can only send test Ether to addresses on the {constants.TESTNET_NAME}
+                        {' '}testnet (networkId {constants.TESTNET_NETWORK_ID}). Please make sure you are
+                        {' '}connected to the {constants.TESTNET_NAME} testnet and try requesting ether again.
+                    </div>
+                );
+
+            case undefined:
+                return; // No error to show
+
+            default:
+                throw utils.spawnSwitchErr('errorType', this.state.errorType);
+        }
     }
     private renderTableRows() {
         if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
@@ -172,6 +218,16 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             return false;
         }
 
+        // If on another network other then the testnet our faucet serves test ether
+        // from, we must show user an error message
+        if (this.props.blockchain.networkId !== constants.TESTNET_NETWORK_ID) {
+            this.setState({
+                errorType: errorTypes.incorrectNetworkForFaucet,
+            });
+            this.onErrorDialogToggle(true);
+            return false;
+        }
+
         await utils.sleepAsync(ARTIFICIAL_ETHER_REQUEST_DELAY);
 
         const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${userAddressIfExists}`);
@@ -182,5 +238,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             await errorReporter.reportAsync(new Error(`Faucet returned non-200: ${JSON.stringify(response)}`));
             return false;
         }
+    }
+    private onErrorDialogToggle(isOpen: boolean) {
+        this.setState({
+            isErrorDialogOpen: isOpen,
+        });
     }
 }
