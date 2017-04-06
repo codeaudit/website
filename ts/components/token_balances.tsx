@@ -38,6 +38,7 @@ interface TokenBalancesProps {
 interface TokenBalancesState {
     errorType: errorTypes;
     isErrorDialogOpen: boolean;
+    isBalanceSpinnerVisible: boolean;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
@@ -45,8 +46,16 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         super(props);
         this.state = {
             errorType: undefined,
+            isBalanceSpinnerVisible: true,
             isErrorDialogOpen: false,
         };
+    }
+    public componentWillReceiveProps(nextProps: TokenBalancesProps) {
+        if (nextProps.userEtherBalance !== this.props.userEtherBalance) {
+            this.setState({
+                isBalanceSpinnerVisible: false,
+            });
+        }
     }
     public render() {
         const etherIconUrl = this.props.tokenBySymbol.WETH.iconUrl;
@@ -81,7 +90,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                                     src={etherIconUrl}
                                 />
                             </TableRowColumn>
-                            <TableRowColumn>{this.props.userEtherBalance.toFixed(PRECISION)} ETH</TableRowColumn>
+                            <TableRowColumn>
+                                {this.props.userEtherBalance.toFixed(PRECISION)} ETH
+                                {this.state.isBalanceSpinnerVisible &&
+                                    <span className="pl1">
+                                        <i className="zmdi zmdi-spinner zmdi-hc-spin" />
+                                    </span>
+                                }
+                            </TableRowColumn>
                             <TableRowColumn />
                             <TableRowColumn>
                                 <LifeCycleRaisedButton
@@ -238,6 +254,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             await errorReporter.reportAsync(new Error(`Faucet returned non-200: ${JSON.stringify(response)}`));
             return false;
         }
+
+        this.setState({
+            isBalanceSpinnerVisible: true,
+        });
+        return true;
     }
     private onErrorDialogToggle(isOpen: boolean) {
         this.setState({
