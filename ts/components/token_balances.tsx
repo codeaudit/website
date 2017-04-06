@@ -234,6 +234,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         try {
             await this.props.blockchain.setExchangeAllowanceAsync(token, newAllowanceAmount);
         } catch (err) {
+            const errMsg = '' + err;
+            if (_.includes(errMsg, 'User denied transaction')) {
+                return false;
+            }
             utils.consoleLog(`Unexpected error encountered: ${err}`);
             utils.consoleLog(err.stack);
             await errorReporter.reportAsync(err);
@@ -253,6 +257,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User has no associated addresses')) {
                 this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+                return false;
+            }
+            if (_.includes(errMsg, 'User denied transaction')) {
                 return false;
             }
             utils.consoleLog(`Unexpected error encountered: ${err}`);
