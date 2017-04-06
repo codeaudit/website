@@ -24,6 +24,10 @@ const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const DEFAULT_ALLOWANCE_AMOUNT = 1000000;
 enum errorTypes {
   incorrectNetworkForFaucet,
+  faucetRequestFailed,
+  faucetQueueIsFull,
+  mintingFailed,
+  allowanceSettingFailed,
 };
 
 interface TokenBalancesProps {
@@ -37,7 +41,6 @@ interface TokenBalancesProps {
 
 interface TokenBalancesState {
     errorType: errorTypes;
-    isErrorDialogOpen: boolean;
     isBalanceSpinnerVisible: boolean;
 }
 
@@ -47,7 +50,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: true,
-            isErrorDialogOpen: false,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
@@ -128,9 +130,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </TableBody>
                 </Table>
                 <Dialog
-                    title="Oh oh. Something went wrong"
+                    title="Oh oh"
                     actions={errorDialogActions}
-                    open={this.state.isErrorDialogOpen}
+                    open={!_.isUndefined(this.state.errorType)}
                     onRequestClose={this.onErrorDialogToggle.bind(this, false)}
                 >
                     {this.renderErrorDialogBody()}
@@ -146,6 +148,36 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         Our faucet can only send test Ether to addresses on the {constants.TESTNET_NAME}
                         {' '}testnet (networkId {constants.TESTNET_NETWORK_ID}). Please make sure you are
                         {' '}connected to the {constants.TESTNET_NAME} testnet and try requesting ether again.
+                    </div>
+                );
+
+            case errorTypes.faucetRequestFailed:
+                return (
+                    <div>
+                        An unexpected error occurred while trying to request test Ether from our faucet.
+                        {' '}Please refresh the page and try again.
+                    </div>
+                );
+
+            case errorTypes.faucetQueueIsFull:
+                return (
+                    <div>
+                        Our test Ether faucet queue is full. Please try requesting test Ether again later.
+                    </div>
+                );
+
+            case errorTypes.mintingFailed:
+                return (
+                    <div>
+                        Minting your test tokens failed unexpectedly. Please refresh the page and try again.
+                    </div>
+                );
+
+            case errorTypes.allowanceSettingFailed:
+                return (
+                    <div>
+                        An unexpected error occurred while trying to set your test token allowance.
+                        {' '}Please refresh the page and try again.
                     </div>
                 );
 
@@ -205,6 +237,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             utils.consoleLog(`Unexpected error encountered: ${err}`);
             utils.consoleLog(err.stack);
             await errorReporter.reportAsync(err);
+            this.setState({
+                errorType: errorTypes.allowanceSettingFailed,
+            });
         }
     }
     private isAllowanceSet(token: Token) {
@@ -223,6 +258,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             utils.consoleLog(`Unexpected error encountered: ${err}`);
             utils.consoleLog(err.stack);
             await errorReporter.reportAsync(err);
+            this.setState({
+                errorType: errorTypes.mintingFailed,
+            });
             return false;
         }
     }
@@ -240,7 +278,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             this.setState({
                 errorType: errorTypes.incorrectNetworkForFaucet,
             });
-            this.onErrorDialogToggle(true);
             return false;
         }
 
@@ -249,9 +286,12 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${userAddressIfExists}`);
         const responseBody = await response.text();
         if (response.status !== 200) {
-            // TODO: Show error message in UI
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
             await errorReporter.reportAsync(new Error(`Faucet returned non-200: ${JSON.stringify(response)}`));
+            const errorType = response.status === 503 ? errorTypes.faucetQueueIsFull : errorTypes.faucetRequestFailed;
+            this.setState({
+                errorType,
+            });
             return false;
         }
 
@@ -262,7 +302,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private onErrorDialogToggle(isOpen: boolean) {
         this.setState({
-            isErrorDialogOpen: isOpen,
+            errorType: undefined,
         });
     }
 }
