@@ -49,7 +49,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         super(props);
         this.state = {
             errorType: undefined,
-            isBalanceSpinnerVisible: true,
+            isBalanceSpinnerVisible: false,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
