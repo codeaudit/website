@@ -192,7 +192,14 @@ export class Blockchain {
         const c = await contract(artifact);
         c.setProvider(this.provider.getProviderObj());
 
-        const contractAddress = !_.isUndefined(address) ? address : artifact.networks[this.networkId].address;
+        const artifactNetworkConfigs = artifact.networks[this.networkId];
+        let contractAddress;
+        if (!_.isUndefined(address)) {
+            contractAddress = address;
+        } else if (!_.isUndefined(artifactNetworkConfigs)) {
+            contractAddress = artifactNetworkConfigs.address;
+        }
+
         if (!_.isUndefined(contractAddress)) {
             const doesContractExist = await this.web3Wrapper.doesContractExistAtAddressAsync(contractAddress);
             if (!doesContractExist) {
