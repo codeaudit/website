@@ -17,6 +17,7 @@ import {AmountInput} from 'ts/components/inputs/amount_input';
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
+import {errorReporter} from 'ts/utils/error_reporter';
 import {
     Side,
     SideToAssetToken,
@@ -282,6 +283,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             } else {
                 globalErrMsg = 'An unexpected error occured. Please try refreshing the page';
                 utils.consoleLog(`Unexpected error occured: ${err}`);
+                await errorReporter.reportAsync(err);
             }
         }
         this.setState({

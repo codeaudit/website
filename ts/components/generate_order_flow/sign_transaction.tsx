@@ -7,6 +7,7 @@ import {Blockchain} from 'ts/blockchain';
 import {Step} from 'ts/components/ui/step';
 import {Direction, SideToAssetToken, HashData} from 'ts/types';
 import {VisualOrder} from 'ts/components/visual_order';
+import {errorReporter} from 'ts/utils/error_reporter';
 
 const PRECISION = 5;
 
@@ -87,6 +88,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
             } catch (err) {
                 // TODO: translate this to a user friendly error message and display it in the UI
                 signingErrMsg = '' + err;
+                await errorReporter.reportAsync(err);
             }
             this.setState({
                 isSigning: false,

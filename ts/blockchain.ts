@@ -8,6 +8,7 @@ import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {BlockchainErrs, Token, SignatureData} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
+import {errorReporter} from 'ts/utils/error_reporter';
 import * as ProxyArtifacts from '../contracts/Proxy.json';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
@@ -212,6 +213,7 @@ export class Blockchain {
         } catch (err) {
             const errMsg = `${err}`;
             utils.consoleLog(`Notice: Error encountered: ${err}`);
+            await errorReporter.reportAsync(err);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
                 this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);

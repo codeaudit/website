@@ -5,6 +5,7 @@ import {constants} from 'ts/utils/constants';
 import {TextField, Paper} from 'material-ui';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
 import {SideToAssetToken, SignatureData, Order} from 'ts/types';
+import {errorReporter} from 'ts/utils/error_reporter';
 
 interface OrderJSONProps {
     orderExpiryTimestamp: number;
@@ -99,6 +100,7 @@ You can see and fill it here: ${shareLink}`);
         if (response.status !== 200) {
             // TODO: Show error message in UI
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
+            await errorReporter.reportAsync(new Error(`Bitly returned non-200: ${JSON.stringify(response)}`));
             return '';
         }
         const bodyObj = JSON.parse(responseBody);

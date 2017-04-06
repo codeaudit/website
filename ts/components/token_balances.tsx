@@ -7,6 +7,7 @@ import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
+import {errorReporter} from 'ts/utils/error_reporter';
 import {
     RaisedButton,
     Table,
@@ -141,6 +142,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         } catch (err) {
             utils.consoleLog(`Unexpected error encountered: ${err}`);
             utils.consoleLog(err.stack);
+            await errorReporter.reportAsync(err);
         }
     }
     private isAllowanceSet(token: Token) {
@@ -158,6 +160,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             }
             utils.consoleLog(`Unexpected error encountered: ${err}`);
             utils.consoleLog(err.stack);
+            await errorReporter.reportAsync(err);
             return false;
         }
     }
@@ -176,6 +179,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         if (response.status !== 200) {
             // TODO: Show error message in UI
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
+            await errorReporter.reportAsync(new Error(`Faucet returned non-200: ${JSON.stringify(response)}`));
             return false;
         }
     }

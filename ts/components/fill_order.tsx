@@ -12,6 +12,7 @@ import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Blockchain} from 'ts/blockchain';
+import {errorReporter} from 'ts/utils/error_reporter';
 
 interface FillOrderProps {
     blockchain: Blockchain;
@@ -209,6 +210,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             return true;
         } catch (err) {
             utils.consoleLog(`${err}`);
+            await errorReporter.reportAsync(err);
             this.setState({
                 globalErrMsg: 'Failed to fill order, please refresh and try again',
             });
