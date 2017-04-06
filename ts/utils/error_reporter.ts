@@ -18,6 +18,10 @@ const rollbar = Rollbar.init(rollbarConfig);
 
 export const errorReporter = {
     reportAsync(err: Error): Promise<any> {
+        if (constants.ENVIRONMENT === 'development') {
+            return; // Let's not log development errors to rollbar
+        }
+
         return new Promise((resolve, reject) => {
             rollbar.error(err, (rollbarErr: Error) => {
                 if (rollbarErr) {
