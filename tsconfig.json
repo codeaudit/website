@@ -6,7 +6,8 @@
         "module": "commonjs",
         "target": "es5",
         "jsx": "react",
-        "baseUrl": "./"
+        "baseUrl": "./",
+        "allowJs": true
     },
     "include": [
         "./ts/**/*"
