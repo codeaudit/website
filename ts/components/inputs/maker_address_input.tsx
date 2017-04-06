@@ -38,10 +38,14 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
         const errorText = this.props.shouldShowIncompleteErrs && !hasMakerAddress ?
             'Didn\'t find any accounts via web3.eth.accounts' : '';
         const value = hasMakerAddress ? this.props.orderMakerAddress : '';
+        // Hack: In order not to show a tooltip with the value `true` when the maker address has not
+        // loaded yet, we must set dataTip to an empty string
+        // Source: https://github.com/wwayne/react-tooltip#2-hide-tooltip-when-getcontent-returns-undefined
+        const dataTip = hasMakerAddress ? true : '';
         return (
             <div>
                 <div
-                    data-tip={true}
+                    data-tip={dataTip}
                     data-for="makerAddressTooltip"
                 >
                     <TextField
@@ -57,7 +61,7 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
                         value={value}
                     />
                 </div>
-                <ReactTooltip id="makerAddressTooltip">{this.props.orderMakerAddress}</ReactTooltip>
+                <ReactTooltip id="makerAddressTooltip">{value}</ReactTooltip>
             </div>
         );
     }
