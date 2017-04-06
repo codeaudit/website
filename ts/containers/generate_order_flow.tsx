@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Store as ReduxStore, Dispatch} from 'redux';
+import {utils} from 'ts/utils/utils';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {ChooseAsset} from 'ts/components/generate_order_flow/choose_asset';
 import {GrantAllowance} from 'ts/components/generate_order_flow/grant_allowance';
