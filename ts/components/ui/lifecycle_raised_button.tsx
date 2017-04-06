@@ -56,7 +56,7 @@ export class LifeCycleRaisedButton extends
                 label = this.props.labelComplete;
                 break;
             default:
-                throw new Error(`Unexpected ButtonState encountered: ${this.state.buttonState}`);
+                throw utils.spawnSwitchErr('ButtonState', this.state.buttonState);
         }
         return (
             <RaisedButton

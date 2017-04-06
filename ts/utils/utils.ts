@@ -17,6 +17,9 @@ export const utils = {
             throw new Error(message);
         }
     },
+    spawnSwitchErr(name: string, value: any) {
+        return new Error(`Unexpected switch value: ${value} encountered for ${name}`);
+    },
     isNumeric(n: string) {
         return !isNaN(parseFloat(n)) && isFinite(Number(n));
     },

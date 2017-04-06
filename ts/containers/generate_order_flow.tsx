@@ -104,12 +104,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                 );
 
             default:
-                // tslint:disable
-                console.log('Unexpected `generateOrderStep` found: ', generateOrderStep);
-                // tslint:enable
-                return (
-                    <div>An error occured. Please refresh.</div>
-                );
+                throw utils.spawnSwitchErr('generateOrderStep', generateOrderStep);
         }
     }
 }

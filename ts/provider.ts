@@ -71,7 +71,7 @@ export class Provider {
                 this.unusedLocalWebProviderObj = undefined;
                 break;
             default: {
-                utils.assert(false, `Unexpected providerType encountered: ${newProviderType}`);
+                throw utils.spawnSwitchErr('providerType', newProviderType);
             }
         }
         this.providerType = newProviderType;
