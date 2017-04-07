@@ -8,6 +8,7 @@ import {Token, TokenBySymbol} from 'ts/types';
 import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
+import {RequiredLabel} from 'ts/components/ui/required_label';
 
 interface NewTokenDialogProps {
     blockchain: Blockchain;
@@ -53,7 +54,7 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
                         <TextField
                             floatingLabelFixed={true}
                             floatingLabelStyle={{color: colors.grey500}}
-                            floatingLabelText="Name"
+                            floatingLabelText={<RequiredLabel label="Name" />}
                             value={this.state.name}
                             errorText={this.state.nameErrorText}
                             onChange={this.onTokenNameChanged.bind(this)}
@@ -63,14 +64,15 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
                         <TextField
                             floatingLabelFixed={true}
                             floatingLabelStyle={{color: colors.grey500}}
-                            floatingLabelText="Symbol"
+                            floatingLabelText={<RequiredLabel label="Symbol" />}
                             value={this.state.symbol}
                             errorText={this.state.symbolErrorText}
                             onChange={this.onTokenSymbolChanged.bind(this)}
                         />
                     </div>
-                    <div>
+                    <div className="pt1">
                         <OrderAddressInput
+                            isRequired={true}
                             label="Contract address"
                             blockchain={this.props.blockchain}
                             initialOrderAddress=""
@@ -126,7 +128,7 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
             globalErrMsg = 'Unsuccessful call to `balanceOf` and/or `allowance` on supplied contract address';
         } else if (!isAddressIncomplete) {
             const existingTokens = _.values(this.props.tokenBySymbol);
-            const existingTokenAddresses = _.map(existingTokens, t => t.address);
+            const existingTokenAddresses = _.map(existingTokens, (t) => t.address);
             if (_.includes(existingTokenAddresses, this.state.address)) {
                 globalErrMsg = 'A token already exists with this address';
             }
