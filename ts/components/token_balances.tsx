@@ -6,6 +6,7 @@ import {TokenBySymbol, Token, BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
+import {configs} from 'ts/utils/configs';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {
@@ -193,6 +194,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             return '';
         }
         return _.map(this.props.tokenBySymbol, (token: Token) => {
+            const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
                 <TableRow key={token.iconUrl}>
                     <TableRowColumn>
@@ -211,12 +213,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         </div>
                     </TableRowColumn>
                     <TableRowColumn>
-                        <LifeCycleRaisedButton
-                            labelReady="Mint"
-                            labelLoading="Minting..."
-                            labelComplete="Tokens minted!"
-                            onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                        />
+                        {isMintable &&
+                            <LifeCycleRaisedButton
+                                labelReady="Mint"
+                                labelLoading="Minting..."
+                                labelComplete="Tokens minted!"
+                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                            />
+                        }
                     </TableRowColumn>
                 </TableRow>
             );

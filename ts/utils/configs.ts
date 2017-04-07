@@ -9,4 +9,5 @@ export const configs = {
             canSendTransactions: true,
         },
     },
+    symbolsOfMintableTokens: ['TA', 'TB', 'WETH'],
 };
