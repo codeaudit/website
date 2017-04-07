@@ -51,6 +51,7 @@ export class MakerAddressInput extends React.Component<MakerAddressInputProps, M
                     <TextField
                         disabled={true}
                         style={{height: 60}}
+                        fullWidth={true}
                         errorText={errorText}
                         floatingLabelFixed={true}
                         floatingLabelStyle={{marginTop: -15, color: colors.grey500}}

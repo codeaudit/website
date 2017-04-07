@@ -43,6 +43,7 @@ export class OrderAddressInput extends React.Component<OrderAddressInputProps, O
         return (
             <TextField
                 disabled={_.isUndefined(this.props.disabled) ? false : this.props.disabled}
+                fullWidth={true}
                 style={{height: 60}}
                 floatingLabelFixed={true}
                 floatingLabelStyle={{marginTop: -15, color: colors.grey500}}

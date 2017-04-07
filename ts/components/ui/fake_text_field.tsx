@@ -11,7 +11,7 @@ const styles = {
         boxSizing: 'content-box',
         margin: 0,
         position: 'absolute',
-        width: 257,
+        width: '100%',
     },
     label: {
         color: colors.grey500,

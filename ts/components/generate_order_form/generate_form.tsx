@@ -81,10 +81,10 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const receiveToken = this.props.tokenBySymbol[receiveTokenSymbol];
         return (
             <div className="py2 mx-auto clearfix" style={{width: 600}}>
-                <h3 className="px3">Generate an order</h3>
-                <div className="px3">
+                <h3>Generate an order</h3>
+                <div>
                     <div className="mx-auto clearfix">
-                        <div className="col col-6 pr2 relative">
+                        <div className="col col-6 pr1 relative">
                             <MakerAddressInput
                                 blockchain={this.props.blockchain}
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
@@ -92,7 +92,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                             />
                         </div>
-                        <div className="col col-6">
+                        <div className="col col-6 pl1">
                             <OrderAddressInput
                                 label="Taker (address)"
                                 blockchain={this.props.blockchain}
@@ -102,9 +102,9 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         </div>
                     </div>
                 </div>
-                <div className="px3 pt3">
+                <div className="pt3">
                     <div className="mx-auto clearfix">
-                        <div className="col col-6 pr3">
+                        <div className="col col-6 pr1">
                             <TokenInput
                                 blockchain={this.props.blockchain}
                                 blockchainErr={this.props.blockchainErr}
@@ -116,7 +116,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 tokenBySymbol={this.props.tokenBySymbol}
                             />
                         </div>
-                        <div className="col col-6">
+                        <div className="col col-6 pl1">
                             <TokenInput
                                 blockchain={this.props.blockchain}
                                 blockchainErr={this.props.blockchainErr}
@@ -130,9 +130,9 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         </div>
                     </div>
                 </div>
-                <div className="px3 pt3">
+                <div className="pt3">
                     <div className="mx-auto clearfix">
-                        <div className="col col-6 pr3">
+                        <div className="col col-6 pr1">
                             <AmountInput
                                 label="Sell amount (uint)"
                                 side={Side.deposit}
@@ -144,7 +144,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                             />
                         </div>
-                        <div className="col col-6">
+                        <div className="col col-6 pl1">
                             <AmountInput
                                 label="Receive amount (uint)"
                                 side={Side.receive}
@@ -157,7 +157,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         </div>
                     </div>
                 </div>
-                <div className="px3 pt3">
+                <div className="pt3">
                     <div className="mx-auto" style={{width: 295}}>
                         <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
                         <ExpirationInput
@@ -166,12 +166,12 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         />
                     </div>
                 </div>
-                <div className="px3 pt1">
+                <div className="pt1">
                     <div className="mx-auto" style={{width: 33}}>
                         <i className="zmdi zmdi-caret-down" style={{fontSize: 80}} />
                     </div>
                 </div>
-                <div className="px3 pt1">
+                <div className="pt1">
                     <div className="mx-auto" style={{width: 256}}>
                         <div style={{fontSize: 12, color: colors.grey500}}>Hash (byte32)</div>
                         <HashInput
@@ -181,7 +181,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         />
                     </div>
                 </div>
-                <div className="px3 pt3">
+                <div className="pt3">
                     <div className="mx-auto center" style={{width: 112}}>
                         <LifeCycleRaisedButton
                             isHidden={this.state.signingState === SigningState.SIGNED}
@@ -193,7 +193,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                     </div>
                     {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
                 </div>
-                <div className="px3 pt3">
+                <div className="pt3">
                     <div className="mx-auto" style={{width: 465}}>
                         {this.state.signingState === SigningState.SIGNED &&
                             <OrderJSON

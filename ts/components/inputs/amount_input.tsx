@@ -62,6 +62,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         }
         return (
             <TextField
+                fullWidth={true}
                 floatingLabelText={label}
                 floatingLabelFixed={true}
                 floatingLabelStyle={{color: colors.grey500}}

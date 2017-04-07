@@ -38,14 +38,14 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         const token = this.props.tokenBySymbol[this.props.assetToken.symbol];
         const label = <RequiredLabel label={this.props.label} />;
         return (
-            <div>
+            <div style={{width: '100%'}}>
                 <FakeTextField label={label}>
                     <div
                         className="pt1"
                         style={{cursor: 'pointer'}}
                         onClick={this.onInputClick.bind(this)}
                     >
-                        <div className="flex" style={{width: '100%'}}>
+                        <div className="flex">
                             <div className="pr1">
                                 <img src={token.iconUrl} style={{width: 20, height: 20}} />
                             </div>
