@@ -124,6 +124,12 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
             globalErrMsg = 'No contract found at supplied address';
         } else if (hasBalanceAllowanceErr) {
             globalErrMsg = 'Unsuccessful call to `balanceOf` and/or `allowance` on supplied contract address';
+        } else if (!isAddressIncomplete) {
+            const existingTokens = _.values(this.props.tokenBySymbol);
+            const existingTokenAddresses = _.map(existingTokens, t => t.address);
+            if (_.includes(existingTokenAddresses, this.state.address)) {
+                globalErrMsg = 'A token already exists with this address';
+            }
         }
 
         if (globalErrMsg !== '') {
