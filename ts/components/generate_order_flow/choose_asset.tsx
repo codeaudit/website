@@ -13,7 +13,7 @@ import {
     TokenBySymbol,
     TabValue,
 } from 'ts/types';
-import {AssetPicker} from 'ts/components/generate_order_flow/asset_picker';
+import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 
 interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
