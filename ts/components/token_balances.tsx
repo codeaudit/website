@@ -9,6 +9,7 @@ import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
+import ReactTooltip = require('react-tooltip');
 import {
     RaisedButton,
     Table,
@@ -150,10 +151,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             return (
                 <TableRow key={token.iconUrl}>
                     <TableRowColumn>
-                        <img
-                            style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
-                            src={token.iconUrl}
-                        />
+                        {this.renderTokenName(token)}
                     </TableRowColumn>
                     <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
                     <TableRowColumn>
@@ -177,6 +175,27 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 </TableRow>
             );
         });
+    }
+    private renderTokenName(token: Token) {
+        const tooltipId = `tooltip-${token.address}`;
+        return (
+            <div className="flex">
+                <div>
+                    <img
+                        style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
+                        src={token.iconUrl}
+                    />
+                </div>
+                <div
+                    data-tip={true}
+                    data-for={tooltipId}
+                    className="mt2 ml2"
+                >
+                    {token.name}
+                </div>
+                <ReactTooltip id={tooltipId}>{token.address}</ReactTooltip>
+            </div>
+        );
     }
     private renderErrorDialogBody() {
         switch (this.state.errorType) {
