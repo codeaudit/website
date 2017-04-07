@@ -141,6 +141,43 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             </div>
         );
     }
+    private renderTableRows() {
+        if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
+            return '';
+        }
+        return _.map(this.props.tokenBySymbol, (token: Token) => {
+            const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
+            return (
+                <TableRow key={token.iconUrl}>
+                    <TableRowColumn>
+                        <img
+                            style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
+                            src={token.iconUrl}
+                        />
+                    </TableRowColumn>
+                    <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
+                    <TableRowColumn>
+                        <div className="pl3">
+                            <Toggle
+                                toggled={this.isAllowanceSet(token)}
+                                onToggle={this.onToggleAllowanceAsync.bind(this, token)}
+                            />
+                        </div>
+                    </TableRowColumn>
+                    <TableRowColumn>
+                        {isMintable &&
+                            <LifeCycleRaisedButton
+                                labelReady="Mint"
+                                labelLoading="Minting..."
+                                labelComplete="Tokens minted!"
+                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                            />
+                        }
+                    </TableRowColumn>
+                </TableRow>
+            );
+        });
+    }
     private renderErrorDialogBody() {
         switch (this.state.errorType) {
             case errorTypes.incorrectNetworkForFaucet:
@@ -188,43 +225,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             default:
                 throw utils.spawnSwitchErr('errorType', this.state.errorType);
         }
-    }
-    private renderTableRows() {
-        if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
-            return '';
-        }
-        return _.map(this.props.tokenBySymbol, (token: Token) => {
-            const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
-            return (
-                <TableRow key={token.iconUrl}>
-                    <TableRowColumn>
-                        <img
-                            style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
-                            src={token.iconUrl}
-                        />
-                    </TableRowColumn>
-                    <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
-                    <TableRowColumn>
-                        <div className="pl3">
-                            <Toggle
-                                toggled={this.isAllowanceSet(token)}
-                                onToggle={this.onToggleAllowanceAsync.bind(this, token)}
-                            />
-                        </div>
-                    </TableRowColumn>
-                    <TableRowColumn>
-                        {isMintable &&
-                            <LifeCycleRaisedButton
-                                labelReady="Mint"
-                                labelLoading="Minting..."
-                                labelComplete="Tokens minted!"
-                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                            />
-                        }
-                    </TableRowColumn>
-                </TableRow>
-            );
-        });
     }
     private async onToggleAllowanceAsync(assetToken: Token) {
         // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
