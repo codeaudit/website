@@ -134,24 +134,33 @@ export class Blockchain {
         })];
         this.dispatcher.updateTokenBySymbol(tokens);
     }
+    public async doesContractExistAtAddressAsync(address: string) {
+        return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
+    }
+    public async getTokenBalanceAndAllowanceAsync(tokenAddress: string) {
+        const userAddress = await this.getFirstAccountIfExistsAsync();
+        const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, tokenAddress);
+        let balance;
+        let allowance;
+        if (!_.isUndefined(userAddress)) {
+            balance = await tokenContract.balanceOf.call(userAddress);
+            allowance = await tokenContract.allowance.call(userAddress, this.proxy.address);
+        }
+        balance = _.isUndefined(balance) ? 0 : balance.toNumber();
+        allowance = _.isUndefined(allowance) ? 0 : allowance.toNumber();
+        return [balance, allowance];
+    }
     private async getTokenRegistryTokensAsync() {
         if (this.tokenRegistry) {
-            const userAddress = await this.getFirstAccountIfExistsAsync();
             const addresses = await this.tokenRegistry.getTokenAddresses.call();
             const tokens = [];
             for (const address of addresses) {
-                const tokenContractIfExists = await this.instantiateContractIfExistsAsync(TokenArtifacts, address);
-                let balance;
-                let allowance;
+                const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(address);
                 const [tokenAddress, name, symbol] = await this.tokenRegistry.getTokenMetaData.call(address);
-                if (!_.isUndefined(tokenContractIfExists) && !_.isUndefined(userAddress)) {
-                    balance = await tokenContractIfExists.balanceOf.call(userAddress);
-                    allowance = await tokenContractIfExists.allowance.call(userAddress, this.proxy.address);
-                }
                 tokens.push({
                     address,
-                    allowance: _.isUndefined(allowance) ? 0 : allowance.toNumber(),
-                    balance: _.isUndefined(balance) ? 0 : balance.toNumber(),
+                    allowance,
+                    balance,
                     name,
                     symbol,
                 });
