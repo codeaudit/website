@@ -10,8 +10,8 @@ interface OrderAddressInputProps {
     disabled?: boolean;
     initialOrderAddress: string;
     label: string;
-    side: Side;
-    updateOrderAddress: (side: Side, address: string) => void;
+    shouldShowIncompleteErrs?: boolean;
+    updateOrderAddress: (address: string) => void;
 }
 
 interface OrderAddressInputState {
@@ -26,6 +26,13 @@ export class OrderAddressInput extends React.Component<OrderAddressInputProps, O
             address: this.props.initialOrderAddress,
             errMsg: '',
         };
+    }
+    public componentWillReceiveProps(nextProps: OrderAddressInputProps) {
+        const errMsg = nextProps.shouldShowIncompleteErrs && this.state.address === '' ?
+                          'Address is required' : this.state.errMsg;
+        this.setState({
+            errMsg,
+        });
     }
     public render() {
         return (
@@ -52,7 +59,7 @@ export class OrderAddressInput extends React.Component<OrderAddressInputProps, O
             errMsg: isValidAddress ? '' : 'Invalid ethereum address',
         });
         if (isValidAddress) {
-            this.props.updateOrderAddress(this.props.side, address);
+            this.props.updateOrderAddress(address);
         }
     }
 }

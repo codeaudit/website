@@ -75,11 +75,10 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
         const dispatcher = this.props.dispatcher;
         return (
             <OrderAddressInput
-                side={Side.receive}
                 label="Taker ethereum address"
                 blockchain={this.props.blockchain}
                 initialOrderAddress={this.props.orderTakerAddress}
-                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
+                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher, Side.receive)}
             />
         );
     }

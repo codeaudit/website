@@ -94,11 +94,10 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         </div>
                         <div className="col col-6">
                             <OrderAddressInput
-                                side={Side.receive}
                                 label="Taker (address)"
                                 blockchain={this.props.blockchain}
                                 initialOrderAddress={this.props.orderTakerAddress}
-                                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher)}
+                                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher, Side.receive)}
                             />
                         </div>
                     </div>
