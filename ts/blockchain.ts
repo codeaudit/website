@@ -143,13 +143,13 @@ export class Blockchain {
     private async getTokenRegistryTokensAsync() {
         if (this.tokenRegistry) {
             const userAddress = await this.getFirstAccountIfExistsAsync();
-            const [addresses, symbols, names] = await this.tokenRegistry.getTokens.call();
+            const addresses = await this.tokenRegistry.getTokenAddresses.call();
             const tokens = [];
-            for (let i = 0; i < addresses.length; i++) {
-                const address = addresses[i];
+            for (const address of addresses) {
                 const tokenContractIfExists = await this.instantiateContractIfExistsAsync(TokenArtifacts, address);
                 let balance;
                 let allowance;
+                const [tokenAddress, name, symbol] = await this.tokenRegistry.getTokenMetaData.call(address);
                 if (!_.isUndefined(tokenContractIfExists) && !_.isUndefined(userAddress)) {
                     balance = await tokenContractIfExists.balanceOf.call(userAddress);
                     allowance = await tokenContractIfExists.allowance.call(userAddress, this.proxy.address);
@@ -158,8 +158,8 @@ export class Blockchain {
                     address,
                     allowance: _.isUndefined(allowance) ? 0 : allowance.toNumber(),
                     balance: _.isUndefined(balance) ? 0 : balance.toNumber(),
-                    name: utils.convertByte32HexToString(names[i]),
-                    symbol: utils.convertByte32HexToString(symbols[i]),
+                    name,
+                    symbol,
                 });
             }
             this.dispatcher.updateTokenBySymbol(tokens);
