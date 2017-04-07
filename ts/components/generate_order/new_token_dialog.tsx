@@ -80,7 +80,7 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
                             updateOrderAddress={this.onTokenAddressChanged.bind(this)}
                         />
                     </div>
-                    <div className="pt2">
+                    <div className="pt2 mx-auto" style={{width: 120}}>
                         <LifeCycleRaisedButton
                             labelReady="Add"
                             labelLoading="Adding..."

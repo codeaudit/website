@@ -61,7 +61,7 @@ export class LifeCycleRaisedButton extends
         return (
             <RaisedButton
                 label={label}
-                style={{margin: 12, width: '100%'}}
+                style={{width: '100%'}}
                 onTouchTap={this.onClickAsync.bind(this)}
                 disabled={this.state.buttonState !== ButtonState.READY}
             />
