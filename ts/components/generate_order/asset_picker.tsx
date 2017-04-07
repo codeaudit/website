@@ -8,6 +8,7 @@ interface AssetPickerProps {
     side: Side;
     currentAssetToken: AssetToken;
     onAssetChosen: (side: Side, chosenAssetToken: AssetToken) => void;
+    onCustomAssetChosen?: () => void;
     tokenBySymbol: TokenBySymbol;
 }
 
@@ -40,7 +41,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                 title="Choose a token"
                 modal={false}
                 open={this.props.isOpen}
-                onRequestClose={this.closeDialog.bind(this)}
+                onRequestClose={this.onCloseDialog.bind(this)}
             >
                 <GridList
                     cellHeight={150}
@@ -54,7 +55,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
         );
     }
     private renderGridTiles() {
-        return _.map(this.props.tokenBySymbol, (token: Token, symbol: string) => {
+        const gridTiles = _.map(this.props.tokenBySymbol, (token: Token, symbol: string) => {
             const assetToken: AssetToken = {
                 symbol,
                 amount: this.props.currentAssetToken.amount,
@@ -68,7 +69,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                 <div
                     key={symbol}
                     style={tileStyles}
-                    onClick={this.chooseAssetAndClose.bind(this, assetToken)}
+                    onClick={this.onChooseAssetAndClose.bind(this, assetToken)}
                     onMouseEnter={this.onToggleHover.bind(this, symbol, true)}
                     onMouseLeave={this.onToggleHover.bind(this, symbol, false)}
                 >
@@ -88,6 +89,28 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                 </div>
             );
         });
+        if (!_.isUndefined(this.props.onCustomAssetChosen)) {
+            gridTiles.push((
+                <div
+                    key="otherToken"
+                    style={{cursor: 'pointer'}}
+                    onClick={this.props.onCustomAssetChosen.bind(this)}
+                >
+                    <GridTile
+                        style={{height: 160}}
+                        title="Another ERC20"
+                    >
+                        <div style={{position: 'absolute', left: 42}}>
+                            <i
+                                style={{fontSize: 105, paddingLeft: 1, paddingRight: 1}}
+                                className="zmdi zmdi-plus-circle"
+                            />
+                        </div>
+                    </GridTile>
+                </div>
+            ));
+        }
+        return gridTiles;
     }
     private onToggleHover(symbol: string, isHovered: boolean) {
         const hoveredSymbol = isHovered ? symbol : undefined;
@@ -95,10 +118,10 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
             hoveredSymbol,
         });
     }
-    private closeDialog() {
+    private onCloseDialog() {
         this.props.onAssetChosen(this.props.side, this.props.currentAssetToken);
     }
-    private chooseAssetAndClose(token: AssetToken) {
+    private onChooseAssetAndClose(token: AssetToken) {
         this.props.onAssetChosen(this.props.side, token);
     }
 }
