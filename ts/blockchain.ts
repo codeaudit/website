@@ -49,11 +49,8 @@ export class Blockchain {
         if (_.isUndefined(userAddressIfExists)) {
             throw new Error('Cannot set allowance if no user accounts accessible');
         }
-        const tokenContractIfExists = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
-        if (_.isUndefined(tokenContractIfExists)) {
-            throw new Error('Cannot set allowance if token contract no deployed on network');
-        }
-        await tokenContractIfExists.approve(this.proxy.address, amount, {
+        const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
+        await tokenContract.approve(this.proxy.address, amount, {
             from: userAddressIfExists,
         });
         token.allowance = amount;
@@ -128,11 +125,8 @@ export class Blockchain {
         if (_.isUndefined(userAddress)) {
             throw new Error('User has no associated addresses');
         }
-        const mintableContractIfExists = await this.instantiateContractIfExistsAsync(MintableArtifacts, token.address);
-        if (_.isUndefined(mintableContractIfExists)) {
-            throw new Error('Cannot mint tokens if token contract no deployed on network');
-        }
-        await mintableContractIfExists.mint(MINT_AMOUNT, {
+        const mintableContract = await this.instantiateContractIfExistsAsync(MintableArtifacts, token.address);
+        await mintableContract.mint(MINT_AMOUNT, {
             from: userAddress,
         });
         const tokens = [_.assign({}, token, {
@@ -182,9 +176,20 @@ export class Blockchain {
                      'Cannot call instantiateContractsAsync if disconnected from Ethereum node');
 
         this.dispatcher.updateBlockchainIsLoaded(false);
-        this.exchange = await this.instantiateContractIfExistsAsync(ExchangeArtifacts);
-        this.tokenRegistry = await this.instantiateContractIfExistsAsync(TokenRegistryArtifacts);
-        this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
+        try {
+            this.exchange = await this.instantiateContractIfExistsAsync(ExchangeArtifacts);
+            this.tokenRegistry = await this.instantiateContractIfExistsAsync(TokenRegistryArtifacts);
+            this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
+        } catch (err) {
+            const errMsg = err + '';
+            if (errMsg === 'CONTRACT_DOES_NOT_EXIST') {
+                this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
+                this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+            } else {
+                // We show a generic message for other possible caught errors
+                this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);
+            }
+        }
         await this.getTokenRegistryTokensAsync();
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
@@ -201,11 +206,9 @@ export class Blockchain {
         }
 
         if (!_.isUndefined(contractAddress)) {
-            const doesContractExist = await this.web3Wrapper.doesContractExistAtAddressAsync(contractAddress);
+            const doesContractExist = await this.doesContractExistAtAddressAsync(contractAddress);
             if (!doesContractExist) {
-                this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
-                this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
-                return undefined;
+                throw new Error('CONTRACT_DOES_NOT_EXIST');
             }
         }
 
@@ -222,13 +225,11 @@ export class Blockchain {
             utils.consoleLog(`Notice: Error encountered: ${err}`);
             await errorReporter.reportAsync(err);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
-                this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
-                this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+                throw new Error('CONTRACT_DOES_NOT_EXIST');
             } else {
-                // We show a generic message for other possible caught errors
-                this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);
+                await errorReporter.reportAsync(err);
+                throw new Error('UNHANDLED_ERROR');
             }
-            return undefined;
         }
     }
     private async onPageLoadAsync() {
