@@ -14,6 +14,7 @@ export interface Action {
 }
 
 export const actionTypes = utils.strEnum([
+    'ADD_TOKEN_TO_TOKEN_BY_SYMBOL',
     'BLOCKCHAIN_ERR_ENCOUNTERED',
     'UPDATE_BLOCKCHAIN_IS_LOADED',
     'UPDATE_NETWORK_ID',

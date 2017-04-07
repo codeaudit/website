@@ -106,6 +106,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                     <div className="mx-auto clearfix">
                         <div className="col col-6 pr3">
                             <TokenInput
+                                blockchain={this.props.blockchain}
                                 blockchainErr={this.props.blockchainErr}
                                 dispatcher={this.props.dispatcher}
                                 label="Token to sell (address)"
@@ -117,6 +118,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                         </div>
                         <div className="col col-6">
                             <TokenInput
+                                blockchain={this.props.blockchain}
                                 blockchainErr={this.props.blockchainErr}
                                 dispatcher={this.props.dispatcher}
                                 label="Token to receive (address)"

@@ -68,6 +68,12 @@ export class Dispatcher {
             type: actionTypes.UPDATE_BLOCKCHAIN_IS_LOADED,
          });
     }
+    public addTokenToTokenBySymbol(token: Token) {
+        this.dispatch({
+             data: token,
+            type: actionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL,
+         });
+    }
     public updateTokenBySymbol(tokens: Token[]) {
         this.dispatch({
              data: tokens,

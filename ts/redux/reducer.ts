@@ -81,9 +81,17 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 userEtherBalance: action.data,
             });
 
+        case actionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL:
+            const newTokenBySymbol = state.tokenBySymbol;
+            newTokenBySymbol[action.data.symbol] = action.data;
+            return _.assign({}, state, {
+                tokenBySymbol: newTokenBySymbol,
+            });
+
         case actionTypes.UPDATE_TOKEN_BY_SYMBOL:
             const tokenBySymbol = state.tokenBySymbol;
-            _.each(action.data, (token) => {
+            const tokens = action.data;
+            _.each(tokens, (token) => {
                 const updatedToken = _.assign({}, tokenBySymbol[token.symbol], token);
                 tokenBySymbol[token.symbol] = updatedToken;
             });
