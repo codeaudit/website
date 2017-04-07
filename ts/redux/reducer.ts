@@ -11,6 +11,7 @@ import {
     SignatureData,
     TokenBySymbol,
 } from 'ts/types';
+import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 
 export interface State {
     blockchainErr: BlockchainErrs;
@@ -29,12 +30,6 @@ export interface State {
 };
 
 const tokenSymbols = _.keys(constants.iconUrlBySymbol);
-const initialTokenBySymbol = _.reduce(constants.iconUrlBySymbol, (result, iconUrl, symbol) => {
-    result[symbol] = {
-        iconUrl,
-    };
-    return result;
-}, Object.create(null));
 const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
@@ -59,9 +54,23 @@ const INITIAL_STATE: State = {
             symbol: tokenSymbols[1],
         },
     },
-    tokenBySymbol: initialTokenBySymbol,
+    tokenBySymbol: getInitialTokenBySymbol(),
     userEtherBalance: 0,
 };
+
+function getInitialTokenBySymbol() {
+    const initialTokenBySymbol = _.reduce(constants.iconUrlBySymbol, (result, iconUrl, symbol) => {
+        result[symbol] = {
+            iconUrl,
+        };
+        return result;
+    }, Object.create(null));
+    const customTokens = customTokenStorage.getCustomTokens();
+    _.each(customTokens, (token) => {
+        initialTokenBySymbol[token.symbol] = token;
+    });
+    return initialTokenBySymbol;
+}
 
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;

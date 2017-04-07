@@ -8,6 +8,7 @@ import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import {AssetToken, Side, TokenBySymbol, BlockchainErrs, Token} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 import {NewTokenDialog} from 'ts/components/generate_order/new_token_dialog';
+import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 
 interface TokenInputProps {
     blockchain: Blockchain;
@@ -98,6 +99,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         });
     }
     private onNewTokenSubmitted(newToken: Token) {
+        customTokenStorage.addCustomToken(newToken);
         this.props.dispatcher.addTokenToTokenBySymbol(newToken);
         this.props.updateChosenAssetToken(this.props.side, {
             amount: this.props.assetToken.amount,
