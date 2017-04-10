@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Toggle, FlatButton, Dialog} from 'material-ui';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {TokenBySymbol, Token, BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
@@ -11,6 +10,8 @@ import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import ReactTooltip = require('react-tooltip');
 import {
+    Dialog,
+    FlatButton,
     RaisedButton,
     Table,
     TableHeader,
@@ -18,6 +19,7 @@ import {
     TableRow,
     TableHeaderColumn,
     TableRowColumn,
+    Toggle,
 } from 'material-ui';
 
 const PRECISION = 5;
