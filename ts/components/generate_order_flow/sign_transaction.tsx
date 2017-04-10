@@ -44,6 +44,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
         };
     }
     public render() {
+        const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.props.orderExpiryTimestamp);
         return (
             <Step
                 title="Confirm and sign your order"
@@ -52,12 +53,16 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 hasBackButton={true}
                 onNavigateClick={this.onNavigationClickAsync.bind(this)}
             >
-                <VisualOrder
-                    orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                    orderTakerAddress={this.props.orderTakerAddress}
-                    orderMakerAddress={this.props.orderMakerAddress}
-                    sideToAssetToken={this.props.sideToAssetToken}
-                />
+                <div className="px4">
+                    <VisualOrder
+                        orderTakerAddress={this.props.orderTakerAddress}
+                        orderMakerAddress={this.props.orderMakerAddress}
+                        sideToAssetToken={this.props.sideToAssetToken}
+                    />
+                    <div className="center pt3 pb2">
+                        Expires: {expiryDate} UTC
+                    </div>
+                </div>
                 <div>{this.state.isSigning && 'Signing...'}</div>
             </Step>
         );

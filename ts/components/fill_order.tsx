@@ -102,14 +102,21 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const token = this.props.tokenBySymbol[assetToken.symbol];
         const orderTaker = this.state.parsedOrder.taker !== '' ? this.state.parsedOrder.taker :
                            this.props.orderMakerAddress;
+        const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.state.parsedOrder.expiry);
         return (
             <div className="pt2 pb1 px4">
-                <VisualOrder
-                    orderExpiryTimestamp={this.state.parsedOrder.expiry}
-                    orderTakerAddress={orderTaker}
-                    orderMakerAddress={this.state.parsedOrder.maker}
-                    sideToAssetToken={this.state.parsedOrder.assetTokens}
-                />
+                <div className="px4">
+                    <div className="px4 pt3">
+                        <VisualOrder
+                            orderTakerAddress={orderTaker}
+                            orderMakerAddress={this.state.parsedOrder.maker}
+                            sideToAssetToken={this.state.parsedOrder.assetTokens}
+                        />
+                        <div className="center pt3 pb2">
+                            Expires: {expiryDate} UTC
+                        </div>
+                    </div>
+                </div>
                 <div className="center">
                     <AmountInput
                         label="Fill amount"

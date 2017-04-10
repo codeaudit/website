@@ -27,7 +27,12 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
             <div>
                 <div className="pb2 mx4 flex">
                     <div>Order JSON</div>
-                    <CopyIcon data={orderJSON}/>
+                    <div
+                        className="inline-block pl1"
+                        style={{top: '1px'}}
+                    >
+                        <CopyIcon data={orderJSON}/>
+                    </div>
                 </div>
                 <Paper className="mx4 center">
                     <TextField
