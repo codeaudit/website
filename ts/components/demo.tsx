@@ -13,6 +13,7 @@ import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {HashData, TokenBySymbol, TabValue, BlockchainErrs, Order} from 'ts/types';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
+import {TradeHistory} from 'ts/components/trade_history/trade_history';
 
 export interface DemoPassedProps {}
 
@@ -71,6 +72,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         if (!_.isUndefined(this.sharedOrderIfExists)) {
             selectedTab = TabValue.fill;
         }
+        selectedTab = TabValue.tradeHistory;
         this.state = {
             kind: 'form',
             prevNetworkId: this.props.networkId,
@@ -165,6 +167,19 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 tokenBySymbol={this.props.tokenBySymbol}
                                 userEtherBalance={this.props.userEtherBalance}
                             />
+                        </Tab>
+                        <Tab
+                          value={TabValue.tradeHistory}
+                          label="History"
+                          buttonStyle={styles.button}
+                        >
+                            <div className="mx-auto" style={{width: 410}}>
+                                <TradeHistory
+                                    blockchain={this.blockchain}
+                                    blockchainErr={this.props.blockchainErr}
+                                    blockchainIsLoaded={this.props.blockchainIsLoaded}
+                                />
+                            </div>
                         </Tab>
                     </Tabs>
                 </Paper>
