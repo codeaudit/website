@@ -27,7 +27,7 @@ export interface DemoAllProps {
     orderFillAmount: number;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
-    orderMakerAddress: string;
+    userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
 }
 
@@ -147,7 +147,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 blockchainErr={this.props.blockchainErr}
                                 initialOrder={this.sharedOrderIfExists}
                                 orderFillAmount={this.props.orderFillAmount}
-                                orderMakerAddress={this.props.orderMakerAddress}
+                                userAddress={this.props.userAddress}
                                 tokenBySymbol={this.props.tokenBySymbol}
                                 triggerTabChange={this.triggerTabChange.bind(this)}
                                 dispatcher={this.props.dispatcher}
@@ -165,6 +165,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                                 dispatcher={this.props.dispatcher}
                                 tokenBySymbol={this.props.tokenBySymbol}
+                                userAddress={this.props.userAddress}
                                 userEtherBalance={this.props.userEtherBalance}
                             />
                         </Tab>
@@ -187,7 +188,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     blockchain={this.blockchain}
                     blockchainErr={this.props.blockchainErr}
                     isOpen={this.props.shouldBlockchainErrDialogBeOpen}
-                    orderMakerAddress={this.props.orderMakerAddress}
+                    userAddress={this.props.userAddress}
                     toggleDialogFn={updateShouldBlockchainErrDialogBeOpen}
                 />
             </div>

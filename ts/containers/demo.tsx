@@ -20,8 +20,8 @@ interface MapStateToProps {
     orderFillAmount: number;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
-    orderMakerAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
+    userAddress: string;
 }
 
 interface ConnectedState {}
@@ -39,7 +39,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         feeRecipientAddress: constants.FEE_RECIPIENT_ADDRESS,
         makerFee: constants.MAKER_FEE,
         orderExpiryTimestamp: state.orderExpiryTimestamp,
-        orderMakerAddress: state.orderMakerAddress,
+        orderMakerAddress: state.userAddress,
         orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : constants.NULL_ADDRESS,
         receiveAmount: state.sideToAssetToken[Side.receive].amount,
         receiveTokenContractAddr: state.tokenBySymbol[receiveSymbol].address,
@@ -50,10 +50,10 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         blockchainIsLoaded: state.blockchainIsLoaded,
         networkId: state.networkId,
         orderFillAmount: state.orderFillAmount,
-        orderMakerAddress: state.orderMakerAddress,
         hashData,
         shouldBlockchainErrDialogBeOpen: state.shouldBlockchainErrDialogBeOpen,
         tokenBySymbol: state.tokenBySymbol,
+        userAddress: state.userAddress,
         userEtherBalance: state.userEtherBalance,
     };
 };

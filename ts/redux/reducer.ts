@@ -20,12 +20,12 @@ export interface State {
     networkId: number;
     orderExpiryTimestamp: number;
     orderFillAmount: number;
-    orderMakerAddress: string;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
+    userAddress: string;
     userEtherBalance: number;
 };
 
@@ -37,7 +37,6 @@ const INITIAL_STATE: State = {
     networkId: undefined,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
     orderFillAmount: undefined,
-    orderMakerAddress: undefined,
     orderSignatureData: {
         hash: '',
         r: '',
@@ -55,6 +54,7 @@ const INITIAL_STATE: State = {
         },
     },
     tokenBySymbol: getInitialTokenBySymbol(),
+    userAddress: '',
     userEtherBalance: 0,
 };
 
@@ -162,16 +162,15 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 orderExpiryTimestamp: action.data,
             });
 
-        case actionTypes.UPDATE_ORDER_ADDRESS:
-            if (action.data.side === Side.deposit) {
-                return _.assign({}, state, {
-                    orderMakerAddress: action.data.address,
-                });
-            } else {
-                return _.assign({}, state, {
-                    orderTakerAddress: action.data.address,
-                });
-            }
+        case actionTypes.UPDATE_ORDER_TAKER_ADDRESS:
+            return _.assign({}, state, {
+                orderTakerAddress: action.data,
+            });
+
+        case actionTypes.UPDATE_USER_ADDRESS:
+            return _.assign({}, state, {
+                userAddress: action.data,
+            });
 
         default:
             return state;

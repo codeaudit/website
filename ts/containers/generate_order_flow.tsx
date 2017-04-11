@@ -32,7 +32,7 @@ interface ConnectedState {
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
-    orderMakerAddress: string;
+    userAddress: string;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
 }
@@ -40,11 +40,11 @@ interface ConnectedState {
 const mapStateToProps = (state: State, ownProps: GenerateOrderFlowProps): ConnectedState => ({
     generateOrderStep: state.generateOrderStep,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
-    orderMakerAddress: state.orderMakerAddress,
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
     tokenBySymbol: state.tokenBySymbol,
+    userAddress: state.userAddress,
 });
 
 class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps & ConnectedState, any> {
@@ -86,7 +86,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                         hashData={this.props.hashData}
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderTakerAddress={this.props.orderTakerAddress}
-                        orderMakerAddress={this.props.orderMakerAddress}
+                        userAddress={this.props.userAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={dispatcher.updateGenerateOrderStep.bind(dispatcher)}
                     />
@@ -98,7 +98,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderSignatureData={this.props.orderSignatureData}
                         orderTakerAddress={this.props.orderTakerAddress}
-                        orderMakerAddress={this.props.orderMakerAddress}
+                        orderMakerAddress={this.props.userAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
                         updateGenerateOrderStep={dispatcher.updateGenerateOrderStep.bind(dispatcher)}
                     />

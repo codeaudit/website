@@ -151,7 +151,7 @@ export class Web3Wrapper {
             // Update makerAddress on network change
             if (prevUserAddress !== userAddressIfExists) {
                 prevUserAddress = userAddressIfExists;
-                this.dispatcher.updateOrderAddress(Side.deposit, userAddressIfExists);
+                this.dispatcher.updateUserAddress(userAddressIfExists);
             }
 
             // Check for user ether balance changes

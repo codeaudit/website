@@ -40,6 +40,7 @@ interface TokenBalancesProps {
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
     tokenBySymbol: TokenBySymbol;
+    userAddress: string;
     userEtherBalance: number;
 }
 
@@ -297,8 +298,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
     }
     private async requestEtherAsync(): Promise<boolean> {
-        const userAddressIfExists = await this.props.blockchain.getFirstAccountIfExistsAsync();
-        if (_.isUndefined(userAddressIfExists) ||
+        if (this.props.userAddress === '' ||
             this.props.blockchainErr !== '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
@@ -315,7 +315,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
 
         await utils.sleepAsync(ARTIFICIAL_ETHER_REQUEST_DELAY);
 
-        const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${userAddressIfExists}`);
+        const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${this.props.userAddress}`);
         const responseBody = await response.text();
         if (response.status !== 200) {
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);

@@ -41,13 +41,16 @@ export class Dispatcher {
             type: actionTypes.UPDATE_CHOSEN_ASSET_TOKEN,
         });
     }
-    public updateOrderAddress(side: Side, address: string) {
+    public updateOrderTakerAddress(address: string) {
         this.dispatch({
-            data: {
-                side,
-                address,
-            },
-            type: actionTypes.UPDATE_ORDER_ADDRESS,
+            data: address,
+            type: actionTypes.UPDATE_ORDER_TAKER_ADDRESS,
+        });
+    }
+    public updateUserAddress(address: string) {
+        this.dispatch({
+            data: address,
+            type: actionTypes.UPDATE_USER_ADDRESS,
         });
     }
     public updateOrderExpiry(unixTimestampSec: number) {

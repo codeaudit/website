@@ -78,7 +78,7 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
                 label="Taker ethereum address"
                 blockchain={this.props.blockchain}
                 initialOrderAddress={this.props.orderTakerAddress}
-                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher, Side.receive)}
+                updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
             />
         );
     }
@@ -86,6 +86,6 @@ export class RemainingConfigs extends React.Component<RemainingConfigsProps, Rem
         this.setState({
             isPointToPoint,
         });
-        this.props.dispatcher.updateOrderAddress(Side.Receive, '');
+        this.props.dispatcher.updateOrderTakerAddress('');
     }
 }

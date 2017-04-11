@@ -27,7 +27,7 @@ interface ConnectedState {
     blockchainIsLoaded: boolean;
     orderExpiryTimestamp: number;
     orderSignatureData: SignatureData;
-    orderMakerAddress: string;
+    userAddress: string;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
@@ -37,11 +37,11 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     blockchainErr: state.blockchainErr,
     blockchainIsLoaded: state.blockchainIsLoaded,
     orderExpiryTimestamp: state.orderExpiryTimestamp,
-    orderMakerAddress: state.orderMakerAddress,
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
     tokenBySymbol: state.tokenBySymbol,
+    userAddress: state.userAddress,
 });
 
 class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps & ConnectedState, any> {
@@ -54,12 +54,12 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 sideToAssetToken={this.props.sideToAssetToken}
                 orderSignatureData={this.props.orderSignatureData}
                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                orderMakerAddress={this.props.orderMakerAddress}
                 orderTakerAddress={this.props.orderTakerAddress}
                 dispatcher={this.props.dispatcher}
                 hashData={this.props.hashData}
                 tokenBySymbol={this.props.tokenBySymbol}
                 triggerTabChange={this.props.triggerTabChange}
+                userAddress={this.props.userAddress}
             />
         );
     }

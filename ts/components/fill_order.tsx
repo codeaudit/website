@@ -18,7 +18,7 @@ interface FillOrderProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
     orderFillAmount: number;
-    orderMakerAddress: string;
+    userAddress: string;
     tokenBySymbol: TokenBySymbol;
     triggerTabChange: (tabValue: TabValue) => void;
     initialOrder: Order;
@@ -101,7 +101,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         };
         const token = this.props.tokenBySymbol[assetToken.symbol];
         const orderTaker = this.state.parsedOrder.taker !== '' ? this.state.parsedOrder.taker :
-                           this.props.orderMakerAddress;
+                           this.props.userAddress;
         const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.state.parsedOrder.expiry);
         return (
             <div className="pt2 pb1 px4">
@@ -182,7 +182,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const receiveToken = this.state.parsedOrder.assetTokens[Side.receive];
         const specifiedTakerAddressIfExists = this.state.parsedOrder.taker;
         const fillAmount = this.props.orderFillAmount;
-        const takerAddress = this.props.orderMakerAddress;
+        const takerAddress = this.props.userAddress;
         const takerToken = this.props.tokenBySymbol[receiveToken.symbol];
         if (_.isUndefined(takerAddress)) {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);

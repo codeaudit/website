@@ -25,7 +25,7 @@ interface SignTransactionProps {
     hashData: HashData;
     orderExpiryTimestamp: number;
     orderTakerAddress: string;
-    orderMakerAddress: string;
+    userAddress: string;
     sideToAssetToken: SideToAssetToken;
     updateGenerateOrderStep(direction: Direction): void;
 }
@@ -56,7 +56,7 @@ export class SignTransaction extends React.Component<SignTransactionProps, SignT
                 <div className="px4">
                     <VisualOrder
                         orderTakerAddress={this.props.orderTakerAddress}
-                        orderMakerAddress={this.props.orderMakerAddress}
+                        orderMakerAddress={this.props.userAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
                     />
                     <div className="center pt3 pb2">

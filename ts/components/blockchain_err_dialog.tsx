@@ -10,7 +10,7 @@ interface BlockchainErrDialogProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
     isOpen: boolean;
-    orderMakerAddress: string;
+    userAddress: string;
     toggleDialogFn: (isOpen: boolean) => void;
 }
 
@@ -24,7 +24,7 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
             />,
         ];
 
-        const hasWalletAddress = !_.isUndefined(this.props.orderMakerAddress);
+        const hasWalletAddress = !_.isUndefined(this.props.userAddress);
         return (
             <Dialog
                 title={this.getTitle(hasWalletAddress)}

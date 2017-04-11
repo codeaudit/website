@@ -41,7 +41,7 @@ interface GenerateFormProps {
     dispatcher: Dispatcher;
     hashData: HashData;
     orderExpiryTimestamp: number;
-    orderMakerAddress: string;
+    userAddress: string;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
@@ -88,7 +88,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                             <MakerAddressInput
                                 blockchain={this.props.blockchain}
                                 blockchainIsLoaded={this.props.blockchainIsLoaded}
-                                orderMakerAddress={this.props.orderMakerAddress}
+                                orderMakerAddress={this.props.userAddress}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                             />
                         </div>
@@ -97,7 +97,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 label="Taker (address)"
                                 blockchain={this.props.blockchain}
                                 initialOrderAddress={this.props.orderTakerAddress}
-                                updateOrderAddress={dispatcher.updateOrderAddress.bind(dispatcher, Side.receive)}
+                                updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
                             />
                         </div>
                     </div>
@@ -200,7 +200,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                                 orderSignatureData={this.props.orderSignatureData}
                                 orderTakerAddress={this.props.orderTakerAddress}
-                                orderMakerAddress={this.props.orderMakerAddress}
+                                orderMakerAddress={this.props.userAddress}
                                 sideToAssetToken={this.props.sideToAssetToken}
                             />
                         }
@@ -222,7 +222,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
             debitToken.amount > 0 && receiveAmount > 0 &&
-            !_.isUndefined(this.props.orderMakerAddress) &&
+            !_.isUndefined(this.props.userAddress) &&
             debitBalance >= debitToken.amount && debitAllowance >= debitToken.amount) {
             const didSignSuccessfully = await this.signTransactionAsync();
             if (didSignSuccessfully) {
@@ -234,7 +234,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             return didSignSuccessfully;
         } else {
             let globalErrMsg = 'You must fix the above errors in order to generate a valid order';
-            if (_.isUndefined(this.props.orderMakerAddress)) {
+            if (_.isUndefined(this.props.userAddress)) {
                 globalErrMsg = 'You must enable wallet communication and make sure you have at least \
                                 one account address in order to sign an order';
             }
@@ -270,7 +270,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             const order = utils.generateOrder(this.props.sideToAssetToken,
                                                   this.props.orderExpiryTimestamp,
                                                   this.props.orderTakerAddress,
-                                                  this.props.orderMakerAddress, signatureData);
+                                                  this.props.userAddress, signatureData);
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';
