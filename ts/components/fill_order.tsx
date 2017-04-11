@@ -188,6 +188,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
+        const currentDate = new Date();
+        const currentUnixTimestamp = currentDate.getTime() / 1000;
         let globalErrMsg = '';
         if (fillAmount > receiveToken.amount) {
             globalErrMsg = `Cannot fill more then order limit of ${receiveToken.amount} ${receiveToken.symbol}`;
@@ -195,6 +197,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
             globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;
+        } else if (this.state.parsedOrder.expiry < currentUnixTimestamp) {
+            globalErrMsg = `This order has expired`;
         }
         if (globalErrMsg !== '') {
             this.setState({
