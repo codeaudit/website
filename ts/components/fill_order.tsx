@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
+import {Ox} from 'ts/utils/Ox';
 import {TextField, Paper} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
 import {Side, TokenBySymbol, Order, TabValue, AssetToken, BlockchainErrs} from 'ts/types';
@@ -156,14 +158,31 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             if (validationResult.errors.length > 0) {
                 orderJSONErrMsg = 'Submitted order JSON is not a valid order';
                 utils.consoleLog(`Unexpected order JSON validation error: ${validationResult.errors.join(', ')}`);
-            } else {
-                parsedOrder = order;
+                return;
+            }
+            parsedOrder = order;
+
+            const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
+            const depositToken = this.props.tokenBySymbol[parsedOrder.assetTokens[Side.deposit].symbol];
+            const receiveToken = this.props.tokenBySymbol[parsedOrder.assetTokens[Side.receive].symbol];
+            const depositAmount = parsedOrder.assetTokens[Side.deposit].amount;
+            const receiveAmount = parsedOrder.assetTokens[Side.receive].amount;
+            const taker = parsedOrder.taker !== '' ? parsedOrder.taker : constants.NULL_ADDRESS;
+            const orderHash = Ox.getOrderHash(exchangeContractAddr, parsedOrder.maker,
+                            taker, depositToken.address,
+                            receiveToken.address, constants.FEE_RECIPIENT_ADDRESS,
+                            depositAmount, receiveAmount, constants.MAKER_FEE,
+                            constants.TAKER_FEE, parsedOrder.expiry);
+            if (orderHash !== parsedOrder.signature.hash) {
+                orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
+                parsedOrder = undefined;
             }
         } catch (err) {
             if (orderJSON !== '') {
                 orderJSONErrMsg = 'Submitted order JSON is not valid JSON';
             }
         }
+
         this.setState({
             orderJSON,
             orderJSONErrMsg,
