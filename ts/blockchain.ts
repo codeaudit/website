@@ -191,7 +191,7 @@ export class Blockchain {
             this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
         } catch (err) {
             const errMsg = err + '';
-            if (errMsg === 'CONTRACT_DOES_NOT_EXIST') {
+            if (_.includes(errMsg, 'CONTRACT_DOES_NOT_EXIST')) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
                 this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             } else {
