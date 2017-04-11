@@ -32,7 +32,7 @@ export class Party extends React.Component<PartyProps, PartyState> {
         const addressWidth = identiconDiameter > MIN_ADDRESS_WIDTH ?
                              identiconDiameter : MIN_ADDRESS_WIDTH;
         return (
-            <div>
+            <div style={{overflow: 'hidden'}}>
                 <div className="pb1">{label}</div>
                 {this.renderIdenticon(address)}
                 <div

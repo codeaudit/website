@@ -22,13 +22,19 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         return (
             <Paper className="p2 my2">
                 <h3 style={{marginTop: 0}}>Trade history</h3>
-                {this.renderTrades()}
+                <div style={{height: 500, overflow: 'scroll'}}>
+                    {this.renderTrades()}
+                </div>
             </Paper>
         );
     }
     private renderTrades() {
         if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
             return <div />;
+        }
+
+        if (this.props.historicalFills.length === 0) {
+            return this.renderEmptyNotice();
         }
 
         return _.map(this.props.historicalFills, (fill, index) => {
@@ -58,7 +64,10 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                 },
             };
             return (
-                <Paper key={`${fill.orderHash}-${fill.filledValueM}-${index}`} className="py1 mb2">
+                <Paper
+                    key={`${fill.orderHash}-${fill.filledValueM}-${index}`}
+                    className="m1 mb2 py1 mb2"
+                >
                     <TradeHistoryItem
                         orderTakerAddress={fill.taker}
                         orderMakerAddress={fill.maker}
@@ -67,5 +76,12 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                 </Paper>
             );
         });
+    }
+    private renderEmptyNotice() {
+        return (
+            <Paper className="mt1 p2 mx-auto center" style={{width: '80%'}}>
+                No filled orders yet.
+            </Paper>
+        );
     }
 }
