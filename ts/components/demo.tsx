@@ -94,6 +94,10 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         }
         if (nextProps.userAddress !== this.state.prevUserAddress) {
             this.blockchain.userAddressUpdatedFireAndForgetAsync(nextProps.userAddress);
+            const tokens = _.values(nextProps.tokenBySymbol);
+            if (nextProps.userAddress !== '') {
+                this.blockchain.updateTokenBalancesAndAllowancesAsync(tokens);
+            }
             this.setState({
                 prevUserAddress: nextProps.userAddress,
             });

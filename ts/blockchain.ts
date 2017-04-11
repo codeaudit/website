@@ -153,6 +153,20 @@ export class Blockchain {
         allowance = _.isUndefined(allowance) ? 0 : allowance.toNumber();
         return [balance, allowance];
     }
+    public async updateTokenBalancesAndAllowancesAsync(tokens: Token[]) {
+        const updatedTokens = [];
+        for (const token of tokens) {
+            if (_.isUndefined(token.address)) {
+                continue; // Cannot retrieve balance for tokens without an address
+            }
+            const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(token.address);
+            updatedTokens.push(_.assign({}, token, {
+                balance,
+                allowance,
+            }));
+        }
+        this.dispatcher.updateTokenBySymbol(updatedTokens);
+    }
     private doesUserAddressExist(): boolean {
         return this.userAddress !== '';
     }
