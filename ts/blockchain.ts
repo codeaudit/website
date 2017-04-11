@@ -23,10 +23,14 @@ export class Blockchain {
     private web3Wrapper: Web3Wrapper;
     private provider: Provider;
     private exchange: any; // TODO: add type definition for Contract
+    private exchangeLogFillEvents: any[];
     private proxy: any;
     private tokenRegistry: any;
+    private userAddress: string;
     constructor(dispatcher: Dispatcher) {
         this.dispatcher = dispatcher;
+        this.userAddress = '';
+        this.exchangeLogFillEvents = [];
         this.onPageLoadInitFireAndForgetAsync();
     }
     public async networkIdUpdatedFireAndForgetAsync(newNetworkId: number) {
@@ -39,19 +43,25 @@ export class Blockchain {
             this.networkId = newNetworkId;
             this.dispatcher.encounteredBlockchainError('');
             await this.instantiateContractsAsync();
+            await this.rehydrateStoreWithContractEvents();
+        }
+    }
+    public async userAddressUpdatedFireAndForgetAsync(newUserAddress: string) {
+        if (this.userAddress !== newUserAddress) {
+            this.userAddress = newUserAddress;
+            await this.rehydrateStoreWithContractEvents();
         }
     }
     public async setExchangeAllowanceAsync(token: Token, amount: number) {
         if (!this.isValidAddress(token.address)) {
             throw new Error('tokenAddress is not a valid address');
         }
-        const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
-        if (_.isUndefined(userAddressIfExists)) {
+        if (!this.doesUserAddressExist()) {
             throw new Error('Cannot set allowance if no user accounts accessible');
         }
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
         await tokenContract.approve(this.proxy.address, amount, {
-            from: userAddressIfExists,
+            from: this.userAddress,
         });
         token.allowance = amount;
         this.dispatcher.updateTokenBySymbol([token]);
@@ -60,8 +70,7 @@ export class Blockchain {
                                 takerTokenAddress: string, makerTokenAmount: number,
                                 takerTokenAmount: number, expirationUnixTimestampSec: number,
                                 fillAmount: number, signatureData: SignatureData) {
-        const userAddressIfExists = await this.getFirstAccountIfExistsAsync();
-        if (_.isUndefined(userAddressIfExists)) {
+        if (!this.doesUserAddressExist()) {
             throw new Error('Cannot fill order if no user accounts accessible');
         }
 
@@ -89,22 +98,18 @@ export class Blockchain {
                                  fill.fillValueM,
                                  fill.v,
                                  fill.rs, {
-                                      from: userAddressIfExists,
+                                      from: this.userAddress,
                                   });
     }
     public getExchangeContractAddressIfExists() {
         return this.exchange ? this.exchange.address : undefined;
-    }
-    public async getFirstAccountIfExistsAsync() {
-        const accountAddress = await this.web3Wrapper.getFirstAccountIfExistsAsync();
-        return accountAddress;
     }
     public isValidAddress(address: string): boolean {
         const lowercaseAddress = address.toLowerCase();
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
     public async sendSignRequestAsync(msgHashHex: string): Promise<SignatureData> {
-        const makerAddress = await this.getFirstAccountIfExistsAsync();
+        const makerAddress = this.userAddress;
         // If makerAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
         if (_.isUndefined(makerAddress)) {
@@ -121,13 +126,12 @@ export class Blockchain {
         return signatureData;
     }
     public async mintTestTokensAsync(token: Token) {
-        const userAddress = await this.getFirstAccountIfExistsAsync();
-        if (_.isUndefined(userAddress)) {
+        if (!this.doesUserAddressExist()) {
             throw new Error('User has no associated addresses');
         }
         const mintableContract = await this.instantiateContractIfExistsAsync(MintableArtifacts, token.address);
         await mintableContract.mint(MINT_AMOUNT, {
-            from: userAddress,
+            from: this.userAddress,
         });
         const tokens = [_.assign({}, token, {
             balance: token.balance + MINT_AMOUNT,
@@ -138,17 +142,78 @@ export class Blockchain {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
     }
     public async getTokenBalanceAndAllowanceAsync(tokenAddress: string) {
-        const userAddress = await this.getFirstAccountIfExistsAsync();
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, tokenAddress);
         let balance;
         let allowance;
-        if (!_.isUndefined(userAddress)) {
-            balance = await tokenContract.balanceOf.call(userAddress);
-            allowance = await tokenContract.allowance.call(userAddress, this.proxy.address);
+        if (this.doesUserAddressExist()) {
+            balance = await tokenContract.balanceOf.call(this.userAddress);
+            allowance = await tokenContract.allowance.call(this.userAddress, this.proxy.address);
         }
         balance = _.isUndefined(balance) ? 0 : balance.toNumber();
         allowance = _.isUndefined(allowance) ? 0 : allowance.toNumber();
         return [balance, allowance];
+    }
+    private doesUserAddressExist(): boolean {
+        return this.userAddress !== '';
+    }
+    private async rehydrateStoreWithContractEvents() {
+        // Ensure we are only ever listening to one set of events
+        this.stopWatchingExchangeLogFillEvents();
+
+        if (!this.doesUserAddressExist()) {
+            return; // short-circuit
+        }
+
+        if (!_.isUndefined(this.exchange)) {
+            // Listen for exchange events where user is the maker
+            this.startListeningForExchangeLogFillEvents({
+                maker: this.userAddress,
+            });
+            // TODO: listen for exchange events where user is a taker
+            // We need to add an index to `taker` on the logFill event
+        }
+    }
+    private startListeningForExchangeLogFillEvents(filterIndexObj: object) {
+        utils.assert(!_.isUndefined(this.exchange), 'Exchange contract must be instantiated.');
+
+        const exchangeLogFillEvent = this.exchange.LogFill(filterIndexObj, {
+            fromBlock: 0,
+            toBlock: 'latest',
+        });
+        exchangeLogFillEvent.watch((err: Error, result: any) => {
+            if (err) {
+                // Note: it's not entirely clear from the documentation which
+                // errors will be thrown by `watch`. For now, let's log the error
+                // to rollbar and stop watching when one occurs
+                errorReporter.reportAsync(err); // fire and forget
+                this.stopWatchingExchangeLogFillEvents();
+                return;
+            } else {
+                const args = result.args;
+                const fill = {
+                    expiration: args.expiration.toNumber(),
+                    filledValueM: args.filledValueM.toNumber(),
+                    maker: args.maker,
+                    orderHash: args.orderHash,
+                    taker: args.taker,
+                    tokenM: args.tokenM,
+                    tokenT: args.tokenT,
+                    transactionHash: result.transactionHash,
+                    valueM: args.valueM.toNumber(),
+                    valueT: args.valueT.toNumber(),
+                };
+                this.dispatcher.addToHistoricalFills(fill);
+            }
+        });
+        this.exchangeLogFillEvents.push(exchangeLogFillEvent);
+    }
+    private stopWatchingExchangeLogFillEvents() {
+        if (!_.isEmpty(this.exchangeLogFillEvents)) {
+            _.each(this.exchangeLogFillEvents, (logFillEvent) => {
+                logFillEvent.stopWatching();
+            });
+            this.exchangeLogFillEvents = [];
+        }
     }
     private async getTokenRegistryTokensAsync() {
         if (this.tokenRegistry) {

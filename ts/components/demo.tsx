@@ -11,7 +11,7 @@ import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
-import {HashData, TokenBySymbol, TabValue, BlockchainErrs, Order} from 'ts/types';
+import {HashData, TokenBySymbol, TabValue, BlockchainErrs, Order, Fill} from 'ts/types';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
 
@@ -29,11 +29,13 @@ export interface DemoAllProps {
     userEtherBalance: number;
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
+    historicalFills: Fill[];
 }
 
 interface DemoAllState {
     kind: string;
     prevNetworkId: number;
+    prevUserAddress: string;
     selectedTab: TabValue;
 }
 
@@ -76,6 +78,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         this.state = {
             kind: 'form',
             prevNetworkId: this.props.networkId,
+            prevUserAddress: this.props.userAddress,
             selectedTab,
         };
     }
@@ -87,6 +90,12 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             this.blockchain.networkIdUpdatedFireAndForgetAsync(nextProps.networkId);
             this.setState({
                 prevNetworkId: nextProps.networkId,
+            });
+        }
+        if (nextProps.userAddress !== this.state.prevUserAddress) {
+            this.blockchain.userAddressUpdatedFireAndForgetAsync(nextProps.userAddress);
+            this.setState({
+                prevUserAddress: nextProps.userAddress,
             });
         }
     }
@@ -179,6 +188,8 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                     blockchain={this.blockchain}
                                     blockchainErr={this.props.blockchainErr}
                                     blockchainIsLoaded={this.props.blockchainIsLoaded}
+                                    tokenBySymbol={this.props.tokenBySymbol}
+                                    historicalFills={this.props.historicalFills}
                                 />
                             </div>
                         </Tab>

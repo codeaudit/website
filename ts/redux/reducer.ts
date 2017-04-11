@@ -10,6 +10,7 @@ import {
     BlockchainErrs,
     SignatureData,
     TokenBySymbol,
+    Fill,
 } from 'ts/types';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 
@@ -25,6 +26,7 @@ export interface State {
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
+    historicalFills: Fill[];
     userAddress: string;
     userEtherBalance: number;
 };
@@ -34,6 +36,7 @@ const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
     generateOrderStep: GenerateOrderSteps.ChooseAssets,
+    historicalFills: [],
     networkId: undefined,
     orderExpiryTimestamp: utils.initialOrderExpiryUnixTimestampSec(),
     orderFillAmount: undefined,
@@ -75,6 +78,25 @@ function getInitialTokenBySymbol() {
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
+        case actionTypes.ADD_TO_HISTORICAL_FILLS:
+            const newHistoryItem = action.data;
+            let historicalFills = state.historicalFills;
+            const existingTransactionHashes = _.map(historicalFills, (fill) => fill.transactionHash);
+            const isTransactionAlreadyIncluded = _.includes(existingTransactionHashes, newHistoryItem.transactionHash);
+            if (isTransactionAlreadyIncluded) {
+                return state;
+            }
+            historicalFills.push(newHistoryItem);
+            historicalFills = _.sortBy(historicalFills, [(historyItem: Fill) => historyItem.expiration]);
+            return _.assign({}, state, {
+                historicalFills,
+            });
+
+        case actionTypes.CLEAR_HISTORICAL_FILLS:
+            return _.assign({}, state, {
+                historicalFills: [],
+            });
+
         case actionTypes.UPDATE_ORDER_FILL_AMOUNT:
             return _.assign({}, state, {
                 orderFillAmount: action.data,

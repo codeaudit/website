@@ -8,6 +8,7 @@ import {
     BlockchainErrs,
     Token,
     SignatureData,
+    Fill,
 } from 'ts/types';
 
 export class Dispatcher {
@@ -24,6 +25,17 @@ export class Dispatcher {
         this.dispatch({
             data: direction,
             type: actionTypes.UPDATE_GENERATE_ORDER_STEP,
+        });
+    }
+    public addToHistoricalFills(fill: Fill) {
+        this.dispatch({
+            data: fill,
+            type: actionTypes.ADD_TO_HISTORICAL_FILLS,
+        });
+    }
+    public clearHistoricalFills() {
+        this.dispatch({
+            type: actionTypes.CLEAR_HISTORICAL_FILLS,
         });
     }
     public updateShouldBlockchainErrDialogBeOpen(shouldBeOpen: boolean) {

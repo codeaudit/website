@@ -144,6 +144,7 @@ export class Web3Wrapper {
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
+                this.dispatcher.clearHistoricalFills();
                 this.dispatcher.updateNetworkId(currentNetworkId);
             }
 
@@ -151,6 +152,7 @@ export class Web3Wrapper {
             // Update makerAddress on network change
             if (prevUserAddress !== userAddressIfExists) {
                 prevUserAddress = userAddressIfExists;
+                this.dispatcher.clearHistoricalFills();
                 this.dispatcher.updateUserAddress(userAddressIfExists);
             }
 

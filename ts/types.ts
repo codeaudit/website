@@ -4,6 +4,7 @@ export enum TabValue {
     generate,
     fill,
     setup,
+    tradeHistory,
 }
 
 export enum GenerateOrderSteps {
@@ -86,4 +87,17 @@ export interface Order {
     signature: SignatureData;
     maker: string;
     taker: string;
+}
+
+export interface Fill {
+    maker: string;
+    taker: string;
+    tokenM: string;
+    tokenT: string;
+    valueM: number;
+    valueT: number;
+    expiration: number;
+    filledValueM: number;
+    orderHash: string;
+    transactionHash: string;
 }

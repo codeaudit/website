@@ -4,12 +4,15 @@ import {Paper} from 'material-ui';
 import {BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
+import {Fill, TokenBySymbol} from 'ts/types';
 import {TradeHistoryItem} from 'ts/components/trade_history/trade_history_item';
 
 interface TradeHistoryProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
+    tokenBySymbol: TokenBySymbol;
+    historicalFills: Fill[];
 }
 
 interface TradeHistoryState {}
@@ -28,14 +31,41 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
             return <div />;
         }
 
-        return [
-            <Paper key="orderOne" className="py1">
-                <TradeHistoryItem
-                    orderTakerAddress="0xA82BF9252dF8830410B3766D11fD34a7019fE5FA"
-                    orderMakerAddress="0xe834ec434daba538cd1b9fe1582052b880bd7e63"
-                    sideToAssetToken={{deposit: {symbol: 'TA', amount: 30}, receive: {symbol: 'TB', amount: 40}}}
-                />
-            </Paper>,
-        ];
+        return _.map(this.props.historicalFills, (fill, index) => {
+            const tokens = _.values(this.props.tokenBySymbol);
+            const depositToken = _.find(tokens, (token) => {
+                return token.address === fill.tokenM;
+            });
+            const receiveToken = _.find(tokens, (token) => {
+                return token.address === fill.tokenT;
+            });
+            // For now we don't show history items for orders using custom ERC20
+            // tokens the client does not know how to display.
+            // TODO: Try to retrieve the name/symbol of an unknown token in order to display it
+            if (_.isUndefined(depositToken) || _.isUndefined(receiveToken)) {
+                return;
+            }
+            const exchangeRate = fill.valueT / fill.valueM;
+            const fillValueT = exchangeRate * fill.filledValueM;
+            const sideToAssetToken = {
+                deposit: {
+                    amount: fill.filledValueM,
+                    symbol: depositToken.symbol,
+                },
+                receive: {
+                    amount: fillValueT,
+                    symbol: receiveToken.symbol,
+                },
+            };
+            return (
+                <Paper key={`${fill.orderHash}-${fill.filledValueM}-${index}`} className="py1 mb2">
+                    <TradeHistoryItem
+                        orderTakerAddress={fill.taker}
+                        orderMakerAddress={fill.maker}
+                        sideToAssetToken={sideToAssetToken}
+                    />
+                </Paper>
+            );
+        });
     }
 }
