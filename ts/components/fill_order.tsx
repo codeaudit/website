@@ -75,7 +75,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 <h3>Fill an order</h3>
                 <Divider />
                 <div className="pt2 pb2">
-                    Paste someones order JSON snippet below to begin
+                    Paste an order JSON snippet below to begin
                 </div>
                 <div className="pb2">Order JSON</div>
                 <Paper className="center p1" style={{width: 640}}>
