@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {constants} from 'ts/utils/constants';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
-import jazzicon = require('jazzicon');
 import ReactTooltip = require('react-tooltip');
+import {Identicon} from 'ts/components/ui/identicon';
 
 const MIN_ADDRESS_WIDTH = 70;
 
@@ -34,7 +33,10 @@ export class Party extends React.Component<PartyProps, PartyState> {
         return (
             <div style={{overflow: 'hidden'}}>
                 <div className="pb1">{label}</div>
-                {this.renderIdenticon(address)}
+                <Identicon
+                    address={this.props.address}
+                    diameter={identiconDiameter}
+                />
                 <div
                     className="mx-auto pt1"
                     style={{...styles.address, width: addressWidth}}
@@ -55,29 +57,5 @@ export class Party extends React.Component<PartyProps, PartyState> {
                 {!_.isEmpty(address) && <ReactTooltip id={tooltipId}>{address}</ReactTooltip>}
             </div>
         );
-    }
-    private renderIdenticon(address: string) {
-        if (_.isUndefined(address)) {
-            address = constants.NULL_ADDRESS;
-        }
-        const diameter = this.props.identiconDiameter;
-        const numericalAddress = this.convertAddressToNumber(address);
-        const jazzIcon = jazzicon(diameter, numericalAddress);
-        const innerHtml: string = jazzIcon.innerHTML;
-        return (
-            <div
-                className="circle mx-auto relative"
-                style={{width: diameter, height: diameter, overflow: 'hidden'}}
-            >
-                <div
-                    dangerouslySetInnerHTML={{__html: innerHtml}}
-                />
-            </div>
-        );
-    }
-    private convertAddressToNumber(address: string): number {
-        const addressWithoutPrefix = address.slice(2, 10);
-        const numericanAddress = parseInt(addressWithoutPrefix, 16);
-        return numericanAddress;
     }
 }

@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {State} from 'ts/redux/reducer';
 import {utils} from 'ts/utils/utils';
-import {RaisedButton, Menu, MenuItem, Paper, AppBar} from 'material-ui';
+import {RaisedButton, Menu, MenuItem, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrderForm} from 'ts/containers/generate_order_form';
 import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
@@ -15,6 +15,7 @@ import {orderSchema} from 'ts/schemas/order_schema';
 import {HashData, TokenBySymbol, MenuItemValue, BlockchainErrs, Order, Fill} from 'ts/types';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
+import {TopBar} from 'ts/components/top_bar';
 
 export interface DemoPassedProps {}
 
@@ -167,10 +168,9 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         };
         return (
             <div>
-                <AppBar
-                    title="0x"
-                    titleStyle={{maxWidth: 1024, margin: 'auto', fontSize: 16, paddingLeft: 34}}
-                    iconElementLeft={<span />}
+                <TopBar
+                    userAddress={this.props.userAddress}
+                    blockchainIsLoaded={this.props.blockchainIsLoaded}
                 />
                 <div className="mx-auto max-width-4">
                     <div className="mx-auto flex">
