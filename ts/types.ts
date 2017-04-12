@@ -1,9 +1,9 @@
 import {utils} from 'ts/utils/utils';
 
-export enum TabValue {
+export enum MenuItemValue {
     generate,
     fill,
-    setup,
+    balances,
     tradeHistory,
 }
 

@@ -3,9 +3,9 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {Ox} from 'ts/utils/Ox';
-import {TextField, Paper} from 'material-ui';
+import {TextField, Paper, Divider} from 'material-ui';
 import {Step} from 'ts/components/ui/step';
-import {Side, TokenBySymbol, Order, TabValue, AssetToken, BlockchainErrs} from 'ts/types';
+import {Side, TokenBySymbol, Order, MenuItemValue, AssetToken, BlockchainErrs} from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {VisualOrder} from 'ts/components/visual_order';
@@ -22,7 +22,7 @@ interface FillOrderProps {
     orderFillAmount: number;
     userAddress: string;
     tokenBySymbol: TokenBySymbol;
-    triggerTabChange: (tabValue: TabValue) => void;
+    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     initialOrder: Order;
     dispatcher: Dispatcher;
 }
@@ -71,13 +71,17 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                               '', '', hintSignatureData);
         const hintOrderJSON = JSON.stringify(hintOrder, null, '\t');
         return (
-            <div className="py3 clearfix" style={{minHeight: 600}}>
-                <h3 className="center">Fill an order</h3>
-                <div className="pb2 px4">Order JSON</div>
-                <Paper className="mx4 center">
+            <div className="clearfix px4" style={{minHeight: 600}}>
+                <h3>Fill an order</h3>
+                <Divider />
+                <div className="pt2 pb2">
+                    Paste someones order JSON snippet below to begin
+                </div>
+                <div className="pb2">Order JSON</div>
+                <Paper className="center p1" style={{width: 640}}>
                     <TextField
                         id="orderJSON"
-                        style={{width: 745}}
+                        style={{width: 620, height: 148}}
                         value={this.state.orderJSON}
                         onChange={this.onFillOrderChanged.bind(this)}
                         hintText={hintOrderJSON}
@@ -87,7 +91,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         underlineStyle={{display: 'none'}}
                     />
                 </Paper>
-                <div className="px4">
+                <div>
                     {this.state.orderJSONErrMsg !== '' &&
                         <ErrorAlert message={this.state.orderJSONErrMsg} />
                     }
@@ -106,7 +110,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                            this.props.userAddress;
         const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.state.parsedOrder.expiry);
         return (
-            <div className="pt2 pb1 px4">
+            <div className="pt2 pb1">
                 <div className="px4">
                     <div className="px4 pt3">
                         <VisualOrder
@@ -127,7 +131,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         shouldCheckBalanceAndAllowance={true}
                         shouldShowIncompleteErrs={false} // TODO
                         token={token}
-                        triggerTabChange={this.props.triggerTabChange}
+                        triggerMenuClick={this.props.triggerMenuClick}
                         updateChosenAssetToken={this.onFillAmountUpdated.bind(this)}
                     />
                 </div>

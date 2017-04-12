@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Blockchain} from 'ts/blockchain';
+import {Paper, Divider} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Ox} from 'ts/utils/Ox';
@@ -23,7 +24,7 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
-    TabValue,
+    MenuItemValue,
     TokenBySymbol,
     BlockchainErrs,
 } from 'ts/types';
@@ -46,7 +47,7 @@ interface GenerateFormProps {
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
     tokenBySymbol: TokenBySymbol;
-    triggerTabChange: (tabValue: TabValue) => void;
+    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
 }
 
 interface GenerateFormState {
@@ -54,6 +55,15 @@ interface GenerateFormState {
     shouldShowIncompleteErrs: boolean;
     signingState: SigningState;
 }
+
+const style = {
+    paper: {
+        display: 'inline-block',
+        position: 'relative',
+        textAlign: 'center',
+        width: '100%',
+    },
+};
 
 export class GenerateForm extends React.Component<GenerateFormProps, any> {
     private validator: Validator;
@@ -80,9 +90,10 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const receiveTokenSymbol = this.props.sideToAssetToken[Side.receive].symbol;
         const receiveToken = this.props.tokenBySymbol[receiveTokenSymbol];
         return (
-            <div className="py2 mx-auto clearfix" style={{width: 600}}>
+            <div className="clearfix mb2 px4">
                 <h3>Generate an order</h3>
-                <div>
+                <Divider />
+                <div className="pt2">
                     <div className="mx-auto clearfix">
                         <div className="col col-6 pr1 relative">
                             <MakerAddressInput
@@ -140,7 +151,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 assetToken={this.props.sideToAssetToken[Side.deposit]}
                                 shouldCheckBalanceAndAllowance={true}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                triggerTabChange={this.props.triggerTabChange}
+                                triggerMenuClick={this.props.triggerMenuClick}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                             />
                         </div>
@@ -152,7 +163,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 assetToken={this.props.sideToAssetToken[Side.receive]}
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                 shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                triggerTabChange={this.props.triggerTabChange}
+                                triggerMenuClick={this.props.triggerMenuClick}
                             />
                         </div>
                     </div>

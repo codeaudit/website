@@ -3,7 +3,7 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
-import {AssetToken, Side, Token, TabValue} from 'ts/types';
+import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 
 interface AmountInputProps {
@@ -16,7 +16,7 @@ interface AmountInputProps {
     shouldCheckBalanceAndAllowance?: boolean;
     shouldShowIncompleteErrs: boolean;
     token: Token;
-    triggerTabChange: (tabValue: TabValue) => void;
+    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     updateChosenAssetToken: (side: Side, token: AssetToken) => void;
 }
 
@@ -104,7 +104,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     Insuffient balance. Mint tokens{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
-                        onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
+                        onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
                         here
                     </a>
@@ -116,7 +116,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     Insuffient allowance. Set allowance{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
-                        onClick={this.props.triggerTabChange.bind(this.props.triggerTabChange, TabValue.setup)}
+                        onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
                         here
                     </a>

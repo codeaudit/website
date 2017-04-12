@@ -11,14 +11,14 @@ import {
     SignatureData,
     HashData,
     TokenBySymbol,
-    TabValue,
+    MenuItemValue,
     BlockchainErrs,
 } from 'ts/types';
 
 interface GenerateOrderFormProps {
     blockchain: Blockchain;
     hashData: HashData;
-    triggerTabChange: (tabValue: TabValue) => void;
+    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     dispatcher: Dispatcher;
 }
 
@@ -58,7 +58,7 @@ class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps 
                 dispatcher={this.props.dispatcher}
                 hashData={this.props.hashData}
                 tokenBySymbol={this.props.tokenBySymbol}
-                triggerTabChange={this.props.triggerTabChange}
+                triggerMenuClick={this.props.triggerMenuClick}
                 userAddress={this.props.userAddress}
             />
         );

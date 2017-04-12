@@ -11,7 +11,7 @@ import {
     SideToAssetToken,
     Direction,
     TokenBySymbol,
-    TabValue,
+    MenuItemValue,
 } from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 
@@ -19,7 +19,7 @@ interface ChooseAssetProps {
     sideToAssetToken: SideToAssetToken;
     dispatcher: Dispatcher;
     tokenBySymbol: TokenBySymbol;
-    triggerTabChange: (tabValue: TabValue) => void;
+    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
 }
 
 interface ChooseAssetState {
@@ -128,7 +128,7 @@ export class ChooseAsset extends React.Component<ChooseAssetProps, ChooseAssetSt
                     side={side}
                     token={token}
                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                    triggerTabChange={this.props.triggerTabChange}
+                    triggerMenuClick={this.props.triggerMenuClick}
                 />
                 </div>
             </div>

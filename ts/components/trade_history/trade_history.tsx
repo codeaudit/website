@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Paper} from 'material-ui';
+import {Paper, Divider} from 'material-ui';
 import {BlockchainErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
@@ -20,12 +20,13 @@ interface TradeHistoryState {}
 export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistoryState> {
     public render() {
         return (
-            <Paper className="p2 my2">
-                <h3 style={{marginTop: 0}}>Trade history</h3>
-                <div style={{height: 500, overflow: 'scroll'}}>
+            <div className="px4">
+                <h3>Trade history</h3>
+                <Divider />
+                <div className="pt2" style={{height: 608, overflow: 'scroll'}}>
                     {this.renderTrades()}
                 </div>
-            </Paper>
+            </div>
         );
     }
     private renderTrades() {
@@ -66,7 +67,8 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
             return (
                 <Paper
                     key={`${fill.orderHash}-${fill.filledValueM}-${index}`}
-                    className="m1 mb2 py1 mb2"
+                    className="py1"
+                    style={{margin: '3px 3px 15px 3px'}}
                 >
                     <TradeHistoryItem
                         orderTakerAddress={fill.taker}

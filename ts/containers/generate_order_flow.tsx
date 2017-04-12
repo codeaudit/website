@@ -17,13 +17,13 @@ import {
     SignatureData,
     HashData,
     TokenBySymbol,
-    TabValue,
+    MenuItemValue,
 } from 'ts/types';
 
 interface GenerateOrderFlowProps {
     blockchain: Blockchain;
     hashData: HashData;
-    triggerTabChange: (tabValue: TabValue) => void;
+    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     dispatcher: Dispatcher;
 }
 
@@ -58,7 +58,7 @@ class GenerateOrderFlowComponent extends React.Component<GenerateOrderFlowProps 
                         sideToAssetToken={this.props.sideToAssetToken}
                         dispatcher={dispatcher}
                         tokenBySymbol={this.props.tokenBySymbol}
-                        triggerTabChange={this.props.triggerTabChange}
+                        triggerMenuClick={this.props.triggerMenuClick}
                     />
                 );
             case GenerateOrderSteps.GrantAllowance:

@@ -11,6 +11,7 @@ import {errorReporter} from 'ts/utils/error_reporter';
 import ReactTooltip = require('react-tooltip');
 import {
     Dialog,
+    Divider,
     FlatButton,
     RaisedButton,
     Table,
@@ -74,9 +75,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             />,
         ];
         return (
-            <div>
-                <h3 className="px4 pt2 center">Test ether</h3>
-                <div className="px2 pb2">
+            <div className="px4">
+                <h3>Test ether</h3>
+                <Divider />
+                <div className="pt2 pb2">
                     In order to try out the 0x protocol demo app, request some test ether to pay for
                     gas costs. It might take a bit of time for the test ether to show up.
                 </div>
@@ -91,7 +93,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                         <TableRow key="ETH">
-                            <TableRowColumn>
+                            <TableRowColumn className="py1">
                                 <img
                                     style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
                                     src={etherIconUrl}
@@ -109,16 +111,17 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <TableRowColumn>
                                 <LifeCycleRaisedButton
                                     labelReady="Request"
-                                    labelLoading="Requesting..."
-                                    labelComplete="Request sent!"
+                                    labelLoading="Sending..."
+                                    labelComplete="Sent!"
                                     onClickAsyncFn={this.requestEtherAsync.bind(this)}
                                 />
                             </TableRowColumn>
                         </TableRow>
                     </TableBody>
                 </Table>
-                <h3 className="px4 center pt2">Test tokens</h3>
-                <div className="px2 pb2">
+                <h3 className="pt2">Test tokens</h3>
+                <Divider />
+                <div className="pt2 pb2">
                     Mint some test tokens you'd like to use to generate or fill an order using 0x.
                 </div>
                 <Table selectable={false} bodyStyle={{height: 289}}>
@@ -152,7 +155,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         return _.map(this.props.tokenBySymbol, (token: Token) => {
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
-                <TableRow key={token.iconUrl}>
+                <TableRow key={token.iconUrl} style={{height: 60}}>
                     <TableRowColumn>
                         {this.renderTokenName(token)}
                     </TableRowColumn>
@@ -170,7 +173,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <LifeCycleRaisedButton
                                 labelReady="Mint"
                                 labelLoading="Minting..."
-                                labelComplete="Tokens minted!"
+                                labelComplete="Minted!"
                                 onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
                             />
                         }
@@ -298,8 +301,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
     }
     private async requestEtherAsync(): Promise<boolean> {
-        if (this.props.userAddress === '' ||
-            this.props.blockchainErr !== '') {
+        if (this.props.userAddress === '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
