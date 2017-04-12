@@ -74,7 +74,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
         const userAddress = this.props.userAddress;
         return (
-            <div className="flex right" style={{padding: '12px 0px 12px 12px'}}>
+            <div className="flex right" style={{padding: '10px 0px 10px 10px'}}>
                 <div
                     style={styles.address}
                     onMouseOver={this.toggleAddressPopoverOpen.bind(this, true)}

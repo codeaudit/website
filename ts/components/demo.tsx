@@ -54,6 +54,9 @@ const styles: React.CSSProperties = {
     inkBar: {
         background: colors.amber600,
     },
+    menuItem: {
+        padding: '0px 16px 0px 48px',
+    },
     tabItemContainer: {
         background: colors.blueGrey500,
         borderRadius: '4px 4px 0 0',
@@ -174,7 +177,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 />
                 <div className="mx-auto max-width-4">
                     <div className="mx-auto flex">
-                        <div className="col col-3 mt2" style={{overflow: 'hidden'}}>
+                        <div className="col col-2 mt2" style={{overflow: 'hidden'}}>
                             {/*
                               * HACK: We must add the disableAutoFocus set to true on the Menu component
                               * otherwise it steals the focus from other text input components.
@@ -182,29 +185,33 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                               */}
                             <Menu disableAutoFocus={true}>
                                 <MenuItem
+                                    innerDivStyle={styles.menuItem}
                                     primaryText="Generate order"
                                     leftIcon={<i style={menuIconStyles} className="zmdi zmdi-code" />}
                                     onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.generate)}
                                 />
                                 <MenuItem
+                                    innerDivStyle={styles.menuItem}
                                     primaryText="Fill order"
                                     leftIcon={<i style={menuIconStyles} className="zmdi zmdi-mail-send" />}
                                     onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.fill)}
                                 />
                                 <MenuItem
+                                    innerDivStyle={styles.menuItem}
                                     primaryText="Balances"
                                     leftIcon={<i style={menuIconStyles} className="zmdi zmdi-balance-wallet" />}
                                     onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.balances)}
                                 />
                                 <MenuItem
+                                    innerDivStyle={styles.menuItem}
                                     primaryText="Trade history"
                                     leftIcon={<i style={menuIconStyles} className="zmdi zmdi-book" />}
                                     onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.tradeHistory)}
                                 />
                             </Menu>
                         </div>
-                        <div className="col col-9">
-                            <Paper>
+                        <div className="col col-10">
+                            <Paper className="ml2">
                                 <div className="py2">
                                     {visibleComponent}
                                 </div>
