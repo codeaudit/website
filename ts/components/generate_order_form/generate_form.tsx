@@ -112,7 +112,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 </div>
                 <div className="pt2">
                     <div className="mx-auto clearfix">
-                        <div className="col col-6 pr1">
+                        <div className="col col-6 pr2">
                             <TokenInput
                                 blockchain={this.props.blockchain}
                                 blockchainErr={this.props.blockchainErr}
@@ -124,7 +124,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 tokenBySymbol={this.props.tokenBySymbol}
                             />
                         </div>
-                        <div className="col col-6 pl1">
+                        <div className="col col-6 pl2">
                             <TokenInput
                                 blockchain={this.props.blockchain}
                                 blockchainErr={this.props.blockchainErr}
@@ -140,7 +140,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                 </div>
                 <div className="pt3">
                     <div className="mx-auto clearfix">
-                        <div className="col col-6 pr1">
+                        <div className="col col-6 pr2">
                             <AmountInput
                                 label="Sell amount (uint)"
                                 side={Side.deposit}
@@ -152,7 +152,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
                                 updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                             />
                         </div>
-                        <div className="col col-6 pl1">
+                        <div className="col col-6 pl2">
                             <AmountInput
                                 label="Receive amount (uint)"
                                 side={Side.receive}

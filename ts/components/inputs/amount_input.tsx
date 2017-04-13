@@ -34,20 +34,6 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             errMsg: '',
         };
     }
-    public componentWillReceiveProps(nextProps: AmountInputProps) {
-        const newAmount = nextProps.assetToken.amount;
-        const amount = _.isUndefined(newAmount) ? '' : newAmount.toString();
-        const isCurrentAmountNumeric = utils.isNumeric(this.state.amount);
-        if (isCurrentAmountNumeric && newAmount !== Number(this.state.amount) ||
-            !isCurrentAmountNumeric && !_.isUndefined(newAmount)) {
-            this.setState({
-                amount,
-            });
-        }
-        this.setState({
-            errMsg: this.getErrMsg(nextProps.token.balance, nextProps.token.allowance, amount),
-        });
-    }
     public render() {
         let errText: (string | React.ReactNode) = '';
         if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
@@ -61,19 +47,25 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             label = <RequiredLabel label={this.props.label} />;
         }
         return (
-            <TextField
-                fullWidth={true}
-                floatingLabelText={label}
-                floatingLabelFixed={true}
-                floatingLabelStyle={{color: colors.grey500}}
-                style={this.props.style ? this.props.style : {}}
-                errorText={errText}
-                value={_.isUndefined(this.state.amount) ? '' : this.state.amount}
-                inputStyle={this.props.inputStyle ? this.props.inputStyle : {}}
-                hintStyle={this.props.hintStyle ? this.props.hintStyle : {}}
-                hintText={<span style={{textTransform: 'capitalize'}}>amount</span>}
-                onChange={this.onUpdatedAssetAmount.bind(this)}
-            />
+            <div className="flex overflow-hidden" style={{height: 84}}>
+                <TextField
+                    fullWidth={true}
+                    floatingLabelText={label}
+                    floatingLabelFixed={true}
+                    floatingLabelStyle={{color: colors.grey500}}
+                    style={this.props.style ? this.props.style : {}}
+                    errorText={errText}
+                    value={_.isUndefined(this.state.amount) ? '' : this.state.amount}
+                    inputStyle={this.props.inputStyle ? this.props.inputStyle : {}}
+                    hintStyle={this.props.hintStyle ? this.props.hintStyle : {}}
+                    hintText={<span style={{textTransform: 'capitalize'}}>amount</span>}
+                    onChange={this.onUpdatedAssetAmount.bind(this)}
+                    underlineStyle={{width: 'calc(100% + 50px)'}}
+                />
+                <div style={{paddingTop: 44}}>
+                    {this.props.assetToken.symbol}
+                </div>
+            </div>
         );
     }
     private onUpdatedAssetAmount(e: any) {
