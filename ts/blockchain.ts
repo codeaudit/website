@@ -311,7 +311,6 @@ export class Blockchain {
         } catch (err) {
             const errMsg = `${err}`;
             utils.consoleLog(`Notice: Error encountered: ${err} ${err.stack}`);
-            await errorReporter.reportAsync(err);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
                 throw new Error('CONTRACT_DOES_NOT_EXIST');
             } else {
