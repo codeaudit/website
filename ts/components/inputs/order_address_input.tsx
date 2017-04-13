@@ -3,7 +3,6 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
-import {Side} from 'ts/types';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 
 interface OrderAddressInputProps {
@@ -11,7 +10,9 @@ interface OrderAddressInputProps {
     disabled?: boolean;
     initialOrderAddress: string;
     isRequired?: boolean;
-    label: string;
+    hintText?: string;
+    shouldHideLabel?: boolean;
+    label?: string;
     shouldShowIncompleteErrs?: boolean;
     updateOrderAddress: (address: string) => void;
 }
@@ -30,25 +31,26 @@ export class OrderAddressInput extends React.Component<OrderAddressInputProps, O
         };
     }
     public componentWillReceiveProps(nextProps: OrderAddressInputProps) {
-        const errMsg = nextProps.shouldShowIncompleteErrs && this.props.isRequired &&
-                       this.state.address === '' ?
-                          'Address is required' : this.state.errMsg;
-        this.setState({
-            errMsg,
-        });
+        if (nextProps.shouldShowIncompleteErrs && this.props.isRequired &&
+            this.state.address === '') {
+                this.setState({
+                    errMsg: 'Address is required',
+                });
+        }
     }
     public render() {
         const label = this.props.isRequired ? <RequiredLabel label={this.props.label} /> :
                       this.props.label;
+        const labelDisplay = this.props.shouldHideLabel ? 'hidden' : 'block';
+        const hintText = this.props.hintText ? this.props.hintText : '';
         return (
             <TextField
+                id={`address-field-${this.props.label}`}
                 disabled={_.isUndefined(this.props.disabled) ? false : this.props.disabled}
                 fullWidth={true}
-                style={{height: 60}}
+                hintText={hintText}
                 floatingLabelFixed={true}
-                floatingLabelStyle={{marginTop: -15, color: colors.grey500}}
-                errorStyle={{marginTop: 15}}
-                inputStyle={{marginTop: 0}}
+                floatingLabelStyle={{color: colors.grey500, display: labelDisplay}}
                 floatingLabelText={label}
                 errorText={this.state.errMsg}
                 value={this.state.address}
@@ -60,9 +62,10 @@ export class OrderAddressInput extends React.Component<OrderAddressInputProps, O
         const address = e.target.value;
         const isValidAddress = this.props.blockchain.isValidAddress(address) ||
             address === '';
+        const errMsg = isValidAddress ? '' : 'Invalid ethereum address';
         this.setState({
             address,
-            errMsg: isValidAddress ? '' : 'Invalid ethereum address',
+            errMsg,
         });
         if (isValidAddress) {
             this.props.updateOrderAddress(address);

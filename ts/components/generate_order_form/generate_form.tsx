@@ -11,14 +11,14 @@ import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderJSON} from 'ts/components/order_json';
-import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
-import {MakerAddressInput} from 'ts/components/inputs/maker_address_input';
+import {IdenticonAddressInput} from 'ts/components/inputs/identicon_address_input';
 import {TokenInput} from 'ts/components/inputs/token_input';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
+import {HelpTooltip} from 'ts/components/ui/help_tooltip';
 import {
     Side,
     SideToAssetToken,
@@ -89,31 +89,28 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const depositToken = this.props.tokenBySymbol[depositTokenSymbol];
         const receiveTokenSymbol = this.props.sideToAssetToken[Side.receive].symbol;
         const receiveToken = this.props.tokenBySymbol[receiveTokenSymbol];
+        const takerExplanation = `If a taker is specified, only they are allowed to fill this order.
+                                  If no taker is specified, anyone is able to fill it.`;
         return (
             <div className="clearfix mb2 px4">
                 <h3>Generate an order</h3>
                 <Divider />
-                <div className="pt2">
-                    <div className="mx-auto clearfix">
-                        <div className="col col-6 pr1 relative">
-                            <MakerAddressInput
-                                blockchain={this.props.blockchain}
-                                blockchainIsLoaded={this.props.blockchainIsLoaded}
-                                orderMakerAddress={this.props.userAddress}
-                                shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                            />
-                        </div>
-                        <div className="col col-6 pl1">
-                            <OrderAddressInput
-                                label="Taker (address)"
-                                blockchain={this.props.blockchain}
-                                initialOrderAddress={this.props.orderTakerAddress}
-                                updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
+                <div className="pt2 flex mx-auto" style={{width: 408}}>
+                    <IdenticonAddressInput
+                        label="Taker (address)"
+                        blockchain={this.props.blockchain}
+                        address={this.props.orderTakerAddress}
+                        updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
+                    />
+                    <div className="pt3">
+                        <div className="pl1">
+                            <HelpTooltip
+                                explanation={takerExplanation}
                             />
                         </div>
                     </div>
                 </div>
-                <div className="pt3">
+                <div className="pt2">
                     <div className="mx-auto clearfix">
                         <div className="col col-6 pr1">
                             <TokenInput
