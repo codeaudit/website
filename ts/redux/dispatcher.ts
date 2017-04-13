@@ -9,6 +9,7 @@ import {
     Token,
     SignatureData,
     Fill,
+    Order,
 } from 'ts/types';
 
 export class Dispatcher {
@@ -25,6 +26,12 @@ export class Dispatcher {
         this.dispatch({
             data: direction,
             type: actionTypes.UPDATE_GENERATE_ORDER_STEP,
+        });
+    }
+    public updateUserSuppliedOrderCache(order: Order) {
+        this.dispatch({
+            data: order,
+            type: actionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE,
         });
     }
     public addToHistoricalFills(fill: Fill) {

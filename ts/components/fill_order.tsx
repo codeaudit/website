@@ -180,11 +180,20 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             if (orderHash !== parsedOrder.signature.hash) {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
                 parsedOrder = undefined;
+            } else {
+                // Update user supplied order cache so that it they navigate away from fill view
+                // e.g to set a token allowance, when they come back, the fill order persists
+                this.props.dispatcher.updateUserSuppliedOrderCache(parsedOrder);
             }
         } catch (err) {
             if (orderJSON !== '') {
                 orderJSONErrMsg = 'Submitted order JSON is not valid JSON';
             }
+        }
+
+        if (orderJSONErrMsg !== '') {
+            // Clear cache entry if user updates orderJSON to invalid entry
+            this.props.dispatcher.updateUserSuppliedOrderCache(undefined);
         }
 
         this.setState({

@@ -32,6 +32,7 @@ export interface DemoAllProps {
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
     historicalFills: Fill[];
+    userSuppliedOrderCache: Order;
 }
 
 interface DemoAllState {
@@ -122,11 +123,14 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 );
                 break;
             case MenuItemValue.fill:
+                const initialFillOrder = !_.isUndefined(this.props.userSuppliedOrderCache) ?
+                                         this.props.userSuppliedOrderCache :
+                                         this.sharedOrderIfExists;
                 visibleComponent = (
                     <FillOrder
                         blockchain={this.blockchain}
                         blockchainErr={this.props.blockchainErr}
-                        initialOrder={this.sharedOrderIfExists}
+                        initialOrder={initialFillOrder}
                         orderFillAmount={this.props.orderFillAmount}
                         userAddress={this.props.userAddress}
                         tokenBySymbol={this.props.tokenBySymbol}

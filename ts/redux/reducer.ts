@@ -11,6 +11,7 @@ import {
     SignatureData,
     TokenBySymbol,
     Fill,
+    Order,
 } from 'ts/types';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 
@@ -29,6 +30,8 @@ export interface State {
     historicalFills: Fill[];
     userAddress: string;
     userEtherBalance: number;
+    // Note: cache of supplied orderJSON in fill order step. Do not use for anything else.
+    userSuppliedOrderCache: Order;
 };
 
 const tokenSymbols = _.keys(constants.iconUrlBySymbol);
@@ -59,6 +62,7 @@ const INITIAL_STATE: State = {
     tokenBySymbol: getInitialTokenBySymbol(),
     userAddress: '',
     userEtherBalance: 0,
+    userSuppliedOrderCache: undefined,
 };
 
 function getInitialTokenBySymbol() {
@@ -110,6 +114,11 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case actionTypes.UPDATE_USER_ETHER_BALANCE:
             return _.assign({}, state, {
                 userEtherBalance: action.data,
+            });
+
+        case actionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE:
+            return _.assign({}, state, {
+                userSuppliedOrderCache: action.data,
             });
 
         case actionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL:

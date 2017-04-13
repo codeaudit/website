@@ -5,7 +5,7 @@ import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Side, HashData, TokenBySymbol, BlockchainErrs, Fill} from 'ts/types';
+import {Side, HashData, TokenBySymbol, BlockchainErrs, Fill, Order} from 'ts/types';
 import {
     Demo as DemoComponent,
     DemoAllProps as DemoComponentAllProps,
@@ -23,6 +23,7 @@ interface MapStateToProps {
     shouldBlockchainErrDialogBeOpen: boolean;
     historicalFills: Fill[];
     userAddress: string;
+    userSuppliedOrderCache: Order;
 }
 
 interface ConnectedState {}
@@ -57,6 +58,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         tokenBySymbol: state.tokenBySymbol,
         userAddress: state.userAddress,
         userEtherBalance: state.userEtherBalance,
+        userSuppliedOrderCache: state.userSuppliedOrderCache,
     };
 };
 
