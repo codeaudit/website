@@ -9,6 +9,7 @@ import {constants} from 'ts/utils/constants';
 import {BlockchainErrs, Token, SignatureData} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {errorReporter} from 'ts/utils/error_reporter';
+import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
 import * as ProxyArtifacts from '../contracts/Proxy.json';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
@@ -179,19 +180,20 @@ export class Blockchain {
         }
 
         if (!_.isUndefined(this.exchange)) {
-            // Listen for exchange events where user is the maker
-            this.startListeningForExchangeLogFillEvents({
-                maker: this.userAddress,
-            });
-            // TODO: listen for exchange events where user is a taker
-            // We need to add an index to `taker` on the logFill event
+            // Since we do not have an index on the `taker` address and want to show
+            // transactions where an account is either the `maker` or `taker`, we loop
+            // through all fill events, and filter/cache them client-side.
+            const filterIndexObj = {};
+            this.startListeningForExchangeLogFillEvents(filterIndexObj);
         }
     }
     private startListeningForExchangeLogFillEvents(filterIndexObj: object) {
         utils.assert(!_.isUndefined(this.exchange), 'Exchange contract must be instantiated.');
+        utils.assert(this.doesUserAddressExist(), 'User must have address available.');
 
+        const fromBlock = tradeHistoryStorage.getFillsLatestBlock(this.userAddress);
         const exchangeLogFillEvent = this.exchange.LogFill(filterIndexObj, {
-            fromBlock: 0,
+            fromBlock,
             toBlock: 'latest',
         });
         exchangeLogFillEvent.watch((err: Error, result: any) => {
@@ -204,9 +206,18 @@ export class Blockchain {
                 return;
             } else {
                 const args = result.args;
+                const isBlockPending = _.isNull(args.blockNumber);
+                if (!isBlockPending) {
+                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, result.blockNumber);
+                }
+                const isUserMakerOrTaker = args.maker === this.userAddress || args.taker === this.userAddress;
+                if (!isUserMakerOrTaker) {
+                    return; // We aren't interested in the fill event
+                }
                 const fill = {
                     expiration: args.expiration.toNumber(),
                     filledValueM: args.filledValueM.toNumber(),
+                    logIndex: result.logIndex,
                     maker: args.maker,
                     orderHash: args.orderHash,
                     taker: args.taker,
@@ -216,7 +227,7 @@ export class Blockchain {
                     valueM: args.valueM.toNumber(),
                     valueT: args.valueT.toNumber(),
                 };
-                this.dispatcher.addToHistoricalFills(fill);
+                tradeHistoryStorage.addFillToUser(this.userAddress, fill);
             }
         });
         this.exchangeLogFillEvents.push(exchangeLogFillEvent);

@@ -1,23 +1,37 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Paper, Divider} from 'material-ui';
-import {BlockchainErrs} from 'ts/types';
-import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {Fill, TokenBySymbol} from 'ts/types';
 import {TradeHistoryItem} from 'ts/components/trade_history/trade_history_item';
+import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
+
+const FILL_POLLING_INTERVAL = 1000;
 
 interface TradeHistoryProps {
-    blockchain: Blockchain;
-    blockchainErr: BlockchainErrs;
-    blockchainIsLoaded: boolean;
     tokenBySymbol: TokenBySymbol;
-    historicalFills: Fill[];
+    userAddress: string;
 }
 
-interface TradeHistoryState {}
+interface TradeHistoryState {
+    sortedFills: Fill[];
+}
 
 export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistoryState> {
+    private fillPollingIntervalId: number;
+    public constructor(props: TradeHistoryProps) {
+        super(props);
+        const sortedFills = this.getSortedFills();
+        this.state = {
+            sortedFills,
+        };
+    }
+    public componentWillMount() {
+        this.startPollingForFills();
+    }
+    public componentWillUnmount() {
+        this.stopPollingForFills();
+    }
     public render() {
         return (
             <div className="px4">
@@ -30,15 +44,11 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         );
     }
     private renderTrades() {
-        if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
-            return <div />;
-        }
-
-        if (this.props.historicalFills.length === 0) {
+        if (this.state.sortedFills.length === 0) {
             return this.renderEmptyNotice();
         }
 
-        return _.map(this.props.historicalFills, (fill, index) => {
+        return _.map(this.state.sortedFills, (fill, index) => {
             const tokens = _.values(this.props.tokenBySymbol);
             const depositToken = _.find(tokens, (token) => {
                 return token.address === fill.tokenM;
@@ -85,5 +95,22 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                 No filled orders yet.
             </Paper>
         );
+    }
+    private startPollingForFills() {
+        this.fillPollingIntervalId = window.setInterval(() => {
+            const sortedFills = this.getSortedFills();
+            this.setState({
+                sortedFills,
+            });
+        }, FILL_POLLING_INTERVAL);
+    }
+    private stopPollingForFills() {
+        clearInterval(this.fillPollingIntervalId);
+    }
+    private getSortedFills() {
+        const fillsByHash = tradeHistoryStorage.getUserFillsByHash(this.props.userAddress);
+        const fills = _.values(fillsByHash);
+        const sortedFills = _.sortBy(fills, [(fill: Fill) => fill.expiration]);
+        return sortedFills;
     }
 }

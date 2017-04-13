@@ -90,6 +90,7 @@ export interface Order {
 }
 
 export interface Fill {
+    logIndex: number;
     maker: string;
     taker: string;
     tokenM: string;

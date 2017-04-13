@@ -13,7 +13,7 @@ export const customTokenStorage = {
     },
     getCustomTokens(): Token[] {
         const customTokensJSONString = localStorage.getItemIfExists(CUSTOM_TOKENS_KEY);
-        if (_.isUndefined(customTokensJSONString)) {
+        if (_.isEmpty(customTokensJSONString)) {
             return [];
         }
         const customTokens = JSON.parse(customTokensJSONString);

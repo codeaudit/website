@@ -4,6 +4,7 @@ import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
 import {Side} from 'ts/types';
 import BigNumber = require('bignumber.js');
+import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
 
 export class Web3Wrapper {
     private dispatcher: Dispatcher;
@@ -144,7 +145,10 @@ export class Web3Wrapper {
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
-                this.dispatcher.clearHistoricalFills();
+                if (!_.isUndefined(prevUserAddress)) {
+                    tradeHistoryStorage.clearUserFillsByHash(prevUserAddress);
+                    tradeHistoryStorage.clearFillsLatestBlock(prevUserAddress);
+                }
                 this.dispatcher.updateNetworkId(currentNetworkId);
             }
 
@@ -152,7 +156,6 @@ export class Web3Wrapper {
             // Update makerAddress on network change
             if (prevUserAddress !== userAddressIfExists) {
                 prevUserAddress = userAddressIfExists;
-                this.dispatcher.clearHistoricalFills();
                 this.dispatcher.updateUserAddress(userAddressIfExists);
             }
 

@@ -34,17 +34,6 @@ export class Dispatcher {
             type: actionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE,
         });
     }
-    public addToHistoricalFills(fill: Fill) {
-        this.dispatch({
-            data: fill,
-            type: actionTypes.ADD_TO_HISTORICAL_FILLS,
-        });
-    }
-    public clearHistoricalFills() {
-        this.dispatch({
-            type: actionTypes.CLEAR_HISTORICAL_FILLS,
-        });
-    }
     public updateShouldBlockchainErrDialogBeOpen(shouldBeOpen: boolean) {
         this.dispatch({
             data: shouldBeOpen,

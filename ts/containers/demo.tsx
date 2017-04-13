@@ -21,7 +21,6 @@ interface MapStateToProps {
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
     shouldBlockchainErrDialogBeOpen: boolean;
-    historicalFills: Fill[];
     userAddress: string;
     userSuppliedOrderCache: Order;
 }
@@ -50,7 +49,6 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
     return {
         blockchainErr: state.blockchainErr,
         blockchainIsLoaded: state.blockchainIsLoaded,
-        historicalFills: state.historicalFills,
         networkId: state.networkId,
         orderFillAmount: state.orderFillAmount,
         hashData,

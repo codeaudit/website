@@ -9,15 +9,21 @@ export const localStorage = {
             return undefined;
         }
         const item = window.localStorage.getItem(key);
-        if (_.isNull(item)) {
-            return undefined;
+        if (_.isNull(item) || item === 'undefined') {
+            return '';
         }
         return item;
     },
     setItem(key: string, value: string) {
-        if (!this.doesExist) {
+        if (!this.doesExist || _.isUndefined(value)) {
             return;
         }
         window.localStorage.setItem(key, value);
+    },
+    removeItem(key: string) {
+        if (!this.doesExist) {
+            return;
+        }
+        window.localStorage.removeItem(key);
     },
 };

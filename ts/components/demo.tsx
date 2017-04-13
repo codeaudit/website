@@ -31,7 +31,6 @@ export interface DemoAllProps {
     userEtherBalance: number;
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
-    historicalFills: Fill[];
     userSuppliedOrderCache: Order;
 }
 
@@ -157,11 +156,8 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             case MenuItemValue.tradeHistory:
                 visibleComponent = (
                     <TradeHistory
-                        blockchain={this.blockchain}
-                        blockchainErr={this.props.blockchainErr}
-                        blockchainIsLoaded={this.props.blockchainIsLoaded}
                         tokenBySymbol={this.props.tokenBySymbol}
-                        historicalFills={this.props.historicalFills}
+                        userAddress={this.props.userAddress}
                     />
                 );
                 break;
