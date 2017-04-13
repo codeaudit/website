@@ -123,7 +123,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         </div>
                     </div>
                 </div>
-                <div className="center">
+                <div className="mx-auto" style={{width: 216, height: 108}}>
                     <AmountInput
                         label="Fill amount"
                         side={Side.receive}
