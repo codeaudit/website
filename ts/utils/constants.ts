@@ -4,7 +4,7 @@ export const constants = {
     BITLY_ENDPOINT: 'https://api-ssl.bitly.com',
     DEFAULT_TOKEN_ICON_URL: '/images/token_icons/default.png',
     ENVIRONMENT: 'development',
-    ETHER_FAUCET_ENDPOINT: 'http://104.131.179.79/rain',
+    ETHER_FAUCET_ENDPOINT: 'http://174.138.84.92/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',
     INFURA_TESTNET_URL: 'https://ropsten.infura.io/T5WSC8cautR4KXyYgsRs',
     MAKER_FEE: '0',
