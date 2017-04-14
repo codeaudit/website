@@ -30,10 +30,8 @@ export class Provider {
             this.providerType = ProviderTypes.injectedWeb3;
             this.providerTypesToNames[this.providerType] = this.discoverLocalWeb3ProviderName();
         } else {
-            // TODO: remove throw here once we've deployed to the public TESTNET
-            throw new Error('Accessing dapp without web3 injected into the browser');
-            // this.providerObj = this.getPublicNodeProvider();
-            // this.providerType = ProviderTypes.publicNode;
+            this.providerObj = this.getPublicNodeProvider();
+            this.providerType = ProviderTypes.publicNode;
         }
     }
     public getProviderObj() {
