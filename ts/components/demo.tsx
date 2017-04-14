@@ -225,17 +225,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         userAddress={this.props.userAddress}
                         toggleDialogFn={updateShouldBlockchainErrDialogBeOpen}
                     />
-                    <div className="flex pb2">
-                        <RaisedButton
-                            className="mr2"
-                            label="Form"
-                            onTouchTap={this.onChangeUIClick.bind(this, 'form')}
-                        />
-                        <RaisedButton
-                            label="Flow"
-                            onTouchTap={this.onChangeUIClick.bind(this, 'flow')}
-                        />
-                    </div>
                 </div>
             </div>
         );

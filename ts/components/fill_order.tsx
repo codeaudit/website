@@ -4,7 +4,6 @@ import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {Ox} from 'ts/utils/Ox';
 import {TextField, Paper, Divider} from 'material-ui';
-import {Step} from 'ts/components/ui/step';
 import {Side, TokenBySymbol, Order, MenuItemValue, AssetToken, BlockchainErrs} from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
