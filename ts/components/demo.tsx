@@ -177,7 +177,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 />
                 <div className="mx-auto max-width-4">
                     <div className="mx-auto flex">
-                        <div className="col col-2 mt2" style={{overflow: 'hidden'}}>
+                        <div className="col col-2 mt2 pr2" style={{overflow: 'hidden'}}>
                             {/*
                               * HACK: We must add the disableAutoFocus set to true on the Menu component
                               * otherwise it steals the focus from other text input components.
@@ -211,7 +211,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                             </Menu>
                         </div>
                         <div className="col col-10">
-                            <Paper className="ml2">
+                            <Paper>
                                 <div className="py2">
                                     {visibleComponent}
                                 </div>
