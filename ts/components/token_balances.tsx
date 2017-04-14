@@ -26,6 +26,8 @@ import {
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
 const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
+const TOKEN_TABLE_ROW_HEIGHT = 60;
+const MAX_TOKEN_TABLE_HEIGHT = 300;
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
@@ -67,8 +69,12 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 onTouchTap={this.onErrorDialogToggle.bind(this, false)}
             />,
         ];
+        const allTokenRowHeight = _.size(this.props.tokenBySymbol) * TOKEN_TABLE_ROW_HEIGHT;
+        const tokenTableHeight = allTokenRowHeight < MAX_TOKEN_TABLE_HEIGHT ?
+                                 allTokenRowHeight :
+                                 MAX_TOKEN_TABLE_HEIGHT;
         return (
-            <div className="px4">
+            <div className="px4 pb2">
                 <h3>Test ether</h3>
                 <Divider />
                 <div className="pt2 pb2">
@@ -117,7 +123,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 <div className="pt2 pb2">
                     Mint some test tokens you'd like to use to generate or fill an order using 0x.
                 </div>
-                <Table selectable={false} bodyStyle={{height: 289}}>
+                <Table selectable={false} bodyStyle={{height: tokenTableHeight}}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>Token</TableHeaderColumn>
@@ -148,7 +154,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         return _.map(this.props.tokenBySymbol, (token: Token) => {
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
-                <TableRow key={token.iconUrl} style={{height: 60}}>
+                <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
                     <TableRowColumn>
                         {this.renderTokenName(token)}
                     </TableRowColumn>
