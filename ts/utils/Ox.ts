@@ -43,4 +43,12 @@ export const Ox = {
         const endian = 'be';
         return new BN(n.toString()).toArrayLike(Buffer, endian, size);
     },
+    isValidOrderHash(orderHash: string): boolean {
+        if (_.isString(orderHash) &&
+            orderHash.length === 66 &&
+            orderHash.substring(0, 2) === '0x') {
+            return true;
+        }
+        return false;
+    },
 };

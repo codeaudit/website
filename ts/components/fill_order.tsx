@@ -207,10 +207,11 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             return false;
         }
 
-        // TODO: add fillAmount < allowance check
-        // TODO: get amount of order already filled, and don't let them try to fill more then whats left
         const depositToken = this.state.parsedOrder.assetTokens[Side.deposit];
         const receiveToken = this.state.parsedOrder.assetTokens[Side.receive];
+        const orderHash = this.state.parsedOrder.signature.hash;
+        const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
+        const amountLeftToFill = receiveToken.amount - amountAlreadyFilled;
         const specifiedTakerAddressIfExists = this.state.parsedOrder.taker;
         const fillAmount = this.props.orderFillAmount;
         const takerAddress = this.props.userAddress;
@@ -222,14 +223,14 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const currentDate = new Date();
         const currentUnixTimestamp = currentDate.getTime() / 1000;
         let globalErrMsg = '';
-        if (fillAmount > receiveToken.amount) {
-            globalErrMsg = `Cannot fill more then order limit of ${receiveToken.amount} ${receiveToken.symbol}`;
-        } else if (fillAmount < 0 || fillAmount > takerToken.balance || fillAmount > takerToken.allowance) {
+        if (fillAmount < 0 || fillAmount > takerToken.balance || fillAmount > takerToken.allowance) {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
             globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;
         } else if (this.state.parsedOrder.expiry < currentUnixTimestamp) {
             globalErrMsg = `This order has expired`;
+        } else if (fillAmount > amountLeftToFill) {
+            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFill}${receiveToken.symbol}`;
         }
         if (globalErrMsg !== '') {
             this.setState({

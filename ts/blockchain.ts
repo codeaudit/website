@@ -5,6 +5,7 @@ import contract = require('truffle-contract');
 import BigNumber = require('bignumber.js');
 import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
+import {Ox} from 'ts/utils/Ox';
 import {constants} from 'ts/utils/constants';
 import {BlockchainErrs, Token, SignatureData} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
@@ -101,6 +102,11 @@ export class Blockchain {
                                  fill.rs, {
                                       from: this.userAddress,
                                   });
+    }
+    public async getFillAmountAsync(orderHash: string) {
+        utils.assert(Ox.isValidOrderHash(orderHash), 'Must be valid orderHash');
+        const fillAmount = await this.exchange.fills.call(orderHash);
+        return fillAmount.toNumber();
     }
     public getExchangeContractAddressIfExists() {
         return this.exchange ? this.exchange.address : undefined;
