@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Blockchain} from 'ts/blockchain';
-import {Paper, Divider} from 'material-ui';
+import {Paper, Divider, Dialog} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Ox} from 'ts/utils/Ox';
@@ -96,7 +96,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             <div className="clearfix mb2 px4">
                 <h3>Generate an order</h3>
                 <Divider />
-                <div className="mx-auto" style={{width: 440}}>
+                <div className="mx-auto" style={{width: 495}}>
                     <div className="pt2 flex mx-auto">
                         <IdenticonAddressInput
                             label="Taker (address)"
@@ -184,25 +184,19 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                             />
                         </div>
                     </div>
-                    <div className="pt1">
-                        <div className="mx-auto" style={{width: 33}}>
-                            <i className="zmdi zmdi-caret-down" style={{fontSize: 80}} />
-                        </div>
+                    <div className="pt2">
+                        <HashInput
+                            blockchain={this.props.blockchain}
+                            blockchainIsLoaded={this.props.blockchainIsLoaded}
+                            hashData={this.props.hashData}
+                            label="Hash (byte32)"
+                        />
                     </div>
-                    <div className="pt1">
-                        <div className="mx-auto" style={{width: 256}}>
-                            <HashInput
-                                blockchain={this.props.blockchain}
-                                blockchainIsLoaded={this.props.blockchainIsLoaded}
-                                hashData={this.props.hashData}
-                                label="Hash (byte32)"
-                            />
-                        </div>
-                    </div>
-                    <div className="pt3">
-                        <div className="mx-auto center" style={{width: 112}}>
+                    <div className="pt2">
+                        <div className="center">
                             <LifeCycleRaisedButton
                                 isHidden={this.state.signingState === SigningState.SIGNED}
+                                isPrimary={true}
                                 labelReady="Sign hash"
                                 labelLoading="Signing..."
                                 labelComplete="Hash signed!"
@@ -211,22 +205,28 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         </div>
                         {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
                     </div>
-                    <div className="pt3">
-                        <div className="mx-auto" style={{width: 465}}>
-                            {this.state.signingState === SigningState.SIGNED &&
-                                <OrderJSON
-                                    orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                                    orderSignatureData={this.props.orderSignatureData}
-                                    orderTakerAddress={this.props.orderTakerAddress}
-                                    orderMakerAddress={this.props.userAddress}
-                                    sideToAssetToken={this.props.sideToAssetToken}
-                                />
-                            }
-                        </div>
-                    </div>
                 </div>
+                <Dialog
+                    title="Order JSON"
+                    modal={false}
+                    open={this.state.signingState === SigningState.SIGNED}
+                    onRequestClose={this.onCloseOrderJSONDialog.bind(this)}
+                >
+                    <OrderJSON
+                        orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                        orderSignatureData={this.props.orderSignatureData}
+                        orderTakerAddress={this.props.orderTakerAddress}
+                        orderMakerAddress={this.props.userAddress}
+                        sideToAssetToken={this.props.sideToAssetToken}
+                    />
+                </Dialog>
             </div>
         );
+    }
+    private onCloseOrderJSONDialog() {
+        this.setState({
+            signingState: SigningState.UNSIGNED,
+        });
     }
     private async onSignClickedAsync(): Promise<boolean> {
         if (this.props.blockchainErr !== '') {

@@ -77,7 +77,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                     Paste an order JSON snippet below to begin
                 </div>
                 <div className="pb2">Order JSON</div>
-                <Paper className="center p1" style={{width: 640}}>
+                <Paper className="mx-auto p1" style={{width: 640}}>
                     <TextField
                         id="orderJSON"
                         style={{width: 620, height: 148}}

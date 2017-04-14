@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {Dispatcher} from 'ts/redux/dispatcher';
@@ -29,13 +30,6 @@ interface TokenInputState {
     isPickerOpen: boolean;
 }
 
-const styles = {
-    tokenIconBox: {
-        border: '1px solid rgb(224, 224, 224)',
-        cursor: 'pointer',
-    },
-};
-
 export class TokenInput extends React.Component<TokenInputProps, TokenInputState> {
     constructor(props: TokenInputProps) {
         super(props);
@@ -57,8 +51,9 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
                 <div className="pb1">
                     <InputLabel text={label} />
                 </div>
-                <div
-                    style={styles.tokenIconBox}
+                <Paper
+                    zDepth={1}
+                    style={{cursor: 'pointer'}}
                     onMouseEnter={this.onToggleHover.bind(this, true)}
                     onMouseLeave={this.onToggleHover.bind(this, false)}
                     onClick={this.onAssetClicked.bind(this)}
@@ -75,7 +70,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
                     <div className="py1 center" style={{color: colors.grey500}}>
                         {token.name}
                     </div>
-                </div>
+                </Paper>
                 <AssetPicker
                     isOpen={this.state.isPickerOpen}
                     currentAssetToken={this.props.assetToken}

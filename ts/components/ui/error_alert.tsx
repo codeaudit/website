@@ -15,7 +15,7 @@ export function ErrorAlert(props: ErrorAlertProps) {
     };
 
     return (
-        <div className="rounded" style={errMsgStyles}>
+        <div className="rounded center" style={errMsgStyles}>
             {props.message}
         </div>
     );

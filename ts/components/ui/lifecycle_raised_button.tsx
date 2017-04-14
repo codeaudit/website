@@ -17,6 +17,7 @@ enum ButtonState {
 
 interface LifeCycleRaisedButtonProps {
     isHidden?: boolean;
+    isPrimary?: boolean;
     labelReady: string;
     labelLoading: string;
     labelComplete: string;
@@ -60,6 +61,7 @@ export class LifeCycleRaisedButton extends
         }
         return (
             <RaisedButton
+                primary={this.props.isPrimary}
                 label={label}
                 style={{width: '100%'}}
                 onTouchTap={this.onClickAsync.bind(this)}

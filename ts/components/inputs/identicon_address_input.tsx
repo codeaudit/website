@@ -24,14 +24,14 @@ export class IdenticonAddressInput extends React.Component<IdenticonAddressInput
         return (
             <div className="relative">
                 <InputLabel text={label} />
-                <div className="flex" style={{width: 418}}>
+                <div className="flex" style={{width: 474}}>
                     <div className="col col-1 pb1 pr1" style={{paddingTop: 13}}>
                         <Identicon address={this.props.address} diameter={25} />
                     </div>
                     <div className="col col-11 pb1 pl1" style={{height: 65}}>
                         <OrderAddressInput
                             blockchain={this.props.blockchain}
-                            hintText="0x75bE4F78AA3699B3A348c84bDB2a96c3D2Rv..."
+                            hintText="0x75bE4F78AA3699B3A348c84bDB2a96c3Dbb5E2EF"
                             shouldHideLabel={true}
                             initialOrderAddress={this.props.address}
                             updateOrderAddress={this.props.updateOrderAddress}

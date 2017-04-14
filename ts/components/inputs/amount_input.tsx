@@ -93,24 +93,24 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         } else if (this.props.shouldCheckBalanceAndAllowance && balance < Number(amount)) {
             errMsg = (
                 <span>
-                    Insuffient balance. Mint tokens{' '}
+                    Insuffient balance.{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
                         onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
-                        here
+                        Mint tokens
                     </a>
                 </span>
             );
         } else if (this.props.shouldCheckBalanceAndAllowance && allowance < Number(amount)) {
             errMsg = (
                 <span>
-                    Insuffient allowance. Set allowance{' '}
+                    Insuffient allowance.{' '}
                     <a
                         style={{cursor: 'pointer', color: colors.blueGrey500}}
                         onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
-                        here
+                        Set allowance
                     </a>
                 </span>
             );

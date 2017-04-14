@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
+import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
 import {TextField, Paper} from 'material-ui';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
@@ -26,18 +27,17 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         return (
             <div>
                 <div className="pb2 mx4 flex">
-                    <div>Order JSON</div>
                     <div
                         className="inline-block pl1"
                         style={{top: '1px'}}
                     >
-                        <CopyIcon data={orderJSON}/>
+                        <CopyIcon data={orderJSON} callToAction="Copy" />
                     </div>
                 </div>
                 <Paper className="mx4 center">
                     <TextField
                         id="orderJSON"
-                        style={{width: 325}}
+                        style={{width: 570}}
                         value={JSON.stringify(order, null, '\t')}
                         multiLine={true}
                         rows={2}
@@ -45,8 +45,10 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                         underlineStyle={{display: 'none'}}
                     />
                 </Paper>
-                <div className="pt3 pb2 center">
-                    <div>Share your signed order with someone willing to fill it ;)</div>
+                <div className="pt3 pb2 center" style={{color: colors.blueGrey600}}>
+                    <div>
+                        Share your signed order with someone willing to fill it ;)
+                    </div>
                     <div className="mx-auto pt2 flex" style={{width: 91}}>
                         <div>
                             <i

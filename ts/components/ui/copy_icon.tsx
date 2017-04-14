@@ -7,6 +7,7 @@ import ReactTooltip = require('react-tooltip');
 
 interface CopyIconProps {
     data: string;
+    callToAction?: string;
 }
 
 interface CopyIconState {
@@ -34,7 +35,7 @@ export class CopyIcon extends React.Component<CopyIconProps, CopyIconState> {
             <div className="inline-block">
                     <CopyToClipboard text={this.props.data} onCopy={this.onCopy.bind(this)}>
                         <div
-                            className="inline"
+                            className="inline flex"
                             style={{cursor: 'pointer', color: colors.amber600}}
                             ref={this.setRefToProperty.bind(this)}
                             data-tip={true}
@@ -44,7 +45,12 @@ export class CopyIcon extends React.Component<CopyIconProps, CopyIconState> {
                             onMouseOver={this.setHoverState.bind(this, true)}
                             onMouseOut={this.setHoverState.bind(this, false)}
                         >
-                            <i style={{fontSize: 15}} className="zmdi zmdi-copy" />
+                            <div>
+                                <i style={{fontSize: 15}} className="zmdi zmdi-copy" />
+                            </div>
+                            {this.props.callToAction &&
+                                <div className="pl1">{this.props.callToAction}</div>
+                            }
                         </div>
                     </CopyToClipboard>
                 <ReactTooltip id="copy">Copied!</ReactTooltip>
