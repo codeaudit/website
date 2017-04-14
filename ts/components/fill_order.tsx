@@ -251,6 +251,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                                                    );
             return true;
         } catch (err) {
+            const errMsg = `${err}`;
+            if (_.includes(errMsg, 'User denied transaction signature')) {
+                return false;
+            }
             utils.consoleLog(`${err}`);
             await errorReporter.reportAsync(err);
             this.setState({
