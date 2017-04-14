@@ -1,13 +1,14 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {TokenBySymbol, Token, BlockchainErrs} from 'ts/types';
+import {TokenBySymbol, Token, BlockchainErrs, BalanceErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
+import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
 import ReactTooltip = require('react-tooltip');
 import {
     Dialog,
@@ -20,20 +21,11 @@ import {
     TableRow,
     TableHeaderColumn,
     TableRowColumn,
-    Toggle,
 } from 'material-ui';
 
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
 const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
-const DEFAULT_ALLOWANCE_AMOUNT = 1000000;
-enum errorTypes {
-  incorrectNetworkForFaucet,
-  faucetRequestFailed,
-  faucetQueueIsFull,
-  mintingFailed,
-  allowanceSettingFailed,
-};
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
@@ -46,13 +38,14 @@ interface TokenBalancesProps {
 }
 
 interface TokenBalancesState {
-    errorType: errorTypes;
+    errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
     public constructor(props: TokenBalancesProps) {
         super(props);
+        const tokens = _.values(props.tokenBySymbol);
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
@@ -161,12 +154,13 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </TableRowColumn>
                     <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
                     <TableRowColumn>
-                        <div className="pl3">
-                            <Toggle
-                                toggled={this.isAllowanceSet(token)}
-                                onToggle={this.onToggleAllowanceAsync.bind(this, token)}
-                            />
-                        </div>
+                        <AllowanceToggle
+                            blockchain={this.props.blockchain}
+                            dispatcher={this.props.dispatcher}
+                            token={token}
+                            onErrorOccurred={this.onErrorOccurred.bind(this)}
+                            userAddress={this.props.userAddress}
+                        />
                     </TableRowColumn>
                     <TableRowColumn>
                         {isMintable &&
@@ -205,7 +199,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private renderErrorDialogBody() {
         switch (this.state.errorType) {
-            case errorTypes.incorrectNetworkForFaucet:
+            case BalanceErrs.incorrectNetworkForFaucet:
                 return (
                     <div>
                         Our faucet can only send test Ether to addresses on the {constants.TESTNET_NAME}
@@ -214,7 +208,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </div>
                 );
 
-            case errorTypes.faucetRequestFailed:
+            case BalanceErrs.faucetRequestFailed:
                 return (
                     <div>
                         An unexpected error occurred while trying to request test Ether from our faucet.
@@ -222,21 +216,21 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </div>
                 );
 
-            case errorTypes.faucetQueueIsFull:
+            case BalanceErrs.faucetQueueIsFull:
                 return (
                     <div>
                         Our test Ether faucet queue is full. Please try requesting test Ether again later.
                     </div>
                 );
 
-            case errorTypes.mintingFailed:
+            case BalanceErrs.mintingFailed:
                 return (
                     <div>
                         Minting your test tokens failed unexpectedly. Please refresh the page and try again.
                     </div>
                 );
 
-            case errorTypes.allowanceSettingFailed:
+            case BalanceErrs.allowanceSettingFailed:
                 return (
                     <div>
                         An unexpected error occurred while trying to set your test token allowance.
@@ -251,37 +245,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 throw utils.spawnSwitchErr('errorType', this.state.errorType);
         }
     }
-    private async onToggleAllowanceAsync(assetToken: Token) {
-        if (this.props.userAddress === '') {
-            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
-            return;
-        }
-
-        // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
-        // Any edits to this hack should include changes to the `isAllowanceSet` method below
-        // TODO: Investigate root cause for why allowance cannot be set to 0
-        let newAllowanceAmount = 1;
-        if (!this.isAllowanceSet(assetToken)) {
-            newAllowanceAmount = DEFAULT_ALLOWANCE_AMOUNT;
-        }
-        const token = this.props.tokenBySymbol[assetToken.symbol];
-        try {
-            await this.props.blockchain.setExchangeAllowanceAsync(token, newAllowanceAmount);
-        } catch (err) {
-            const errMsg = '' + err;
-            if (_.includes(errMsg, 'User denied transaction')) {
-                return false;
-            }
-            utils.consoleLog(`Unexpected error encountered: ${err}`);
-            utils.consoleLog(err.stack);
-            await errorReporter.reportAsync(err);
-            this.setState({
-                errorType: errorTypes.allowanceSettingFailed,
-            });
-        }
-    }
-    private isAllowanceSet(token: Token) {
-        return token.allowance !== 0 && token.allowance !== 1;
+    private onErrorOccurred(errorType: BalanceErrs) {
+        this.setState({
+            errorType,
+        });
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
@@ -300,7 +267,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             utils.consoleLog(err.stack);
             await errorReporter.reportAsync(err);
             this.setState({
-                errorType: errorTypes.mintingFailed,
+                errorType: BalanceErrs.mintingFailed,
             });
             return false;
         }
@@ -315,7 +282,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         // from, we must show user an error message
         if (this.props.blockchain.networkId !== constants.TESTNET_NETWORK_ID) {
             this.setState({
-                errorType: errorTypes.incorrectNetworkForFaucet,
+                errorType: BalanceErrs.incorrectNetworkForFaucet,
             });
             return false;
         }
@@ -327,7 +294,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         if (response.status !== 200) {
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
             await errorReporter.reportAsync(new Error(`Faucet returned non-200: ${JSON.stringify(response)}`));
-            const errorType = response.status === 503 ? errorTypes.faucetQueueIsFull : errorTypes.faucetRequestFailed;
+            const errorType = response.status === 503 ? BalanceErrs.faucetQueueIsFull : BalanceErrs.faucetRequestFailed;
             this.setState({
                 errorType,
             });

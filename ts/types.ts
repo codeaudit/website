@@ -102,3 +102,11 @@ export interface Fill {
     orderHash: string;
     transactionHash: string;
 }
+
+export enum BalanceErrs {
+    incorrectNetworkForFaucet,
+    faucetRequestFailed,
+    faucetQueueIsFull,
+    mintingFailed,
+    allowanceSettingFailed,
+};
