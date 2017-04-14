@@ -203,7 +203,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         });
     }
     private async onFillOrderClickAsync(): Promise<boolean> {
-        if (this.props.blockchainErr !== '') {
+        if (this.props.blockchainErr !== '' || this.props.userAddress === '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }

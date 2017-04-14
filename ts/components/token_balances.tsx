@@ -252,6 +252,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
     }
     private async onToggleAllowanceAsync(assetToken: Token) {
+        if (this.props.userAddress === '') {
+            this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+            return;
+        }
+
         // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
         // Any edits to this hack should include changes to the `isAllowanceSet` method below
         // TODO: Investigate root cause for why allowance cannot be set to 0

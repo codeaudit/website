@@ -230,7 +230,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
             debitToken.amount > 0 && receiveAmount > 0 &&
-            !_.isUndefined(this.props.userAddress) &&
+            this.props.userAddress !== '' &&
             debitBalance >= debitToken.amount && debitAllowance >= debitToken.amount) {
             const didSignSuccessfully = await this.signTransactionAsync();
             if (didSignSuccessfully) {
@@ -242,9 +242,9 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             return didSignSuccessfully;
         } else {
             let globalErrMsg = 'You must fix the above errors in order to generate a valid order';
-            if (_.isUndefined(this.props.userAddress)) {
-                globalErrMsg = 'You must enable wallet communication and make sure you have at least \
-                                one account address in order to sign an order';
+            if (this.props.userAddress === '') {
+                globalErrMsg = 'You must enable wallet communication';
+                this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             }
             this.setState({
                 globalErrMsg,

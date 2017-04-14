@@ -24,7 +24,7 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
             />,
         ];
 
-        const hasWalletAddress = !_.isUndefined(this.props.userAddress);
+        const hasWalletAddress = this.props.userAddress !== '';
         return (
             <Dialog
                 title={this.getTitle(hasWalletAddress)}
@@ -85,12 +85,12 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
             <div>
                 <div>
                     We were unable to access an Ethereum wallet you control. In order to interact
-                    {' '}with the demo dApp, we need a way to interact with one of your ethereum wallets.
+                    {' '}with the demo dApp, we need a way to interact with one of your Ethereum wallets.
                     {' '}There are two easy ways you can enable us to do that:
                 </div>
-                <h4>1. Chrome extension ethereum wallet</h4>
+                <h4>1. Chrome extension Ethereum wallet</h4>
                 <div>
-                    You can install a chrome extension ethereum wallet such as{' '}
+                    You can install a Chrome extension Ethereum wallet such as{' '}
                     <a href={constants.METAMASK_CHROME_STORE_URL} target="_blank">
                         Metamask
                     </a>. Once installed and set up, refresh this page.
@@ -102,8 +102,9 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
                 </div>
                 <div className="pt2">
                     <span className="bold">Note:</span>
-                    {' '}If you have done one of the above steps and are still seeing this message, we are
-                    {' '}still unable to retrieve an ethereum address by calling `web3.eth.accounts`.
+                    {' '}If you have done one of the above steps and are still seeing this message,
+                    {' '}we might still be unable to retrieve an Ethereum address by calling `web3.eth.accounts`.
+                    {' '}Make sure you have created at least one Ethereum address.
                 </div>
             </div>
         );
