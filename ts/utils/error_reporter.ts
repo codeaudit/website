@@ -7,6 +7,7 @@ const rollbarConfig = {
     accessToken: constants.ROLLBAR_ACCESS_TOKEN,
     captureUncaught: true,
     captureUnhandledRejections: true,
+    itemsPerMinute: 10,
     maxItems: 500,
     payload: {
         environment: constants.ENVIRONMENT,
