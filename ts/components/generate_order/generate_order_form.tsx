@@ -36,7 +36,7 @@ enum SigningState {
     SIGNED,
 }
 
-interface GenerateFormProps {
+interface GenerateOrderFormProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
@@ -51,7 +51,7 @@ interface GenerateFormProps {
     triggerMenuClick: (menuItemValue: MenuItemValue) => void;
 }
 
-interface GenerateFormState {
+interface GenerateOrderFormState {
     globalErrMsg: string;
     shouldShowIncompleteErrs: boolean;
     signingState: SigningState;
@@ -66,9 +66,9 @@ const style = {
     },
 };
 
-export class GenerateForm extends React.Component<GenerateFormProps, any> {
+export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, any> {
     private validator: Validator;
-    constructor(props: GenerateFormProps) {
+    constructor(props: GenerateOrderFormProps) {
         super(props);
         this.state = {
             globalErrMsg: '',
@@ -77,7 +77,7 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
         };
         this.validator = new Validator();
     }
-    public componentWillReceiveProps(newProps: GenerateFormProps) {
+    public componentWillReceiveProps(newProps: GenerateOrderFormProps) {
         if (!utils.deepEqual(newProps.hashData, this.props.hashData)) {
             this.setState({
                 signingState: SigningState.UNSIGNED,

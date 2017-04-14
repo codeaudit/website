@@ -5,7 +5,7 @@ import {Store as ReduxStore, Dispatch} from 'redux';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {State} from 'ts/redux/reducer';
 import {Blockchain} from 'ts/blockchain';
-import {GenerateForm} from 'ts/components/generate_order_form/generate_form';
+import {GenerateOrderForm as GenerateOrderFormComponent} from 'ts/components/generate_order/generate_order_form';
 import {
     SideToAssetToken,
     SignatureData,
@@ -43,27 +43,6 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     tokenBySymbol: state.tokenBySymbol,
     userAddress: state.userAddress,
 });
-
-class GenerateOrderFormComponent extends React.Component<GenerateOrderFormProps & ConnectedState, any> {
-    public render() {
-        return (
-            <GenerateForm
-                blockchain={this.props.blockchain}
-                blockchainErr={this.props.blockchainErr}
-                blockchainIsLoaded={this.props.blockchainIsLoaded}
-                sideToAssetToken={this.props.sideToAssetToken}
-                orderSignatureData={this.props.orderSignatureData}
-                orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                orderTakerAddress={this.props.orderTakerAddress}
-                dispatcher={this.props.dispatcher}
-                hashData={this.props.hashData}
-                tokenBySymbol={this.props.tokenBySymbol}
-                triggerMenuClick={this.props.triggerMenuClick}
-                userAddress={this.props.userAddress}
-            />
-        );
-    }
-}
 
 export const GenerateOrderForm: React.ComponentClass<GenerateOrderFormProps> =
   connect(mapStateToProps)(GenerateOrderFormComponent);

@@ -6,7 +6,6 @@ import {utils} from 'ts/utils/utils';
 import {RaisedButton, Menu, MenuItem, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrderForm} from 'ts/containers/generate_order_form';
-import {GenerateOrderFlow} from 'ts/containers/generate_order_flow';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
@@ -102,10 +101,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         }
     }
     public render() {
-        let GenerateOrder = GenerateOrderFlow;
-        if (this.state.kind === 'form') {
-            GenerateOrder = GenerateOrderForm;
-        }
         const updateShouldBlockchainErrDialogBeOpen = this.props.dispatcher
                 .updateShouldBlockchainErrDialogBeOpen.bind(this.props.dispatcher);
 
@@ -113,7 +108,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         switch (this.state.selectedMenuItem) {
             case MenuItemValue.generate:
                 visibleComponent = (
-                    <GenerateOrder
+                    <GenerateOrderForm
                         blockchain={this.blockchain}
                         hashData={this.props.hashData}
                         triggerMenuClick={this.triggerMenuClick.bind(this)}
@@ -211,7 +206,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                             </Menu>
                         </div>
                         <div className="col col-10">
-                            <Paper>
+                            <Paper className="mb3">
                                 <div className="py2">
                                     {visibleComponent}
                                 </div>
