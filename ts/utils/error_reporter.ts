@@ -27,7 +27,8 @@ export const errorReporter = {
             rollbar.error(err, (rollbarErr: Error) => {
                 if (rollbarErr) {
                     utils.consoleLog(`Error reporting to rollbar, ignoring: ${rollbarErr}`);
-                    reject(rollbarErr);
+                    // We never want to reject and cause the app to throw because of rollbar
+                    resolve();
                 } else {
                     resolve();
                 }
