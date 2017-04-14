@@ -19,6 +19,7 @@ import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {HelpTooltip} from 'ts/components/ui/help_tooltip';
+import {SwapIcon} from 'ts/components/ui/swap_icon';
 import {
     Side,
     SideToAssetToken,
@@ -95,123 +96,133 @@ export class GenerateForm extends React.Component<GenerateFormProps, any> {
             <div className="clearfix mb2 px4">
                 <h3>Generate an order</h3>
                 <Divider />
-                <div className="pt2 flex mx-auto" style={{width: 408}}>
-                    <IdenticonAddressInput
-                        label="Taker (address)"
-                        blockchain={this.props.blockchain}
-                        address={this.props.orderTakerAddress}
-                        updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
-                    />
-                    <div className="pt3">
-                        <div className="pl1">
-                            <HelpTooltip
-                                explanation={takerExplanation}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="pt2">
-                    <div className="mx-auto clearfix">
-                        <div className="col col-6 pr2">
-                            <TokenInput
-                                blockchain={this.props.blockchain}
-                                blockchainErr={this.props.blockchainErr}
-                                dispatcher={this.props.dispatcher}
-                                label="Token to sell (address)"
-                                side={Side.deposit}
-                                assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                                tokenBySymbol={this.props.tokenBySymbol}
-                            />
-                        </div>
-                        <div className="col col-6 pl2">
-                            <TokenInput
-                                blockchain={this.props.blockchain}
-                                blockchainErr={this.props.blockchainErr}
-                                dispatcher={this.props.dispatcher}
-                                label="Token to receive (address)"
-                                side={Side.receive}
-                                assetToken={this.props.sideToAssetToken[Side.receive]}
-                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                                tokenBySymbol={this.props.tokenBySymbol}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="pt3">
-                    <div className="mx-auto clearfix">
-                        <div className="col col-6 pr2">
-                            <AmountInput
-                                label="Sell amount (uint)"
-                                side={Side.deposit}
-                                token={depositToken}
-                                assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                shouldCheckBalanceAndAllowance={true}
-                                shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                triggerMenuClick={this.props.triggerMenuClick}
-                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                            />
-                        </div>
-                        <div className="col col-6 pl2">
-                            <AmountInput
-                                label="Receive amount (uint)"
-                                side={Side.receive}
-                                token={receiveToken}
-                                assetToken={this.props.sideToAssetToken[Side.receive]}
-                                updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                                shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                triggerMenuClick={this.props.triggerMenuClick}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="pt3">
-                    <div className="mx-auto" style={{width: 295}}>
-                        <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
-                        <ExpirationInput
-                            orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                            updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
-                        />
-                    </div>
-                </div>
-                <div className="pt1">
-                    <div className="mx-auto" style={{width: 33}}>
-                        <i className="zmdi zmdi-caret-down" style={{fontSize: 80}} />
-                    </div>
-                </div>
-                <div className="pt1">
-                    <div className="mx-auto" style={{width: 256}}>
-                        <div style={{fontSize: 12, color: colors.grey500}}>Hash (byte32)</div>
-                        <HashInput
+                <div className="mx-auto" style={{width: 440}}>
+                    <div className="pt2 flex mx-auto">
+                        <IdenticonAddressInput
+                            label="Taker (address)"
                             blockchain={this.props.blockchain}
-                            blockchainIsLoaded={this.props.blockchainIsLoaded}
-                            hashData={this.props.hashData}
+                            address={this.props.orderTakerAddress}
+                            updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
                         />
+                        <div className="pt3">
+                            <div className="pl1">
+                                <HelpTooltip
+                                    explanation={takerExplanation}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="pt3">
-                    <div className="mx-auto center" style={{width: 112}}>
-                        <LifeCycleRaisedButton
-                            isHidden={this.state.signingState === SigningState.SIGNED}
-                            labelReady="Sign hash"
-                            labelLoading="Signing..."
-                            labelComplete="Hash signed!"
-                            onClickAsyncFn={this.onSignClickedAsync.bind(this)}
-                        />
+                    <div className="pt1">
+                        <div className="mx-auto clearfix">
+                            <div className="col col-5">
+                                <TokenInput
+                                    blockchain={this.props.blockchain}
+                                    blockchainErr={this.props.blockchainErr}
+                                    dispatcher={this.props.dispatcher}
+                                    label="Token to sell (address)"
+                                    side={Side.deposit}
+                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
+                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    tokenBySymbol={this.props.tokenBySymbol}
+                                />
+                            </div>
+                            <div className="col col-2">
+                                <div className="p1">
+                                    <SwapIcon
+                                        swapTokensFn={dispatcher.swapAssetTokenSymbols.bind(dispatcher)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col col-5">
+                                <TokenInput
+                                    blockchain={this.props.blockchain}
+                                    blockchainErr={this.props.blockchainErr}
+                                    dispatcher={this.props.dispatcher}
+                                    label="Token to receive (address)"
+                                    side={Side.receive}
+                                    assetToken={this.props.sideToAssetToken[Side.receive]}
+                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    tokenBySymbol={this.props.tokenBySymbol}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
-                </div>
-                <div className="pt3">
-                    <div className="mx-auto" style={{width: 465}}>
-                        {this.state.signingState === SigningState.SIGNED &&
-                            <OrderJSON
+                    <div className="pt1">
+                        <div className="mx-auto clearfix">
+                            <div className="col col-5">
+                                <AmountInput
+                                    label="Sell amount (uint)"
+                                    side={Side.deposit}
+                                    token={depositToken}
+                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
+                                    shouldCheckBalanceAndAllowance={true}
+                                    shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                    triggerMenuClick={this.props.triggerMenuClick}
+                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                />
+                            </div>
+                            <div className="col col-2 p1" />
+                            <div className="col col-5">
+                                <AmountInput
+                                    label="Receive amount (uint)"
+                                    side={Side.receive}
+                                    token={receiveToken}
+                                    assetToken={this.props.sideToAssetToken[Side.receive]}
+                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                    triggerMenuClick={this.props.triggerMenuClick}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="pt1">
+                        <div className="mx-auto" style={{width: 295}}>
+                            <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
+                            <ExpirationInput
                                 orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                                orderSignatureData={this.props.orderSignatureData}
-                                orderTakerAddress={this.props.orderTakerAddress}
-                                orderMakerAddress={this.props.userAddress}
-                                sideToAssetToken={this.props.sideToAssetToken}
+                                updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
                             />
-                        }
+                        </div>
+                    </div>
+                    <div className="pt1">
+                        <div className="mx-auto" style={{width: 33}}>
+                            <i className="zmdi zmdi-caret-down" style={{fontSize: 80}} />
+                        </div>
+                    </div>
+                    <div className="pt1">
+                        <div className="mx-auto" style={{width: 256}}>
+                            <HashInput
+                                blockchain={this.props.blockchain}
+                                blockchainIsLoaded={this.props.blockchainIsLoaded}
+                                hashData={this.props.hashData}
+                                label="Hash (byte32)"
+                            />
+                        </div>
+                    </div>
+                    <div className="pt3">
+                        <div className="mx-auto center" style={{width: 112}}>
+                            <LifeCycleRaisedButton
+                                isHidden={this.state.signingState === SigningState.SIGNED}
+                                labelReady="Sign hash"
+                                labelLoading="Signing..."
+                                labelComplete="Hash signed!"
+                                onClickAsyncFn={this.onSignClickedAsync.bind(this)}
+                            />
+                        </div>
+                        {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
+                    </div>
+                    <div className="pt3">
+                        <div className="mx-auto" style={{width: 465}}>
+                            {this.state.signingState === SigningState.SIGNED &&
+                                <OrderJSON
+                                    orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                                    orderSignatureData={this.props.orderSignatureData}
+                                    orderTakerAddress={this.props.orderTakerAddress}
+                                    orderMakerAddress={this.props.userAddress}
+                                    sideToAssetToken={this.props.sideToAssetToken}
+                                />
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

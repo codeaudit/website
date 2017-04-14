@@ -23,6 +23,7 @@ interface HashInputProps {
     blockchain: Blockchain;
     blockchainIsLoaded: boolean;
     hashData: HashData;
+    label: string;
 }
 
 interface HashInputState {}
@@ -32,7 +33,7 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
         const msgHashHex = this.props.blockchainIsLoaded ? this.generateMessageHashHex() : '';
         return (
             <div>
-                <FakeTextField>
+                <FakeTextField label={this.props.label}>
                     <div
                         style={styles.textField}
                         data-tip={true}

@@ -25,7 +25,7 @@ export function FakeTextField(props: FakeTextFieldProps) {
     return (
         <div className="relative">
             {props.label !== '' && <InputLabel text={props.label} />}
-            <div className="py2">
+            <div className="pb2" style={{height: 23}}>
                 {props.children}
             </div>
             <hr style={styles.hr} />

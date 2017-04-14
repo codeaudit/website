@@ -4,11 +4,13 @@ import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {RequiredLabel} from 'ts/components/ui/required_label';
-import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import {AssetToken, Side, TokenBySymbol, BlockchainErrs, Token} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 import {NewTokenDialog} from 'ts/components/generate_order/new_token_dialog';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
+import {InputLabel} from 'ts/components/ui/input_label';
+
+const TOKEN_ICON_DIMENSION = 80;
 
 interface TokenInputProps {
     blockchain: Blockchain;
@@ -22,14 +24,23 @@ interface TokenInputProps {
 }
 
 interface TokenInputState {
+    isHoveringIcon: boolean;
     isNewTokenDialogOpen: boolean;
     isPickerOpen: boolean;
 }
+
+const styles = {
+    tokenIconBox: {
+        border: '1px solid rgb(224, 224, 224)',
+        cursor: 'pointer',
+    },
+};
 
 export class TokenInput extends React.Component<TokenInputProps, TokenInputState> {
     constructor(props: TokenInputProps) {
         super(props);
         this.state = {
+            isHoveringIcon: false,
             isNewTokenDialogOpen: false,
             isPickerOpen: false,
         };
@@ -37,22 +48,34 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
     public render() {
         const token = this.props.tokenBySymbol[this.props.assetToken.symbol];
         const label = <RequiredLabel label={this.props.label} />;
+        const iconStyles = {
+            cursor: 'pointer',
+            opacity: this.state.isHoveringIcon ? 0.8 : 1,
+        };
         return (
-            <div style={{width: '100%'}}>
-                <FakeTextField label={label}>
+            <div className="relative">
+                <div className="pb1">
+                    <InputLabel text={label} />
+                </div>
+                <div
+                    style={styles.tokenIconBox}
+                    onMouseEnter={this.onToggleHover.bind(this, true)}
+                    onMouseLeave={this.onToggleHover.bind(this, false)}
+                    onClick={this.onAssetClicked.bind(this)}
+                >
                     <div
-                        className="pt1"
-                        style={{cursor: 'pointer'}}
-                        onClick={this.onInputClick.bind(this)}
+                        className="mx-auto pt2"
+                        style={{width: TOKEN_ICON_DIMENSION}}
                     >
-                        <div className="flex">
-                            <div className="pr1">
-                                <img src={token.iconUrl} style={{width: 20, height: 20}} />
-                            </div>
-                            <div style={{lineHeight: 1.4}}>{token.name}</div>
-                        </div>
+                        <img
+                            style={{width: TOKEN_ICON_DIMENSION, height: TOKEN_ICON_DIMENSION, ...iconStyles}}
+                            src={token.iconUrl}
+                        />
                     </div>
-                </FakeTextField>
+                    <div className="py1 center" style={{color: colors.grey500}}>
+                        {token.name}
+                    </div>
+                </div>
                 <AssetPicker
                     isOpen={this.state.isPickerOpen}
                     currentAssetToken={this.props.assetToken}
@@ -71,12 +94,17 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
             </div>
         );
     }
+    private onToggleHover(isHoveringIcon: boolean) {
+        this.setState({
+            isHoveringIcon,
+        });
+    }
     private onCloseNewTokenDialog() {
         this.setState({
             isNewTokenDialogOpen: false,
         });
     }
-    private onInputClick() {
+    private onAssetClicked() {
         if (this.props.blockchainErr !== '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return;
