@@ -68,8 +68,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             v: 27,
         };
         const hintOrder = utils.generateOrder(hintSideToAssetToken, hintOrderExpiryTimestamp,
-                              '', '', hintSignatureData);
-        const hintOrderJSON = JSON.stringify(hintOrder, null, '\t');
+                              '', '', hintSignatureData, this.props.tokenBySymbol);
+        const hintOrderJSON = `${JSON.stringify(hintOrder, null, '\t').substring(0, 500)}...`;
         return (
             <div className="clearfix px4" style={{minHeight: 600}}>
                 <h3>Fill an order</h3>
@@ -81,6 +81,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 <Paper className="mx-auto p1" style={{width: 640}}>
                     <TextField
                         id="orderJSON"
+                        hintStyle={{bottom: 0, top: 0}}
                         style={{width: 620, height: 148}}
                         value={this.state.orderJSON}
                         onChange={this.onFillOrderChanged.bind(this)}
