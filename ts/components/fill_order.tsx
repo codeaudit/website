@@ -12,6 +12,7 @@ import {
     AssetToken,
     BlockchainErrs,
     OrderToken,
+    Token,
 } from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
@@ -22,6 +23,7 @@ import {orderSchema} from 'ts/schemas/order_schema';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Blockchain} from 'ts/blockchain';
 import {errorReporter} from 'ts/utils/error_reporter';
+import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 import BigNumber = require('bignumber.js');
 
 interface FillOrderProps {
@@ -188,6 +190,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 return;
             }
             parsedOrder = order;
+            this.addTokenToCustomTokensIfUnseen(parsedOrder.maker.token);
+            this.addTokenToCustomTokensIfUnseen(parsedOrder.taker.token);
 
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
             const makerAmount = new BigNumber(parsedOrder.maker.amount);
@@ -300,5 +304,38 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             });
             return false;
         }
+    }
+    private addTokenToCustomTokensIfUnseen(token: OrderToken) {
+        const existingToken = this.props.tokenByAddress[token.address];
+
+        // If a token with the address already exists, we trust the tokens retrieved from the
+        // tokenRegistry or supplied by the current user over ones from an orderJSON. Thus, we
+        // do not add a customToken and will defer to the rest of the details associated to the existing
+        // token with this address for the rest of it's metadata.
+        const doesTokenWithAddressExist = !_.isUndefined(existingToken);
+        if (doesTokenWithAddressExist) {
+            return;
+        }
+
+        // Let's make sure this token (with a unique address), also have a unique name/symbol, otherwise
+        // we append something to make it visibly clear to the end user that this is a different underlying
+        // token then the identically named one they already had locally.
+        const existingTokens = _.values(this.props.tokenByAddress);
+        const isUniqueName = _.isUndefined(_.find(existingTokens, {name: token.name}));
+        if (!isUniqueName) {
+            token.name = `${token.name} [Imported]`;
+        }
+
+        const isUniqueSymbol = _.isUndefined(_.find(existingTokens, {symbol: token.symbol}));
+        if (!isUniqueSymbol) {
+            token.symbol = `*${token.symbol}*`;
+        }
+
+        // Add default token icon url
+        (token as Token).iconUrl = constants.DEFAULT_TOKEN_ICON_URL;
+
+        // Add the custom token to local storage and to the redux store
+        customTokenStorage.addCustomToken(this.props.blockchain.networkId, token);
+        this.props.dispatcher.addTokenToTokenByAddress(token);
     }
 }
