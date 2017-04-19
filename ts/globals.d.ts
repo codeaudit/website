@@ -25,8 +25,17 @@ declare module 'bignumber.js' {
         public static ROUND_DOWN: any;
         public static config(arg: any): void;
 
-        constructor(value: number|string); // Acccepts a number OR a string
+        constructor(value: number|string);
         public toNumber(): number;
+        public div(value: BigNumber): BigNumber;
+        public pow(exponent: BigNumber|number): BigNumber;
+        public times(value: BigNumber): BigNumber;
+        public plus(value: BigNumber|number): BigNumber;
+        public lt(value: BigNumber|number): BigNumber;
+        public gte(value: BigNumber|number): BigNumber;
+        public gt(value: BigNumber|number): BigNumber;
+        public eq(value: BigNumber|number): BigNumber;
+        public minus(value: BigNumber): BigNumber;
     }
 
     // A standalone class is not exportable, so there is an empty module

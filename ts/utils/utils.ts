@@ -1,17 +1,9 @@
 import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
-import {SideToAssetToken, SignatureData, Order} from 'ts/types';
+import {SideToAssetToken, SignatureData, Order, Side} from 'ts/types';
 import deepEqual = require('deep-equal');
 
 export const utils = {
-    // Utility function to create a K:V from a list of strings
-    // Adapted from: https://basarat.gitbooks.io/typescript/content/docs/types/literal-types.html
-    strEnum(values: string[]): {[key: string]: string} {
-        return _.reduce(values, (result, key) => {
-            result[key] = key;
-            return result;
-        }, Object.create(null));
-    },
     assert(condition: boolean, message: string) {
         if (!condition) {
             throw new Error(message);

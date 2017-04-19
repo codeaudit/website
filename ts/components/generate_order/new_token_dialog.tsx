@@ -9,6 +9,7 @@ import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {RequiredLabel} from 'ts/components/ui/required_label';
+import BigNumber = require('bignumber.js');
 
 interface NewTokenDialogProps {
     blockchain: Blockchain;
@@ -105,8 +106,8 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
         }
 
         let hasBalanceAllowanceErr = false;
-        let balance = 0;
-        let allowance = 0;
+        let balance = new BigNumber(0);
+        let allowance = new BigNumber(0);
         if (doesContractExist) {
             try {
                 [

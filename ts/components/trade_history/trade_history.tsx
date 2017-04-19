@@ -62,8 +62,8 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
             if (_.isUndefined(depositToken) || _.isUndefined(receiveToken)) {
                 return;
             }
-            const exchangeRate = fill.valueT / fill.valueM;
-            const fillValueT = exchangeRate * fill.filledValueM;
+            const exchangeRate = fill.valueT.div(fill.valueM);
+            const fillValueT = exchangeRate.times(fill.filledValueM);
             const sideToAssetToken = {
                 deposit: {
                     amount: fill.filledValueM,
@@ -84,6 +84,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                         orderTakerAddress={fill.taker}
                         orderMakerAddress={fill.maker}
                         sideToAssetToken={sideToAssetToken}
+                        tokenBySymbol={this.props.tokenBySymbol}
                     />
                 </Paper>
             );

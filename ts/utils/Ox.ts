@@ -1,12 +1,14 @@
 import * as _ from 'lodash';
 import BN = require('bn.js');
+import BigNumber = require('bignumber.js');
 import ethUtil = require('ethereumjs-util');
 
 export const Ox = {
     getOrderHash(exchangeContractAddr: string, makerAddr: string, takerAddr: string,
                  depositTokenAddr: string, receiveTokenAddr: string, feeRecipient: string,
-                 depositAmt: number, receiveAmt: number, makerFee: string, takerFee: string,
+                 depositAmt: BigNumber, receiveAmt: BigNumber, makerFee: string, takerFee: string,
                  expiration: number): string {
+
         const orderParts = [
             exchangeContractAddr,
             makerAddr,
@@ -14,16 +16,15 @@ export const Ox = {
             depositTokenAddr,
             receiveTokenAddr,
             feeRecipient,
-            depositAmt,
-            receiveAmt,
+            depositAmt.toString(),
+            receiveAmt.toString(),
             makerFee,
             takerFee,
             expiration,
         ];
         const buffHash = this.sha3(orderParts);
-        const personalOrderHash = ethUtil.hashPersonalMessage(buffHash);
-        const personalOrderHashHex = ethUtil.bufferToHex(personalOrderHash);
-        return personalOrderHashHex;
+        const buffHashHex = ethUtil.bufferToHex(buffHash);
+        return buffHashHex;
     },
     sha3(params: Array<(string | number | Buffer)>) {
         const messageBuffs = _.map(params, (param) => {
@@ -42,6 +43,23 @@ export const Ox = {
         const size = 32;
         const endian = 'be';
         return new BN(n.toString()).toArrayLike(Buffer, endian, size);
+    },
+    // A unit amount is defined as the amount of a currency just above the decimal places.
+    // E.g: If a currency has 18 decimal places, 1e18 or one quintillion of the currency is equivalent
+    // to 1 unit.
+    toUnitAmount(amount: BigNumber, decimals: number): BigNumber {
+      const aUnit = new BigNumber(10).pow(decimals);
+      const unit = amount.div(aUnit);
+      return unit;
+    },
+    // A baseUnit is defined as the smallest denomination of a currency. An amount expressed in baseUnits
+    // is the amount expressed in the smallest denomination.
+    // E.g: 1 unit of a currency with 18 decimal places is expressed in baseUnits as 1000000000000000000
+    toBaseUnitAmount(amount: number, decimals: number): BigNumber {
+      const amountBn = new BigNumber(amount);
+      const unit = new BigNumber(10).pow(decimals);
+      const baseUnitAmount = amountBn.times(unit);
+      return baseUnitAmount;
     },
     isValidOrderHash(orderHash: string): boolean {
         if (_.isString(orderHash) &&

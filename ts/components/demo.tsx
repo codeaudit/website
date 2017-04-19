@@ -11,10 +11,11 @@ import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
-import {HashData, TokenBySymbol, MenuItemValue, BlockchainErrs, Order, Fill} from 'ts/types';
+import {HashData, TokenBySymbol, MenuItemValue, BlockchainErrs, Order, Fill, Side} from 'ts/types';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
 import {TopBar} from 'ts/components/top_bar';
+import BigNumber = require('bignumber.js');
 
 export interface DemoPassedProps {}
 
@@ -25,7 +26,7 @@ export interface DemoAllProps {
     hashData: HashData;
     kind: string;
     networkId: number;
-    orderFillAmount: number;
+    orderFillAmount: BigNumber;
     tokenBySymbol: TokenBySymbol;
     userEtherBalance: number;
     userAddress: string;

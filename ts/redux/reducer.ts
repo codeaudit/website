@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {Action, actionTypes} from 'ts/redux/actions';
 import {
     GenerateOrderSteps,
     Side,
@@ -11,8 +10,11 @@ import {
     SignatureData,
     TokenBySymbol,
     Order,
+    Action,
+    ActionTypes,
 } from 'ts/types';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
+import BigNumber = require('bignumber.js');
 
 export interface State {
     blockchainErr: BlockchainErrs;
@@ -20,7 +22,7 @@ export interface State {
     generateOrderStep: GenerateOrderSteps;
     networkId: number;
     orderExpiryTimestamp: number;
-    orderFillAmount: number;
+    orderFillAmount: BigNumber;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
     shouldBlockchainErrDialogBeOpen: boolean;
@@ -79,34 +81,34 @@ function getInitialTokenBySymbol() {
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
-        case actionTypes.UPDATE_ORDER_FILL_AMOUNT:
+        case ActionTypes.UPDATE_ORDER_FILL_AMOUNT:
             return _.assign({}, state, {
                 orderFillAmount: action.data,
             });
 
-        case actionTypes.UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN:
+        case ActionTypes.UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN:
             return _.assign({}, state, {
                 shouldBlockchainErrDialogBeOpen: action.data,
             });
 
-        case actionTypes.UPDATE_USER_ETHER_BALANCE:
+        case ActionTypes.UPDATE_USER_ETHER_BALANCE:
             return _.assign({}, state, {
                 userEtherBalance: action.data,
             });
 
-        case actionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE:
+        case ActionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE:
             return _.assign({}, state, {
                 userSuppliedOrderCache: action.data,
             });
 
-        case actionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL:
+        case ActionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL:
             const newTokenBySymbol = state.tokenBySymbol;
             newTokenBySymbol[action.data.symbol] = action.data;
             return _.assign({}, state, {
                 tokenBySymbol: newTokenBySymbol,
             });
 
-        case actionTypes.UPDATE_TOKEN_BY_SYMBOL:
+        case ActionTypes.UPDATE_TOKEN_BY_SYMBOL:
             const tokenBySymbol = state.tokenBySymbol;
             const tokens = action.data;
             _.each(tokens, (token) => {
@@ -117,27 +119,27 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 tokenBySymbol,
             });
 
-        case actionTypes.UPDATE_ORDER_SIGNATURE_DATA:
+        case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA:
             return _.assign({}, state, {
                 orderSignatureData: action.data,
             });
 
-        case actionTypes.UPDATE_BLOCKCHAIN_IS_LOADED:
+        case ActionTypes.UPDATE_BLOCKCHAIN_IS_LOADED:
             return _.assign({}, state, {
                 blockchainIsLoaded: action.data,
             });
 
-        case actionTypes.BLOCKCHAIN_ERR_ENCOUNTERED:
+        case ActionTypes.BLOCKCHAIN_ERR_ENCOUNTERED:
             return _.assign({}, state, {
                 blockchainErr: action.data,
             });
 
-        case actionTypes.UPDATE_NETWORK_ID:
+        case ActionTypes.UPDATE_NETWORK_ID:
             return _.assign({}, state, {
                 networkId: action.data,
             });
 
-        case actionTypes.UPDATE_GENERATE_ORDER_STEP:
+        case ActionTypes.UPDATE_GENERATE_ORDER_STEP:
             const direction = action.data;
             let nextGenerateOrderStep = state.generateOrderStep;
             if (direction === Direction.forward) {
@@ -149,7 +151,7 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 generateOrderStep: nextGenerateOrderStep,
             });
 
-        case actionTypes.UPDATE_CHOSEN_ASSET_TOKEN:
+        case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN:
             newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
                 [action.data.side]: action.data.token,
             });
@@ -157,7 +159,7 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 sideToAssetToken: newSideToAssetToken,
             });
 
-        case actionTypes.SWAP_ASSET_TOKENS:
+        case ActionTypes.SWAP_ASSET_TOKENS:
             newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
                 [Side.deposit]: state.sideToAssetToken[Side.receive],
                 [Side.receive]: state.sideToAssetToken[Side.deposit],
@@ -166,17 +168,17 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 sideToAssetToken: newSideToAssetToken,
             });
 
-        case actionTypes.UPDATE_ORDER_EXPIRY:
+        case ActionTypes.UPDATE_ORDER_EXPIRY:
             return _.assign({}, state, {
                 orderExpiryTimestamp: action.data,
             });
 
-        case actionTypes.UPDATE_ORDER_TAKER_ADDRESS:
+        case ActionTypes.UPDATE_ORDER_TAKER_ADDRESS:
             return _.assign({}, state, {
                 orderTakerAddress: action.data,
             });
 
-        case actionTypes.UPDATE_USER_ADDRESS:
+        case ActionTypes.UPDATE_USER_ADDRESS:
             return _.assign({}, state, {
                 userAddress: action.data,
             });

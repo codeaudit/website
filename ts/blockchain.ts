@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import contract = require('truffle-contract');
-import BigNumber = require('bignumber.js');
 import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {Ox} from 'ts/utils/Ox';
@@ -16,8 +14,11 @@ import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
 import * as TokenArtifacts from '../contracts/Token.json';
 import * as MintableArtifacts from '../contracts/Mintable.json';
+import contract = require('truffle-contract');
+import BigNumber = require('bignumber.js');
+import ethUtil = require('ethereumjs-util');
 
-const MINT_AMOUNT = 100;
+const MINT_AMOUNT = new BigNumber('100000000000000000000');
 
 export class Blockchain {
     public networkId: number;
@@ -54,7 +55,7 @@ export class Blockchain {
             await this.rehydrateStoreWithContractEvents();
         }
     }
-    public async setExchangeAllowanceAsync(token: Token, amount: number) {
+    public async setExchangeAllowanceAsync(token: Token, amountInBaseUnits: BigNumber) {
         if (!this.isValidAddress(token.address)) {
             throw new Error('tokenAddress is not a valid address');
         }
@@ -62,22 +63,39 @@ export class Blockchain {
             throw new Error('Cannot set allowance if no user accounts accessible');
         }
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
-        await tokenContract.approve(this.proxy.address, amount, {
+        await tokenContract.approve(this.proxy.address, amountInBaseUnits, {
             from: this.userAddress,
         });
-        token.allowance = amount;
+        token.allowance = amountInBaseUnits;
         this.dispatcher.updateTokenBySymbol([token]);
     }
+    public async isValidSignatureAsync(maker: string, signatureData: SignatureData) {
+      if (!this.doesUserAddressExist()) {
+          throw new Error('Cannot check for validSignature if no user accounts accessible');
+      }
+
+      const isValidSignature = await this.exchange.isValidSignature.call(
+        maker,
+        signatureData.hash,
+        signatureData.v,
+        signatureData.r,
+        signatureData.s,
+        {
+          from: this.userAddress,
+        },
+      );
+      return isValidSignature;
+    }
     public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
-                                takerTokenAddress: string, makerTokenAmount: number,
-                                takerTokenAmount: number, expirationUnixTimestampSec: number,
-                                fillAmount: number, signatureData: SignatureData) {
+                                takerTokenAddress: string, makerTokenAmount: BigNumber,
+                                takerTokenAmount: BigNumber, expirationUnixTimestampSec: number,
+                                fillAmount: BigNumber, signatureData: SignatureData) {
         if (!this.doesUserAddressExist()) {
             throw new Error('Cannot fill order if no user accounts accessible');
         }
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
-        const shouldCheckTransfer = false;
+        const shouldCheckTransfer = true;
         const fill = {
             expiration: expirationUnixTimestampSec,
             feeRecipient: constants.FEE_RECIPIENT_ADDRESS,
@@ -115,7 +133,10 @@ export class Blockchain {
         const lowercaseAddress = address.toLowerCase();
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
-    public async sendSignRequestAsync(msgHashHex: string): Promise<SignatureData> {
+    public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
+        const orderHashBuff = new Buffer(orderHashHex.substring(2), 'hex');
+        const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuff);
+        const msgHashHex = ethUtil.bufferToHex(msgHashBuff);
         const makerAddress = this.userAddress;
         // If makerAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
@@ -124,7 +145,7 @@ export class Blockchain {
         }
         const signature = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
         const signatureData = {
-            hash: msgHashHex,
+            hash: orderHashHex,
             r: `0x${signature.substring(2, 66)}`,
             s: `0x${signature.substring(66, 130)}`,
             v: _.parseInt(signature.substring(130, 132)) + 27,
@@ -141,14 +162,14 @@ export class Blockchain {
             from: this.userAddress,
         });
         const tokens = [_.assign({}, token, {
-            balance: token.balance + MINT_AMOUNT,
+            balance: token.balance.plus(MINT_AMOUNT),
         })];
         this.dispatcher.updateTokenBySymbol(tokens);
     }
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
     }
-    public async getTokenBalanceAndAllowanceAsync(tokenAddress: string) {
+    public async getTokenBalanceAndAllowanceAsync(tokenAddress: string): Promise<BigNumber[]> {
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, tokenAddress);
         let balance;
         let allowance;
@@ -156,8 +177,8 @@ export class Blockchain {
             balance = await tokenContract.balanceOf.call(this.userAddress);
             allowance = await tokenContract.allowance.call(this.userAddress, this.proxy.address);
         }
-        balance = _.isUndefined(balance) ? 0 : balance.toNumber();
-        allowance = _.isUndefined(allowance) ? 0 : allowance.toNumber();
+        balance = _.isUndefined(balance) ? new BigNumber(0) : balance;
+        allowance = _.isUndefined(allowance) ? new BigNumber(0) : allowance;
         return [balance, allowance];
     }
     public async updateTokenBalancesAndAllowancesAsync(tokens: Token[]) {
@@ -252,13 +273,20 @@ export class Blockchain {
             const tokens = [];
             for (const address of addresses) {
                 const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(address);
-                const [tokenAddress, name, symbol] = await this.tokenRegistry.getTokenMetaData.call(address);
+                const [
+                  tokenAddress,
+                  name,
+                  symbol,
+                  url,
+                  decimals,
+                ] = await this.tokenRegistry.getTokenMetaData.call(address);
                 tokens.push({
                     address,
                     allowance,
                     balance,
                     name,
                     symbol,
+                    decimals,
                 });
             }
             this.dispatcher.updateTokenBySymbol(tokens);

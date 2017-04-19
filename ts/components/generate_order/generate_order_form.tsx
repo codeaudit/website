@@ -240,9 +240,9 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         const debitAllowance = this.props.tokenBySymbol[debitToken.symbol].allowance;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
-            debitToken.amount > 0 && receiveAmount > 0 &&
+            debitToken.amount.gt(0) && receiveAmount.gt(0) &&
             this.props.userAddress !== '' &&
-            debitBalance >= debitToken.amount && debitAllowance >= debitToken.amount) {
+            debitBalance.gte(debitToken.amount) && debitAllowance.gte(debitToken.amount)) {
             const didSignSuccessfully = await this.signTransactionAsync();
             if (didSignSuccessfully) {
                 this.setState({
@@ -293,8 +293,8 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';
-                utils.consoleLog(`Unexpected error occured: Invalid signatureData received:
-                                  ${JSON.stringify(signatureData)}`);
+                utils.consoleLog(`Unexpected error occured: Order validation failed:
+                                  ${validationResult.errors}`);
             }
         } catch (err) {
             const errMsg = '' + err;

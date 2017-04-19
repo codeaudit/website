@@ -6,8 +6,10 @@ import {Toggle} from 'material-ui';
 import {Token, BalanceErrs} from 'ts/types';
 import {utils} from 'ts/utils/utils';
 import {errorReporter} from 'ts/utils/error_reporter';
+import {Ox} from 'ts/utils/Ox';
+import BigNumber = require('bignumber.js');
 
-const DEFAULT_ALLOWANCE_AMOUNT = 1000000;
+const DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS = 1000000;
 
 interface AllowanceToggleProps {
     blockchain: Blockchain;
@@ -19,7 +21,7 @@ interface AllowanceToggleProps {
 
 interface AllowanceToggleState {
     isSpinnerVisible: boolean;
-    prevAllowance: number;
+    prevAllowance: BigNumber;
 }
 
 export class AllowanceToggle extends React.Component<AllowanceToggleProps, AllowanceToggleState> {
@@ -31,7 +33,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
         };
     }
     public componentWillReceiveProps(nextProps: AllowanceToggleProps) {
-        if (nextProps.token.allowance !== this.state.prevAllowance) {
+        if (!nextProps.token.allowance.eq(this.state.prevAllowance)) {
             this.setState({
                 isSpinnerVisible: false,
                 prevAllowance: nextProps.token.allowance,
@@ -69,12 +71,13 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
         // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
         // Any edits to this hack should include changes to the `isAllowanceSet` method below
         // TODO: Investigate root cause for why allowance cannot be set to 0
-        let newAllowanceAmount = 1;
+        let newAllowanceAmountInUnits = 1;
         if (!this.isAllowanceSet(assetToken)) {
-            newAllowanceAmount = DEFAULT_ALLOWANCE_AMOUNT;
+            newAllowanceAmountInUnits = DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS;
         }
         try {
-            await this.props.blockchain.setExchangeAllowanceAsync(this.props.token, newAllowanceAmount);
+            const amountInBaseUnits = Ox.toBaseUnitAmount(newAllowanceAmountInUnits, this.props.token.decimals);
+            await this.props.blockchain.setExchangeAllowanceAsync(this.props.token, amountInBaseUnits);
         } catch (err) {
             this.setState({
                 isSpinnerVisible: false,
@@ -90,6 +93,6 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
         }
     }
     private isAllowanceSet(token: Token) {
-        return token.allowance !== 0 && token.allowance !== 1;
+        return !token.allowance.eq(0) && !token.allowance.eq(1);
     }
 }

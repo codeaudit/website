@@ -11,6 +11,7 @@ import {
     DemoAllProps as DemoComponentAllProps,
     DemoPassedProps as DemoComponentPassedProps,
 } from 'ts/components/demo';
+import BigNumber = require('bignumber.js');
 
 interface MapStateToProps {
     blockchainErr: BlockchainErrs;
@@ -34,15 +35,19 @@ interface ConnectedDispatch {
 const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): ConnectedState => {
     const receiveSymbol = state.sideToAssetToken[Side.receive].symbol;
     const depositSymbol = state.sideToAssetToken[Side.deposit].symbol;
+    const receiveAmount = !_.isUndefined(state.sideToAssetToken[Side.receive].amount) ?
+                          state.sideToAssetToken[Side.receive].amount : new BigNumber(0);
+    const depositAmount = !_.isUndefined(state.sideToAssetToken[Side.deposit].amount) ?
+                          state.sideToAssetToken[Side.deposit].amount : new BigNumber(0);
     const hashData = {
-        depositAmount: state.sideToAssetToken[Side.deposit].amount,
+        depositAmount,
         depositTokenContractAddr: state.tokenBySymbol[depositSymbol].address,
         feeRecipientAddress: constants.FEE_RECIPIENT_ADDRESS,
         makerFee: constants.MAKER_FEE,
         orderExpiryTimestamp: state.orderExpiryTimestamp,
         orderMakerAddress: state.userAddress,
         orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : constants.NULL_ADDRESS,
-        receiveAmount: state.sideToAssetToken[Side.receive].amount,
+        receiveAmount,
         receiveTokenContractAddr: state.tokenBySymbol[receiveSymbol].address,
         takerFee: constants.TAKER_FEE,
     };

@@ -14,11 +14,12 @@ import {orderSchema} from 'ts/schemas/order_schema';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Blockchain} from 'ts/blockchain';
 import {errorReporter} from 'ts/utils/error_reporter';
+import BigNumber = require('bignumber.js');
 
 interface FillOrderProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
-    orderFillAmount: number;
+    orderFillAmount: BigNumber;
     userAddress: string;
     tokenBySymbol: TokenBySymbol;
     triggerMenuClick: (menuItemValue: MenuItemValue) => void;
@@ -51,11 +52,11 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const symbols = _.keys(this.props.tokenBySymbol);
         const hintSideToAssetToken = {
             [Side.deposit]: {
-                amount: 35,
+                amount: new BigNumber(35),
                 symbol: symbols[0],
             },
             [Side.receive]: {
-                amount: 89,
+                amount: new BigNumber(89),
                 symbol: symbols[1],
             },
         };
@@ -116,6 +117,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                             orderTakerAddress={orderTaker}
                             orderMakerAddress={this.state.parsedOrder.maker}
                             sideToAssetToken={this.state.parsedOrder.assetTokens}
+                            tokenBySymbol={this.props.tokenBySymbol}
                         />
                         <div className="center pt3 pb2">
                             Expires: {expiryDate} UTC
@@ -207,15 +209,19 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             return false;
         }
 
-        const depositToken = this.state.parsedOrder.assetTokens[Side.deposit];
-        const receiveToken = this.state.parsedOrder.assetTokens[Side.receive];
-        const orderHash = this.state.parsedOrder.signature.hash;
+        const parsedOrder = this.state.parsedOrder;
+        const depositAssetToken = parsedOrder.assetTokens[Side.deposit];
+        const receiveAssetToken = parsedOrder.assetTokens[Side.receive];
+        const receiveToken = this.props.tokenBySymbol[receiveAssetToken.symbol];
+        const orderHash = parsedOrder.signature.hash;
         const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
-        const amountLeftToFill = receiveToken.amount - amountAlreadyFilled;
-        const specifiedTakerAddressIfExists = this.state.parsedOrder.taker;
+        const amountLeftToFill = receiveAssetToken.amount.minus(amountAlreadyFilled);
+        const specifiedTakerAddressIfExists = parsedOrder.taker;
         const fillAmount = this.props.orderFillAmount;
         const takerAddress = this.props.userAddress;
-        const takerToken = this.props.tokenBySymbol[receiveToken.symbol];
+        const takerToken = this.props.tokenBySymbol[receiveAssetToken.symbol];
+        const isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker,
+                                                                                   parsedOrder.signature);
         if (_.isUndefined(takerAddress)) {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
@@ -223,14 +229,17 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const currentDate = new Date();
         const currentUnixTimestamp = currentDate.getTime() / 1000;
         let globalErrMsg = '';
-        if (fillAmount < 0 || fillAmount > takerToken.balance || fillAmount > takerToken.allowance) {
+        if (fillAmount.lt(0) || fillAmount.gt(takerToken.balance) || fillAmount.gt(takerToken.allowance)) {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
             globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;
         } else if (this.state.parsedOrder.expiry < currentUnixTimestamp) {
             globalErrMsg = `This order has expired`;
-        } else if (fillAmount > amountLeftToFill) {
-            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFill}${receiveToken.symbol}`;
+        } else if (fillAmount.gt(amountLeftToFill)) {
+            const amountLeftToFillInUnits = Ox.toUnitAmount(amountLeftToFill, receiveToken.decimals);
+            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${receiveAssetToken.symbol}`;
+        } else if (!isValidSignature) {
+            globalErrMsg = 'Order signature is not valid';
         }
         if (globalErrMsg !== '') {
             this.setState({
@@ -242,10 +251,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         try {
             await this.props.blockchain.fillOrderAsync(this.state.parsedOrder.maker,
                                                        this.state.parsedOrder.taker,
-                                                       this.props.tokenBySymbol[depositToken.symbol].address,
-                                                       this.props.tokenBySymbol[receiveToken.symbol].address,
-                                                       depositToken.amount,
-                                                       receiveToken.amount,
+                                                       this.props.tokenBySymbol[depositAssetToken.symbol].address,
+                                                       this.props.tokenBySymbol[receiveAssetToken.symbol].address,
+                                                       depositAssetToken.amount,
+                                                       receiveAssetToken.amount,
                                                        this.state.parsedOrder.expiry,
                                                        this.props.orderFillAmount,
                                                        this.state.parsedOrder.signature,

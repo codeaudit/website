@@ -3,13 +3,13 @@ import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {TokenBySymbol, Token, BlockchainErrs, BalanceErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
+import {Ox} from 'ts/utils/Ox';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
-import ReactTooltip = require('react-tooltip');
 import {
     Dialog,
     Divider,
@@ -22,6 +22,8 @@ import {
     TableHeaderColumn,
     TableRowColumn,
 } from 'material-ui';
+import ReactTooltip = require('react-tooltip');
+import BigNumber = require('bignumber.js');
 
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
@@ -158,7 +160,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     <TableRowColumn>
                         {this.renderTokenName(token)}
                     </TableRowColumn>
-                    <TableRowColumn>{token.balance.toFixed(PRECISION)} {token.symbol}</TableRowColumn>
+                    <TableRowColumn>{this.renderAmount(token.balance, token.decimals)} {token.symbol}</TableRowColumn>
                     <TableRowColumn>
                         <AllowanceToggle
                             blockchain={this.props.blockchain}
@@ -181,6 +183,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 </TableRow>
             );
         });
+    }
+    private renderAmount(amount: BigNumber, decimals: number) {
+      const unitAmount = Ox.toUnitAmount(amount, decimals);
+      return unitAmount.toNumber().toFixed(PRECISION);
     }
     private renderTokenName(token: Token) {
         const tooltipId = `tooltip-${token.address}`;
