@@ -286,7 +286,7 @@ export class Blockchain {
                     balance,
                     name,
                     symbol,
-                    decimals,
+                    decimals: decimals.toNumber(),
                 });
             }
             this.dispatcher.updateTokenBySymbol(tokens);
