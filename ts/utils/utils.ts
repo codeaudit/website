@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
-import {SideToAssetToken, SignatureData, Order, Side} from 'ts/types';
+import {SideToAssetToken, SignatureData, Order, Side, TokenBySymbol, OrderParty} from 'ts/types';
 import deepEqual = require('deep-equal');
 
 export const utils = {
@@ -43,15 +43,34 @@ export const utils = {
         const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
         return formattedDate;
     },
-    generateOrder(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
+    generateOrder(sideToAssetToken: any, orderExpiryTimestamp: number,
                   orderTakerAddress: string, orderMakerAddress: string,
-                  signatureData: SignatureData): Order {
+                  signatureData: SignatureData, tokenBySymbol: TokenBySymbol): Order {
+        const makerToken = tokenBySymbol[sideToAssetToken[Side.deposit].symbol];
+        const takerToken = tokenBySymbol[sideToAssetToken[Side.receive].symbol];
         const order = {
-            assetTokens: sideToAssetToken,
-            expiry: orderExpiryTimestamp,
-            maker: orderMakerAddress,
+            maker: {
+                address: orderMakerAddress,
+                token: {
+                    name: makerToken.name,
+                    symbol: makerToken.symbol,
+                    decimals: makerToken.decimals,
+                    address: makerToken.address,
+                },
+                amount: sideToAssetToken[Side.deposit].amount.toString(),
+            },
+            taker: {
+                address: orderTakerAddress,
+                token: {
+                    name: takerToken.name,
+                    symbol: takerToken.symbol,
+                    decimals: takerToken.decimals,
+                    address: takerToken.address,
+                },
+                amount: sideToAssetToken[Side.receive].amount.toString(),
+            },
+            expiration: orderExpiryTimestamp,
             signature: signatureData,
-            taker: orderTakerAddress,
         };
         return order;
     },

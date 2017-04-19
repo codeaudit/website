@@ -22,6 +22,8 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     public render() {
         const depositAssetToken = this.props.sideToAssetToken[Side.deposit];
         const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
+        const depositToken = this.props.tokenBySymbol[depositAssetToken.symbol];
+        const receiveToken = this.props.tokenBySymbol[receiveAssetToken.symbol];
         return (
             <div>
                 <div className="clearfix">

@@ -1,12 +1,11 @@
 export const orderSchema = {
     id: '/Order',
     properties: {
-        assetTokens: {$ref: '/SideToAssetToken'},
-        expiry: {type: 'number'},
-        maker: {type: 'string'},
+        maker: {$ref: '/OrderTaker'},
+        taker: {$ref: '/OrderTaker'},
         signature: {$ref: '/SignatureData'},
-        taker: {type: 'string'},
+        expiration: {type: 'number'},
     },
-    required: ['assetTokens', 'expiry', 'signature', 'taker', 'maker'],
+    required: ['maker', 'taker', 'signature', 'expiration'],
     type: 'object',
 };

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import {Fill} from 'ts/types';
 import {localStorage} from 'ts/local_storage/local_storage';
 import ethUtil = require('ethereumjs-util');
+import BigNumber = require('bignumber.js');
 
 const FILLS_KEY = 'fills';
 const FILLS_LATEST_BLOCK = 'fillsLatestBlock';
@@ -26,6 +27,11 @@ export const tradeHistoryStorage = {
             return {};
         }
         const userFillsByHash = JSON.parse(userFillsJSONString);
+        _.each(userFillsByHash, (fill, hash) => {
+          fill.valueT = new BigNumber(fill.valueT);
+          fill.valueM = new BigNumber(fill.valueM);
+          fill.filledValueM = new BigNumber(fill.filledValueM);
+        });
         return userFillsByHash;
     },
     clearUserFillsByHash(userAddress: string) {

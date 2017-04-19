@@ -3,8 +3,10 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
+import {Ox} from 'ts/utils/Ox';
 import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
 import {RequiredLabel} from 'ts/components/ui/required_label';
+import BigNumber = require('bignumber.js');
 
 interface AmountInputProps {
     label?: string;
@@ -28,9 +30,10 @@ interface AmountInputState {
 export class AmountInput extends React.Component<AmountInputProps, AmountInputState> {
     constructor(props: AmountInputProps) {
         super(props);
-        const intialAmount = this.props.assetToken.amount;
+        const initialAmount = _.isUndefined(props.assetToken.amount) ? '' :
+                              Ox.toUnitAmount(props.assetToken.amount, props.token.decimals).toString();
         this.state = {
-            amount: _.isUndefined(intialAmount) ? '' : intialAmount.toString(),
+            amount: initialAmount,
             errMsg: '',
         };
     }
@@ -77,20 +80,22 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         });
         const assetToken = this.props.assetToken;
         if (isAmountNumeric) {
-            assetToken.amount = Number(amount);
+            assetToken.amount = Ox.toBaseUnitAmount(Number(amount), this.props.token.decimals);
         } else {
             assetToken.amount = undefined;
         }
         this.props.updateChosenAssetToken(this.props.side, assetToken);
     }
-    private getErrMsg(balance: number, allowance: number, amount: string): (string | React.ReactNode) {
+    private getErrMsg(balance: BigNumber, allowance: BigNumber, amount: string): (string | React.ReactNode) {
         const isAmountNumeric = utils.isNumeric(amount);
+        const amountInSmallestUnits = Ox.toBaseUnitAmount(Number(amount), this.props.token.decimals);
         let errMsg: (string | React.ReactNode) = '';
         if (!isAmountNumeric && amount !== '') {
             errMsg = 'Must be a number';
         } else if (amount === '0') {
             errMsg = 'Cannot be zero';
-        } else if (this.props.shouldCheckBalanceAndAllowance && balance < Number(amount)) {
+        } else if (this.props.shouldCheckBalanceAndAllowance && isAmountNumeric &&
+                   balance.lt(amountInSmallestUnits)) {
             errMsg = (
                 <span>
                     Insuffient balance.{' '}
@@ -102,7 +107,8 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     </a>
                 </span>
             );
-        } else if (this.props.shouldCheckBalanceAndAllowance && allowance < Number(amount)) {
+        } else if (this.props.shouldCheckBalanceAndAllowance && isAmountNumeric &&
+                   allowance.lt(amountInSmallestUnits)) {
             errMsg = (
                 <span>
                     Insuffient allowance.{' '}

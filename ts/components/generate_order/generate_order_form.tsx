@@ -218,6 +218,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         orderTakerAddress={this.props.orderTakerAddress}
                         orderMakerAddress={this.props.userAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
+                        tokenBySymbol={this.props.tokenBySymbol}
                     />
                 </Dialog>
             </div>
@@ -289,7 +290,8 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             const order = utils.generateOrder(this.props.sideToAssetToken,
                                                   this.props.orderExpiryTimestamp,
                                                   this.props.orderTakerAddress,
-                                                  this.props.userAddress, signatureData);
+                                                  this.props.userAddress, signatureData,
+                                                  this.props.tokenBySymbol);
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';

@@ -59,6 +59,7 @@ export interface Token {
     allowance?: BigNumber;
     decimals?: number;
 };
+
 export interface TokenBySymbol {
     [symbol: string]: Token;
 };
@@ -92,12 +93,22 @@ export interface HashData {
     takerFee: string;
 }
 
+export interface OrderParty {
+    address: string;
+    token: {
+        name: string;
+        symbol: string;
+        decimals: number;
+        address: string;
+    };
+    amount: string;
+}
+
 export interface Order {
-    assetTokens: SideToAssetToken;
-    expiry: number;
+    maker: OrderParty;
+    taker: OrderParty;
+    expiration: number;
     signature: SignatureData;
-    maker: string;
-    taker: string;
 }
 
 export interface Fill {

@@ -5,7 +5,7 @@ import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
 import {TextField, Paper} from 'material-ui';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
-import {SideToAssetToken, SignatureData, Order} from 'ts/types';
+import {SideToAssetToken, SignatureData, Order, TokenBySymbol} from 'ts/types';
 import {errorReporter} from 'ts/utils/error_reporter';
 
 interface OrderJSONProps {
@@ -14,6 +14,7 @@ interface OrderJSONProps {
     orderTakerAddress: string;
     orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
+    tokenBySymbol: TokenBySymbol;
 }
 
 interface OrderJSONState {}
@@ -22,7 +23,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
     public render() {
         const order = utils.generateOrder(this.props.sideToAssetToken,
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData);
+            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenBySymbol);
         const orderJSON = JSON.stringify(order);
         return (
             <div>
@@ -116,7 +117,7 @@ You can see and fill it here: ${shareLink}`);
     private getOrderUrl() {
         const order = utils.generateOrder(this.props.sideToAssetToken,
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData);
+            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenBySymbol);
         const orderJSONString = JSON.stringify(order);
         const orderUrl = `${constants.BASE_URL}/?order=${orderJSONString}`;
         return orderUrl;

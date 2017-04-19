@@ -101,23 +101,35 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         );
     }
     private renderVisualOrder() {
-        const assetToken = {
-            amount: this.props.orderFillAmount,
-            symbol: this.state.parsedOrder.assetTokens[Side.receive].symbol,
+        const takerToken = this.state.parsedOrder.taker.token;
+        const takerAssetToken = {
+            amount: new BigNumber(this.state.parsedOrder.taker.amount),
+            symbol: takerToken.symbol,
         };
-        const token = this.props.tokenBySymbol[assetToken.symbol];
-        const orderTaker = this.state.parsedOrder.taker !== '' ? this.state.parsedOrder.taker :
+        const fillToken = this.props.tokenBySymbol[takerToken.symbol];
+        const makerToken = this.state.parsedOrder.maker.token;
+        const makerAssetToken = {
+            amount: new BigNumber(this.state.parsedOrder.maker.amount),
+            symbol: makerToken.symbol,
+        };
+        const fillAssetToken = {
+            amount: this.props.orderFillAmount,
+            symbol: takerToken.symbol,
+        };
+        const orderTaker = this.state.parsedOrder.taker.address !== '' ? this.state.parsedOrder.taker.address :
                            this.props.userAddress;
-        const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.state.parsedOrder.expiry);
+        const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.state.parsedOrder.expiration);
         return (
             <div className="pt2 pb1">
                 <div className="px4">
                     <div className="px4 pt3">
                         <VisualOrder
                             orderTakerAddress={orderTaker}
-                            orderMakerAddress={this.state.parsedOrder.maker}
-                            sideToAssetToken={this.state.parsedOrder.assetTokens}
-                            tokenBySymbol={this.props.tokenBySymbol}
+                            orderMakerAddress={this.state.parsedOrder.maker.address}
+                            makerAssetToken={makerAssetToken}
+                            takerAssetToken={takerAssetToken}
+                            makerTokenDecimals={makerToken.decimals}
+                            takerTokenDecimals={takerToken.decimals}
                         />
                         <div className="center pt3 pb2">
                             Expires: {expiryDate} UTC
@@ -128,10 +140,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                     <AmountInput
                         label="Fill amount"
                         side={Side.receive}
-                        assetToken={assetToken}
+                        assetToken={fillAssetToken}
                         shouldCheckBalanceAndAllowance={true}
                         shouldShowIncompleteErrs={false} // TODO
-                        token={token}
+                        token={fillToken}
                         triggerMenuClick={this.props.triggerMenuClick}
                         updateChosenAssetToken={this.onFillAmountUpdated.bind(this)}
                     />
@@ -156,7 +168,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     private onFillOrderChanged(e: any) {
         const orderJSON = e.target.value;
         let orderJSONErrMsg = '';
-        let parsedOrder;
+        let parsedOrder: Order;
         try {
             const order = JSON.parse(orderJSON);
             const validationResult = this.validator.validate(order, orderSchema);
@@ -168,16 +180,13 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             parsedOrder = order;
 
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
-            const depositToken = this.props.tokenBySymbol[parsedOrder.assetTokens[Side.deposit].symbol];
-            const receiveToken = this.props.tokenBySymbol[parsedOrder.assetTokens[Side.receive].symbol];
-            const depositAmount = parsedOrder.assetTokens[Side.deposit].amount;
-            const receiveAmount = parsedOrder.assetTokens[Side.receive].amount;
-            const taker = parsedOrder.taker !== '' ? parsedOrder.taker : constants.NULL_ADDRESS;
-            const orderHash = Ox.getOrderHash(exchangeContractAddr, parsedOrder.maker,
-                            taker, depositToken.address,
-                            receiveToken.address, constants.FEE_RECIPIENT_ADDRESS,
-                            depositAmount, receiveAmount, constants.MAKER_FEE,
-                            constants.TAKER_FEE, parsedOrder.expiry);
+            const makerAmount = new BigNumber(parsedOrder.maker.amount);
+            const takerAmount = new BigNumber(parsedOrder.taker.amount);
+            const orderHash = Ox.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
+                            parsedOrder.taker.address, parsedOrder.maker.token.address,
+                            parsedOrder.taker.token.address, constants.FEE_RECIPIENT_ADDRESS,
+                            makerAmount, takerAmount, constants.MAKER_FEE,
+                            constants.TAKER_FEE, parsedOrder.expiration);
             if (orderHash !== parsedOrder.signature.hash) {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
                 parsedOrder = undefined;
@@ -210,17 +219,24 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         }
 
         const parsedOrder = this.state.parsedOrder;
-        const depositAssetToken = parsedOrder.assetTokens[Side.deposit];
-        const receiveAssetToken = parsedOrder.assetTokens[Side.receive];
-        const receiveToken = this.props.tokenBySymbol[receiveAssetToken.symbol];
+        const makerTokenSymbol = parsedOrder.maker.token.symbol;
+        const takerTokenSymbol = parsedOrder.taker.token.symbol;
+        const depositAssetToken = {
+            symbol: makerTokenSymbol,
+            amount: new BigNumber(parsedOrder.maker.amount),
+        };
+        const receiveAssetToken = {
+            symbol: takerTokenSymbol,
+            amount: new BigNumber(parsedOrder.taker.amount),
+        };
         const orderHash = parsedOrder.signature.hash;
         const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
         const amountLeftToFill = receiveAssetToken.amount.minus(amountAlreadyFilled);
-        const specifiedTakerAddressIfExists = parsedOrder.taker;
+        const specifiedTakerAddressIfExists = parsedOrder.taker.address;
         const fillAmount = this.props.orderFillAmount;
         const takerAddress = this.props.userAddress;
-        const takerToken = this.props.tokenBySymbol[receiveAssetToken.symbol];
-        const isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker,
+        const takerToken = this.props.tokenBySymbol[takerTokenSymbol];
+        const isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker.address,
                                                                                    parsedOrder.signature);
         if (_.isUndefined(takerAddress)) {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
@@ -233,10 +249,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
             globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;
-        } else if (this.state.parsedOrder.expiry < currentUnixTimestamp) {
+        } else if (this.state.parsedOrder.expiration < currentUnixTimestamp) {
             globalErrMsg = `This order has expired`;
+        } else if (amountLeftToFill.eq(0)) {
+            globalErrMsg = 'This order has already been completely filled';
         } else if (fillAmount.gt(amountLeftToFill)) {
-            const amountLeftToFillInUnits = Ox.toUnitAmount(amountLeftToFill, receiveToken.decimals);
+            const amountLeftToFillInUnits = Ox.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
             globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${receiveAssetToken.symbol}`;
         } else if (!isValidSignature) {
             globalErrMsg = 'Order signature is not valid';
@@ -249,15 +267,15 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         }
 
         try {
-            await this.props.blockchain.fillOrderAsync(this.state.parsedOrder.maker,
-                                                       this.state.parsedOrder.taker,
-                                                       this.props.tokenBySymbol[depositAssetToken.symbol].address,
-                                                       this.props.tokenBySymbol[receiveAssetToken.symbol].address,
+            await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
+                                                       parsedOrder.taker.address,
+                                                       this.props.tokenBySymbol[makerTokenSymbol].address,
+                                                       this.props.tokenBySymbol[takerTokenSymbol].address,
                                                        depositAssetToken.amount,
                                                        receiveAssetToken.amount,
-                                                       this.state.parsedOrder.expiry,
+                                                       parsedOrder.expiration,
                                                        this.props.orderFillAmount,
-                                                       this.state.parsedOrder.signature,
+                                                       parsedOrder.signature,
                                                    );
             return true;
         } catch (err) {
