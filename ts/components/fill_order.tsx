@@ -113,13 +113,15 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         );
     }
     private renderVisualOrder() {
-        const takerToken = this.state.parsedOrder.taker.token;
+        const takerTokenAddress = this.state.parsedOrder.taker.token.address;
+        const takerToken = this.props.tokenByAddress[takerTokenAddress];
         const takerAssetToken = {
             amount: new BigNumber(this.state.parsedOrder.taker.amount),
             symbol: takerToken.symbol,
         };
         const fillToken = this.props.tokenByAddress[takerToken.address];
-        const makerToken = this.state.parsedOrder.maker.token;
+        const makerTokenAddress = this.state.parsedOrder.maker.token.address;
+        const makerToken = this.props.tokenByAddress[makerTokenAddress];
         const makerAssetToken = {
             amount: new BigNumber(this.state.parsedOrder.maker.amount),
             symbol: makerToken.symbol,
