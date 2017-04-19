@@ -209,7 +209,10 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         <div className="col col-10">
                             <Paper className="mb3">
                                 <div className="py2">
-                                    {visibleComponent}
+                                    {this.props.blockchainIsLoaded ?
+                                        visibleComponent :
+                                        this.renderLoading()
+                                    }
                                 </div>
                             </Paper>
                         </div>
@@ -225,7 +228,20 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             </div>
         );
     }
+    private renderLoading() {
+        return (
+            <div className="pt4" style={{height: 500}}>
+                <Paper className="mx-auto" style={{width: 417}}>
+                    <img className="p1" src="/images/loading.gif" width={400}  />
+                    <div className="center" style={{paddingBottom: 11}}>Connecting to the blockchain...</div>
+                </Paper>
+            </div>
+        );
+    }
     private triggerMenuClick(selectedMenuItem: MenuItemValue) {
+        if (!this.props.blockchainIsLoaded) {
+            return; // Ignore menu click
+        }
         this.setState({
             selectedMenuItem,
         });
