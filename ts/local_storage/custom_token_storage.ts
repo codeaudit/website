@@ -17,7 +17,7 @@ export const customTokenStorage = {
     getCustomTokensByNetworkId(): CustomTokensByNetworkId {
         const customTokensJSONString = localStorage.getItemIfExists(CUSTOM_TOKENS_KEY);
         if (_.isEmpty(customTokensJSONString)) {
-            return [];
+            return {};
         }
         const customTokensByNetworkId = JSON.parse(customTokensJSONString);
         return customTokensByNetworkId;
