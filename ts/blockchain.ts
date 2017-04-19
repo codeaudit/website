@@ -302,6 +302,15 @@ export class Blockchain {
             return [];
         }
     }
+    private async getCustomTokensAsync() {
+        const customTokens = customTokenStorage.getCustomTokens(this.networkId);
+        for (const customToken of customTokens) {
+            const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(customToken.address);
+            customToken.balance = balance;
+            customToken.allowance = allowance;
+        }
+        return customTokens;
+    }
     private async onPageLoadInitFireAndForgetAsync() {
         await this.onPageLoadAsync(); // wait for page to load
 
@@ -333,7 +342,7 @@ export class Blockchain {
         }
         this.dispatcher.clearTokenByAddress();
         let tokens = await this.getTokenRegistryTokensAsync();
-        const customTokens = customTokenStorage.getCustomTokens(this.networkId);
+        const customTokens = await this.getCustomTokensAsync();
         tokens = [...tokens, ...customTokens];
         this.dispatcher.updateTokenByAddress(tokens);
         this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, tokens[0].address);
