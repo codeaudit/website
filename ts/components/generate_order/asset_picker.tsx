@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
-import {Token, Side, AssetToken, TokenBySymbol} from 'ts/types';
+import {Token, Side, AssetToken, TokenByAddress} from 'ts/types';
 
 interface AssetPickerProps {
     isOpen: boolean;
@@ -9,11 +9,11 @@ interface AssetPickerProps {
     currentAssetToken: AssetToken;
     onAssetChosen: (side: Side, chosenAssetToken: AssetToken) => void;
     onCustomAssetChosen?: () => void;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
 }
 
 interface AssetPickerState {
-    hoveredSymbol: string | undefined;
+    hoveredAddress: string | undefined;
 }
 
 const styles = {
@@ -32,7 +32,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
     constructor(props: AssetPickerProps) {
         super(props);
         this.state = {
-            hoveredSymbol: undefined,
+            hoveredAddress: undefined,
         };
     }
     public render() {
@@ -55,23 +55,23 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
         );
     }
     private renderGridTiles() {
-        const gridTiles = _.map(this.props.tokenBySymbol, (token: Token, symbol: string) => {
+        const gridTiles = _.map(this.props.tokenByAddress, (token: Token, address: string) => {
             const assetToken: AssetToken = {
-                symbol,
+                address,
                 amount: this.props.currentAssetToken.amount,
             };
-            const isHovered = this.state.hoveredSymbol === symbol;
+            const isHovered = this.state.hoveredAddress === address;
             const tileStyles = {
                 cursor: 'pointer',
                 opacity: isHovered ? 0.8 : 1,
             };
             return (
                 <div
-                    key={symbol}
+                    key={address}
                     style={tileStyles}
                     onClick={this.onChooseAssetAndClose.bind(this, assetToken)}
-                    onMouseEnter={this.onToggleHover.bind(this, symbol, true)}
-                    onMouseLeave={this.onToggleHover.bind(this, symbol, false)}
+                    onMouseEnter={this.onToggleHover.bind(this, address, true)}
+                    onMouseLeave={this.onToggleHover.bind(this, address, false)}
                 >
                     <GridTile
                         style={{height: 160}}
@@ -112,10 +112,10 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
         }
         return gridTiles;
     }
-    private onToggleHover(symbol: string, isHovered: boolean) {
-        const hoveredSymbol = isHovered ? symbol : undefined;
+    private onToggleHover(address: string, isHovered: boolean) {
+        const hoveredAddress = isHovered ? address : undefined;
         this.setState({
-            hoveredSymbol,
+            hoveredAddress,
         });
     }
     private onCloseDialog() {

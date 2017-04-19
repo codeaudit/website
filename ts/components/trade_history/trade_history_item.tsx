@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {Direction, SideToAssetToken, Side, AssetToken, TokenBySymbol} from 'ts/types';
+import {Direction, SideToAssetToken, Side, AssetToken, TokenByAddress} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
 import {Ox} from 'ts/utils/Ox';
 
@@ -13,7 +13,7 @@ interface TradeHistoryItemProps {
     orderTakerAddress: string;
     orderMakerAddress: string;
     sideToAssetToken: SideToAssetToken;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
 }
 
 interface TradeHistoryItemState {}
@@ -22,8 +22,8 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     public render() {
         const depositAssetToken = this.props.sideToAssetToken[Side.deposit];
         const receiveAssetToken = this.props.sideToAssetToken[Side.receive];
-        const depositToken = this.props.tokenBySymbol[depositAssetToken.symbol];
-        const receiveToken = this.props.tokenBySymbol[receiveAssetToken.symbol];
+        const depositToken = this.props.tokenByAddress[depositAssetToken.address];
+        const receiveToken = this.props.tokenByAddress[receiveAssetToken.address];
         return (
             <div>
                 <div className="clearfix">
@@ -60,9 +60,10 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     }
     private renderAmount(assetToken: AssetToken, decimals: number) {
         const unitAmount = Ox.toUnitAmount(assetToken.amount, decimals);
+        const token = this.props.tokenByAddress[assetToken.address];
         return (
             <div style={{fontSize: 13}}>
-                {unitAmount.toNumber().toFixed(PRECISION)} {assetToken.symbol}
+                {unitAmount.toNumber().toFixed(PRECISION)} {token.symbol}
             </div>
         );
     }

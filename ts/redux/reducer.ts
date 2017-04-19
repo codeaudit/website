@@ -8,12 +8,14 @@ import {
     Direction,
     BlockchainErrs,
     SignatureData,
-    TokenBySymbol,
+    TokenByAddress,
     Order,
     Action,
     ActionTypes,
 } from 'ts/types';
-import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
+import * as DummyTokenAArtifacts from '../contracts/DummyTokenA.json';
+import * as DummyTokenBArtifacts from '../contracts/DummyTokenB.json';
+import * as DummyEtherTokenArtifacts from '../contracts/DummyEtherToken.json';
 import BigNumber = require('bignumber.js');
 
 export interface State {
@@ -27,14 +29,13 @@ export interface State {
     orderSignatureData: SignatureData;
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     userAddress: string;
     userEtherBalance: number;
     // Note: cache of supplied orderJSON in fill order step. Do not use for anything else.
     userSuppliedOrderCache: Order;
 };
 
-const tokenSymbols = _.keys(constants.iconUrlBySymbol);
 const INITIAL_STATE: State = {
     blockchainErr: '',
     blockchainIsLoaded: false,
@@ -51,32 +52,14 @@ const INITIAL_STATE: State = {
     orderTakerAddress: '',
     shouldBlockchainErrDialogBeOpen: false,
     sideToAssetToken: {
-        [Side.deposit]: {
-            symbol: tokenSymbols[0],
-        },
-        [Side.receive]: {
-            symbol: tokenSymbols[1],
-        },
+        [Side.deposit]: {},
+        [Side.receive]: {},
     },
-    tokenBySymbol: getInitialTokenBySymbol(),
+    tokenByAddress: {},
     userAddress: '',
     userEtherBalance: 0,
     userSuppliedOrderCache: undefined,
 };
-
-function getInitialTokenBySymbol() {
-    const initialTokenBySymbol = _.reduce(constants.iconUrlBySymbol, (result, iconUrl, symbol) => {
-        result[symbol] = {
-            iconUrl,
-        };
-        return result;
-    }, Object.create(null));
-    const customTokens = customTokenStorage.getCustomTokens();
-    _.each(customTokens, (token) => {
-        initialTokenBySymbol[token.symbol] = token;
-    });
-    return initialTokenBySymbol;
-}
 
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
@@ -101,22 +84,27 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 userSuppliedOrderCache: action.data,
             });
 
-        case ActionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL:
-            const newTokenBySymbol = state.tokenBySymbol;
-            newTokenBySymbol[action.data.symbol] = action.data;
+        case ActionTypes.CLEAR_TOKEN_BY_ADDRESS:
             return _.assign({}, state, {
-                tokenBySymbol: newTokenBySymbol,
+                tokenByAddress: {},
             });
 
-        case ActionTypes.UPDATE_TOKEN_BY_SYMBOL:
-            const tokenBySymbol = state.tokenBySymbol;
+        case ActionTypes.ADD_TOKEN_TO_TOKEN_BY_ADDRESS:
+            const newTokenByAddress = state.tokenByAddress;
+            newTokenByAddress[action.data.address] = action.data;
+            return _.assign({}, state, {
+                tokenByAddress: newTokenByAddress,
+            });
+
+        case ActionTypes.UPDATE_TOKEN_BY_ADDRESS:
+            const tokenByAddress = state.tokenByAddress;
             const tokens = action.data;
             _.each(tokens, (token) => {
-                const updatedToken = _.assign({}, tokenBySymbol[token.symbol], token);
-                tokenBySymbol[token.symbol] = updatedToken;
+                const updatedToken = _.assign({}, tokenByAddress[token.address], token);
+                tokenByAddress[token.address] = updatedToken;
             });
             return _.assign({}, state, {
-                tokenBySymbol,
+                tokenByAddress,
             });
 
         case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA:
@@ -154,6 +142,16 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN:
             newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
                 [action.data.side]: action.data.token,
+            });
+            return _.assign({}, state, {
+                sideToAssetToken: newSideToAssetToken,
+            });
+
+        case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN_ADDRESS:
+            const newAssetToken = state.sideToAssetToken[action.data.side];
+            newAssetToken.address = action.data.address;
+            newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
+                [action.data.side]: newAssetToken,
             });
             return _.assign({}, state, {
                 sideToAssetToken: newSideToAssetToken,

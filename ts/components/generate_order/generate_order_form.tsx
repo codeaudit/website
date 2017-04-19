@@ -26,7 +26,7 @@ import {
     SignatureData,
     HashData,
     MenuItemValue,
-    TokenBySymbol,
+    TokenByAddress,
     BlockchainErrs,
 } from 'ts/types';
 
@@ -47,7 +47,7 @@ interface GenerateOrderFormProps {
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     triggerMenuClick: (menuItemValue: MenuItemValue) => void;
 }
 
@@ -86,10 +86,10 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
     }
     public render() {
         const dispatcher = this.props.dispatcher;
-        const depositTokenSymbol = this.props.sideToAssetToken[Side.deposit].symbol;
-        const depositToken = this.props.tokenBySymbol[depositTokenSymbol];
-        const receiveTokenSymbol = this.props.sideToAssetToken[Side.receive].symbol;
-        const receiveToken = this.props.tokenBySymbol[receiveTokenSymbol];
+        const depositTokenAddress = this.props.sideToAssetToken[Side.deposit].address;
+        const depositToken = this.props.tokenByAddress[depositTokenAddress];
+        const receiveTokenAddress = this.props.sideToAssetToken[Side.receive].address;
+        const receiveToken = this.props.tokenByAddress[receiveTokenAddress];
         const takerExplanation = `If a taker is specified, only they are allowed to fill this order.
                                   If no taker is specified, anyone is able to fill it.`;
         return (
@@ -123,7 +123,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     side={Side.deposit}
                                     assetToken={this.props.sideToAssetToken[Side.deposit]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                                    tokenBySymbol={this.props.tokenBySymbol}
+                                    tokenByAddress={this.props.tokenByAddress}
                                 />
                             </div>
                             <div className="col col-2">
@@ -142,7 +142,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     side={Side.receive}
                                     assetToken={this.props.sideToAssetToken[Side.receive]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                                    tokenBySymbol={this.props.tokenBySymbol}
+                                    tokenByAddress={this.props.tokenByAddress}
                                 />
                             </div>
                         </div>
@@ -218,7 +218,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         orderTakerAddress={this.props.orderTakerAddress}
                         orderMakerAddress={this.props.userAddress}
                         sideToAssetToken={this.props.sideToAssetToken}
-                        tokenBySymbol={this.props.tokenBySymbol}
+                        tokenByAddress={this.props.tokenByAddress}
                     />
                 </Dialog>
             </div>
@@ -237,8 +237,8 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
 
         // Check if all required inputs were supplied
         const debitToken = this.props.sideToAssetToken[Side.deposit];
-        const debitBalance = this.props.tokenBySymbol[debitToken.symbol].balance;
-        const debitAllowance = this.props.tokenBySymbol[debitToken.symbol].allowance;
+        const debitBalance = this.props.tokenByAddress[debitToken.address].balance;
+        const debitAllowance = this.props.tokenByAddress[debitToken.address].allowance;
         const receiveAmount = this.props.sideToAssetToken[Side.receive].amount;
         if (!_.isUndefined(debitToken.amount) && !_.isUndefined(receiveAmount) &&
             debitToken.amount.gt(0) && receiveAmount.gt(0) &&
@@ -291,7 +291,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                                   this.props.orderExpiryTimestamp,
                                                   this.props.orderTakerAddress,
                                                   this.props.userAddress, signatureData,
-                                                  this.props.tokenBySymbol);
+                                                  this.props.tokenByAddress);
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';

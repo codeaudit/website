@@ -10,7 +10,7 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
-    TokenBySymbol,
+    TokenByAddress,
     MenuItemValue,
     BlockchainErrs,
 } from 'ts/types';
@@ -30,7 +30,7 @@ interface ConnectedState {
     userAddress: string;
     orderTakerAddress: string;
     sideToAssetToken: SideToAssetToken;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
 }
 
 const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): ConnectedState => ({
@@ -40,7 +40,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     sideToAssetToken: state.sideToAssetToken,
-    tokenBySymbol: state.tokenBySymbol,
+    tokenByAddress: state.tokenByAddress,
     userAddress: state.userAddress,
 });
 

@@ -21,5 +21,5 @@ export const constants = {
         WETH: '/images/token_icons/ether.png',
         // FBTC: '/images/token_icons/btc.png',
         // FDGX: '/images/token_icons/digixdao.png',
-    },
+    } as {[symbol: string]: string},
 };

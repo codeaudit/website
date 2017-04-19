@@ -4,7 +4,15 @@ import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {Ox} from 'ts/utils/Ox';
 import {TextField, Paper, Divider} from 'material-ui';
-import {Side, TokenBySymbol, Order, MenuItemValue, AssetToken, BlockchainErrs} from 'ts/types';
+import {
+    Side,
+    TokenByAddress,
+    Order,
+    MenuItemValue,
+    AssetToken,
+    BlockchainErrs,
+    OrderToken,
+} from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import {VisualOrder} from 'ts/components/visual_order';
@@ -21,7 +29,7 @@ interface FillOrderProps {
     blockchainErr: BlockchainErrs;
     orderFillAmount: BigNumber;
     userAddress: string;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     initialOrder: Order;
     dispatcher: Dispatcher;
@@ -49,15 +57,15 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         this.validator = new Validator();
     }
     public render() {
-        const symbols = _.keys(this.props.tokenBySymbol);
+        const addresses = _.keys(this.props.tokenByAddress);
         const hintSideToAssetToken = {
             [Side.deposit]: {
                 amount: new BigNumber(35),
-                symbol: symbols[0],
+                address: addresses[0],
             },
             [Side.receive]: {
                 amount: new BigNumber(89),
-                symbol: symbols[1],
+                address: addresses[1],
             },
         };
         const hintOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
@@ -68,7 +76,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             v: 27,
         };
         const hintOrder = utils.generateOrder(hintSideToAssetToken, hintOrderExpiryTimestamp,
-                              '', '', hintSignatureData, this.props.tokenBySymbol);
+                              '', '', hintSignatureData, this.props.tokenByAddress);
         const hintOrderJSON = `${JSON.stringify(hintOrder, null, '\t').substring(0, 500)}...`;
         return (
             <div className="clearfix px4" style={{minHeight: 600}}>
@@ -90,6 +98,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         rows={4}
                         rowsMax={8}
                         underlineStyle={{display: 'none'}}
+                        textareaStyle={{marginTop: 0}}
                     />
                 </Paper>
                 <div>
@@ -107,7 +116,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             amount: new BigNumber(this.state.parsedOrder.taker.amount),
             symbol: takerToken.symbol,
         };
-        const fillToken = this.props.tokenBySymbol[takerToken.symbol];
+        const fillToken = this.props.tokenByAddress[takerToken.address];
         const makerToken = this.state.parsedOrder.maker.token;
         const makerAssetToken = {
             amount: new BigNumber(this.state.parsedOrder.maker.amount),
@@ -129,8 +138,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                             orderMakerAddress={this.state.parsedOrder.maker.address}
                             makerAssetToken={makerAssetToken}
                             takerAssetToken={takerAssetToken}
-                            makerTokenDecimals={makerToken.decimals}
-                            takerTokenDecimals={takerToken.decimals}
+                            makerToken={makerToken}
+                            takerToken={takerToken}
                         />
                         <div className="center pt3 pb2">
                             Expires: {expiryDate} UTC
@@ -192,7 +201,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
                 parsedOrder = undefined;
             } else {
-                // Update user supplied order cache so that it they navigate away from fill view
+                // Update user supplied order cache so that if they navigate away from fill view
                 // e.g to set a token allowance, when they come back, the fill order persists
                 this.props.dispatcher.updateUserSuppliedOrderCache(parsedOrder);
             }
@@ -220,14 +229,14 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         }
 
         const parsedOrder = this.state.parsedOrder;
-        const makerTokenSymbol = parsedOrder.maker.token.symbol;
-        const takerTokenSymbol = parsedOrder.taker.token.symbol;
+        const makerTokenAddress = parsedOrder.maker.token.address;
+        const takerTokenAddress = parsedOrder.taker.token.address;
         const depositAssetToken = {
-            symbol: makerTokenSymbol,
+            address: makerTokenAddress,
             amount: new BigNumber(parsedOrder.maker.amount),
         };
         const receiveAssetToken = {
-            symbol: takerTokenSymbol,
+            address: takerTokenAddress,
             amount: new BigNumber(parsedOrder.taker.amount),
         };
         const orderHash = parsedOrder.signature.hash;
@@ -236,7 +245,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const specifiedTakerAddressIfExists = parsedOrder.taker.address;
         const fillAmount = this.props.orderFillAmount;
         const takerAddress = this.props.userAddress;
-        const takerToken = this.props.tokenBySymbol[takerTokenSymbol];
+        const takerToken = this.props.tokenByAddress[takerTokenAddress];
         const isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker.address,
                                                                                    parsedOrder.signature);
         if (_.isUndefined(takerAddress)) {
@@ -256,7 +265,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = 'This order has already been completely filled';
         } else if (fillAmount.gt(amountLeftToFill)) {
             const amountLeftToFillInUnits = Ox.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
-            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${receiveAssetToken.symbol}`;
+            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${takerToken.symbol}`;
         } else if (!isValidSignature) {
             globalErrMsg = 'Order signature is not valid';
         }
@@ -270,8 +279,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         try {
             await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
                                                        parsedOrder.taker.address,
-                                                       this.props.tokenBySymbol[makerTokenSymbol].address,
-                                                       this.props.tokenBySymbol[takerTokenSymbol].address,
+                                                       this.props.tokenByAddress[makerTokenAddress].address,
+                                                       this.props.tokenByAddress[takerTokenAddress].address,
                                                        depositAssetToken.amount,
                                                        receiveAssetToken.amount,
                                                        parsedOrder.expiration,

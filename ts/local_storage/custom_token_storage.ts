@@ -1,22 +1,37 @@
 import * as _ from 'lodash';
-import {Token} from 'ts/types';
+import {Token, CustomTokensByNetworkId} from 'ts/types';
 import {localStorage} from 'ts/local_storage/local_storage';
 
 const CUSTOM_TOKENS_KEY = 'customTokens';
 
 export const customTokenStorage = {
-    addCustomToken(token: Token) {
-        const customTokens = this.getCustomTokens();
+    addCustomToken(networkId: number, token: Token) {
+        const customTokensByNetworkId = this.getCustomTokensByNetworkId();
+        const customTokens = !_.isUndefined(customTokensByNetworkId[networkId]) ?
+                             customTokensByNetworkId[networkId] : [];
         customTokens.push(token);
-        const customTokensJSONString = JSON.stringify(customTokens);
-        localStorage.setItem(CUSTOM_TOKENS_KEY, customTokensJSONString);
+        customTokensByNetworkId[networkId] = customTokens;
+        const customTokensByNetworkIdJSONString = JSON.stringify(customTokensByNetworkId);
+        localStorage.setItem(CUSTOM_TOKENS_KEY, customTokensByNetworkIdJSONString);
     },
-    getCustomTokens(): Token[] {
+    getCustomTokensByNetworkId(): CustomTokensByNetworkId {
         const customTokensJSONString = localStorage.getItemIfExists(CUSTOM_TOKENS_KEY);
         if (_.isEmpty(customTokensJSONString)) {
             return [];
         }
-        const customTokens = JSON.parse(customTokensJSONString);
+        const customTokensByNetworkId = JSON.parse(customTokensJSONString);
+        return customTokensByNetworkId;
+    },
+    getCustomTokens(networkId: number): Token[] {
+        const customTokensJSONString = localStorage.getItemIfExists(CUSTOM_TOKENS_KEY);
+        if (_.isEmpty(customTokensJSONString)) {
+            return [];
+        }
+        const customTokensByNetworkId = JSON.parse(customTokensJSONString);
+        const customTokens = customTokensByNetworkId[networkId];
+        if (_.isUndefined(customTokens)) {
+            return [];
+        }
         return customTokens;
     },
 };

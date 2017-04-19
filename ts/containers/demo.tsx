@@ -5,7 +5,7 @@ import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Side, HashData, TokenBySymbol, BlockchainErrs, Fill, Order} from 'ts/types';
+import {Side, HashData, TokenByAddress, BlockchainErrs, Fill, Order} from 'ts/types';
 import {
     Demo as DemoComponent,
     DemoAllProps as DemoComponentAllProps,
@@ -19,7 +19,7 @@ interface MapStateToProps {
     hashData: HashData;
     networkId: number;
     orderFillAmount: number;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     userEtherBalance: number;
     shouldBlockchainErrDialogBeOpen: boolean;
     userAddress: string;
@@ -33,22 +33,26 @@ interface ConnectedDispatch {
 }
 
 const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): ConnectedState => {
-    const receiveSymbol = state.sideToAssetToken[Side.receive].symbol;
-    const depositSymbol = state.sideToAssetToken[Side.deposit].symbol;
-    const receiveAmount = !_.isUndefined(state.sideToAssetToken[Side.receive].amount) ?
-                          state.sideToAssetToken[Side.receive].amount : new BigNumber(0);
-    const depositAmount = !_.isUndefined(state.sideToAssetToken[Side.deposit].amount) ?
-                          state.sideToAssetToken[Side.deposit].amount : new BigNumber(0);
+    const receiveAssetToken = state.sideToAssetToken[Side.receive];
+    const depositAssetToken = state.sideToAssetToken[Side.deposit];
+    const receiveAddress = !_.isUndefined(receiveAssetToken.address) ?
+                          receiveAssetToken.address : constants.NULL_ADDRESS;
+    const depositAddress = !_.isUndefined(depositAssetToken.address) ?
+                          depositAssetToken.address : constants.NULL_ADDRESS;
+    const receiveAmount = !_.isUndefined(receiveAssetToken.amount) ?
+                          receiveAssetToken.amount : new BigNumber(0);
+    const depositAmount = !_.isUndefined(depositAssetToken.amount) ?
+                          depositAssetToken.amount : new BigNumber(0);
     const hashData = {
         depositAmount,
-        depositTokenContractAddr: state.tokenBySymbol[depositSymbol].address,
+        depositTokenContractAddr: depositAddress,
         feeRecipientAddress: constants.FEE_RECIPIENT_ADDRESS,
         makerFee: constants.MAKER_FEE,
         orderExpiryTimestamp: state.orderExpiryTimestamp,
         orderMakerAddress: state.userAddress,
         orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : constants.NULL_ADDRESS,
         receiveAmount,
-        receiveTokenContractAddr: state.tokenBySymbol[receiveSymbol].address,
+        receiveTokenContractAddr: receiveAddress,
         takerFee: constants.TAKER_FEE,
     };
     return {
@@ -58,7 +62,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         orderFillAmount: state.orderFillAmount,
         hashData,
         shouldBlockchainErrDialogBeOpen: state.shouldBlockchainErrDialogBeOpen,
-        tokenBySymbol: state.tokenBySymbol,
+        tokenByAddress: state.tokenByAddress,
         userAddress: state.userAddress,
         userEtherBalance: state.userEtherBalance,
         userSuppliedOrderCache: state.userSuppliedOrderCache,

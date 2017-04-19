@@ -60,12 +60,12 @@ export interface Token {
     decimals?: number;
 };
 
-export interface TokenBySymbol {
-    [symbol: string]: Token;
+export interface TokenByAddress {
+    [address: string]: Token;
 };
 
 export interface AssetToken {
-    symbol: string;
+    address?: string;
     amount?: BigNumber;
 }
 
@@ -93,14 +93,16 @@ export interface HashData {
     takerFee: string;
 }
 
+export interface OrderToken {
+    name: string;
+    symbol: string;
+    decimals: number;
+    address: string;
+}
+
 export interface OrderParty {
     address: string;
-    token: {
-        name: string;
-        symbol: string;
-        decimals: number;
-        address: string;
-    };
+    token: OrderToken;
     amount: string;
 }
 
@@ -134,15 +136,17 @@ export enum BalanceErrs {
 };
 
 export const ActionTypes = strEnum([
-    'ADD_TOKEN_TO_TOKEN_BY_SYMBOL',
+    'ADD_TOKEN_TO_TOKEN_BY_ADDRESS',
     'BLOCKCHAIN_ERR_ENCOUNTERED',
+    'CLEAR_TOKEN_BY_ADDRESS',
     'UPDATE_BLOCKCHAIN_IS_LOADED',
     'UPDATE_NETWORK_ID',
     'UPDATE_GENERATE_ORDER_STEP',
     'UPDATE_CHOSEN_ASSET_TOKEN',
+    'UPDATE_CHOSEN_ASSET_TOKEN_ADDRESS',
     'UPDATE_ORDER_TAKER_ADDRESS',
     'UPDATE_ORDER_SIGNATURE_DATA',
-    'UPDATE_TOKEN_BY_SYMBOL',
+    'UPDATE_TOKEN_BY_ADDRESS',
     'UPDATE_ORDER_EXPIRY',
     'SWAP_ASSET_TOKENS',
     'UPDATE_USER_ADDRESS',
@@ -156,4 +160,8 @@ export type ActionTypes = keyof typeof ActionTypes;
 export interface Action {
     type: ActionTypes;
     data?: any;
+}
+
+export interface CustomTokensByNetworkId {
+    [networkId: number]: Token;
 }

@@ -5,10 +5,11 @@ import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {Ox} from 'ts/utils/Ox';
 import {constants} from 'ts/utils/constants';
-import {BlockchainErrs, Token, SignatureData} from 'ts/types';
+import {BlockchainErrs, Token, SignatureData, Side} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
+import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 import * as ProxyArtifacts from '../contracts/Proxy.json';
 import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
@@ -67,7 +68,7 @@ export class Blockchain {
             from: this.userAddress,
         });
         token.allowance = amountInBaseUnits;
-        this.dispatcher.updateTokenBySymbol([token]);
+        this.dispatcher.updateTokenByAddress([token]);
     }
     public async isValidSignatureAsync(maker: string, signatureData: SignatureData) {
       if (!this.doesUserAddressExist()) {
@@ -164,7 +165,7 @@ export class Blockchain {
         const tokens = [_.assign({}, token, {
             balance: token.balance.plus(MINT_AMOUNT),
         })];
-        this.dispatcher.updateTokenBySymbol(tokens);
+        this.dispatcher.updateTokenByAddress(tokens);
     }
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
@@ -193,7 +194,7 @@ export class Blockchain {
                 allowance,
             }));
         }
-        this.dispatcher.updateTokenBySymbol(updatedTokens);
+        this.dispatcher.updateTokenByAddress(updatedTokens);
     }
     private doesUserAddressExist(): boolean {
         return this.userAddress !== '';
@@ -280,16 +281,23 @@ export class Blockchain {
                   url,
                   decimals,
                 ] = await this.tokenRegistry.getTokenMetaData.call(address);
-                tokens.push({
+                const token: Token = {
                     address,
                     allowance,
                     balance,
                     name,
                     symbol,
                     decimals: decimals.toNumber(),
-                });
+                };
+                // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
+                // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
+                const iconUrl = constants.iconUrlBySymbol[symbol];
+                if (!_.isUndefined(iconUrl)) {
+                    token.iconUrl = iconUrl;
+                }
+                tokens.push(token);
             }
-            this.dispatcher.updateTokenBySymbol(tokens);
+            return tokens;
         } else {
             return [];
         }
@@ -323,7 +331,13 @@ export class Blockchain {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);
             }
         }
-        await this.getTokenRegistryTokensAsync();
+        this.dispatcher.clearTokenByAddress();
+        let tokens = await this.getTokenRegistryTokensAsync();
+        const customTokens = customTokenStorage.getCustomTokens(this.networkId);
+        tokens = [...tokens, ...customTokens];
+        this.dispatcher.updateTokenByAddress(tokens);
+        this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, tokens[0].address);
+        this.dispatcher.updateChosenAssetTokenAddress(Side.receive, tokens[1].address);
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
     private async instantiateContractIfExistsAsync(artifact: any, address?: string) {

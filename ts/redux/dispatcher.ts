@@ -50,6 +50,15 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN,
         });
     }
+    public updateChosenAssetTokenAddress(side: Side, address: string) {
+        this.dispatch({
+            data: {
+                address,
+                side,
+            },
+            type: ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN_ADDRESS,
+        });
+    }
     public updateOrderTakerAddress(address: string) {
         this.dispatch({
             data: address,
@@ -80,16 +89,21 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_BLOCKCHAIN_IS_LOADED,
          });
     }
-    public addTokenToTokenBySymbol(token: Token) {
+    public addTokenToTokenByAddress(token: Token) {
         this.dispatch({
              data: token,
-            type: ActionTypes.ADD_TOKEN_TO_TOKEN_BY_SYMBOL,
+            type: ActionTypes.ADD_TOKEN_TO_TOKEN_BY_ADDRESS,
          });
     }
-    public updateTokenBySymbol(tokens: Token[]) {
+    public clearTokenByAddress() {
+        this.dispatch({
+            type: ActionTypes.CLEAR_TOKEN_BY_ADDRESS,
+         });
+    }
+    public updateTokenByAddress(tokens: Token[]) {
         this.dispatch({
              data: tokens,
-            type: ActionTypes.UPDATE_TOKEN_BY_SYMBOL,
+            type: ActionTypes.UPDATE_TOKEN_BY_ADDRESS,
          });
     }
     public updateSignatureData(signatureData: SignatureData) {

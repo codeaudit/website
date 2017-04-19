@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {TokenBySymbol, Token, BlockchainErrs, BalanceErrs} from 'ts/types';
+import {TokenByAddress, Token, BlockchainErrs, BalanceErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
 import {Ox} from 'ts/utils/Ox';
 import {utils} from 'ts/utils/utils';
@@ -30,13 +30,14 @@ const ICON_DIMENSION = 40;
 const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const TOKEN_TABLE_ROW_HEIGHT = 60;
 const MAX_TOKEN_TABLE_HEIGHT = 300;
+const ETHER_TOKEN_SYMBOL = 'WETH';
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     userAddress: string;
     userEtherBalance: number;
 }
@@ -49,7 +50,7 @@ interface TokenBalancesState {
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
     public constructor(props: TokenBalancesProps) {
         super(props);
-        const tokens = _.values(props.tokenBySymbol);
+        const tokens = _.values(props.tokenByAddress);
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
@@ -63,7 +64,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
     }
     public render() {
-        const etherIconUrl = this.props.tokenBySymbol.WETH.iconUrl;
+        const etherIconUrl = this.getEtherIconUrl();
         const errorDialogActions = [
             <FlatButton
                 label="Ok"
@@ -71,7 +72,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 onTouchTap={this.onErrorDialogToggle.bind(this, false)}
             />,
         ];
-        const allTokenRowHeight = _.size(this.props.tokenBySymbol) * TOKEN_TABLE_ROW_HEIGHT;
+        const allTokenRowHeight = _.size(this.props.tokenByAddress) * TOKEN_TABLE_ROW_HEIGHT;
         const tokenTableHeight = allTokenRowHeight < MAX_TOKEN_TABLE_HEIGHT ?
                                  allTokenRowHeight :
                                  MAX_TOKEN_TABLE_HEIGHT;
@@ -153,7 +154,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
             return '';
         }
-        return _.map(this.props.tokenBySymbol, (token: Token) => {
+        return _.map(this.props.tokenByAddress, (token: Token, address: string) => {
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
                 <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
@@ -322,5 +323,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.setState({
             errorType: undefined,
         });
+    }
+    private getEtherIconUrl() {
+        const tokens = _.values(this.props.tokenByAddress);
+        const etherToken = _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
+        const etherIconUrl = this.props.tokenByAddress[etherToken.address].iconUrl;
+        return etherIconUrl;
     }
 }

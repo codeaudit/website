@@ -2,14 +2,14 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {Paper, Divider} from 'material-ui';
 import {utils} from 'ts/utils/utils';
-import {Fill, TokenBySymbol} from 'ts/types';
+import {Fill, TokenByAddress} from 'ts/types';
 import {TradeHistoryItem} from 'ts/components/trade_history/trade_history_item';
 import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
 
 const FILL_POLLING_INTERVAL = 1000;
 
 interface TradeHistoryProps {
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     userAddress: string;
 }
 
@@ -49,7 +49,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         }
 
         return _.map(this.state.sortedFills, (fill, index) => {
-            const tokens = _.values(this.props.tokenBySymbol);
+            const tokens = _.values(this.props.tokenByAddress);
             const depositToken = _.find(tokens, (token) => {
                 return token.address === fill.tokenM;
             });
@@ -67,11 +67,11 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
             const sideToAssetToken = {
                 deposit: {
                     amount: fill.filledValueM,
-                    symbol: depositToken.symbol,
+                    address: depositToken.address,
                 },
                 receive: {
                     amount: fillValueT,
-                    symbol: receiveToken.symbol,
+                    address: receiveToken.address,
                 },
             };
             return (
@@ -84,7 +84,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                         orderTakerAddress={fill.taker}
                         orderMakerAddress={fill.maker}
                         sideToAssetToken={sideToAssetToken}
-                        tokenBySymbol={this.props.tokenBySymbol}
+                        tokenByAddress={this.props.tokenByAddress}
                     />
                 </Paper>
             );

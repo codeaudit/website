@@ -11,7 +11,7 @@ import {FillOrder} from 'ts/components/fill_order';
 import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
-import {HashData, TokenBySymbol, MenuItemValue, BlockchainErrs, Order, Fill, Side} from 'ts/types';
+import {HashData, TokenByAddress, MenuItemValue, BlockchainErrs, Order, Fill, Side} from 'ts/types';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
 import {TopBar} from 'ts/components/top_bar';
@@ -27,7 +27,7 @@ export interface DemoAllProps {
     kind: string;
     networkId: number;
     orderFillAmount: BigNumber;
-    tokenBySymbol: TokenBySymbol;
+    tokenByAddress: TokenByAddress;
     userEtherBalance: number;
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
@@ -92,7 +92,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         }
         if (nextProps.userAddress !== this.state.prevUserAddress) {
             this.blockchain.userAddressUpdatedFireAndForgetAsync(nextProps.userAddress);
-            const tokens = _.values(nextProps.tokenBySymbol);
+            const tokens = _.values(nextProps.tokenByAddress);
             if (nextProps.userAddress !== '' && nextProps.blockchainIsLoaded) {
                 this.blockchain.updateTokenBalancesAndAllowancesAsync(tokens);
             }
@@ -128,7 +128,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         initialOrder={initialFillOrder}
                         orderFillAmount={this.props.orderFillAmount}
                         userAddress={this.props.userAddress}
-                        tokenBySymbol={this.props.tokenBySymbol}
+                        tokenByAddress={this.props.tokenByAddress}
                         triggerMenuClick={this.triggerMenuClick.bind(this)}
                         dispatcher={this.props.dispatcher}
                     />
@@ -142,7 +142,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         blockchainErr={this.props.blockchainErr}
                         blockchainIsLoaded={this.props.blockchainIsLoaded}
                         dispatcher={this.props.dispatcher}
-                        tokenBySymbol={this.props.tokenBySymbol}
+                        tokenByAddress={this.props.tokenByAddress}
                         userAddress={this.props.userAddress}
                         userEtherBalance={this.props.userEtherBalance}
                     />
@@ -152,7 +152,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             case MenuItemValue.tradeHistory:
                 visibleComponent = (
                     <TradeHistory
-                        tokenBySymbol={this.props.tokenBySymbol}
+                        tokenByAddress={this.props.tokenByAddress}
                         userAddress={this.props.userAddress}
                     />
                 );

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {Direction, SideToAssetToken, Side, AssetToken, TokenBySymbol} from 'ts/types';
+import {Direction, SideToAssetToken, Side, AssetToken, Token} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
 import {Ox} from 'ts/utils/Ox';
 
@@ -14,8 +14,8 @@ interface VisualOrderProps {
     orderMakerAddress: string;
     makerAssetToken: AssetToken;
     takerAssetToken: AssetToken;
-    makerTokenDecimals: number;
-    takerTokenDecimals: number;
+    makerToken: Token;
+    takerToken: Token;
 }
 
 interface VisualOrderState {}
@@ -34,7 +34,7 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
                     </div>
                     <div className="col col-2 center" style={{paddingTop: 25}}>
                         <div style={{paddingBottom: 6}}>
-                            {this.renderAmount(this.props.makerAssetToken, this.props.makerTokenDecimals)}
+                            {this.renderAmount(this.props.makerAssetToken, this.props.makerToken)}
                         </div>
                         <div className="relative mx-auto" style={{width: 69, height: 54}}>
                             <div className="absolute" style={{top: -18, left: 1}}>
@@ -42,7 +42,7 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
                             </div>
                         </div>
                         <div style={{paddingTop: 8}}>
-                            {this.renderAmount(this.props.takerAssetToken, this.props.takerTokenDecimals)}
+                            {this.renderAmount(this.props.takerAssetToken, this.props.takerToken)}
                         </div>
                     </div>
                     <div className="col col-5 center">
@@ -56,11 +56,11 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
             </div>
         );
     }
-    private renderAmount(assetToken: AssetToken, decimals: number) {
-        const unitAmount = Ox.toUnitAmount(assetToken.amount, decimals);
+    private renderAmount(assetToken: AssetToken, token: Token) {
+        const unitAmount = Ox.toUnitAmount(assetToken.amount, token.decimals);
         return (
             <div style={{fontSize: 13}}>
-                {unitAmount.toNumber().toFixed(PRECISION)} {assetToken.symbol}
+                {unitAmount.toNumber().toFixed(PRECISION)} {token.symbol}
             </div>
         );
     }

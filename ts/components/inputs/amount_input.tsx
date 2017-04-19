@@ -66,7 +66,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     underlineStyle={{width: 'calc(100% + 50px)'}}
                 />
                 <div style={{paddingTop: 44}}>
-                    {this.props.assetToken.symbol}
+                    {this.props.token.symbol}
                 </div>
             </div>
         );
