@@ -3,7 +3,7 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {Blockchain} from 'ts/blockchain';
 import {constants} from 'ts/utils/constants';
-import {Ox} from 'ts/utils/Ox';
+import {ZeroEx} from 'ts/utils/zero_ex';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import ReactTooltip = require('react-tooltip');
 import {
@@ -49,7 +49,7 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
     private generateMessageHashHex() {
         const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
         const hashData = this.props.hashData;
-        const orderHash = Ox.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
+        const orderHash = ZeroEx.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
                         hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
                         hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,

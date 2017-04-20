@@ -4,7 +4,7 @@ import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {Direction, SideToAssetToken, Side, AssetToken, Token} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
-import {Ox} from 'ts/utils/Ox';
+import {ZeroEx} from 'ts/utils/zero_ex';
 
 const PRECISION = 5;
 const IDENTICON_DIAMETER = 100;
@@ -57,7 +57,7 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
         );
     }
     private renderAmount(assetToken: AssetToken, token: Token) {
-        const unitAmount = Ox.toUnitAmount(assetToken.amount, token.decimals);
+        const unitAmount = ZeroEx.toUnitAmount(assetToken.amount, token.decimals);
         return (
             <div style={{fontSize: 13}}>
                 {unitAmount.toNumber().toFixed(PRECISION)} {token.symbol}

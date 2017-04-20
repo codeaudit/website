@@ -4,7 +4,7 @@ import BigNumber = require('bignumber.js');
 import ethUtil = require('ethereumjs-util');
 import {constants} from 'ts/utils/constants';
 
-export const Ox = {
+export const ZeroEx = {
     getOrderHash(exchangeContractAddr: string, makerAddr: string, takerAddr: string,
                  depositTokenAddr: string, receiveTokenAddr: string, feeRecipient: string,
                  depositAmt: BigNumber, receiveAmt: BigNumber, makerFee: string, takerFee: string,
@@ -76,6 +76,8 @@ export const Ox = {
         try {
             const pubKey = ethUtil.ecrecover(personalMessageHash, v, ethUtil.toBuffer(r), ethUtil.toBuffer(s));
             const retrievedAddress = ethUtil.bufferToHex(ethUtil.pubToAddress(pubKey));
+            console.log('retrievedAddress', retrievedAddress);
+            console.log('makerAddress', makerAddress);
             return retrievedAddress === makerAddress;
         } catch (err) {
             return false;
