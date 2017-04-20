@@ -34,7 +34,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                               Ox.toUnitAmount(props.assetToken.amount, props.token.decimals).toString();
         this.state = {
             amount: initialAmount,
-            errMsg: '',
+            errMsg: this.getErrMsg(props.token.balance, props.token.allowance, initialAmount),
         };
     }
     public componentWillReceiveProps(nextProps: AmountInputProps) {
