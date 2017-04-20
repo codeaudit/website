@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
 import {SideToAssetToken, SignatureData, Order, Side, TokenByAddress, OrderParty} from 'ts/types';
 import deepEqual = require('deep-equal');
+import ethUtil = require('ethereumjs-util');
 
 export const utils = {
     assert(condition: boolean, message: string) {
@@ -75,7 +76,7 @@ export const utils = {
         return order;
     },
     convertByte32HexToString(byte32Hex: string) {
-        const buf = new Buffer(byte32Hex.substring(2), 'hex');
+        const buf = ethUtil.toBuffer(byte32Hex);
         return buf.toString().replace(/\0/g, '');
     },
     consoleLog(message: string) {

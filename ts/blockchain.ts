@@ -135,7 +135,7 @@ export class Blockchain {
         return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
     }
     public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
-        const orderHashBuff = new Buffer(orderHashHex.substring(2), 'hex');
+        const orderHashBuff = ethUtil.toBuffer(orderHashHex);
         const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuff);
         const msgHashHex = ethUtil.bufferToHex(msgHashBuff);
         const makerAddress = this.userAddress;
