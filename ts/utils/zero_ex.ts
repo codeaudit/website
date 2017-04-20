@@ -72,12 +72,10 @@ export const zeroEx = {
     },
     isValidSignature(orderHash: string, v: number, r: string, s: string, makerAddress: string) {
         const orderHashBuf = ethUtil.toBuffer(orderHash);
-        const personalMessageHash = ethUtil.hashPersonalMessage(orderHashBuf);
+        const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuf);
         try {
-            const pubKey = ethUtil.ecrecover(personalMessageHash, v, ethUtil.toBuffer(r), ethUtil.toBuffer(s));
+            const pubKey = ethUtil.ecrecover(msgHashBuff, v, ethUtil.toBuffer(r), ethUtil.toBuffer(s));
             const retrievedAddress = ethUtil.bufferToHex(ethUtil.pubToAddress(pubKey));
-            console.log('retrievedAddress', retrievedAddress);
-            console.log('makerAddress', makerAddress);
             return retrievedAddress === makerAddress;
         } catch (err) {
             return false;

@@ -145,12 +145,15 @@ export class Blockchain {
             throw new Error('Tried to send a sign request but user has no associated addresses');
         }
         const signature = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
-        const signatureData = {
-            hash: orderHashHex,
-            r: `0x${signature.substring(2, 66)}`,
-            s: `0x${signature.substring(66, 130)}`,
-            v: _.parseInt(signature.substring(130, 132)) + 27,
-        };
+        const signatureData = ethUtil.fromRpcSig(signature);
+        const {v, r, s} = signatureData;
+        signatureData.hash = orderHashHex;
+        signatureData.r = ethUtil.bufferToHex(signatureData.r);
+        signatureData.s = ethUtil.bufferToHex(signatureData.s);
+        const isValidSignature = zeroEx.isValidSignature(orderHashHex, v, r, s, makerAddress);
+        if (!isValidSignature) {
+            throw new Error('Cannot recover original address from generated signature');
+        }
         this.dispatcher.updateSignatureData(signatureData);
         return signatureData;
     }
