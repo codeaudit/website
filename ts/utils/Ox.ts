@@ -70,4 +70,15 @@ export const Ox = {
         }
         return false;
     },
+    isValidSignature(orderHash: string, v: number, r: string, s: string, makerAddress: string) {
+        const orderHashBuf = ethUtil.toBuffer(orderHash);
+        const personalMessageHash = ethUtil.hashPersonalMessage(orderHashBuf);
+        try {
+            const pubKey = ethUtil.ecrecover(personalMessageHash, v, ethUtil.toBuffer(r), ethUtil.toBuffer(s));
+            const retrievedAddress = ethUtil.bufferToHex(ethUtil.pubToAddress(pubKey));
+            return retrievedAddress === makerAddress;
+        } catch (err) {
+            return false;
+        }
+    },
 };

@@ -248,12 +248,21 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const orderHash = parsedOrder.signature.hash;
         const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
         const amountLeftToFill = receiveAssetToken.amount.minus(amountAlreadyFilled);
-        const specifiedTakerAddressIfExists = parsedOrder.taker.address;
+        const specifiedTakerAddressIfExists = parsedOrder.taker.address.toLowerCase();
         const fillAmount = this.props.orderFillAmount;
         const takerAddress = this.props.userAddress;
         const takerToken = this.props.tokenByAddress[takerTokenAddress];
-        const isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker.address,
-                                                                                   parsedOrder.signature);
+        let isValidSignature = false;
+        if (this.props.userAddress === '') {
+            const signatureData = parsedOrder.signature;
+            isValidSignature = Ox.isValidSignature(signatureData.hash, signatureData.v,
+                                                   signatureData.r, signatureData.s,
+                                                   parsedOrder.maker.address);
+        } else {
+            isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker.address,
+                                                              parsedOrder.signature);
+        }
+
         if (_.isUndefined(takerAddress)) {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
