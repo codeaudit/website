@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {ZeroEx} from 'ts/utils/zero_ex';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {TextField, Paper, Divider} from 'material-ui';
 import {
     Side,
@@ -198,7 +198,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
             const makerAmount = new BigNumber(parsedOrder.maker.amount);
             const takerAmount = new BigNumber(parsedOrder.taker.amount);
-            const orderHash = ZeroEx.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
+            const orderHash = zeroEx.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
                             parsedOrder.taker.address, parsedOrder.maker.token.address,
                             parsedOrder.taker.token.address, constants.FEE_RECIPIENT_ADDRESS,
                             makerAmount, takerAmount, constants.MAKER_FEE,
@@ -255,7 +255,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         let isValidSignature = false;
         if (this.props.userAddress === '') {
             const signatureData = parsedOrder.signature;
-            isValidSignature = ZeroEx.isValidSignature(signatureData.hash, signatureData.v,
+            isValidSignature = zeroEx.isValidSignature(signatureData.hash, signatureData.v,
                                                    signatureData.r, signatureData.s,
                                                    parsedOrder.maker.address);
         } else {
@@ -279,7 +279,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         } else if (amountLeftToFill.eq(0)) {
             globalErrMsg = 'This order has already been completely filled';
         } else if (fillAmount.gt(amountLeftToFill)) {
-            const amountLeftToFillInUnits = ZeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
+            const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
             globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${takerToken.symbol}`;
         } else if (!isValidSignature) {
             globalErrMsg = 'Order signature is not valid';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
-import {ZeroEx} from 'ts/utils/zero_ex';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import BigNumber = require('bignumber.js');
@@ -31,7 +31,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
     constructor(props: AmountInputProps) {
         super(props);
         const initialAmount = _.isUndefined(props.assetToken.amount) ? '' :
-                              ZeroEx.toUnitAmount(props.assetToken.amount, props.token.decimals).toString();
+                              zeroEx.toUnitAmount(props.assetToken.amount, props.token.decimals).toString();
         this.state = {
             amount: initialAmount,
             errMsg: this.getErrMsg(props.token.balance, props.token.allowance, initialAmount),
@@ -46,7 +46,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         let amountString = '';
         const isNewAmountNumeric = !_.isUndefined(newAmount);
         if (isNewAmountNumeric) {
-            newAmountInUnits = ZeroEx.toUnitAmount(newAmount, nextProps.token.decimals);
+            newAmountInUnits = zeroEx.toUnitAmount(newAmount, nextProps.token.decimals);
             amountString = newAmountInUnits.toString();
             this.setState({
                 amount: amountString,
@@ -106,7 +106,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
         });
         const assetToken = this.props.assetToken;
         if (isAmountNumeric) {
-            assetToken.amount = ZeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
+            assetToken.amount = zeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
         } else {
             assetToken.amount = undefined;
         }
@@ -114,7 +114,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
     }
     private getErrMsg(balance: BigNumber, allowance: BigNumber, amount: string): (string | React.ReactNode) {
         const isAmountNumeric = utils.isNumeric(amount);
-        const amountInSmallestUnits = ZeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
+        const amountInSmallestUnits = zeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
         let errMsg: (string | React.ReactNode) = '';
         if (!isAmountNumeric && amount !== '') {
             errMsg = 'Must be a number';

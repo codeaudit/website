@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {TokenByAddress, Token, BlockchainErrs, BalanceErrs} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
-import {ZeroEx} from 'ts/utils/zero_ex';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
@@ -186,7 +186,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         });
     }
     private renderAmount(amount: BigNumber, decimals: number) {
-      const unitAmount = ZeroEx.toUnitAmount(amount, decimals);
+      const unitAmount = zeroEx.toUnitAmount(amount, decimals);
       return unitAmount.toNumber().toFixed(PRECISION);
     }
     private renderTokenName(token: Token) {

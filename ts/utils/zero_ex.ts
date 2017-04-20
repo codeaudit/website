@@ -4,7 +4,7 @@ import BigNumber = require('bignumber.js');
 import ethUtil = require('ethereumjs-util');
 import {constants} from 'ts/utils/constants';
 
-export const ZeroEx = {
+export const zeroEx = {
     getOrderHash(exchangeContractAddr: string, makerAddr: string, takerAddr: string,
                  depositTokenAddr: string, receiveTokenAddr: string, feeRecipient: string,
                  depositAmt: BigNumber, receiveAmt: BigNumber, makerFee: string, takerFee: string,

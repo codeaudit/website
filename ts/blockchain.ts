@@ -3,7 +3,7 @@ import * as Web3 from 'web3';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
-import {ZeroEx} from 'ts/utils/zero_ex';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
 import {BlockchainErrs, Token, SignatureData, Side} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
@@ -123,7 +123,7 @@ export class Blockchain {
                                   });
     }
     public async getFillAmountAsync(orderHash: string) {
-        utils.assert(ZeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
+        utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
         const fillAmount = await this.exchange.fills.call(orderHash);
         return fillAmount.toNumber();
     }

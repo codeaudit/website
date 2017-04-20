@@ -4,7 +4,7 @@ import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {Direction, SideToAssetToken, Side, AssetToken, TokenByAddress} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
-import {ZeroEx} from 'ts/utils/zero_ex';
+import {zeroEx} from 'ts/utils/zero_ex';
 
 const PRECISION = 5;
 const IDENTICON_DIAMETER = 60;
@@ -59,7 +59,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         );
     }
     private renderAmount(assetToken: AssetToken, decimals: number) {
-        const unitAmount = ZeroEx.toUnitAmount(assetToken.amount, decimals);
+        const unitAmount = zeroEx.toUnitAmount(assetToken.amount, decimals);
         const token = this.props.tokenByAddress[assetToken.address];
         return (
             <div style={{fontSize: 13}}>

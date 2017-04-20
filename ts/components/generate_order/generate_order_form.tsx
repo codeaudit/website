@@ -4,7 +4,7 @@ import {Blockchain} from 'ts/blockchain';
 import {Paper, Divider, Dialog} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {ZeroEx} from 'ts/utils/zero_ex';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {Validator} from 'ts/schemas/validator';
@@ -278,7 +278,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             return false;
         }
         const hashData = this.props.hashData;
-        const orderHash = ZeroEx.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
+        const orderHash = zeroEx.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
                         hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
                         hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
