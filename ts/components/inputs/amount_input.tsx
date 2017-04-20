@@ -37,6 +37,32 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             errMsg: '',
         };
     }
+    public componentWillReceiveProps(nextProps: AmountInputProps) {
+        const newAmount = nextProps.assetToken.amount;
+        const newTokenAddress = nextProps.assetToken.address;
+        const oldTokenAddress = this.props.assetToken.address;
+
+        let newAmountInUnits;
+        let amountString = '';
+        const isNewAmountNumeric = !_.isUndefined(newAmount);
+        if (isNewAmountNumeric) {
+            newAmountInUnits = Ox.toUnitAmount(newAmount, nextProps.token.decimals);
+            amountString = newAmountInUnits.toString();
+            this.setState({
+                amount: amountString,
+                errMsg: this.getErrMsg(nextProps.token.balance, nextProps.token.allowance, amountString),
+            });
+        } else {
+            const didUserSwapTokens = newTokenAddress !== oldTokenAddress;
+            if (didUserSwapTokens) {
+                amountString = '';
+                this.setState({
+                    amount: amountString,
+                    errMsg: this.getErrMsg(nextProps.token.balance, nextProps.token.allowance, amountString),
+                });
+            }
+        }
+    }
     public render() {
         let errText: (string | React.ReactNode) = '';
         if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
