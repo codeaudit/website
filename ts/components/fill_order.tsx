@@ -192,8 +192,6 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 return;
             }
             parsedOrder = order;
-            this.addTokenToCustomTokensIfUnseen(parsedOrder.maker.token);
-            this.addTokenToCustomTokensIfUnseen(parsedOrder.taker.token);
 
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
             const makerAmount = new BigNumber(parsedOrder.maker.amount);
@@ -218,6 +216,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 // Update user supplied order cache so that if they navigate away from fill view
                 // e.g to set a token allowance, when they come back, the fill order persists
                 this.props.dispatcher.updateUserSuppliedOrderCache(parsedOrder);
+                this.addTokenToCustomTokensIfUnseen(parsedOrder.maker.token);
+                this.addTokenToCustomTokensIfUnseen(parsedOrder.taker.token);
             }
         } catch (err) {
             if (orderJSON !== '') {
