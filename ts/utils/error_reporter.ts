@@ -1,5 +1,6 @@
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
+import {configs} from 'ts/utils/configs';
 
 // Suggested way to include Rollbar with Webpack
 // https://github.com/rollbar/rollbar.js/tree/master/examples/webpack
@@ -10,7 +11,7 @@ const rollbarConfig = {
     itemsPerMinute: 10,
     maxItems: 500,
     payload: {
-        environment: constants.ENVIRONMENT,
+        environment: configs.ENVIRONMENT,
     },
     uncaughtErrorLevel: 'error',
 };
@@ -19,7 +20,7 @@ const rollbar = Rollbar.init(rollbarConfig);
 
 export const errorReporter = {
     reportAsync(err: Error): Promise<any> {
-        if (constants.ENVIRONMENT === 'development') {
+        if (configs.ENVIRONMENT === 'development') {
             return; // Let's not log development errors to rollbar
         }
 

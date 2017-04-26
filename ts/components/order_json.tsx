@@ -3,6 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
+import {configs} from 'ts/utils/configs';
 import {TextField, Paper} from 'material-ui';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
 import {SideToAssetToken, SignatureData, Order, TokenByAddress} from 'ts/types';
@@ -119,7 +120,7 @@ You can see and fill it here: ${shareLink}`);
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
             this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress);
         const orderJSONString = JSON.stringify(order);
-        const orderUrl = `${constants.BASE_URL}/?order=${orderJSONString}`;
+        const orderUrl = `${configs.BASE_URL}/?order=${orderJSONString}`;
         return orderUrl;
     }
 }
