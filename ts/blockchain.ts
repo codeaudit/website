@@ -338,9 +338,11 @@ export class Blockchain {
             if (_.includes(errMsg, 'CONTRACT_DOES_NOT_EXIST')) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
                 this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+                return;
             } else {
                 // We show a generic message for other possible caught errors
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.UNHANDLED_ERROR);
+                return;
             }
         }
         this.dispatcher.clearTokenByAddress();

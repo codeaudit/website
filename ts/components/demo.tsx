@@ -240,6 +240,9 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     }
     private triggerMenuClick(selectedMenuItem: MenuItemValue) {
         if (!this.props.blockchainIsLoaded) {
+            if (this.props.blockchainErr !== '') {
+              this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+            }
             return; // Ignore menu click
         }
         this.setState({
