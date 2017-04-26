@@ -88,17 +88,17 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                     Paste an order JSON snippet below to begin
                 </div>
                 <div className="pb2">Order JSON</div>
-                <Paper className="mx-auto p1" style={{width: 640}}>
+                <Paper className="mx-auto p1" style={{width: 640, height: 164}}>
                     <TextField
                         id="orderJSON"
                         hintStyle={{bottom: 0, top: 0}}
-                        style={{width: 620, height: 148}}
+                        style={{width: 620}}
                         value={this.state.orderJSON}
                         onChange={this.onFillOrderChanged.bind(this)}
                         hintText={hintOrderJSON}
                         multiLine={true}
-                        rows={4}
-                        rowsMax={8}
+                        rows={6}
+                        rowsMax={6}
                         underlineStyle={{display: 'none'}}
                         textareaStyle={{marginTop: 0}}
                     />
