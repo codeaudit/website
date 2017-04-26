@@ -203,8 +203,16 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                             parsedOrder.taker.token.address, constants.FEE_RECIPIENT_ADDRESS,
                             makerAmount, takerAmount, constants.MAKER_FEE,
                             constants.TAKER_FEE, parsedOrder.expiration);
+
+            const signature = parsedOrder.signature;
+            const isValidSignature = zeroEx.isValidSignature(signature.hash, signature.v,
+                                                       signature.r, signature.s,
+                                                       parsedOrder.maker.address);
             if (orderHash !== parsedOrder.signature.hash) {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
+                parsedOrder = undefined;
+            } else if (!isValidSignature) {
+                orderJSONErrMsg = 'Order signature is invalid';
                 parsedOrder = undefined;
             } else {
                 // Update user supplied order cache so that if they navigate away from fill view
