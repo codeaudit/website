@@ -46,7 +46,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
                 <div>
                     <Toggle
                         disabled={this.state.isSpinnerVisible}
-                        toggled={this.isAllowanceSet(this.props.token)}
+                        toggled={this.isAllowanceSet()}
                         onToggle={this.onToggleAllowanceAsync.bind(this, this.props.token)}
                     />
                 </div>
@@ -58,7 +58,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
             </div>
         );
     }
-    private async onToggleAllowanceAsync(assetToken: Token) {
+    private async onToggleAllowanceAsync() {
         if (this.props.userAddress === '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
@@ -72,7 +72,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
         // Any edits to this hack should include changes to the `isAllowanceSet` method below
         // TODO: Investigate root cause for why allowance cannot be set to 0
         let newAllowanceAmountInUnits = 1;
-        if (!this.isAllowanceSet(assetToken)) {
+        if (!this.isAllowanceSet()) {
             newAllowanceAmountInUnits = DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS;
         }
         try {
@@ -92,7 +92,9 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
             this.props.onErrorOccurred(BalanceErrs.allowanceSettingFailed);
         }
     }
-    private isAllowanceSet(token: Token) {
-        return !token.allowance.eq(0) && !token.allowance.eq(1);
+    private isAllowanceSet() {
+        const token = this.props.token;
+        const allowanceInUnits = zeroEx.toUnitAmount(token.allowance, token.decimals);
+        return !allowanceInUnits.eq(0) && !allowanceInUnits.eq(1);
     }
 }
