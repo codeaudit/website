@@ -275,6 +275,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
+
+        const [
+          makerBalance,
+          makerAllowance,
+        ] = await this.props.blockchain.getTokenBalanceAndAllowanceAsync(parsedOrder.maker.address,
+                                                                         parsedOrder.maker.token.address);
         const currentDate = new Date();
         const currentUnixTimestamp = currentDate.getTime() / 1000;
         let globalErrMsg = '';
@@ -289,6 +295,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         } else if (fillAmount.gt(amountLeftToFill)) {
             const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
             globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${takerToken.symbol}`;
+        } else if (makerBalance.lt(fillAmount)) {
+            globalErrMsg = 'Maker no longer has a sufficient balance to complete this order';
+        } else if (makerAllowance.lt(fillAmount)) {
+            globalErrMsg = 'Maker does not have a high enough allowance set to complete this order';
         } else if (!isValidSignature) {
             globalErrMsg = 'Order signature is not valid';
         }

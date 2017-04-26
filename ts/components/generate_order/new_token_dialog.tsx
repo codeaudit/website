@@ -128,7 +128,7 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
                 [
                     balance,
                     allowance,
-                ] = await this.props.blockchain.getTokenBalanceAndAllowanceAsync(this.state.address);
+                ] = await this.props.blockchain.getCurrentUserTokenBalanceAndAllowanceAsync(this.state.address);
             } catch (err) {
                 hasBalanceAllowanceErr = true;
             }

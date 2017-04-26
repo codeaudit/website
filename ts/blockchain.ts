@@ -173,13 +173,16 @@ export class Blockchain {
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
     }
-    public async getTokenBalanceAndAllowanceAsync(tokenAddress: string): Promise<BigNumber[]> {
+    public async getCurrentUserTokenBalanceAndAllowanceAsync(tokenAddress: string): Promise<BigNumber[]> {
+      return await this.getTokenBalanceAndAllowanceAsync(this.userAddress, tokenAddress);
+    }
+    public async getTokenBalanceAndAllowanceAsync(ownerAddress: string, tokenAddress: string): Promise<BigNumber[]> {
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, tokenAddress);
         let balance;
         let allowance;
         if (this.doesUserAddressExist()) {
-            balance = await tokenContract.balanceOf.call(this.userAddress);
-            allowance = await tokenContract.allowance.call(this.userAddress, this.proxy.address);
+            balance = await tokenContract.balanceOf.call(ownerAddress);
+            allowance = await tokenContract.allowance.call(ownerAddress, this.proxy.address);
         }
         balance = _.isUndefined(balance) ? new BigNumber(0) : balance;
         allowance = _.isUndefined(allowance) ? new BigNumber(0) : allowance;
@@ -191,7 +194,7 @@ export class Blockchain {
             if (_.isUndefined(token.address)) {
                 continue; // Cannot retrieve balance for tokens without an address
             }
-            const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(token.address);
+            const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, token.address);
             updatedTokens.push(_.assign({}, token, {
                 balance,
                 allowance,
@@ -276,7 +279,10 @@ export class Blockchain {
             const addresses = await this.tokenRegistry.getTokenAddresses.call();
             const tokens = [];
             for (const address of addresses) {
-                const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(address);
+                const [
+                  balance,
+                  allowance,
+                ] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, address);
                 const [
                   tokenAddress,
                   name,
@@ -308,7 +314,10 @@ export class Blockchain {
     private async getCustomTokensAsync() {
         const customTokens = customTokenStorage.getCustomTokens(this.networkId);
         for (const customToken of customTokens) {
-            const [balance, allowance] = await this.getTokenBalanceAndAllowanceAsync(customToken.address);
+            const [
+              balance,
+              allowance,
+            ] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, customToken.address);
             customToken.balance = balance;
             customToken.allowance = allowance;
         }
