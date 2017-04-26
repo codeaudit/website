@@ -17,7 +17,7 @@ const muiTheme = getMuiTheme({
     palette: {
         pickerHeaderColor: colors.blueGrey500,
         primary1Color: colors.blueGrey500,
-        primary2Color: colors.amber600,
+        primary2Color: colors.blueGrey500,
         textColor: colors.blueGrey600,
     },
 });
