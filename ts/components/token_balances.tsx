@@ -129,9 +129,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 <Table selectable={false} bodyStyle={{height: tokenTableHeight}}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
-                            <TableHeaderColumn>Token</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={2}>Token</TableHeaderColumn>
                             <TableHeaderColumn>Balance</TableHeaderColumn>
-                            <TableHeaderColumn>0x exchange allowance</TableHeaderColumn>
+                            <TableHeaderColumn>0x allowance</TableHeaderColumn>
                             <TableHeaderColumn>Mint test tokens</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
@@ -158,7 +158,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
                 <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
-                    <TableRowColumn>
+                    <TableRowColumn colSpan={2}>
                         {this.renderTokenName(token)}
                     </TableRowColumn>
                     <TableRowColumn>{this.renderAmount(token.balance, token.decimals)} {token.symbol}</TableRowColumn>

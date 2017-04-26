@@ -42,7 +42,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
     }
     public render() {
         return (
-            <div className="pl3 flex">
+            <div className="flex">
                 <div>
                     <Toggle
                         disabled={this.state.isSpinnerVisible}
