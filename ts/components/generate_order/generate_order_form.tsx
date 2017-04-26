@@ -278,17 +278,21 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             return false;
         }
         const hashData = this.props.hashData;
+        const finalOrderExpiryTimestamp = this.addRandomizedSecondsToAvoidOrderCollisions(
+          hashData.orderExpiryTimestamp,
+        );
+        this.props.dispatcher.updateOrderExpiry(finalOrderExpiryTimestamp);
         const orderHash = zeroEx.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
                         hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
                         hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
-                        hashData.takerFee, hashData.orderExpiryTimestamp);
+                        hashData.takerFee, finalOrderExpiryTimestamp);
 
         let globalErrMsg = '';
         try {
             const signatureData = await this.props.blockchain.sendSignRequestAsync(orderHash);
             const order = utils.generateOrder(this.props.sideToAssetToken,
-                                                  this.props.orderExpiryTimestamp,
+                                                  finalOrderExpiryTimestamp,
                                                   this.props.orderTakerAddress,
                                                   this.props.userAddress, signatureData,
                                                   this.props.tokenByAddress);
@@ -313,5 +317,19 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             globalErrMsg,
         });
         return globalErrMsg === '';
+    }
+    // HACK:
+    // Currently identical 0x orders will have identical orderHashes and will be treated as the same
+    // order by the Exchange smart contract. This means a user cannot generate two identical orders and
+    // expect them both to be fillable. The only way to accomplish this is to modify slightly the expiration
+    // or amounts of the two orders.
+    // In order to allow someone to generate two 'almost' identical orders that can both be filled,
+    // we currently randomize the number of seconds in the order's expiration.
+    private addRandomizedSecondsToAvoidOrderCollisions(expiryTimestamp: number) {
+      const minInclusive = 0;
+      const maxInclusive = 59;
+      const randomSeconds = Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) + minInclusive;
+      const finalTimestamp = expiryTimestamp + randomSeconds;
+      return finalTimestamp;
     }
 }
