@@ -81,7 +81,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                     fullWidth={true}
                     floatingLabelText={label}
                     floatingLabelFixed={true}
-                    floatingLabelStyle={{color: colors.grey500}}
+                    floatingLabelStyle={{color: colors.grey500, width: 206}}
                     style={this.props.style ? this.props.style : {}}
                     errorText={errText}
                     value={_.isUndefined(this.state.amount) ? '' : this.state.amount}
