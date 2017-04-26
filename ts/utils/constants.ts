@@ -16,10 +16,12 @@ export const constants = {
     TESTNET_NAME: 'Ropsten',
     TESTNET_NETWORK_ID: 3,
     iconUrlBySymbol: {
-        TA: '/images/token_icons/clams.png',
-        TB: '/images/token_icons/digixdao.png',
+        REP: '/images/token_icons/augur.png',
+        DGD: '/images/token_icons/digixdao.png',
         WETH: '/images/token_icons/ether.png',
-        // FBTC: '/images/token_icons/btc.png',
-        // FDGX: '/images/token_icons/digixdao.png',
+        MLN: '/images/token_icons/melon.png',
+        GNT: '/images/token_icons/golem.png',
+        MKR: '/images/token_icons/makerdao.png',
+        ZRX: '/images/token_icons/zero_ex.png',
     } as {[symbol: string]: string},
 };

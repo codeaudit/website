@@ -9,5 +9,5 @@ export const configs = {
             canSendTransactions: true,
         },
     },
-    symbolsOfMintableTokens: ['TA', 'TB', 'WETH'],
+    symbolsOfMintableTokens: ['MKR', 'MLN', 'WETH', 'GNT', 'DGD', 'REP', 'ZRX'],
 };
