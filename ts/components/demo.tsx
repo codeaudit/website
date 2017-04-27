@@ -15,6 +15,7 @@ import {HashData, TokenByAddress, MenuItemValue, BlockchainErrs, Order, Fill, Si
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
 import {TopBar} from 'ts/components/top_bar';
+import {Loading} from 'ts/components/ui/loading';
 import BigNumber = require('bignumber.js');
 
 export interface DemoPassedProps {}
@@ -211,7 +212,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 <div className="py2">
                                     {this.props.blockchainIsLoaded ?
                                         visibleComponent :
-                                        this.renderLoading()
+                                        <Loading />
                                     }
                                 </div>
                             </Paper>
@@ -225,16 +226,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         toggleDialogFn={updateShouldBlockchainErrDialogBeOpen}
                     />
                 </div>
-            </div>
-        );
-    }
-    private renderLoading() {
-        return (
-            <div className="pt4" style={{height: 500}}>
-                <Paper className="mx-auto" style={{width: 417}}>
-                    <img className="p1" src="/images/loading.gif" width={400}  />
-                    <div className="center" style={{paddingBottom: 11}}>Connecting to the blockchain...</div>
-                </Paper>
             </div>
         );
     }

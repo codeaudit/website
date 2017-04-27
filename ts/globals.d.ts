@@ -7,6 +7,7 @@ declare module 'keccak';
 declare module 'bn.js';
 declare module 'web3-provider-engine';
 declare module 'whatwg-fetch';
+declare module 'react-html5video';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 
