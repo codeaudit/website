@@ -3,10 +3,11 @@ import * as React from 'react';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
 import ReactTooltip = require('react-tooltip');
 import {Identicon} from 'ts/components/ui/identicon';
+import {Styles} from 'ts/types';
 
 const MIN_ADDRESS_WIDTH = 70;
 
-const styles = {
+const styles: Styles = {
     address: {
         overflow: 'hidden',
         textOverflow: 'ellipsis',

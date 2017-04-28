@@ -6,11 +6,9 @@ import {constants} from 'ts/utils/constants';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import ReactTooltip = require('react-tooltip');
-import {
-    HashData,
-} from 'ts/types';
+import {HashData, Styles} from 'ts/types';
 
-const styles = {
+const styles: Styles = {
     textField: {
         overflow: 'hidden',
         paddingTop: 8,

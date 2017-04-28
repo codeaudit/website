@@ -165,3 +165,7 @@ export interface Action {
 export interface CustomTokensByNetworkId {
     [networkId: number]: Token;
 }
+
+export interface Styles {
+    [name: string]: React.CSSProperties;
+}

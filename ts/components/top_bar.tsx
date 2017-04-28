@@ -3,6 +3,7 @@ import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
 import {Identicon} from 'ts/components/ui/identicon';
+import {Styles} from 'ts/types';
 
 interface TopBarProps {
     userAddress: string;
@@ -11,7 +12,7 @@ interface TopBarProps {
 
 interface TopBarState {}
 
-const styles = {
+const styles: Styles = {
     address: {
         color: 'white',
         marginRight: 12,

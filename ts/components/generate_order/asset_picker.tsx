@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
-import {Token, Side, AssetToken, TokenByAddress} from 'ts/types';
+import {Token, Side, AssetToken, TokenByAddress, Styles} from 'ts/types';
 
 interface AssetPickerProps {
     isOpen: boolean;
@@ -16,7 +16,7 @@ interface AssetPickerState {
     hoveredAddress: string | undefined;
 }
 
-const styles = {
+const styles: Styles = {
     gridList: {
         overflowY: 'auto',
         width: 722,

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {InputLabel} from 'ts/components/ui/input_label';
+import {Styles} from 'ts/types';
 
-const styles = {
+const styles: Styles = {
     hr: {
         borderBottom: '1px solid rgb(224, 224, 224)',
         borderLeft: 'none rgb(224, 224, 224)',
