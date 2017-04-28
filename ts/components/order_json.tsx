@@ -106,13 +106,13 @@ You can see and fill it here: ${shareLink}`);
                                      '&longUrl=' + longUrl;
         const response = await fetch(bitlyRequestUrl);
         const responseBody = await response.text();
-        if (response.status !== 200) {
+        const bodyObj = JSON.parse(responseBody);
+        if (response.status !== 200 || bodyObj.status_code !== 200) {
             // TODO: Show error message in UI
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
             await errorReporter.reportAsync(new Error(`Bitly returned non-200: ${JSON.stringify(response)}`));
             return '';
         }
-        const bodyObj = JSON.parse(responseBody);
         return (bodyObj as any).data.url;
     }
     private getOrderUrl() {
