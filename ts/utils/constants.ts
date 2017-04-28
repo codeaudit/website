@@ -11,8 +11,8 @@ export const constants = {
     NULL_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROLLBAR_ACCESS_TOKEN: 'a6619002b51c4464928201e6ea94de65',
     TAKER_FEE: '0',
-    TESTNET_NAME: 'Ropsten',
-    TESTNET_NETWORK_ID: 3,
+    TESTNET_NAME: 'Kovan',
+    TESTNET_NETWORK_ID: 42,
     iconUrlBySymbol: {
         REP: '/images/token_icons/augur.png',
         DGD: '/images/token_icons/digixdao.png',
