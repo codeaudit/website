@@ -134,9 +134,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                            this.props.userAddress;
         const expiryDate = utils.convertToReadableDateTimeFromUnixTimestamp(this.state.parsedOrder.expiration);
         return (
-            <div className="pt2 pb1">
+            <div className="pt3 pb1">
+                <span>Order details</span>
                 <div className="px4">
-                    <div className="px4 pt3">
+                    <div className="px4 pt1">
                         <VisualOrder
                             orderTakerAddress={orderTaker}
                             orderMakerAddress={this.state.parsedOrder.maker.address}
