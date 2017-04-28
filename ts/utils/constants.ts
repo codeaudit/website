@@ -4,7 +4,7 @@ export const constants = {
     DEFAULT_TOKEN_ICON_URL: '/images/token_icons/default.png',
     ETHER_FAUCET_ENDPOINT: 'http://174.138.84.92/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',
-    INFURA_TESTNET_URL: 'https://ropsten.infura.io/T5WSC8cautR4KXyYgsRs',
+    INFURA_TESTNET_URL: 'https://kovan.infura.io/T5WSC8cautR4KXyYgsRs',
     MAKER_FEE: '0',
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
