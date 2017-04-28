@@ -25,7 +25,6 @@ export interface DemoAllProps {
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
     hashData: HashData;
-    kind: string;
     networkId: number;
     orderFillAmount: BigNumber;
     tokenByAddress: TokenByAddress;
@@ -36,7 +35,6 @@ export interface DemoAllProps {
 }
 
 interface DemoAllState {
-    kind: string;
     prevNetworkId: number;
     prevUserAddress: string;
     selectedMenuItem: MenuItemValue;
@@ -75,7 +73,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             selectedMenuItem = MenuItemValue.fill;
         }
         this.state = {
-            kind: 'form',
             prevNetworkId: this.props.networkId,
             prevUserAddress: this.props.userAddress,
             selectedMenuItem,
@@ -238,11 +235,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         }
         this.setState({
             selectedMenuItem,
-        });
-    }
-    private onChangeUIClick(kind: string) {
-        this.setState({
-            kind,
         });
     }
     private getSharedOrderIfExists(): Order {
