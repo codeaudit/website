@@ -15,6 +15,7 @@ import {HashData, TokenByAddress, MenuItemValue, BlockchainErrs, Order, Fill, Si
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
 import {TopBar} from 'ts/components/top_bar';
+import {Footer} from 'ts/components/footer';
 import {Loading} from 'ts/components/ui/loading';
 import BigNumber = require('bignumber.js');
 
@@ -32,6 +33,7 @@ export interface DemoAllProps {
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
     userSuppliedOrderCache: Order;
+    location: Location;
 }
 
 interface DemoAllState {
@@ -168,8 +170,9 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 <TopBar
                     userAddress={this.props.userAddress}
                     blockchainIsLoaded={this.props.blockchainIsLoaded}
+                    location={this.props.location}
                 />
-                <div className="mx-auto max-width-4">
+                <div className="mx-auto max-width-4 pt4">
                     <div className="mx-auto flex">
                         <div className="col col-2 mt2 pr2" style={{overflow: 'hidden'}}>
                             {/*
@@ -223,6 +226,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         toggleDialogFn={updateShouldBlockchainErrDialogBeOpen}
                     />
                 </div>
+                <Footer />
             </div>
         );
     }

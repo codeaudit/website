@@ -16,6 +16,7 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         alias: {
             ts: path.join(__dirname, '/ts'),
+            less: path.join(__dirname, '/less'),
         },
     },
     module: {
@@ -37,6 +38,10 @@ module.exports = {
                 test: /\.css$/,
                 loaders: ['style-loader', 'css-loader']
             },
+            {
+                test: /\.json$/,
+                loader: 'json-loader'
+            }
         ],
     },
     devServer: {

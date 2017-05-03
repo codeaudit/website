@@ -2,7 +2,8 @@ import * as React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, Store as ReduxStore} from 'redux';
-import {Home} from 'ts/home';
+import {Home} from 'ts/pages/home';
+import {FAQ} from 'ts/pages/faq';
 import {Demo} from 'ts/containers/demo';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
@@ -15,6 +16,7 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import 'basscss/css/basscss.css';
+import 'less/all.less';
 
 const muiTheme = getMuiTheme({
     appBar: {
@@ -31,7 +33,6 @@ const muiTheme = getMuiTheme({
 });
 
 const store: ReduxStore<State> = createStore(reducer);
-
 render(
     <Router>
         <div>
@@ -40,6 +41,7 @@ render(
                     <div>
                         <Route exact={true} path="/" component={Home as any} />
                         <Route path="/demo" component={Demo as any} />
+                        <Route path="/faq" component={FAQ as any} />
                     </div>
                 </Provider>
             </MuiThemeProvider>

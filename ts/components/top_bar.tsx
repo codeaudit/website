@@ -1,20 +1,30 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {AppBar, Drawer, MenuItem} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
 import {Identicon} from 'ts/components/ui/identicon';
 import {Styles} from 'ts/types';
+import {
+    Link as ScrollLink,
+    Element as ScrollElement,
+    animateScroll,
+} from 'react-scroll';
+import {Link} from 'react-router-dom';
+import {HashLink} from 'react-router-hash-link';
 
 interface TopBarProps {
-    userAddress: string;
+    userAddress?: string;
     blockchainIsLoaded: boolean;
+    location: Location;
 }
 
-interface TopBarState {}
+interface TopBarState {
+    isDrawerOpen: boolean;
+}
 
 const styles: Styles = {
     address: {
-        color: 'white',
         marginRight: 12,
         overflow: 'hidden',
         paddingTop: 4,
@@ -27,35 +37,123 @@ const styles: Styles = {
         color: 'white',
         padding: 3,
     },
-    logo: {
-        color: 'white',
-        fontSize: 18,
-        paddingLeft: 16,
-    },
     topBar: {
-        backgroundColor: colors.blueGrey500,
-        fontFamily: 'Roboto, sans-serif',
-        height: 45,
+        backgroundColor: 'white',
+        height: 42,
         width: '100%',
+        position: 'fixed',
+        top: 0,
         zIndex: 1100,
     },
 };
 
 export class TopBar extends React.Component<TopBarProps, TopBarState> {
+    constructor(props: TopBarProps) {
+        super(props);
+        this.state = {
+            isDrawerOpen: false,
+        };
+    }
     public render() {
         return (
             <div style={styles.topBar}>
-                <div className="flex mx-auto" style={{width: 1024}}>
+                <div className="flex mx-auto max-width-4">
                     <div className="col col-1">
-                        <h1 style={styles.logo}>0x</h1>
+                        <div className="pt1 sm-pl2 md-pl2 lg-pl0" style={{fontSize: 25, color: 'black'}}>
+                            <i
+                                className="zmdi zmdi-menu"
+                                onClick={this.onMenuButtonClick.bind(this)}
+                            />
+                        </div>
                     </div>
                     <div className="col col-8" />
                     <div className="col col-3">
                         {this.renderUser()}
                     </div>
                 </div>
+                {this.renderDrawer()}
             </div>
         );
+    }
+    private renderDrawer() {
+        return (
+            <Drawer
+                open={this.state.isDrawerOpen}
+                docked={false}
+                onRequestChange={this.onMenuButtonClick.bind(this)}
+            >
+                <Link to="/" className="text-decoration-none">
+                    <MenuItem>
+                        Home
+                    </MenuItem>
+                </Link>
+                <a
+                    className="text-decoration-none"
+                    target="_blank"
+                    href="https://www.0xproject.com/whitepaper/0x_white_paper.pdf"
+                >
+                    <MenuItem>Whitepaper</MenuItem>
+                </a>
+                {this.renderTeamMenuItem()}
+                {this.renderAdvisorsMenuItem()}
+                <Link to="/faq" className="text-decoration-none">
+                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                        FAQ
+                    </MenuItem>
+                </Link>
+                <Link to="/demo" className="text-decoration-none">
+                    <MenuItem>Demo</MenuItem>
+                </Link>
+            </Drawer>
+        );
+    }
+    private renderTeamMenuItem() {
+        if (this.props.location.pathname === '/') {
+            return (
+                <ScrollLink
+                    to="team"
+                    smooth={true}
+                    offset={0}
+                    duration={500}
+                >
+                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                        Team
+                    </MenuItem>
+                </ScrollLink>
+            );
+        } else {
+            return (
+                <HashLink to="/#team" className="text-decoration-none">
+                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                        Team
+                    </MenuItem>
+                </HashLink>
+            );
+        }
+    }
+    private renderAdvisorsMenuItem() {
+        if (this.props.location.pathname === '/') {
+            return (
+                <ScrollLink
+                    to="advisors"
+                    smooth={true}
+                    offset={0}
+                    duration={500}
+                >
+                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                        Advisors
+                    </MenuItem>
+                </ScrollLink>
+            );
+        } else {
+            return (
+                <HashLink to="/#advisors" className="text-decoration-none">
+                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                        Advisors
+                    </MenuItem>
+                </HashLink>
+            );
+        }
     }
     private renderUser() {
         if (!this.props.blockchainIsLoaded || this.props.userAddress === '') {
@@ -64,7 +162,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
         const userAddress = this.props.userAddress;
         return (
-            <div className="flex right" style={{padding: '10px 0px 10px 10px'}}>
+            <div className="flex right pt1 lg-pr0 md-pr2 sm-pr2">
                 <div
                     style={styles.address}
                     data-tip={true}
@@ -78,5 +176,10 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 </div>
             </div>
         );
+    }
+    private onMenuButtonClick() {
+        this.setState({
+            isDrawerOpen: !this.state.isDrawerOpen,
+        });
     }
 }

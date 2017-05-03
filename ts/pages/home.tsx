@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {RaisedButton, FlatButton, AppBar, Drawer, MenuItem} from 'material-ui';
+import {RaisedButton, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Styles} from 'ts/types';
 import {
@@ -8,10 +8,9 @@ import {
     Element as ScrollElement,
     animateScroll,
 } from 'react-scroll';
-
-import {
-  Link,
-} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {Footer} from 'ts/components/footer';
+import {TopBar} from 'ts/components/top_bar';
 
 const marketCaps = [
     {
@@ -100,11 +99,11 @@ const advisors = [
     },
 ];
 
-export interface HomeProps {}
-
-interface HomeState {
-    isDrawerOpen: boolean;
+export interface HomeProps {
+    location: Location;
 }
+
+interface HomeState {}
 
 const styles: Styles = {
     thin: {
@@ -123,61 +122,15 @@ const styles: Styles = {
 };
 
 export class Home extends React.Component<HomeProps, HomeState> {
-    constructor(props: HomeProps) {
-        super(props);
-        this.state = {
-            isDrawerOpen: false,
-        };
-    }
     public render() {
         return (
-            <div style={{fontFamily: 'Roboto, sans-serif', color: colors.grey800}}>
+            <div style={{color: colors.grey800}}>
+                <TopBar
+                    blockchainIsLoaded={false}
+                    location={this.props.location}
+                />
                 <div className="lg-pb4 md-pb4 sm-pb2 sm-pt0 md-pt4 lg-pt4 mx-auto max-width-4">
                     <div className="lg-pb4 md-pb4 clearfix">
-                        <div className="col col-12 lg-hide md-hide">
-                            <AppBar
-                                title={<img src="/images/logo_text.png" style={{width: 21}} />}
-                                titleStyle={{textAlign: 'center'}}
-                                iconClassNameRight="muidocs-icon-navigation-expand-more"
-                                onLeftIconButtonTouchTap={this.onMenuButtonClick.bind(this)}
-                            />
-                            <Drawer
-                                open={this.state.isDrawerOpen}
-                                docked={false}
-                                onRequestChange={this.onMenuButtonClick.bind(this)}
-                            >
-                                <a
-                                    className="text-decoration-none"
-                                    target="_blank"
-                                    href="https://www.0xproject.com/whitepaper/0x_white_paper.pdf"
-                                >
-                                    <MenuItem>Whitepaper</MenuItem>
-                                </a>
-                                <ScrollLink
-                                    to="team"
-                                    smooth={true}
-                                    offset={50}
-                                    duration={500}
-                                >
-                                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
-                                        Team
-                                    </MenuItem>
-                                </ScrollLink>
-                                <ScrollLink
-                                    to="advisors"
-                                    smooth={true}
-                                    offset={50}
-                                    duration={500}
-                                >
-                                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
-                                        Advisors
-                                    </MenuItem>
-                                </ScrollLink>
-                                <Link to="/demo" className="text-decoration-none">
-                                    <MenuItem>Demo</MenuItem>
-                                </Link>
-                            </Drawer>
-                        </div>
                         <div className="md-col md-col-6 pt4">
                             <div className="pt4 sm-center xs-center">
                                 <img
@@ -192,6 +145,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                     <img src="/images/0x_logo.png" style={{width: 125}} />
                                 </div>
                                 <div className="py2 pl1 sm-h2 sm-center">
+                                    <span className="lg-hide md-hide">0x: </span>
                                     A Decentralized Exchange Protocol
                                 </div>
                                 <div className="sm-hide xs-hide">
@@ -208,7 +162,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                     <ScrollLink
                                         to="team"
                                         smooth={true}
-                                        offset={50}
+                                        offset={0}
                                         duration={500}
                                     >
                                         <FlatButton
@@ -218,13 +172,18 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                     <ScrollLink
                                         to="advisors"
                                         smooth={true}
-                                        offset={50}
+                                        offset={0}
                                         duration={500}
                                     >
                                         <FlatButton
                                             label="Advisors"
                                         />
                                     </ScrollLink>
+                                    <Link to="/faq">
+                                        <FlatButton
+                                            label="FAQ"
+                                        />
+                                    </Link>
                                     <Link to="/demo">
                                         <FlatButton
                                             label="Demo"
@@ -270,6 +229,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     <ScrollElement name="team">
                         <div className="mx-auto max-width-4 pb4" style={{color: colors.grey50}}>
                             <h1
+                                id="team"
                                 className="pt4 sm-center md-pl3 lg-pl0"
                                 style={{...styles.teamHeader, ...styles.thin, color: 'white'}}
                             >
@@ -285,6 +245,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     <ScrollElement name="advisors">
                         <div className="mx-auto max-width-4 pb4" style={{color: colors.grey800}}>
                             <h1
+                                id="advisors"
                                 className="pt4 sm-center md-pl3 lg-pl0"
                                 style={{...styles.teamHeader, ...styles.thin, color: colors.grey800}}
                             >
@@ -296,11 +257,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         </div>
                     </ScrollElement>
                 </div>
-                <div className="relative" style={{backgroundColor: '#272727'}}>
-                    <div className="mx-auto max-width-4 py3 sm-center" style={{color: 'white'}}>
-                        team@0xproject.com
-                    </div>
-                </div>
+                <Footer />
             </div>
         );
     }
@@ -356,11 +313,6 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     </div>
                 </div>
             );
-        });
-    }
-    private onMenuButtonClick() {
-        this.setState({
-            isDrawerOpen: !this.state.isDrawerOpen,
         });
     }
     private getColSize(items: number) {

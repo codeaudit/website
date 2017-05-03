@@ -1,5 +1,6 @@
 declare module 'jazzicon';
 declare module 'react-tooltip';
+declare module 'react-router-hash-link';
 declare module 'es6-promisify';
 declare module 'truffle-contract';
 declare module 'ethereumjs-util';
