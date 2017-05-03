@@ -135,7 +135,7 @@ const investors = [
     },
     {
         name: 'Blockchain Capital',
-        logo: '/images/logos/Blockchain_capital.png',
+        logo: '/images/logos/blockchain_capital.png',
         url: 'http://http://blockchain.capital/',
     },
     {
