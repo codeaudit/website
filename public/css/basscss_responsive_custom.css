@@ -4,6 +4,12 @@
     .sm-center {
         text-align: center;
     }
+    .sm-left-align {
+        text-align: left;
+    }
+    .sm-right-align {
+        text-align: right;
+    }
     .sm-mx-auto {
         margin-left: auto;
         margin-right: auto;
@@ -14,6 +20,12 @@
     .md-center {
         text-align: center;
     }
+    .md-left-align {
+        text-align: left;
+    }
+    .md-right-align {
+        text-align: right;
+    }
     .md-mx-auto {
         margin-left: auto;
         margin-right: auto;
@@ -23,6 +35,12 @@
 @media (min-width: 64em) {
     .lg-center {
         text-align: center;
+    }
+    .lg-left-align {
+        text-align: left;
+    }
+    .lg-right-align {
+        text-align: right;
     }
     .lg-mx-auto {
         margin-left: auto;
