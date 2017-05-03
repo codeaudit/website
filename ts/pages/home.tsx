@@ -99,6 +99,52 @@ const advisors = [
     },
 ];
 
+const partnerships = [
+    {
+        name: 'Augur',
+        logo: '/images/logos/augur.png',
+        url: 'https://augur.net/',
+    },
+    {
+        name: 'Maker',
+        logo: '/images/logos/maker.png',
+        url: 'http://makerdao.com/',
+    },
+    {
+        name: 'Aragon',
+        logo: '/images/logos/aragon.png',
+        url: 'https://aragon.one/',
+    },
+    {
+        name: 'Melonport',
+        logo: '/images/logos/melonport.jpg',
+        url: 'https://melonport.com/',
+    },
+];
+
+const investors = [
+    {
+        name: 'Polychain Capital',
+        logo: '/images/logos/polychain_capital.png',
+        url: 'http://polychain.capital/',
+    },
+    {
+        name: 'Pantera Capital',
+        logo: '/images/logos/pantera_capital.png',
+        url: 'https://panteracapital.com/',
+    },
+    {
+        name: 'Blockchain Capital',
+        logo: '/images/logos/Blockchain_capital.png',
+        url: 'http://http://blockchain.capital/',
+    },
+    {
+        name: 'Jen Advisors',
+        logo: '/images/logos/jen_advisors.png',
+        url: 'http://www.jenadvisors.com/',
+    },
+];
+
 export interface HomeProps {
     location: Location;
 }
@@ -114,7 +160,7 @@ const styles: Styles = {
         lineHeight: 1.4,
         fontSize: 18,
     },
-    teamHeader: {
+    subheader: {
         textTransform: 'uppercase',
         fontSize: 32,
         margin: 0,
@@ -225,6 +271,27 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         style={{bottom: 0, right: 0, zIndex: 0, width: 550}}
                     />
                 </div>
+                <div style={{backgroundColor: 'white'}}>
+                    <div className="mx-auto max-width-4 pb4">
+                        <h1
+                            id="partnerships"
+                            className="pt4 sm-center md-pl3 lg-pl0"
+                            style={{...styles.subheader, ...styles.thin}}
+                        >
+                            Partnerships
+                        </h1>
+                        <div
+                            className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
+                            style={{...styles.paragraph, ...styles.thin}}
+                        >
+                            {`The following projects have agreed to be early adopters of the 0x
+                              protocol and will be using it in their respective applications.`}
+                        </div>
+                        <div className="clearfix pt3 mx-auto md-pl3">
+                            {this.renderPartners(partnerships)}
+                        </div>
+                    </div>
+                </div>
                 <div
                     className="relative"
                     style={{backgroundColor: '#272727'}}
@@ -234,7 +301,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             <h1
                                 id="team"
                                 className="pt4 sm-center md-pl3 lg-pl0"
-                                style={{...styles.teamHeader, ...styles.thin, color: 'white'}}
+                                style={{...styles.subheader, ...styles.thin, color: 'white'}}
                             >
                                 Team
                             </h1>
@@ -250,7 +317,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             <h1
                                 id="advisors"
                                 className="pt4 sm-center md-pl3 lg-pl0"
-                                style={{...styles.teamHeader, ...styles.thin, color: colors.grey800}}
+                                style={{...styles.subheader, ...styles.thin, color: colors.grey800}}
                             >
                                 Advisors
                             </h1>
@@ -260,9 +327,38 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         </div>
                     </ScrollElement>
                 </div>
+                <div style={{backgroundColor: 'white'}}>
+                    <div className="mx-auto max-width-4 pb4">
+                        <h1
+                            id="investors"
+                            className="pt4 sm-center md-pl3 lg-pl0"
+                            style={{...styles.subheader, ...styles.thin}}
+                        >
+                            Investors
+                        </h1>
+                        <div className="clearfix pt4 mx-auto md-pl3">
+                            {this.renderPartners(investors)}
+                        </div>
+                    </div>
+                </div>
                 <Footer />
             </div>
         );
+    }
+    private renderPartners(partners: any[]) {
+        const colSize = this.getColSize(partners.length);
+        return _.map(partners, (partner) => {
+            return (
+                <div
+                    key={partner.name}
+                    className={`sm-col sm-col-${colSize} sm-center sm-pb3`}
+                >
+                    <a href={partner.url} target="_blank">
+                        <img src={partner.logo} style={{maxWidth: 200, maxHeight: 120}} />
+                    </a>
+                </div>
+            );
+        });
     }
     private renderProfiles(individuals: any[]) {
         const numIndiv = individuals.length;
