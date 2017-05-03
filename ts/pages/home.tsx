@@ -178,7 +178,10 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     blockchainIsLoaded={false}
                     location={this.props.location}
                 />
-                <div className="lg-pb4 md-pb4 sm-pb2 sm-pt0 md-pt4 lg-pt4 mx-auto max-width-4">
+                <div
+                    id="home"
+                    className="lg-pb4 md-pb4 sm-pb2 sm-pt0 md-pt4 lg-pt4 mx-auto max-width-4"
+                >
                     <div className="lg-pb4 md-pb4 clearfix">
                         <div className="md-col md-col-6 pt4">
                             <div className="pt4 sm-center xs-center">
@@ -219,13 +222,13 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                         />
                                     </ScrollLink>
                                     <ScrollLink
-                                        to="advisors"
+                                        to="partnerships"
                                         smooth={true}
                                         offset={0}
                                         duration={500}
                                     >
                                         <FlatButton
-                                            label="Advisors"
+                                            label="Partners"
                                         />
                                     </ScrollLink>
                                     <Link to="/faq">

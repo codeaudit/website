@@ -59,7 +59,10 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             <div style={styles.topBar}>
                 <div className="flex mx-auto max-width-4">
                     <div className="col col-1">
-                        <div className="pt1 sm-pl2 md-pl2 lg-pl0" style={{fontSize: 25, color: 'black'}}>
+                        <div
+                            className="pt1 sm-pl2 md-pl2 lg-pl0"
+                            style={{fontSize: 25, color: 'black', cursor: 'pointer'}}
+                        >
                             <i
                                 className="zmdi zmdi-menu"
                                 onClick={this.onMenuButtonClick.bind(this)}
@@ -82,11 +85,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 docked={false}
                 onRequestChange={this.onMenuButtonClick.bind(this)}
             >
-                <Link to="/" className="text-decoration-none">
-                    <MenuItem>
-                        Home
-                    </MenuItem>
-                </Link>
+                {this.renderHomepageMenuItem('home')}
                 <a
                     className="text-decoration-none"
                     target="_blank"
@@ -94,8 +93,10 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 >
                     <MenuItem>Whitepaper</MenuItem>
                 </a>
-                {this.renderTeamMenuItem()}
-                {this.renderAdvisorsMenuItem()}
+                {this.renderHomepageMenuItem('partnerships')}
+                {this.renderHomepageMenuItem('team')}
+                {this.renderHomepageMenuItem('advisors')}
+                {this.renderHomepageMenuItem('investors')}
                 <Link to="/faq" className="text-decoration-none">
                     <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
                         FAQ
@@ -131,25 +132,25 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             );
         }
     }
-    private renderAdvisorsMenuItem() {
+    private renderHomepageMenuItem(location: string) {
         if (this.props.location.pathname === '/') {
             return (
                 <ScrollLink
-                    to="advisors"
+                    to={location}
                     smooth={true}
                     offset={0}
                     duration={500}
                 >
                     <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
-                        Advisors
+                        {_.capitalize(location)}
                     </MenuItem>
                 </ScrollLink>
             );
         } else {
             return (
-                <HashLink to="/#advisors" className="text-decoration-none">
+                <HashLink to={`/#${location}`} className="text-decoration-none">
                     <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
-                        Advisors
+                        {_.capitalize(location)}
                     </MenuItem>
                 </HashLink>
             );
