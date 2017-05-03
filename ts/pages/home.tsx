@@ -119,6 +119,9 @@ const styles: Styles = {
         fontSize: 32,
         margin: 0,
     },
+    socalIcon: {
+        fontSize: 20,
+    },
 };
 
 export class Home extends React.Component<HomeProps, HomeState> {
@@ -268,32 +271,67 @@ export class Home extends React.Component<HomeProps, HomeState> {
             return (
                 <div
                     key={individual.name}
-                    className={`sm-col sm-col-${colSize} sm-center`}
+                    className={`sm-col sm-col-${colSize}`}
                 >
-                    <div>
-                        <img src={individual.image} />
-                    </div>
-                    <div
-                        className="pt1"
-                        style={{fontSize: 18, fontWeight: 'bold'}}
-                    >
-                        {individual.name}
-                    </div>
-                    <div
-                        className="pb2 pt1"
-                        style={{...styles.thin, fontSize: 16}}
-                    >
-                        {individual.title}
-                    </div>
-                    <div
-                        style={{fontSize: 13, ...styles.thin}}
-                        className="pb3 sm-px4"
-                    >
-                        {individual.description}
+                    <div className="mx-auto" style={{width: 200}}>
+                        <div>
+                            <img src={individual.image} />
+                        </div>
+                        <div
+                            className="pt1"
+                            style={{fontSize: 18, fontWeight: 'bold'}}
+                        >
+                            {individual.name}
+                        </div>
+                        <div
+                            className="pb2 pt1"
+                            style={{...styles.thin, fontSize: 16}}
+                        >
+                            {individual.title}
+                        </div>
+                        <div
+                            style={{fontSize: 13, minHeight: 60, ...styles.thin}}
+                            className="pb2"
+                        >
+                            {individual.description}
+                        </div>
+                        <div className="flex pb3">
+                            {this.renderSocialMediaIcons(individual)}
+                        </div>
                     </div>
                 </div>
             );
         });
+    }
+    private renderSocialMediaIcons(individual: any) {
+        const icons = [];
+        if (!_.isEmpty(individual.github)) {
+            const icon = this.renderSocialMediaIcon('zmdi-github-box', individual.github);
+            icons.push(icon);
+        }
+        if (!_.isEmpty(individual.linkedIn)) {
+            const icon = this.renderSocialMediaIcon('zmdi-linkedin-box', individual.linkedIn);
+            icons.push(icon);
+        }
+        if (!_.isEmpty(individual.twitter)) {
+            const icon = this.renderSocialMediaIcon('zmdi-twitter-box', individual.twitter);
+            icons.push(icon);
+        }
+        return icons;
+    }
+    private renderSocialMediaIcon(iconName: string, url: string) {
+        return (
+            <div key={url} className="pr2">
+                <a
+                    href={url}
+                    style={{color: 'inherit'}}
+                    target="_blank"
+                    className="text-decoration-none"
+                >
+                    <i className={`zmdi ${iconName}`} style={{...styles.socalIcon}} />
+                </a>
+            </div>
+        );
     }
     private renderMarketCaps() {
         const colSize = this.getColSize(marketCaps.length);
