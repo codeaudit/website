@@ -196,7 +196,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         <div className="center">
                             <LifeCycleRaisedButton
                                 isHidden={this.state.signingState === SigningState.SIGNED}
-                                isPrimary={true}
                                 labelReady="Sign hash"
                                 labelLoading="Signing..."
                                 labelComplete="Hash signed!"

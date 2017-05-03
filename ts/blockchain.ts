@@ -402,6 +402,9 @@ export class Blockchain {
         }
     }
     private async onPageLoadAsync() {
+        if (document.readyState === 'complete') {
+            return; // Already loaded
+        }
         return new Promise((resolve, reject) => {
             window.onload = resolve;
         });

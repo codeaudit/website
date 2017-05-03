@@ -16,7 +16,6 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         alias: {
             ts: path.join(__dirname, '/ts'),
-            less: path.join(__dirname, '/less'),
         },
     },
     module: {
