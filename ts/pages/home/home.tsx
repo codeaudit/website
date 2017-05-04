@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 import {RaisedButton, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Styles} from 'ts/types';
@@ -8,24 +9,11 @@ import {
     Element as ScrollElement,
     animateScroll,
 } from 'react-scroll';
-import {Link} from 'react-router-dom';
+import {utils} from 'ts/utils/utils';
 import {Footer} from 'ts/components/footer';
 import {TopBar} from 'ts/components/top_bar';
-
-const marketCaps = [
-    {
-        name: 'Ether',
-        marketCap: '$7.7B',
-    },
-    {
-        name: 'Augur REP',
-        marketCap: '$187M',
-    },
-    {
-        name: 'Golem',
-        marketCap: '$197M',
-    },
-];
+import {NewsletterInput} from 'ts/pages/home/newsletter_input';
+import {Statistics} from 'ts/pages/home/statistics';
 
 const team = [
     {
@@ -269,7 +257,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         </div>
                         <div className="lg-py4 md-py4 sm-py2" />
                         <div className="pt4 pb1 clearfix sm-pl3 md-pl3 lg-pl0">
-                            {this.renderMarketCaps()}
+                            <Statistics />
                         </div>
                     </div>
                     <img
@@ -277,6 +265,34 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         src="/images/0x_city_globe.png"
                         style={{bottom: 0, right: 0, zIndex: 0, width: 550}}
                     />
+                </div>
+                <div
+                    style={{backgroundColor: '#272727'}}
+                >
+                    <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
+                        <div className="sm-col sm-col-6">
+                            <h1
+                                className="pt4 sm-center md-pl3 lg-pl0"
+                                style={{...styles.subheader, ...styles.thin}}
+                            >
+                                Newsletter
+                            </h1>
+                            <div
+                                className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
+                                style={{...styles.paragraph, ...styles.thin}}
+                            >
+                                Stay up to date with the latest 0x developments
+                            </div>
+                            <div className="pt1 md-pl3 lg-pl0 sm-center sm-px4">
+                                <NewsletterInput />
+                            </div>
+                        </div>
+                        <div className="sm-col sm-col-6 p4">
+                            <div className="center">
+                                <img src="/images/paper_airplane.png" style={{width: 150}} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div style={{backgroundColor: 'white'}}>
                     <div className="mx-auto max-width-4 pb4">
@@ -353,7 +369,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         );
     }
     private renderPartners(partners: any[]) {
-        const colSize = this.getColSize(partners.length);
+        const colSize = utils.getColSize(partners.length);
         return _.map(partners, (partner) => {
             return (
                 <div
@@ -369,7 +385,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     }
     private renderProfiles(individuals: any[]) {
         const numIndiv = individuals.length;
-        const colSize = this.getColSize(individuals.length);
+        const colSize = utils.getColSize(individuals.length);
         return _.map(individuals, (individual) => {
             return (
                 <div
@@ -435,33 +451,5 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 </a>
             </div>
         );
-    }
-    private renderMarketCaps() {
-        const colSize = this.getColSize(marketCaps.length);
-        return _.map(marketCaps, (mc) => {
-            return (
-                <div
-                    key={mc.name}
-                    className="sm-col sm-col-${colSize} pr4 pb3"
-                    style={{color: colors.grey700, textShadow: '0 0 4px #fff'}}
-                >
-                    <div className="center" style={{fontSize: 58, ...styles.thin}}>{mc.marketCap}</div>
-                    <div
-                        className="center pt1"
-                        style={{textTransform: 'uppercase', fontSize: 25}}
-                    >
-                        {mc.name}
-                    </div>
-                </div>
-            );
-        });
-    }
-    private getColSize(items: number) {
-        const bassCssGridSize = 12; // Source: http://basscss.com/#basscss-grid
-        const colSize = 12 / items;
-        if (!_.isInteger(colSize)) {
-            throw new Error('Number of cols must be divisible by 12');
-        }
-        return colSize;
     }
 }
