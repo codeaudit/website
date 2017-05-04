@@ -2,7 +2,7 @@ import * as React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, Store as ReduxStore} from 'redux';
-import {Home} from 'ts/pages/home';
+import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
 import {Demo} from 'ts/containers/demo';
 import {State, reducer} from 'ts/redux/reducer';
