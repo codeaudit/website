@@ -93,7 +93,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 >
                     <MenuItem>Whitepaper</MenuItem>
                 </a>
-                {this.renderHomepageMenuItem('partnerships')}
+                {this.renderHomepageMenuItem('partners')}
                 {this.renderHomepageMenuItem('team')}
                 {this.renderHomepageMenuItem('advisors')}
                 {this.renderHomepageMenuItem('investors')}

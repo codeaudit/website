@@ -15,15 +15,15 @@ import {TopBar} from 'ts/components/top_bar';
 const marketCaps = [
     {
         name: 'Ether',
-        marketCap: '$5.8B',
+        marketCap: '$7.7B',
     },
     {
         name: 'Augur REP',
-        marketCap: '$161M',
+        marketCap: '$187M',
     },
     {
         name: 'Golem',
-        marketCap: '$114M',
+        marketCap: '$197M',
     },
 ];
 
@@ -156,7 +156,6 @@ const styles: Styles = {
         fontWeight: 100,
     },
     paragraph: {
-        maxWidth: 750,
         lineHeight: 1.4,
         fontSize: 18,
     },
@@ -196,9 +195,9 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                 <div className="pt3 sm-hide xs-hide">
                                     <img src="/images/0x_logo.png" style={{width: 125}} />
                                 </div>
-                                <div className="py2 pl1 sm-h2 sm-center">
+                                <div className="py2 sm-h2 sm-center">
                                     <span className="lg-hide md-hide">0x: </span>
-                                    A Decentralized Exchange Protocol
+                                    The Protocol for Trading Tokens
                                 </div>
                                 <div className="sm-hide xs-hide">
                                     <a
@@ -252,16 +251,21 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             className="pt4 lg-h0 xm-center sm-center md-pl3 lg-pl0"
                             style={{textTransform: 'uppercase', ...styles.thin}}
                         >
-                            The world will be tokenized
+                            The World is Becoming Tokenized
                         </h1>
                         <div
                             className="pb4 sm-center sm-px3 md-pl3 lg-pl0"
-                            style={{...styles.paragraph, ...styles.thin}}
+                            style={{maxWidth: 750, ...styles.paragraph, ...styles.thin}}
                         >
-                            {`Talking about how the world is adopting digital assets and trading them
-                            like never before, with boundless growth coming. Talking about how the
-                            world is adopting digital assets and trading them like never before,
-                            with boundless growth coming.`}
+                            The Ethereum blockchain has become host to a{' '}
+                            <a href="https://etherscan.io/tokens" target="_blank">
+                                variety of digital assets
+                            </a>, with{' '}
+                            <a href="https://www.icoalert.com/" target="_blank">
+                                more being created every month
+                            </a>. Soon, thousands of assets will be tokenized and moved onto this{' '}
+                            open financial network including traditional securities, currencies and{' '}
+                            scarce digital goods.
                         </div>
                         <div className="lg-py4 md-py4 sm-py2" />
                         <div className="pt4 pb1 clearfix sm-pl3 md-pl3 lg-pl0">
@@ -277,11 +281,11 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 <div style={{backgroundColor: 'white'}}>
                     <div className="mx-auto max-width-4 pb4">
                         <h1
-                            id="partnerships"
+                            id="partners"
                             className="pt4 sm-center md-pl3 lg-pl0"
                             style={{...styles.subheader, ...styles.thin}}
                         >
-                            Partnerships
+                            Partners
                         </h1>
                         <div
                             className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
@@ -337,7 +341,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             className="pt4 sm-center md-pl3 lg-pl0"
                             style={{...styles.subheader, ...styles.thin}}
                         >
-                            Investors
+                            Backed by
                         </h1>
                         <div className="clearfix pt4 mx-auto md-pl3">
                             {this.renderPartners(investors)}
