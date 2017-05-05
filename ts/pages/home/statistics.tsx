@@ -3,6 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
+import {StatisticByKey, Statistic} from 'ts/types';
 
 interface ERC20MarketInfo {
     etherMarketCapUsd: number;
@@ -10,18 +11,18 @@ interface ERC20MarketInfo {
     marketCapERC20TokensUsd: number;
 }
 
-const defaultStats = {
+const defaultStats: StatisticByKey = {
     ETHER_MARKET_CAP: {
         title: 'Ether',
-        statistic: '$7.7B',
+        figure: '$7.7B',
     },
     ERC20_TOKEN_MARKET_CAP: {
         title: 'Tokens',
-        statistic: '$0.8B',
+        figure: '$0.8B',
     },
     NUMBER_LIQUID_ERC20_TOKENS: {
         title: 'Liquid Tokens',
-        statistic: '17',
+        figure: '17',
     },
 };
 
@@ -42,10 +43,10 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
         const colSize = utils.getColSize(_.size(defaultStats));
         const stats = defaultStats;
         if (!_.isUndefined(this.state.erc20MarketInfo)) {
-            stats.NUMBER_LIQUID_ERC20_TOKENS.statistic = this.state.erc20MarketInfo.numLiquidERC20Tokens.toString();
+            stats.NUMBER_LIQUID_ERC20_TOKENS.figure = this.state.erc20MarketInfo.numLiquidERC20Tokens.toString();
 
             const erc20MarketCapUsd = this.state.erc20MarketInfo.marketCapERC20TokensUsd;
-            stats.ERC20_TOKEN_MARKET_CAP.statistic = this.formatToBillions(erc20MarketCapUsd);
+            stats.ERC20_TOKEN_MARKET_CAP.figure = this.formatToBillions(erc20MarketCapUsd);
         }
         return (
             <div>
@@ -53,7 +54,7 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
             </div>
         );
     }
-    private renderStats(stats: any) {
+    private renderStats(stats: StatisticByKey) {
         return _.map(_.values(defaultStats), (stat) => {
             return (
                 <div
@@ -61,7 +62,7 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
                     className="sm-col sm-col-${colSize} pr4 pb3"
                     style={{color: colors.grey700, textShadow: '0 0 4px #fff'}}
                 >
-                    <div className="center" style={{fontSize: 58, fontWeight: 100}}>{stat.statistic}</div>
+                    <div className="center" style={{fontSize: 58, fontWeight: 100}}>{stat.figure}</div>
                     <div
                         className="center pt1"
                         style={{textTransform: 'uppercase', fontSize: 25}}

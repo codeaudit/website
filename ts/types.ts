@@ -169,3 +169,30 @@ export interface CustomTokensByNetworkId {
 export interface Styles {
     [name: string]: React.CSSProperties;
 }
+
+export interface Profile {
+    name: string;
+    title: string;
+    description: string;
+    image: string;
+    linkedIn?: string;
+    github?: string;
+    angellist?: string;
+    medium?: string;
+    twitter?: string;
+}
+
+export interface Partner {
+    name: string;
+    logo: string;
+    url: string;
+}
+
+export interface Statistic {
+    title: string;
+    figure: string;
+}
+
+export interface StatisticByKey {
+    [key: string]: Statistic;
+}

@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Link} from 'react-router-dom';
 import {RaisedButton, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {Styles} from 'ts/types';
+import {Styles, Profile, Partner} from 'ts/types';
 import {
     Link as ScrollLink,
     Element as ScrollElement,
@@ -15,79 +15,79 @@ import {TopBar} from 'ts/components/top_bar';
 import {NewsletterInput} from 'ts/pages/home/newsletter_input';
 import {Statistics} from 'ts/pages/home/statistics';
 
-const team = [
+const team: Profile[] = [
     {
         name: 'Will Warren',
         title: 'Co-founder & CEO',
         description: `Smart contract R&D. Previously applied physics research and simulations at Los
                       Alamos National Laboratory. Mechanical engineering at UC San Diego. PhD dropout.`,
+        image: '/images/team/will.jpg',
         linkedIn: 'https://www.linkedin.com/in/will-warren-92aab62b/',
         github: 'https://github.com/willwarren89',
         medium: 'https://medium.com/@willwarren89',
-        image: '/images/team/will.jpg',
     },
     {
         name: 'Amir Bandeali',
         title: 'Co-founder & CTO',
         description: `Full-stack web application & smart contract dev. Former fixed income trader at
                       DRW and online poker professional. Finance at University of Illinois, Urbana-Champaign.`,
+        image: '/images/team/amir.jpeg',
         linkedIn: 'https://www.linkedin.com/in/abandeali1/',
         github: 'https://github.com/abandeali1',
         medium: 'https://medium.com/@abandeali1',
-        image: '/images/team/amir.jpeg',
     },
     {
         name: 'Fabio Berger',
         title: 'Senior Engineer',
         description: `Blockchain engineer with extensive full-stack and devOps experience. Previously
                       software engineer at Airtable and founder of WealthLift. Computer science at Duke.`,
+        image: '/images/team/fabio.jpg',
         linkedIn: 'https://www.linkedin.com/in/fabio-berger-03ab261a/',
         github: 'https://github.com/fabioberger',
         medium: '',
-        image: '/images/team/fabio.jpg',
     },
 ];
 
-const advisors = [
+const advisors: Profile[] = [
     {
         name: 'Fred Ehrsam',
         title: 'Advisor',
         description: 'Co-founder of Coinbase. Previously FX trader at Goldman Sachs. Computer Science at Duke.',
+        image: '/images/advisors/fred.jpg',
         linkedIn: 'https://www.linkedin.com/in/fredehrsam/',
         medium: 'https://medium.com/@FEhrsam',
         twitter: 'https://twitter.com/FEhrsam',
-        image: '/images/advisors/fred.jpg',
     },
     {
         name: 'Olaf Carlson-Wee',
         title: 'Advisor',
+        image: '/images/advisors/olaf.png',
         description: 'Founder of Polychain Capital. First employee at Coinbase. Angel investor.',
         linkedIn: 'https://www.linkedin.com/in/olafcw/',
         angellist: 'https://angel.co/olafcw',
-        image: '/images/advisors/olaf.png',
     },
     {
         name: 'Joey Krug',
         title: 'Advisor',
         description: `Founder of Augur. Computer Science at Pomona College dropout.
                       Thiel Fellowship 20 Under 20 Fellow.`,
+        image: '/images/advisors/joey.jpg',
         linkedIn: 'https://www.linkedin.com/in/joeykrug/',
         github: 'https://github.com/joeykrug',
         angellist: 'https://angel.co/joeykrug',
-        image: '/images/advisors/joey.jpg',
     },
     {
         name: 'Linda Xie',
         title: 'Advisor',
         description: 'Product Manager at Coinbase. Previously Portfolio Risk at AIG.',
+        image: '/images/advisors/linda.jpg',
         linkedIn: 'https://www.linkedin.com/in/lindaxie/',
         medium: 'https://medium.com/@linda.xie',
         twitter: 'https://twitter.com/ljxie',
-        image: '/images/advisors/linda.jpg',
     },
 ];
 
-const partnerships = [
+const partnerships: Partner[] = [
     {
         name: 'Augur',
         logo: '/images/logos/augur.png',
@@ -110,7 +110,7 @@ const partnerships = [
     },
 ];
 
-const investors = [
+const investors: Partner[] = [
     {
         name: 'Polychain Capital',
         logo: '/images/logos/polychain_capital.png',
@@ -368,7 +368,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
             </div>
         );
     }
-    private renderPartners(partners: any[]) {
+    private renderPartners(partners: Partner[]) {
         const colSize = utils.getColSize(partners.length);
         return _.map(partners, (partner) => {
             return (
@@ -383,57 +383,57 @@ export class Home extends React.Component<HomeProps, HomeState> {
             );
         });
     }
-    private renderProfiles(individuals: any[]) {
-        const numIndiv = individuals.length;
-        const colSize = utils.getColSize(individuals.length);
-        return _.map(individuals, (individual) => {
+    private renderProfiles(profiles: Profile[]) {
+        const numIndiv = profiles.length;
+        const colSize = utils.getColSize(profiles.length);
+        return _.map(profiles, (profile) => {
             return (
                 <div
-                    key={individual.name}
+                    key={profile.name}
                     className={`sm-col sm-col-${colSize}`}
                 >
                     <div className="mx-auto" style={{width: 200}}>
                         <div>
-                            <img src={individual.image} />
+                            <img src={profile.image} />
                         </div>
                         <div
                             className="pt1"
                             style={{fontSize: 18, fontWeight: 'bold'}}
                         >
-                            {individual.name}
+                            {profile.name}
                         </div>
                         <div
                             className="pb2 pt1"
                             style={{...styles.thin, fontSize: 16}}
                         >
-                            {individual.title}
+                            {profile.title}
                         </div>
                         <div
                             style={{fontSize: 13, minHeight: 60, ...styles.thin}}
                             className="pb2"
                         >
-                            {individual.description}
+                            {profile.description}
                         </div>
                         <div className="flex pb3">
-                            {this.renderSocialMediaIcons(individual)}
+                            {this.renderSocialMediaIcons(profile)}
                         </div>
                     </div>
                 </div>
             );
         });
     }
-    private renderSocialMediaIcons(individual: any) {
+    private renderSocialMediaIcons(profile: Profile) {
         const icons = [];
-        if (!_.isEmpty(individual.github)) {
-            const icon = this.renderSocialMediaIcon('zmdi-github-box', individual.github);
+        if (!_.isEmpty(profile.github)) {
+            const icon = this.renderSocialMediaIcon('zmdi-github-box', profile.github);
             icons.push(icon);
         }
-        if (!_.isEmpty(individual.linkedIn)) {
-            const icon = this.renderSocialMediaIcon('zmdi-linkedin-box', individual.linkedIn);
+        if (!_.isEmpty(profile.linkedIn)) {
+            const icon = this.renderSocialMediaIcon('zmdi-linkedin-box', profile.linkedIn);
             icons.push(icon);
         }
-        if (!_.isEmpty(individual.twitter)) {
-            const icon = this.renderSocialMediaIcon('zmdi-twitter-box', individual.twitter);
+        if (!_.isEmpty(profile.twitter)) {
+            const icon = this.renderSocialMediaIcon('zmdi-twitter-box', profile.twitter);
             icons.push(icon);
         }
         return icons;
