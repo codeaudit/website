@@ -207,6 +207,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                 </div>
                 <Dialog
                     title="Order JSON"
+                    titleStyle={{fontWeight: 100}}
                     modal={false}
                     open={this.state.signingState === SigningState.SIGNED}
                     onRequestClose={this.onCloseOrderJSONDialog.bind(this)}

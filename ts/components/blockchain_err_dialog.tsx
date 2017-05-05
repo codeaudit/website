@@ -28,6 +28,7 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
         return (
             <Dialog
                 title={this.getTitle(hasWalletAddress)}
+                titleStyle={{fontWeight: 100}}
                 actions={dialogActions}
                 open={this.props.isOpen}
                 contentStyle={{width: 400}}

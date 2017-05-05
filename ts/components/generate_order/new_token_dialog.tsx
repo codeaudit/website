@@ -50,6 +50,7 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
         return (
             <Dialog
                 title="Add an ERC20 token"
+                titleStyle={{fontWeight: 100}}
                 modal={false}
                 open={this.props.isOpen}
                 onRequestClose={this.props.onCloseDialog.bind(this)}

@@ -39,6 +39,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
         return (
             <Dialog
                 title="Choose a token"
+                titleStyle={{fontWeight: 100}}
                 modal={false}
                 open={this.props.isOpen}
                 onRequestClose={this.onCloseDialog.bind(this)}

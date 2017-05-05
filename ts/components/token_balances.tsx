@@ -155,6 +155,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 </Table>
                 <Dialog
                     title="Oh oh"
+                    titleStyle={{fontWeight: 100}}
                     actions={errorDialogActions}
                     open={!_.isUndefined(this.state.errorType)}
                     onRequestClose={this.onErrorDialogToggle.bind(this, false)}
