@@ -173,7 +173,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     blockchainIsLoaded={this.props.blockchainIsLoaded}
                     location={this.props.location}
                 />
-                <div className="mx-auto max-width-4 pt4">
+                <div id="demo" className="mx-auto max-width-4 pt4">
                     <Paper className="mb3 mt2">
                         <div className="mx-auto flex">
                             <div
