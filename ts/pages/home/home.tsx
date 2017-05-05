@@ -3,6 +3,7 @@ import * as React from 'react';
 import {Link} from 'react-router-dom';
 import {RaisedButton, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {configs} from 'ts/utils/configs';
 import {Styles, Profile, Partner} from 'ts/types';
 import {
     Link as ScrollLink,
@@ -14,6 +15,7 @@ import {Footer} from 'ts/components/footer';
 import {TopBar} from 'ts/components/top_bar';
 import {NewsletterInput} from 'ts/pages/home/newsletter_input';
 import {Statistics} from 'ts/pages/home/statistics';
+import ReactTooltip = require('react-tooltip');
 
 const team: Profile[] = [
     {
@@ -160,13 +162,12 @@ const styles: Styles = {
 export class Home extends React.Component<HomeProps, HomeState> {
     public render() {
         return (
-            <div style={{color: colors.grey800}}>
+            <div id="home" style={{color: colors.grey800}}>
                 <TopBar
                     blockchainIsLoaded={false}
                     location={this.props.location}
                 />
                 <div
-                    id="home"
                     className="lg-pb4 md-pb4 sm-pb2 sm-pt0 md-pt4 lg-pt4 mx-auto max-width-4"
                 >
                     <div className="lg-pb4 md-pb4 clearfix">
@@ -187,7 +188,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                     <span className="lg-hide md-hide">0x: </span>
                                     The Protocol for Trading Tokens
                                 </div>
-                                <div className="sm-hide xs-hide">
+                                <div className="flex sm-hide xs-hide">
                                     <a
                                         target="_blank"
                                         href="https://www.0xproject.com/whitepaper/0x_white_paper.pdf"
@@ -209,7 +210,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                         />
                                     </ScrollLink>
                                     <ScrollLink
-                                        to="partnerships"
+                                        to="partners"
                                         smooth={true}
                                         offset={0}
                                         duration={500}
@@ -223,11 +224,22 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             label="FAQ"
                                         />
                                     </Link>
-                                    <Link to="/demo">
-                                        <FlatButton
-                                            label="Demo"
-                                        />
-                                    </Link>
+                                    {configs.isDemoEnabled ?
+                                        <Link to="/demo">
+                                            <FlatButton
+                                                label="Demo"
+                                            />
+                                        </Link> :
+                                        <div
+                                            data-tip={true}
+                                            data-for="demoTooltip"
+                                        >
+                                            <FlatButton
+                                                label="Demo"
+                                            />
+                                            <ReactTooltip id="demoTooltip">Coming soon!</ReactTooltip>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>

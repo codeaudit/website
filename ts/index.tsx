@@ -2,6 +2,7 @@ import * as React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, Store as ReduxStore} from 'redux';
+import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
 import {Demo} from 'ts/containers/demo';
@@ -40,7 +41,9 @@ render(
                 <Provider store={store}>
                     <div>
                         <Route exact={true} path="/" component={Home as any} />
-                        <Route path="/demo" component={Demo as any} />
+                        {configs.isDemoEnabled &&
+                            <Route path="/demo" component={Demo as any} />
+                        }
                         <Route path="/faq" component={FAQ as any} />
                     </div>
                 </Provider>

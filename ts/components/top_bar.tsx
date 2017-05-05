@@ -3,6 +3,7 @@ import * as React from 'react';
 import {AppBar, Drawer, MenuItem} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
+import {configs} from 'ts/utils/configs';
 import {Identicon} from 'ts/components/ui/identicon';
 import {Styles} from 'ts/types';
 import {
@@ -102,9 +103,11 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                         FAQ
                     </MenuItem>
                 </Link>
-                <Link to="/demo" className="text-decoration-none">
-                    <MenuItem>Demo</MenuItem>
-                </Link>
+                {configs.isDemoEnabled &&
+                    <Link to="/demo" className="text-decoration-none">
+                        <MenuItem>Demo</MenuItem>
+                    </Link>
+                }
             </Drawer>
         );
     }
