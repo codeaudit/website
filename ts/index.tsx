@@ -9,11 +9,7 @@ import {NotFound} from 'ts/pages/not_found';
 import {Demo} from 'ts/containers/demo';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-} from 'react-router-dom';
+import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
@@ -41,12 +37,14 @@ render(
             <MuiThemeProvider muiTheme={muiTheme}>
                 <Provider store={store}>
                     <div>
-                        <Route exact={true} path="/" component={Home as any} />
-                        {configs.isDemoEnabled &&
-                            <Route path="/demo" component={Demo as any} />
-                        }
-                        <Route path="/faq" component={FAQ as any} />
-                        <Route path="*" component={NotFound as any} />
+                        <Switch>
+                            <Route exact={true} path="/" component={Home as any} />
+                            {configs.isDemoEnabled &&
+                                <Route path="/demo" component={Demo as any} />
+                            }
+                            <Route path="/faq" component={FAQ as any} />
+                            <Route component={NotFound as any} />
+                        </Switch>
                     </div>
                 </Provider>
             </MuiThemeProvider>
