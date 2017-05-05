@@ -5,6 +5,7 @@ import {createStore, Store as ReduxStore} from 'redux';
 import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
+import {NotFound} from 'ts/pages/not_found';
 import {Demo} from 'ts/containers/demo';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
@@ -45,6 +46,7 @@ render(
                             <Route path="/demo" component={Demo as any} />
                         }
                         <Route path="/faq" component={FAQ as any} />
+                        <Route path="*" component={NotFound as any} />
                     </div>
                 </Provider>
             </MuiThemeProvider>
