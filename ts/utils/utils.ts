@@ -90,4 +90,12 @@ export const utils = {
     deepEqual(actual: any, expected: any, opts?: {strict: boolean}) {
         return deepEqual(actual, expected, opts);
     },
+    getColSize(items: number) {
+        const bassCssGridSize = 12; // Source: http://basscss.com/#basscss-grid
+        const colSize = 12 / items;
+        if (!_.isInteger(colSize)) {
+            throw new Error('Number of cols must be divisible by 12');
+        }
+        return colSize;
+    },
 };
