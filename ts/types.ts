@@ -196,3 +196,9 @@ export interface Statistic {
 export interface StatisticByKey {
     [key: string]: Statistic;
 }
+
+export interface ERC20MarketInfo {
+    etherMarketCapUsd: number;
+    numLiquidERC20Tokens: number;
+    marketCapERC20TokensUsd: number;
+}

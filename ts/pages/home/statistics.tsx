@@ -3,13 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
-import {StatisticByKey, Statistic} from 'ts/types';
-
-interface ERC20MarketInfo {
-    etherMarketCapUsd: number;
-    numLiquidERC20Tokens: number;
-    marketCapERC20TokensUsd: number;
-}
+import {StatisticByKey, Statistic, ERC20MarketInfo} from 'ts/types';
 
 const defaultStats: StatisticByKey = {
     ETHER_MARKET_CAP: {
