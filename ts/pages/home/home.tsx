@@ -255,7 +255,10 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                 more being created every month
                             </a>. Soon, thousands of assets will be tokenized and moved onto this{' '}
                             open financial network including traditional securities, currencies and{' '}
-                            scarce digital goods.
+                            scarce digital goods. As the token space continues to develop, the need{' '}
+                            to exchange these assets will be compounded. 0x protocol will act as a{' '}
+                            critical piece of infrastructure for the token economy, allowing Ethereum{' '}
+                            smart contracts to programmatically and seamlessly exchange Ethereum-based assets.
                         </div>
                         <div className="lg-py4 md-py4 sm-py2" />
                         <div className="pt4 pb1 clearfix sm-pl3 md-pl3 lg-pl0">
