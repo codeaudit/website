@@ -35,7 +35,7 @@ export class FAQ extends React.Component<FAQProps, FAQState> {
                 />
                 <div
                     id="faq"
-                    className="mx-auto max-width-4 pt3"
+                    className="mx-auto max-width-4 pt4"
                     style={{color: colors.grey800}}
                 >
                     <h1 className="center" style={{...styles.thin}}>0x FAQ</h1>
