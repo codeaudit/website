@@ -105,11 +105,6 @@ const partnerships: Partner[] = [
         logo: '/images/logos/aragon.png',
         url: 'https://aragon.one/',
     },
-    {
-        name: 'Melonport',
-        logo: '/images/logos/melonport.jpg',
-        url: 'https://melonport.com/',
-    },
 ];
 
 const investors: Partner[] = [
@@ -127,11 +122,6 @@ const investors: Partner[] = [
         name: 'Blockchain Capital',
         logo: '/images/logos/blockchain_capital.png',
         url: 'http://http://blockchain.capital/',
-    },
-    {
-        name: 'Jen Advisors',
-        logo: '/images/logos/jen_advisors.png',
-        url: 'http://www.jenadvisors.com/',
     },
 ];
 
