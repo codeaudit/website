@@ -5,6 +5,8 @@ import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
 import {StatisticByKey, Statistic, ERC20MarketInfo} from 'ts/types';
 
+const ONE_BILLION = 1000000000;
+
 const defaultStats: StatisticByKey = {
     ETHER_MARKET_CAP: {
         title: 'Ether',
@@ -12,7 +14,7 @@ const defaultStats: StatisticByKey = {
     },
     ERC20_TOKEN_MARKET_CAP: {
         title: 'Tokens',
-        figure: '$0.8B',
+        figure: '$0.5B',
     },
     NUMBER_LIQUID_ERC20_TOKENS: {
         title: 'Liquid Tokens',
@@ -23,33 +25,42 @@ const defaultStats: StatisticByKey = {
 interface StatisticsProps {}
 
 interface StatisticsState {
-    erc20MarketInfo: ERC20MarketInfo;
+    stats: StatisticByKey;
 }
 
 export class Statistics extends React.Component<StatisticsProps, StatisticsState> {
     public constructor(props: StatisticsProps) {
         super(props);
         this.state = {
-            erc20MarketInfo: undefined,
+            stats: {
+                ETHER_MARKET_CAP: {
+                    title: 'Ether',
+                    figure: '$7.7B',
+                },
+                ERC20_TOKEN_MARKET_CAP: {
+                    title: 'Tokens',
+                    figure: '$0.8B',
+                },
+                NUMBER_LIQUID_ERC20_TOKENS: {
+                    title: 'Liquid Tokens',
+                    figure: '17',
+                },
+            },
         };
+    }
+    public componentWillMount() {
+        this.fetchAndSetERC20MarketInfo();
     }
     public render() {
         const colSize = utils.getColSize(_.size(defaultStats));
-        const stats = defaultStats;
-        if (!_.isUndefined(this.state.erc20MarketInfo)) {
-            stats.NUMBER_LIQUID_ERC20_TOKENS.figure = this.state.erc20MarketInfo.numLiquidERC20Tokens.toString();
-
-            const erc20MarketCapUsd = this.state.erc20MarketInfo.marketCapERC20TokensUsd;
-            stats.ERC20_TOKEN_MARKET_CAP.figure = this.formatToBillions(erc20MarketCapUsd);
-        }
         return (
             <div>
-                {this.renderStats(stats)}
+                {this.renderStats()}
             </div>
         );
     }
-    private renderStats(stats: StatisticByKey) {
-        return _.map(_.values(defaultStats), (stat) => {
+    private renderStats() {
+        return _.map(_.values(this.state.stats), (stat) => {
             return (
                 <div
                     key={stat.title}
@@ -67,16 +78,34 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
             );
         });
     }
-    private async fetchStatsAsync() {
+    private async fetchAndSetERC20MarketInfo() {
         const endpoint = `${constants.BACKEND_BASE_URL}/erc20_market_info`;
         const response = await fetch(endpoint);
         const responseBody = await response.text();
         const erc20MarketInfo = JSON.parse(responseBody);
+        const numLiquidERC20Tokens = erc20MarketInfo.numLiquidERC20Tokens.toString();
+        const erc20MarketCapUsd = erc20MarketInfo.marketCapERC20TokensUsd;
+        const etherMarketCapUsd = erc20MarketInfo.etherMarketCapUsd;
+
         this.setState({
-            erc20MarketInfo,
+            stats: {
+                ETHER_MARKET_CAP: {
+                    title: 'Ether',
+                    figure: this.formatToBillions(etherMarketCapUsd),
+                },
+                ERC20_TOKEN_MARKET_CAP: {
+                    title: 'Tokens',
+                    figure: this.formatToBillions(erc20MarketCapUsd),
+                },
+                NUMBER_LIQUID_ERC20_TOKENS: {
+                    title: 'Liquid Tokens',
+                    figure: numLiquidERC20Tokens,
+                },
+            },
         });
     }
     private formatToBillions(dollarAmount: number): string {
-        return dollarAmount.toString();
+        const billionAmount = dollarAmount / ONE_BILLION;
+        return `$${billionAmount.toFixed(1)}B`;
     }
 }
