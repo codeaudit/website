@@ -191,7 +191,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                 <div className="flex sm-hide xs-hide">
                                     <a
                                         target="_blank"
-                                        href="https://www.0xproject.com/whitepaper/0x_white_paper.pdf"
+                                        href="/pdfs/0x_white_paper.pdf"
                                     >
                                         <RaisedButton
                                             label="Whitepaper"

@@ -90,7 +90,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 <a
                     className="text-decoration-none"
                     target="_blank"
-                    href="https://www.0xproject.com/whitepaper/0x_white_paper.pdf"
+                    href="/pdfs/0x_white_paper.pdf"
                 >
                     <MenuItem>Whitepaper</MenuItem>
                 </a>
