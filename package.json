@@ -10,7 +10,7 @@
     "deploy_live": "npm run build; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers"
   },
   "author": "Fabio Berger",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "basscss": "^8.0.3",
     "bn.js": "^4.11.6",
