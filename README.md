@@ -1,4 +1,4 @@
-0x Demo App
+0x Website
 -----------
 
 ### Dev Setup
@@ -31,3 +31,5 @@ Visit: [http://0xproject.dev:8080](http://0xproject.dev:8080) in your browser.
 ### Resources
 
 - [Icon set](http://zavoloklom.github.io/material-design-iconic-font/icons.html#directional)
+- [CSS toolkit](http://basscss.com/)
+- [Material UI Library](http://www.material-ui.com/#/)
