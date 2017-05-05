@@ -45,6 +45,8 @@ const styles: Styles = {
         position: 'fixed',
         top: 0,
         zIndex: 1100,
+        paddingBottom: 1,
+        boxShadow: 'rgba(0, 0, 0, 0.187647) 0px 1px 3px',
     },
 };
 
@@ -57,12 +59,12 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
     }
     public render() {
         return (
-            <div style={styles.topBar}>
+            <div style={styles.topBar} className="pb1">
                 <div className="flex mx-auto max-width-4">
                     <div className="col col-1">
                         <div
-                            className="pt1 sm-pl2 md-pl2 lg-pl0"
-                            style={{fontSize: 25, color: 'black', cursor: 'pointer'}}
+                            className="sm-pl2 md-pl2 lg-pl0"
+                            style={{fontSize: 25, color: 'black', cursor: 'pointer', paddingTop: 8}}
                         >
                             <i
                                 className="zmdi zmdi-menu"

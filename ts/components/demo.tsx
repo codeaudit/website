@@ -3,11 +3,12 @@ import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {State} from 'ts/redux/reducer';
 import {utils} from 'ts/utils/utils';
-import {RaisedButton, Menu, MenuItem, Paper} from 'material-ui';
+import {RaisedButton, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {GenerateOrderForm} from 'ts/containers/generate_order_form';
 import {TokenBalances} from 'ts/components/token_balances';
 import {FillOrder} from 'ts/components/fill_order';
+import {MenuItem} from 'ts/components/ui/menu_item';
 import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
@@ -61,6 +62,9 @@ const styles: React.CSSProperties = {
     tabItemContainer: {
         background: colors.blueGrey500,
         borderRadius: '4px 4px 0 0',
+    },
+    menuIcon: {
+        fontSize: 20,
     },
 };
 
@@ -162,9 +166,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 throw utils.spawnSwitchErr('MenuItemValue', this.state.selectedMenuItem);
         }
 
-        const menuIconStyles = {
-            fontSize: 20,
-        };
         return (
             <div>
                 <TopBar
@@ -173,51 +174,43 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     location={this.props.location}
                 />
                 <div className="mx-auto max-width-4 pt4">
-                    <div className="mx-auto flex">
-                        <div className="col col-2 mt2 pr2" style={{overflow: 'hidden'}}>
-                            {/*
-                              * HACK: We must add the disableAutoFocus set to true on the Menu component
-                              * otherwise it steals the focus from other text input components.
-                              * Source: https://github.com/callemall/material-ui/issues/4387
-                              */}
-                            <Menu disableAutoFocus={true}>
+                    <Paper className="mb3 mt2">
+                        <div className="mx-auto flex">
+                            <div
+                                className="col col-2 pr2 pt1"
+                                style={{overflow: 'hidden', backgroundColor: 'rgb(39, 39, 39)', color: 'white'}}
+                            >
                                 <MenuItem
-                                    innerDivStyle={styles.menuItem}
-                                    primaryText="Generate order"
-                                    leftIcon={<i style={menuIconStyles} className="zmdi zmdi-code" />}
-                                    onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.generate)}
-                                />
+                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.generate)}
+                                >
+                                    {this.renderMenuItemWithIcon('Generate order', 'zmdi-code')}
+                                </MenuItem>
                                 <MenuItem
-                                    innerDivStyle={styles.menuItem}
-                                    primaryText="Fill order"
-                                    leftIcon={<i style={menuIconStyles} className="zmdi zmdi-mail-send" />}
-                                    onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.fill)}
-                                />
+                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.fill)}
+                                >
+                                    {this.renderMenuItemWithIcon('Fill order', 'zmdi-mail-send')}
+                                </MenuItem>
                                 <MenuItem
-                                    innerDivStyle={styles.menuItem}
-                                    primaryText="Balances"
-                                    leftIcon={<i style={menuIconStyles} className="zmdi zmdi-balance-wallet" />}
-                                    onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.balances)}
-                                />
+                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.balances)}
+                                >
+                                    {this.renderMenuItemWithIcon('Balances', 'zmdi-balance-wallet')}
+                                </MenuItem>
                                 <MenuItem
-                                    innerDivStyle={styles.menuItem}
-                                    primaryText="Trade history"
-                                    leftIcon={<i style={menuIconStyles} className="zmdi zmdi-book" />}
-                                    onTouchTap={this.triggerMenuClick.bind(this, MenuItemValue.tradeHistory)}
-                                />
-                            </Menu>
-                        </div>
-                        <div className="col col-10">
-                            <Paper className="mb3">
-                                <div className="py2">
+                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.tradeHistory)}
+                                >
+                                    {this.renderMenuItemWithIcon('Trade history', 'zmdi-book')}
+                                </MenuItem>
+                            </div>
+                            <div className="col col-10">
+                                <div className="py2" style={{backgroundColor: colors.grey50}}>
                                     {this.props.blockchainIsLoaded ?
                                         visibleComponent :
                                         <Loading />
                                     }
                                 </div>
-                            </Paper>
+                            </div>
                         </div>
-                    </div>
+                    </Paper>
                     <BlockchainErrDialog
                         blockchain={this.blockchain}
                         blockchainErr={this.props.blockchainErr}
@@ -227,6 +220,18 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     />
                 </div>
                 <Footer />
+            </div>
+        );
+    }
+    private renderMenuItemWithIcon(title: string, iconName: string) {
+        return (
+            <div className="flex" style={{fontWeight: 100}}>
+                <div className="pr1 pl2">
+                    <i style={styles.menuIcon} className={`zmdi ${iconName}`} />
+                </div>
+                <div className="pl1">
+                    {title}
+                </div>
             </div>
         );
     }

@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {TokenByAddress, Token, BlockchainErrs, BalanceErrs} from 'ts/types';
+import {TokenByAddress, Token, BlockchainErrs, BalanceErrs, Styles} from 'ts/types';
+import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
@@ -31,6 +32,12 @@ const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const TOKEN_TABLE_ROW_HEIGHT = 60;
 const MAX_TOKEN_TABLE_HEIGHT = 420;
 const ETHER_TOKEN_SYMBOL = 'WETH';
+
+const styles: Styles = {
+    bgColor: {
+        backgroundColor: colors.grey50,
+    },
+};
 
 interface TokenBalancesProps {
     blockchain: Blockchain;
@@ -84,7 +91,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     In order to try out the 0x protocol demo app, request some test ether to pay for
                     gas costs. It might take a bit of time for the test ether to show up.
                 </div>
-                <Table selectable={false}>
+                <Table
+                    selectable={false}
+                    style={styles.bgColor}
+                >
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>Currency</TableHeaderColumn>
@@ -126,7 +136,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 <div className="pt2 pb2">
                     Mint some test tokens you'd like to use to generate or fill an order using 0x.
                 </div>
-                <Table selectable={false} bodyStyle={{height: tokenTableHeight}}>
+                <Table
+                    selectable={false}
+                    bodyStyle={{height: tokenTableHeight}}
+                    style={styles.bgColor}
+                >
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn colSpan={2}>Token</TableHeaderColumn>

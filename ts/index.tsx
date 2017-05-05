@@ -26,7 +26,7 @@ const muiTheme = getMuiTheme({
         pickerHeaderColor: colors.cyanA400,
         primary1Color: colors.cyanA400,
         primary2Color: colors.cyanA400,
-        textColor: colors.blueGrey600,
+        textColor: colors.grey700,
     },
 });
 

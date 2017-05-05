@@ -47,7 +47,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                         underlineStyle={{display: 'none'}}
                     />
                 </Paper>
-                <div className="pt3 pb2 center" style={{color: colors.blueGrey600}}>
+                <div className="pt3 pb2 center">
                     <div>
                         Share your signed order with someone willing to fill it ;)
                     </div>

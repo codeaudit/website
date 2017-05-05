@@ -126,7 +126,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                 <span>
                     Insuffient balance.{' '}
                     <a
-                        style={{cursor: 'pointer', color: colors.blueGrey500}}
+                        style={{cursor: 'pointer', color: colors.grey900}}
                         onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
                         Mint tokens
@@ -139,7 +139,7 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
                 <span>
                     Insuffient allowance.{' '}
                     <a
-                        style={{cursor: 'pointer', color: colors.blueGrey500}}
+                        style={{cursor: 'pointer', color: colors.grey900}}
                         onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
                         Set allowance
