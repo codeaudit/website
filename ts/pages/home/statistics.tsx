@@ -81,6 +81,9 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
     private async fetchAndSetERC20MarketInfo() {
         const endpoint = `${constants.BACKEND_BASE_URL}/erc20_market_info`;
         const response = await fetch(endpoint);
+        if (response.status !== 200) {
+            return; // fail silently
+        }
         const responseBody = await response.text();
         const erc20MarketInfo = JSON.parse(responseBody);
         const numLiquidERC20Tokens = erc20MarketInfo.numLiquidERC20Tokens.toString();
