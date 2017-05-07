@@ -1,5 +1,5 @@
 export const constants = {
-    BACKEND_BASE_URL: 'http://45.55.165.217',
+    BACKEND_BASE_URL: 'https://api.0xproject.com',
     BITLY_ACCESS_TOKEN: 'ffc4c1a31e5143848fb7c523b39f91b9b213d208',
     BITLY_ENDPOINT: 'https://api-ssl.bitly.com',
     DEFAULT_TOKEN_ICON_URL: '/images/token_icons/default.png',

@@ -49,8 +49,7 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
         };
     }
     public componentWillMount() {
-        // TODO: re-enable once website backend is re-deployed with SSL encryption
-        // this.fetchAndSetERC20MarketInfo();
+        this.fetchAndSetERC20MarketInfo();
     }
     public render() {
         const colSize = utils.getColSize(_.size(defaultStats));
