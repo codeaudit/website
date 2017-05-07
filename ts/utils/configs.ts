@@ -21,4 +21,5 @@ export const configs = {
     },
     symbolsOfMintableTokens: ['MKR', 'MLN', 'WETH', 'GNT', 'DGD', 'REP', 'ZRX'],
     isDemoEnabled: isDevelopment || isStaging,
+    isNewsletterEnabled: false,
 };

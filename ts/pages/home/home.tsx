@@ -271,34 +271,36 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         style={{bottom: 0, right: 0, zIndex: 0, width: 550}}
                     />
                 </div>
-                <div
-                    style={{backgroundColor: '#272727'}}
-                >
-                    <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
-                        <div className="sm-col sm-col-6">
-                            <h1
-                                className="pt4 sm-center md-pl3 lg-pl0"
-                                style={{...styles.subheader, ...styles.thin}}
-                            >
-                                Newsletter
-                            </h1>
-                            <div
-                                className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
-                                style={{...styles.paragraph, ...styles.thin}}
-                            >
-                                Stay up to date with the latest 0x developments
+                {configs.isNewsletterEnabled &&
+                    <div
+                        style={{backgroundColor: '#272727'}}
+                    >
+                        <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
+                            <div className="sm-col sm-col-6">
+                                <h1
+                                    className="pt4 sm-center md-pl3 lg-pl0"
+                                    style={{...styles.subheader, ...styles.thin}}
+                                >
+                                    Newsletter
+                                </h1>
+                                <div
+                                    className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
+                                    style={{...styles.paragraph, ...styles.thin}}
+                                >
+                                    Stay up to date with the latest 0x developments
+                                </div>
+                                <div className="pt1 md-pl3 lg-pl0 sm-center sm-px4">
+                                    <NewsletterInput />
+                                </div>
                             </div>
-                            <div className="pt1 md-pl3 lg-pl0 sm-center sm-px4">
-                                <NewsletterInput />
-                            </div>
-                        </div>
-                        <div className="sm-col sm-col-6 p4">
-                            <div className="center">
-                                <img src="/images/paper_airplane.png" style={{width: 150}} />
+                            <div className="sm-col sm-col-6 p4">
+                                <div className="center">
+                                    <img src="/images/paper_airplane.png" style={{width: 150}} />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div style={{backgroundColor: 'white'}}>
                     <div className="mx-auto max-width-4 pb4">
                         <h1
