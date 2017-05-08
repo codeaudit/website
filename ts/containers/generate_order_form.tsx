@@ -14,6 +14,7 @@ import {
     MenuItemValue,
     BlockchainErrs,
 } from 'ts/types';
+import BigNumber = require('bignumber.js');
 
 interface GenerateOrderFormProps {
     blockchain: Blockchain;
@@ -25,10 +26,11 @@ interface GenerateOrderFormProps {
 interface ConnectedState {
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
-    orderExpiryTimestamp: number;
+    orderExpiryTimestamp: BigNumber;
     orderSignatureData: SignatureData;
     userAddress: string;
     orderTakerAddress: string;
+    orderSalt: BigNumber;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
 }
@@ -39,6 +41,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     orderExpiryTimestamp: state.orderExpiryTimestamp,
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
+    orderSalt: state.orderSalt,
     sideToAssetToken: state.sideToAssetToken,
     tokenByAddress: state.tokenByAddress,
     userAddress: state.userAddress,

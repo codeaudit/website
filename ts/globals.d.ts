@@ -4,6 +4,7 @@ declare module 'react-router-hash-link';
 declare module 'es6-promisify';
 declare module 'truffle-contract';
 declare module 'ethereumjs-util';
+declare module 'ethereumjs-abi';
 declare module 'keccak';
 declare module 'bn.js';
 declare module 'web3-provider-engine';
@@ -25,19 +26,23 @@ declare module 'bignumber.js' {
     class BigNumber {
         // Those static attributes could have been in the module, a few lines beneath
         public static ROUND_DOWN: any;
+        public isBigNumber: boolean;
         public static config(arg: any): void;
+        public static random(numDecimals: number): BigNumber;
 
         constructor(value: number|string);
         public toNumber(): number;
+        public toString(base?: number): string;
         public div(value: BigNumber): BigNumber;
         public pow(exponent: BigNumber|number): BigNumber;
-        public times(value: BigNumber): BigNumber;
+        public times(value: BigNumber|number): BigNumber;
         public plus(value: BigNumber|number): BigNumber;
         public lt(value: BigNumber|number): BigNumber;
         public gte(value: BigNumber|number): BigNumber;
         public gt(value: BigNumber|number): BigNumber;
         public eq(value: BigNumber|number): BigNumber;
         public minus(value: BigNumber): BigNumber;
+        public round(numDecimals?: BigNumber|number): BigNumber;
     }
 
     // A standalone class is not exportable, so there is an empty module

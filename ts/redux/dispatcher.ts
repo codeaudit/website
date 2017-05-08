@@ -76,7 +76,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_USER_ADDRESS,
         });
     }
-    public updateOrderExpiry(unixTimestampSec: number) {
+    public updateOrderExpiry(unixTimestampSec: BigNumber) {
         this.dispatch({
             data: unixTimestampSec,
             type: ActionTypes.UPDATE_ORDER_EXPIRY,

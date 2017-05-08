@@ -13,9 +13,11 @@
   "license": "Apache-2.0",
   "dependencies": {
     "basscss": "^8.0.3",
+    "bignumber.js": "^4.0.2",
     "bn.js": "^4.11.6",
     "dateformat": "^2.0.0",
     "deep-equal": "^1.0.1",
+    "ethereumjs-abi": "^0.6.4",
     "ethereumjs-util": "^5.1.1",
     "jazzicon": "^1.5.0",
     "jsonschema": "^1.1.1",

@@ -3,6 +3,7 @@ import * as dateFormat from 'dateformat';
 import {SideToAssetToken, SignatureData, Order, Side, TokenByAddress, OrderParty} from 'ts/types';
 import deepEqual = require('deep-equal');
 import ethUtil = require('ethereumjs-util');
+import BigNumber = require('bignumber.js');
 
 export const utils = {
     assert(condition: boolean, message: string) {
@@ -20,11 +21,11 @@ export const utils = {
     // It is a fixed constant so that both the redux store's INITIAL_STATE and components can check for
     // whether a user has set an expiry date or not. It is set unrealistically high so as not to collide
     // with actual values a user would select.
-    initialOrderExpiryUnixTimestampSec() {
+    initialOrderExpiryUnixTimestampSec(): BigNumber {
         const d = new Date('2050');
-        return d.getTime() / 1000;
+        return new BigNumber(d.getTime() / 1000);
     },
-    convertToUnixTimestampSeconds(dateDate: Date, dateTime: Date) {
+    convertToUnixTimestampSeconds(dateDate: Date, dateTime: Date): BigNumber {
         const finalDate = !_.isUndefined(dateDate) ? dateDate : new Date();
         if (!_.isUndefined(dateTime)) {
             const hrs = dateTime.getHours();
@@ -32,21 +33,21 @@ export const utils = {
             finalDate.setHours(dateTime.getHours());
             finalDate.setMinutes(dateTime.getMinutes());
         }
-        return finalDate.getTime() / 1000;
+        return new BigNumber(finalDate.getTime() / 1000);
     },
-    convertToDateTimeFromUnixTimestamp(unixTimestampSec: number) {
-        const unixTimestampMs = unixTimestampSec * 1000;
-        const d = new Date(unixTimestampMs);
+    convertToDateTimeFromUnixTimestamp(unixTimestampSec: BigNumber) {
+        const unixTimestampMs = unixTimestampSec.times(1000);
+        const d = new Date(unixTimestampMs.toNumber());
         return d;
     },
-    convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: number): string {
+    convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: BigNumber): string {
         const d = this.convertToDateTimeFromUnixTimestamp(unixTimestampSec);
         const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
         return formattedDate;
     },
-    generateOrder(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: number,
+    generateOrder(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: BigNumber,
                   orderTakerAddress: string, orderMakerAddress: string,
-                  signatureData: SignatureData, tokenByAddress: TokenByAddress): Order {
+                  signatureData: SignatureData, tokenByAddress: TokenByAddress, orderSalt: BigNumber): Order {
         const makerToken = tokenByAddress[sideToAssetToken[Side.deposit].address];
         const takerToken = tokenByAddress[sideToAssetToken[Side.receive].address];
         const order = {
@@ -58,7 +59,7 @@ export const utils = {
                     decimals: makerToken.decimals,
                     address: makerToken.address,
                 },
-                amount: sideToAssetToken[Side.deposit].amount.toString(),
+                amount: sideToAssetToken[Side.deposit].amount.toString(10),
             },
             taker: {
                 address: orderTakerAddress,
@@ -68,9 +69,10 @@ export const utils = {
                     decimals: takerToken.decimals,
                     address: takerToken.address,
                 },
-                amount: sideToAssetToken[Side.receive].amount.toString(),
+                amount: sideToAssetToken[Side.receive].amount.toString(10),
             },
-            expiration: orderExpiryTimestamp,
+            expiration: orderExpiryTimestamp.toString(10),
+            salt: orderSalt.toString(10),
             signature: signatureData,
         };
         return order;

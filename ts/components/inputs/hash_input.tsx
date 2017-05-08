@@ -51,8 +51,7 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
                         hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
                         hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
-                        hashData.takerFee, hashData.orderExpiryTimestamp);
-
+                        hashData.takerFee, hashData.orderExpiryTimestamp, hashData.orderSalt);
         return orderHash;
     }
 }

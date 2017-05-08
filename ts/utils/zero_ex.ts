@@ -2,13 +2,17 @@ import * as _ from 'lodash';
 import BN = require('bn.js');
 import BigNumber = require('bignumber.js');
 import ethUtil = require('ethereumjs-util');
+import ethABI = require('ethereumjs-abi');
 import {constants} from 'ts/utils/constants';
+import {SolidityTypes} from 'ts/types';
+
+const MAX_DIGITS_IN_UNSIGNED_256_INT = 78;
 
 export const zeroEx = {
     getOrderHash(exchangeContractAddr: string, makerAddr: string, takerAddr: string,
                  depositTokenAddr: string, receiveTokenAddr: string, feeRecipient: string,
-                 depositAmt: BigNumber, receiveAmt: BigNumber, makerFee: string, takerFee: string,
-                 expiration: number): string {
+                 depositAmt: BigNumber, receiveAmt: BigNumber, makerFee: BigNumber, takerFee: BigNumber,
+                 expiration: BigNumber, salt: BigNumber): string {
         takerAddr = takerAddr !== '' ? takerAddr : constants.NULL_ADDRESS;
         const orderParts = [
             exchangeContractAddr,
@@ -17,33 +21,46 @@ export const zeroEx = {
             depositTokenAddr,
             receiveTokenAddr,
             feeRecipient,
-            depositAmt.toString(),
-            receiveAmt.toString(),
+            depositAmt,
+            receiveAmt,
             makerFee,
             takerFee,
             expiration,
+            salt,
         ];
-        const buffHash = this.sha3(orderParts);
+        const buffHash = this.solSHA3(orderParts);
         const buffHashHex = ethUtil.bufferToHex(buffHash);
         return buffHashHex;
     },
-    sha3(params: Array<(string | number | Buffer)>) {
-        const messageBuffs = _.map(params, (param) => {
-            if (!ethUtil.isHexString(param) && !isNaN(param as number)) {
-                return this.numberToBuffer(param);
+    /*
+     * We convert types from JS to Solidity as follows:
+     * BigNumber -> uint256
+     * number -> uint8
+     * string -> string
+     * boolean -> bool
+     * valid Ethereum address -> address
+     */
+    solSHA3(args: any[]): Buffer {
+        const argTypes: string[] = [];
+        _.each(args, (arg, i) => {
+            const isNumber = _.isFinite(arg);
+            if (isNumber) {
+                argTypes.push(SolidityTypes.uint8);
+            } else if ((arg as BigNumber).isBigNumber) {
+                argTypes.push(SolidityTypes.uint256);
+                args[i] = new BN(arg.toString(10), 10);
+            } else if (ethUtil.isValidAddress(arg)) {
+                argTypes.push(SolidityTypes.address);
+            } else if (_.isString(arg)) {
+                argTypes.push(SolidityTypes.string);
+            } else if  (_.isBoolean(arg)) {
+                argTypes.push(SolidityTypes.bool);
+            } else {
+                throw new Error(`Unable to guess arg type: ${arg}`);
             }
-            if (param === '0x0') {
-                return ethUtil.setLength(ethUtil.toBuffer(param), 20);
-            }
-            return ethUtil.toBuffer(param);
         });
-        const hash = ethUtil.sha3(Buffer.concat(messageBuffs));
+        const hash = ethABI.soliditySHA3(argTypes, args);
         return hash;
-    },
-    numberToBuffer(n: number) {
-        const size = 32;
-        const endian = 'be';
-        return new BN(n.toString()).toArrayLike(Buffer, endian, size);
     },
     // A unit amount is defined as the amount of a currency just above the decimal places.
     // E.g: If a currency has 18 decimal places, 1e18 or one quintillion of the currency is equivalent
@@ -80,5 +97,13 @@ export const zeroEx = {
         } catch (err) {
             return false;
         }
+    },
+    generateSalt(): BigNumber {
+        // BigNumber.random returns a random number between 0 & 1 with a passed in number of decimal
+        // places. Source: https://mikemcl.github.io/bignumber.js/#random
+        const randomNumber = BigNumber.random(MAX_DIGITS_IN_UNSIGNED_256_INT);
+        const factor = new BigNumber(10).pow(MAX_DIGITS_IN_UNSIGNED_256_INT - 1);
+        const salt = randomNumber.times(factor).round();
+        return salt;
     },
 };

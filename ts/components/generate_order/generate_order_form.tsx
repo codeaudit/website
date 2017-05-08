@@ -29,6 +29,7 @@ import {
     TokenByAddress,
     BlockchainErrs,
 } from 'ts/types';
+import BigNumber = require('bignumber.js');
 
 enum SigningState {
     UNSIGNED,
@@ -42,10 +43,11 @@ interface GenerateOrderFormProps {
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
     hashData: HashData;
-    orderExpiryTimestamp: number;
+    orderExpiryTimestamp: BigNumber;
     userAddress: string;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
+    orderSalt: BigNumber;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
     triggerMenuClick: (menuItemValue: MenuItemValue) => void;
@@ -217,6 +219,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         orderSignatureData={this.props.orderSignatureData}
                         orderTakerAddress={this.props.orderTakerAddress}
                         orderMakerAddress={this.props.userAddress}
+                        orderSalt={this.props.orderSalt}
                         sideToAssetToken={this.props.sideToAssetToken}
                         tokenByAddress={this.props.tokenByAddress}
                     />
@@ -282,7 +285,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         hashData.orderTakerAddress, hashData.depositTokenContractAddr,
                         hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
                         hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
-                        hashData.takerFee, hashData.orderExpiryTimestamp);
+                        hashData.takerFee, hashData.orderExpiryTimestamp, hashData.orderSalt);
 
         let globalErrMsg = '';
         try {
@@ -291,7 +294,8 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                                   hashData.orderExpiryTimestamp,
                                                   this.props.orderTakerAddress,
                                                   this.props.userAddress, signatureData,
-                                                  this.props.tokenByAddress);
+                                                  this.props.tokenByAddress,
+                                                  hashData.orderSalt);
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';
