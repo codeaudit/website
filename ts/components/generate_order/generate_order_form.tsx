@@ -79,13 +79,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         };
         this.validator = new Validator();
     }
-    public componentWillReceiveProps(newProps: GenerateOrderFormProps) {
-        if (!utils.deepEqual(newProps.hashData, this.props.hashData)) {
-            this.setState({
-                signingState: SigningState.UNSIGNED,
-            });
-        }
-    }
     public render() {
         const dispatcher = this.props.dispatcher;
         const depositTokenAddress = this.props.sideToAssetToken[Side.deposit].address;
@@ -197,7 +190,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                     <div className="pt2">
                         <div className="center">
                             <LifeCycleRaisedButton
-                                isHidden={this.state.signingState === SigningState.SIGNED}
                                 labelReady="Sign hash"
                                 labelLoading="Signing..."
                                 labelComplete="Hash signed!"
