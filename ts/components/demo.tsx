@@ -87,6 +87,10 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     public componentWillMount() {
         this.blockchain = new Blockchain(this.props.dispatcher);
     }
+    public componentWillUnmount() {
+        this.props.dispatcher.updateBlockchainIsLoaded(false);
+        this.props.dispatcher.updateNetworkId(undefined);
+    }
     public componentWillReceiveProps(nextProps: DemoAllProps) {
         if (nextProps.networkId !== this.state.prevNetworkId) {
             this.blockchain.networkIdUpdatedFireAndForgetAsync(nextProps.networkId);
