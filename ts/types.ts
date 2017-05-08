@@ -123,8 +123,8 @@ export interface Fill {
     tokenT: string;
     valueM: BigNumber;
     valueT: BigNumber;
-    filledValueM: BigNumber;
     expiration: BigNumber;
+    filledValueT: BigNumber;
     orderHash: string;
     transactionHash: string;
 }

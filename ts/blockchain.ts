@@ -98,7 +98,6 @@ export class Blockchain {
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
         const fill = {
-            fillValueM: fillAmount.toString(),
             traders: [maker, taker],
             tokens: [makerTokenAddress, takerTokenAddress],
             feeRecipient: constants.FEE_RECIPIENT_ADDRESS,
@@ -106,6 +105,7 @@ export class Blockchain {
             values: [makerTokenAmount.toString(), takerTokenAmount.toString()],
             fees: [constants.MAKER_FEE, constants.TAKER_FEE],
             expirationAndSalt: [expirationUnixTimestampSec, salt.toString()],
+            fillValueT: fillAmount.toString(),
             v: signatureData.v,
             rs: [signatureData.r, signatureData.s],
         };
@@ -115,8 +115,8 @@ export class Blockchain {
                                  fill.shouldCheckTransfer,
                                  fill.values,
                                  fill.fees,
-                                 fill.fillValueM,
                                  fill.expirationAndSalt,
+                                 fill.fillValueT,
                                  fill.v,
                                  fill.rs, {
                                       from: this.userAddress,
@@ -250,7 +250,7 @@ export class Blockchain {
                 }
                 const fill = {
                     expiration: args.expiration.toNumber(),
-                    filledValueM: args.filledValueM.toNumber(),
+                    filledValueT: args.filledValueT,
                     logIndex: result.logIndex,
                     maker: args.maker,
                     orderHash: args.orderHash,
@@ -258,8 +258,8 @@ export class Blockchain {
                     tokenM: args.tokenM,
                     tokenT: args.tokenT,
                     transactionHash: result.transactionHash,
-                    valueM: args.valueM.toNumber(),
-                    valueT: args.valueT.toNumber(),
+                    valueM: args.valueM,
+                    valueT: args.valueT,
                 };
                 tradeHistoryStorage.addFillToUser(this.userAddress, fill);
             }
