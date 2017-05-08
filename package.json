@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node node_modules/webpack/bin/webpack.js",
     "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base public",
-    "update_contracts": "cp -r ./../contracts/build/contracts/ ./contracts/",
+    "update_contracts": "node node_modules/copyfiles/copyfiles ./../contracts/build/contracts/**/* ./contracts/;",
     "deploy_staging": "npm run build; aws s3 sync ./public/. s3://staging-0xproject --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
     "deploy_live": "npm run build; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers"
   },
@@ -57,6 +57,7 @@
     "@types/redux": "^3.6.0",
     "awesome-typescript-loader": "^3.1.2",
     "copy-webpack-plugin": "^4.0.1",
+    "copyfiles": "^1.2.0",
     "css-loader": "0.23.x",
     "exports-loader": "0.6.x",
     "imports-loader": "0.6.x",
