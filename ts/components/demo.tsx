@@ -84,6 +84,9 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             selectedMenuItem,
         };
     }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
     public componentWillMount() {
         this.blockchain = new Blockchain(this.props.dispatcher);
     }
