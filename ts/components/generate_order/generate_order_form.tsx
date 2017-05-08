@@ -241,6 +241,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             debitBalance.gte(debitToken.amount) && debitAllowance.gte(debitToken.amount)) {
             const didSignSuccessfully = await this.signTransactionAsync();
             if (didSignSuccessfully) {
+                this.props.dispatcher.updateOrderSalt(zeroEx.generateSalt());
                 this.setState({
                     globalErrMsg: '',
                     shouldShowIncompleteErrs: false,

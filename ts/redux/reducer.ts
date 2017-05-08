@@ -70,6 +70,11 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case ActionTypes.RESET_STATE:
             return INITIAL_STATE;
 
+        case ActionTypes.UPDATE_ORDER_SALT:
+            return _.assign({}, state, {
+                orderSalt: action.data,
+            });
+
         case ActionTypes.UPDATE_ORDER_FILL_AMOUNT:
             return _.assign({}, state, {
                 orderFillAmount: action.data,
