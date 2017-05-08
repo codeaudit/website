@@ -136,6 +136,7 @@ export enum BalanceErrs {
 };
 
 export const ActionTypes = strEnum([
+    'RESET_STATE',
     'ADD_TOKEN_TO_TOKEN_BY_ADDRESS',
     'BLOCKCHAIN_ERR_ENCOUNTERED',
     'CLEAR_TOKEN_BY_ADDRESS',

@@ -64,6 +64,9 @@ const INITIAL_STATE: State = {
 export function reducer(state: State = INITIAL_STATE, action: Action) {
     let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
+        case ActionTypes.RESET_STATE:
+            return INITIAL_STATE;
+
         case ActionTypes.UPDATE_ORDER_FILL_AMOUNT:
             return _.assign({}, state, {
                 orderFillAmount: action.data,

@@ -91,9 +91,11 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         this.blockchain = new Blockchain(this.props.dispatcher);
     }
     public componentWillUnmount() {
-        this.props.dispatcher.updateBlockchainIsLoaded(false);
-        this.props.dispatcher.updateNetworkId(undefined);
-        this.props.dispatcher.updateUserAddress('');
+        // We re-set the entire redux state when the demo is unmounted so that when it is re-rendered
+        // the initialization process always occurs from the same base state. This helps avoid
+        // initialization inconsistencies (i.e While the demo was unrendered, the user might have
+        // become disconnected from their backing Ethereum node, changes user accounts, etc...)
+        this.props.dispatcher.resetState();
     }
     public componentWillReceiveProps(nextProps: DemoAllProps) {
         if (nextProps.networkId !== this.state.prevNetworkId) {

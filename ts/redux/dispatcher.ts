@@ -18,6 +18,11 @@ export class Dispatcher {
     constructor(dispatch: Dispatch<State>) {
         this.dispatch = dispatch;
     }
+    public resetState() {
+        this.dispatch({
+            type: ActionTypes.RESET_STATE,
+        });
+    }
     public swapAssetTokenSymbols() {
         this.dispatch({
             type: ActionTypes.SWAP_ASSET_TOKENS,
