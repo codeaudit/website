@@ -93,6 +93,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     public componentWillUnmount() {
         this.props.dispatcher.updateBlockchainIsLoaded(false);
         this.props.dispatcher.updateNetworkId(undefined);
+        this.props.dispatcher.updateUserAddress('');
     }
     public componentWillReceiveProps(nextProps: DemoAllProps) {
         if (nextProps.networkId !== this.state.prevNetworkId) {
