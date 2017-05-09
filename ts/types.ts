@@ -127,6 +127,7 @@ export enum BalanceErrs {
     faucetRequestFailed,
     faucetQueueIsFull,
     mintingFailed,
+    wethConversionFailed,
     allowanceSettingFailed,
 };
 

@@ -22,6 +22,7 @@ import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
 import * as TokenArtifacts from '../contracts/Token.json';
 import * as MintableArtifacts from '../contracts/Mintable.json';
+import * as DummyEtherTokenArtifacts from '../contracts/DummyEtherToken.json';
 import contract = require('truffle-contract');
 import BigNumber = require('bignumber.js');
 import ethUtil = require('ethereumjs-util');
@@ -180,6 +181,28 @@ export class Blockchain {
         });
         const tokens = [_.assign({}, token, {
             balance: token.balance.plus(MINT_AMOUNT),
+        })];
+        this.dispatcher.updateTokenByAddress(tokens);
+    }
+    public async convertBetweenEthAndWeth(token: Token, direction: Side, count: BigNumber) {
+        if (!this.doesUserAddressExist()) {
+            throw new Error('User has no associated addresses');
+        }
+        const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
+        let newBalance = null;
+        if (direction === Side.deposit) {
+            await wethContract.buyTokens({
+                from: this.userAddress,
+                value: count,
+            });
+            newBalance = token.balance.plus(count);
+        } else {
+            await wethContract.sellTokens(count, {from: this.userAddress});
+            newBalance = token.balance.minus(count);
+        }
+
+        const tokens = [_.assign({}, token, {
+            balance: newBalance,
         })];
         this.dispatcher.updateTokenByAddress(tokens);
     }

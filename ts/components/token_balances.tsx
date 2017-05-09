@@ -8,9 +8,11 @@ import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
+import {Side} from 'ts/types';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
+import {EthWethConversionDialog} from 'ts/components/eth_weth_conversion_dialog';
 import {
     Dialog,
     Divider,
@@ -22,6 +24,8 @@ import {
     TableRow,
     TableHeaderColumn,
     TableRowColumn,
+    RadioButtonGroup,
+    RadioButton,
 } from 'material-ui';
 import ReactTooltip = require('react-tooltip');
 import BigNumber = require('bignumber.js');
@@ -55,21 +59,29 @@ interface TokenBalancesProps {
 interface TokenBalancesState {
     errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
+    isConvertDialogVisible: boolean;
+    wethToken: Token;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
     public constructor(props: TokenBalancesProps) {
         super(props);
         const tokens = _.values(props.tokenByAddress);
+        const wethToken = tokens.filter((token) => token.symbol === ETHER_TOKEN_SYMBOL)[0];
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
+            isConvertDialogVisible: false,
+            wethToken,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
+        const tokens = _.values(nextProps.tokenByAddress);
+        const wethToken = tokens.filter((token) => token.symbol === ETHER_TOKEN_SYMBOL)[0];
         if (nextProps.userEtherBalance !== this.props.userEtherBalance) {
             this.setState({
                 isBalanceSpinnerVisible: false,
+                wethToken,
             });
         }
     }
@@ -171,6 +183,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 >
                     {this.renderErrorDialogBody()}
                 </Dialog>
+                <EthWethConversionDialog
+                    isOpen={this.state.isConvertDialogVisible}
+                    onComplete={this.onConversionAmountSelected.bind(this)}
+                    onCancelled={this.toggleConversionDialog.bind(this)}
+                    token={this.state.wethToken}/>
             </div>
         );
     }
@@ -203,16 +220,21 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         />
                     </TableRowColumn>
                     <TableRowColumn
-                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
-                    >
-                        {isMintable &&
+                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}>
+                        {isMintable ? (
                             <LifeCycleRaisedButton
                                 labelReady="Mint"
                                 labelLoading="Minting..."
                                 labelComplete="Minted!"
                                 onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
                             />
-                        }
+                        ) : null}
+                        {token.symbol === ETHER_TOKEN_SYMBOL ? (
+                            <RaisedButton
+                                label="Convert"
+                                onClick={this.toggleConversionDialog.bind(this)}
+                            />
+                        ) : null}
                     </TableRowColumn>
                 </TableRow>
             );
@@ -276,6 +298,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </div>
                 );
 
+            case BalanceErrs.wethConversionFailed:
+                return (
+                    <div>
+                        Conversion between ether and ether tokens failed unexpectedly.
+                        Please refresh the page and try again.
+                    </div>
+                );
+
             case BalanceErrs.allowanceSettingFailed:
                 return (
                     <div>
@@ -295,6 +325,34 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.setState({
             errorType,
         });
+    }
+    private toggleConversionDialog() {
+        this.setState({
+            isConvertDialogVisible: !this.state.isConvertDialogVisible,
+        });
+    }
+    private async onConversionAmountSelected(direction: Side, value: BigNumber) {
+        this.toggleConversionDialog();
+        try {
+            await this.props.blockchain.convertBetweenEthAndWeth(this.state.wethToken, direction, value);
+            return true;
+        } catch (err) {
+            const errMsg = '' + err;
+            if (_.includes(errMsg, 'User has no associated addresses')) {
+                this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
+                return false;
+            }
+            if (_.includes(errMsg, 'User denied transaction')) {
+                return false;
+            }
+            utils.consoleLog(`Unexpected error encountered: ${err}`);
+            utils.consoleLog(err.stack);
+            await errorReporter.reportAsync(err);
+            this.setState({
+                errorType: BalanceErrs.wethConversionFailed,
+            });
+            return false;
+        }
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
