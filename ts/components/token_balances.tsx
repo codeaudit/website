@@ -294,7 +294,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             case BalanceErrs.wethConversionFailed:
                 return (
                     <div>
-                        Conversion between ether and ether tokens failed unexpectedly.
+                        Converting between Ether and wrapped Ether tokens failed unexpectedly.
                         Please refresh the page and try again.
                     </div>
                 );
