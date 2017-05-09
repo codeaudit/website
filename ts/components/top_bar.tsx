@@ -14,6 +14,8 @@ import {
 import {Link} from 'react-router-dom';
 import {HashLink} from 'react-router-hash-link';
 
+const SCROLL_DURATION_SECONDS = 500;
+
 interface TopBarProps {
     userAddress?: string;
     blockchainIsLoaded: boolean;
@@ -113,30 +115,6 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             </Drawer>
         );
     }
-    private renderTeamMenuItem() {
-        if (this.props.location.pathname === '/') {
-            return (
-                <ScrollLink
-                    to="team"
-                    smooth={true}
-                    offset={0}
-                    duration={500}
-                >
-                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
-                        Team
-                    </MenuItem>
-                </ScrollLink>
-            );
-        } else {
-            return (
-                <HashLink to="/#team" className="text-decoration-none">
-                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
-                        Team
-                    </MenuItem>
-                </HashLink>
-            );
-        }
-    }
     private renderHomepageMenuItem(location: string) {
         if (this.props.location.pathname === '/') {
             return (
@@ -144,7 +122,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                     to={location}
                     smooth={true}
                     offset={0}
-                    duration={500}
+                    duration={SCROLL_DURATION_SECONDS}
                 >
                     <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
                         {_.capitalize(location)}
@@ -167,6 +145,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
         }
 
         const userAddress = this.props.userAddress;
+        const identiconDiameter = 25;
         return (
             <div className="flex right pt1 lg-pr0 md-pr2 sm-pr2">
                 <div
@@ -178,7 +157,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 </div>
                 <ReactTooltip id="userAddressTooltip">{userAddress}</ReactTooltip>
                 <div>
-                    <Identicon address={userAddress} diameter={25} />
+                    <Identicon address={userAddress} diameter={identiconDiameter} />
                 </div>
             </div>
         );
