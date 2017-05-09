@@ -290,7 +290,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const currentDate = new Date();
         const currentUnixTimestamp = currentDate.getTime() / 1000;
         let globalErrMsg = '';
-        if (fillAmount.lt(0) || fillAmount.gt(takerToken.balance) || fillAmount.gt(takerToken.allowance)) {
+        if (_.isUndefined(fillAmount)) {
+            globalErrMsg = 'You must specify a fill amount';
+        } else if (fillAmount.lte(0) || fillAmount.gt(takerToken.balance) ||
+            fillAmount.gt(takerToken.allowance)) {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
             globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;

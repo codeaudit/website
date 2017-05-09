@@ -38,6 +38,7 @@ declare module 'bignumber.js' {
         public times(value: BigNumber|number): BigNumber;
         public plus(value: BigNumber|number): BigNumber;
         public lt(value: BigNumber|number): BigNumber;
+        public lte(value: BigNumber|number): BigNumber;
         public gte(value: BigNumber|number): BigNumber;
         public gt(value: BigNumber|number): BigNumber;
         public eq(value: BigNumber|number): BigNumber;
