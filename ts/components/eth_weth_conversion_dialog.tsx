@@ -72,7 +72,7 @@ export class EthWethConversionDialog extends
                     />
                 </RadioButtonGroup>
 
-                {(this.state.direction === Side.receive) ?
+                {this.state.direction === Side.receive ?
                     (
                         <AmountInput
                             token={this.props.token}
