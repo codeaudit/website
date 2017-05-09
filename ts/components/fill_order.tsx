@@ -13,6 +13,7 @@ import {
     BlockchainErrs,
     OrderToken,
     Token,
+    ExchangeContractErrs,
 } from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
@@ -334,10 +335,17 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             if (_.includes(errMsg, 'User denied transaction signature')) {
                 return false;
             }
+            const fillTruncationErrMsg = constants.exchangeContractErrToMsg[
+                ExchangeContractErrs.ERROR_FILL_TRUNCATION
+            ];
+            globalErrMsg = 'Failed to fill order, please refresh and try again';
+            if (_.includes(errMsg, fillTruncationErrMsg)) {
+                globalErrMsg = fillTruncationErrMsg;
+            }
             utils.consoleLog(`${err}`);
             await errorReporter.reportAsync(err);
             this.setState({
-                globalErrMsg: 'Failed to fill order, please refresh and try again',
+                globalErrMsg,
             });
             return false;
         }
