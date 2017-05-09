@@ -220,6 +220,10 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         );
     }
     private onCloseOrderJSONDialog() {
+        // Upon closing the order JSON dialog, we update the orderSalt stored in the Redux store
+        // with a new value so that if a user signs the identical order again, the newly signed
+        // orderHash will not collide with the previously generated orderHash.
+        this.props.dispatcher.updateOrderSalt(zeroEx.generateSalt());
         this.setState({
             signingState: SigningState.UNSIGNED,
         });
@@ -241,7 +245,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             debitBalance.gte(debitToken.amount) && debitAllowance.gte(debitToken.amount)) {
             const didSignSuccessfully = await this.signTransactionAsync();
             if (didSignSuccessfully) {
-                this.props.dispatcher.updateOrderSalt(zeroEx.generateSalt());
                 this.setState({
                     globalErrMsg: '',
                     shouldShowIncompleteErrs: false,
