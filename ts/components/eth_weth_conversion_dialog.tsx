@@ -26,7 +26,6 @@ export class EthWethConversionDialog extends
             direction: Side.deposit,
         };
     }
-
     public render() {
         const convertDialogActions = [
             <FlatButton
@@ -47,16 +46,13 @@ export class EthWethConversionDialog extends
             {this.renderConversionDialogBody()}
         </Dialog>;
     }
-
     private updateValue(side: Side, token: AssetToken) {
         this.setState({value: token.amount});
     }
-
     // TODO to be removed when is not required in amount_input
     private onMenuClick(menuItemValue: MenuItemValue) {
         return;
     }
-
     private renderConversionDialogBody() {
         return <div>
             <RadioButtonGroup
@@ -87,16 +83,13 @@ export class EthWethConversionDialog extends
             }
         </div>;
     }
-
     private onConversionDirectionChange(_: any, direction: Side) {
         this.setState({direction});
     }
-
     private onValueChange(_: any, valueInEth: string) {
         const valueInWei = zeroEx.toBaseUnitAmount(Number(valueInEth), 18);
         this.setState({value: valueInWei});
     }
-
     private convert() {
         this.props.onComplete(this.state.direction, this.state.value);
     }
