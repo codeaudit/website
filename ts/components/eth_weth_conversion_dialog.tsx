@@ -35,7 +35,7 @@ export class EthWethConversionDialog extends
             <FlatButton
                 label="Convert"
                 primary={true}
-                onTouchTap={this.convert.bind(this)}
+                onTouchTap={this.onConvertClick.bind(this)}
             />,
         ];
         return <Dialog
@@ -90,7 +90,7 @@ export class EthWethConversionDialog extends
         const valueInWei = zeroEx.toBaseUnitAmount(Number(valueInEth), 18);
         this.setState({value: valueInWei});
     }
-    private convert() {
+    private onConvertClick() {
         this.props.onComplete(this.state.direction, this.state.value);
     }
 }
