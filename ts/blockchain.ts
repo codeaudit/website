@@ -193,10 +193,6 @@ export class Blockchain {
             from: this.userAddress,
             value: amount,
         });
-        const updatedToken = _.assign({}, token, {
-            balance: token.balance.plus(amount),
-        });
-        this.dispatcher.updateTokenByAddress([updatedToken]);
     }
     public async convertWrappedEthTokensToEthAsync(token: Token, amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
@@ -204,10 +200,6 @@ export class Blockchain {
         }
         const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
         await wethContract.sellTokens(amount, {from: this.userAddress});
-        const updatedToken = _.assign({}, token, {
-            balance: token.balance.minus(amount),
-        });
-        this.dispatcher.updateTokenByAddress([updatedToken]);
     }
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
