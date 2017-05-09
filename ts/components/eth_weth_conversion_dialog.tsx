@@ -4,7 +4,7 @@ import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import * as BigNumber from 'bignumber.js';
 import {zeroEx} from 'ts/utils/zero_ex';
-import {constants} from "ts/utils/constants";
+import {constants} from 'ts/utils/constants';
 
 interface EthWethConversionDialogProps {
     onComplete: (direction: Side, value: BigNumber) => any;
@@ -29,15 +29,19 @@ export class EthWethConversionDialog extends
     }
     public render() {
         const convertDialogActions = [
-            <FlatButton
-                label="Cancel"
-                onTouchTap={this.props.onCancelled}
-            />,
-            <FlatButton
-                label="Convert"
-                primary={true}
-                onTouchTap={this.onConvertClick.bind(this)}
-            />,
+            (
+                <FlatButton
+                    label="Cancel"
+                    onTouchTap={this.props.onCancelled}
+                />
+            ),
+            (
+                <FlatButton
+                    label="Convert"
+                    primary={true}
+                    onTouchTap={this.onConvertClick.bind(this)}
+                />
+            ),
         ];
         return (
             <Dialog
