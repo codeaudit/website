@@ -8,7 +8,7 @@
     "update_contracts": "copyfiles -u 4 ./../contracts/build/contracts/*.json ./contracts;",
     "deploy_staging": "npm run build; aws s3 sync ./public/. s3://staging-0xproject --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
     "deploy_live": "npm run build; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
-    "testrpc": "testrpc -p 8545 --networkId 50 --verbose"
+    "testrpc": "testrpc -p 8545 --networkId 50"
   },
   "author": "Fabio Berger",
   "license": "Apache-2.0",
