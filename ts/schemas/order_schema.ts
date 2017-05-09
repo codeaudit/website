@@ -3,9 +3,10 @@ export const orderSchema = {
     properties: {
         maker: {$ref: '/OrderTaker'},
         taker: {$ref: '/OrderTaker'},
+        salt: {type: 'string'},
         signature: {$ref: '/SignatureData'},
-        expiration: {type: 'number'},
+        expiration: {type: 'string'},
     },
-    required: ['maker', 'taker', 'signature', 'expiration'],
+    required: ['maker', 'taker', 'salt', 'signature', 'expiration'],
     type: 'object',
 };

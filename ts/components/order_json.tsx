@@ -8,12 +8,14 @@ import {TextField, Paper} from 'material-ui';
 import {CopyIcon} from 'ts/components/ui/copy_icon';
 import {SideToAssetToken, SignatureData, Order, TokenByAddress} from 'ts/types';
 import {errorReporter} from 'ts/utils/error_reporter';
+import BigNumber = require('bignumber.js');
 
 interface OrderJSONProps {
-    orderExpiryTimestamp: number;
+    orderExpiryTimestamp: BigNumber;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
     orderMakerAddress: string;
+    orderSalt: BigNumber;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
 }
@@ -24,7 +26,8 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
     public render() {
         const order = utils.generateOrder(this.props.sideToAssetToken,
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress);
+            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress,
+            this.props.orderSalt);
         const orderJSON = JSON.stringify(order);
         return (
             <div>
@@ -118,7 +121,8 @@ You can see and fill it here: ${shareLink}`);
     private getOrderUrl() {
         const order = utils.generateOrder(this.props.sideToAssetToken,
             this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress);
+            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress,
+            this.props.orderSalt);
         const orderJSONString = JSON.stringify(order);
         const orderUrl = `${configs.BASE_URL}/?order=${orderJSONString}`;
         return orderUrl;

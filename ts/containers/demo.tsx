@@ -54,6 +54,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         receiveAmount,
         receiveTokenContractAddr: receiveAddress,
         takerFee: constants.TAKER_FEE,
+        orderSalt: state.orderSalt,
     };
     return {
         blockchainErr: state.blockchainErr,

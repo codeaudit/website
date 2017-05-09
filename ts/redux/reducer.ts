@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {
     GenerateOrderSteps,
     Side,
@@ -23,10 +24,11 @@ export interface State {
     blockchainIsLoaded: boolean;
     generateOrderStep: GenerateOrderSteps;
     networkId: number;
-    orderExpiryTimestamp: number;
+    orderExpiryTimestamp: BigNumber;
     orderFillAmount: BigNumber;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
+    orderSalt: BigNumber;
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
@@ -50,6 +52,7 @@ const INITIAL_STATE: State = {
         v: 27,
     },
     orderTakerAddress: '',
+    orderSalt: zeroEx.generateSalt(),
     shouldBlockchainErrDialogBeOpen: false,
     sideToAssetToken: {
         [Side.deposit]: {},
@@ -66,6 +69,11 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
     switch (action.type) {
         case ActionTypes.RESET_STATE:
             return INITIAL_STATE;
+
+        case ActionTypes.UPDATE_ORDER_SALT:
+            return _.assign({}, state, {
+                orderSalt: action.data,
+            });
 
         case ActionTypes.UPDATE_ORDER_FILL_AMOUNT:
             return _.assign({}, state, {

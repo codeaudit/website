@@ -34,6 +34,12 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_GENERATE_ORDER_STEP,
         });
     }
+    public updateOrderSalt(salt: BigNumber) {
+        this.dispatch({
+            data: salt,
+            type: ActionTypes.UPDATE_ORDER_SALT,
+        });
+    }
     public updateUserSuppliedOrderCache(order: Order) {
         this.dispatch({
             data: order,
@@ -76,7 +82,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_USER_ADDRESS,
         });
     }
-    public updateOrderExpiry(unixTimestampSec: number) {
+    public updateOrderExpiry(unixTimestampSec: BigNumber) {
         this.dispatch({
             data: unixTimestampSec,
             type: ActionTypes.UPDATE_ORDER_EXPIRY,

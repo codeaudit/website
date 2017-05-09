@@ -30,7 +30,7 @@ export const tradeHistoryStorage = {
         _.each(userFillsByHash, (fill, hash) => {
           fill.valueT = new BigNumber(fill.valueT);
           fill.valueM = new BigNumber(fill.valueM);
-          fill.filledValueM = new BigNumber(fill.filledValueM);
+          fill.filledValueT = new BigNumber(fill.filledValueT);
         });
         return userFillsByHash;
     },

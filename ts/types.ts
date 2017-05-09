@@ -84,13 +84,14 @@ export interface HashData {
     depositAmount: BigNumber;
     depositTokenContractAddr: string;
     feeRecipientAddress: string;
-    makerFee: string;
-    orderExpiryTimestamp: number;
+    makerFee: BigNumber;
+    orderExpiryTimestamp: BigNumber;
     orderMakerAddress: string;
     orderTakerAddress: string;
     receiveAmount: BigNumber;
     receiveTokenContractAddr: string;
-    takerFee: string;
+    takerFee: BigNumber;
+    orderSalt: BigNumber;
 }
 
 export interface OrderToken {
@@ -109,7 +110,8 @@ export interface OrderParty {
 export interface Order {
     maker: OrderParty;
     taker: OrderParty;
-    expiration: number;
+    expiration: string;
+    salt: string;
     signature: SignatureData;
 }
 
@@ -121,8 +123,8 @@ export interface Fill {
     tokenT: string;
     valueM: BigNumber;
     valueT: BigNumber;
-    expiration: number;
-    filledValueM: BigNumber;
+    expiration: BigNumber;
+    filledValueT: BigNumber;
     orderHash: string;
     transactionHash: string;
 }
@@ -146,6 +148,7 @@ export const ActionTypes = strEnum([
     'UPDATE_CHOSEN_ASSET_TOKEN',
     'UPDATE_CHOSEN_ASSET_TOKEN_ADDRESS',
     'UPDATE_ORDER_TAKER_ADDRESS',
+    'UPDATE_ORDER_SALT',
     'UPDATE_ORDER_SIGNATURE_DATA',
     'UPDATE_TOKEN_BY_ADDRESS',
     'UPDATE_ORDER_EXPIRY',
@@ -203,3 +206,12 @@ export interface ERC20MarketInfo {
     numLiquidERC20Tokens: number;
     marketCapERC20TokensUsd: number;
 }
+
+export const SolidityTypes = strEnum([
+  'address',
+  'uint256',
+  'uint8',
+  'string',
+  'bool',
+]);
+export type SolidityTypes = keyof typeof SolidityTypes;

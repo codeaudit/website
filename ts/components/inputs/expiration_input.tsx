@@ -2,10 +2,11 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {DatePicker, TimePicker} from 'material-ui';
 import {utils} from 'ts/utils/utils';
+import BigNumber = require('bignumber.js');
 
 interface ExpirationInputProps {
-    orderExpiryTimestamp: number;
-    updateOrderExpiry: (unixTimestampSec: number) => void;
+    orderExpiryTimestamp: BigNumber;
+    updateOrderExpiry: (unixTimestampSec: BigNumber) => void;
 }
 
 interface ExpirationInputState {
@@ -22,7 +23,8 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
         earliestPickableDate.setHours(0, 0, 0, 0);
         this.earliestPickerableDateMs = Date.parse(earliestPickableDate.toISOString());
         const dateTime = utils.convertToDateTimeFromUnixTimestamp(props.orderExpiryTimestamp);
-        const didUserSetExpiry = utils.initialOrderExpiryUnixTimestampSec() !== props.orderExpiryTimestamp;
+        const initialOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
+        const didUserSetExpiry = !initialOrderExpiryTimestamp.eq(props.orderExpiryTimestamp);
         this.state = {
             date: didUserSetExpiry ? dateTime : undefined,
             time: didUserSetExpiry ? dateTime : undefined,
