@@ -189,20 +189,20 @@ export class Blockchain {
             throw new Error('User has no associated addresses');
         }
         const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
-        let newBalance = null;
+        let balance = token.balance;
         if (direction === Side.deposit) {
             await wethContract.buyTokens({
                 from: this.userAddress,
                 value: amount,
             });
-            newBalance = token.balance.plus(amount);
+            balance = balance.plus(amount);
         } else {
             await wethContract.sellTokens(amount, {from: this.userAddress});
-            newBalance = token.balance.minus(amount);
+            balance = balance.minus(amount);
         }
 
         const tokens = [_.assign({}, token, {
-            balance: newBalance,
+            balance,
         })];
         this.dispatcher.updateTokenByAddress(tokens);
     }
