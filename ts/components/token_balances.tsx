@@ -334,7 +334,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber): Promise<boolean> {
         this.toggleConversionDialog();
         try {
-            await this.props.blockchain.convertBetweenEthAndWeth(this.state.wethToken, direction, value);
+            if (direction === Side.deposit){
+                await this.props.blockchain.convertEthToWrappedEthTokensAsync(this.state.wethToken, value);
+            }else{
+                await this.props.blockchain.convertWrappedEthTokensToEthAsync(this.state.wethToken, value);
+            }
             return true;
         } catch (err) {
             const errMsg = '' + err;

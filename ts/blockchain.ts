@@ -184,27 +184,30 @@ export class Blockchain {
         })];
         this.dispatcher.updateTokenByAddress(tokens);
     }
-    public async convertBetweenEthAndWeth(token: Token, direction: Side, amount: BigNumber) {
+    public async convertEthToWrappedEthTokensAsync(token: Token, amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
             throw new Error('User has no associated addresses');
         }
         const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
-        let balance = token.balance;
-        if (direction === Side.deposit) {
-            await wethContract.buyTokens({
-                from: this.userAddress,
-                value: amount,
-            });
-            balance = balance.plus(amount);
-        } else {
-            await wethContract.sellTokens(amount, {from: this.userAddress});
-            balance = balance.minus(amount);
+        await wethContract.buyTokens({
+            from: this.userAddress,
+            value: amount,
+        });
+        const updatedToken = _.assign({}, token, {
+            balance: token.balance.plus(amount),
+        });
+        this.dispatcher.updateTokenByAddress([updatedToken]);
+    }
+    public async convertWrappedEthTokensToEthAsync(token: Token, amount: BigNumber) {
+        if (!this.doesUserAddressExist()) {
+            throw new Error('User has no associated addresses');
         }
-
-        const tokens = [_.assign({}, token, {
-            balance,
-        })];
-        this.dispatcher.updateTokenByAddress(tokens);
+        const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
+        await wethContract.sellTokens(amount, {from: this.userAddress});
+        const updatedToken = _.assign({}, token, {
+            balance: token.balance.minus(amount),
+        });
+        this.dispatcher.updateTokenByAddress([updatedToken]);
     }
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
