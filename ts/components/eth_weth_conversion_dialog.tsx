@@ -89,10 +89,12 @@ export class EthWethConversionDialog extends
             </div>
         );
     }
-    private onConversionDirectionChange(_: any, direction: Side) {
-        this.setState({direction});
+    private onConversionDirectionChange(e: any, direction: Side) {
+        this.setState({
+            direction,
+        });
     }
-    private onValueChange(_: any, valueInEth: string) {
+    private onValueChange(e: any, valueInEth: string) {
         const valueInWei = zeroEx.toBaseUnitAmount(Number(valueInEth), 18);
         this.setState({value: valueInWei});
     }
