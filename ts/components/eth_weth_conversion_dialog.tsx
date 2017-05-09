@@ -3,7 +3,8 @@ import {Dialog, FlatButton, RadioButtonGroup, RadioButton, TextField} from 'mate
 import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
 import {AmountInput} from 'ts/components/inputs/amount_input';
 import * as BigNumber from 'bignumber.js';
-import {zeroEx} from "ts/utils/zero_ex";
+import {zeroEx} from 'ts/utils/zero_ex';
+import {constants} from "ts/utils/constants";
 
 interface EthWethConversionDialogProps {
     onComplete: (direction: Side, value: BigNumber) => any;
@@ -95,7 +96,7 @@ export class EthWethConversionDialog extends
         });
     }
     private onValueChange(e: any, valueInEth: string) {
-        const valueInWei = zeroEx.toBaseUnitAmount(Number(valueInEth), 18);
+        const valueInWei = zeroEx.toBaseUnitAmount(Number(valueInEth), constants.ETH_DECIMAL_PLACES);
         this.setState({value: valueInWei});
     }
     private onConvertClick() {
