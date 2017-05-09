@@ -59,7 +59,7 @@ interface TokenBalancesProps {
 interface TokenBalancesState {
     errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
-    isConvertDialogVisible: boolean;
+    isETHConversionDialogVisible: boolean;
     wethToken: Token;
 }
 
