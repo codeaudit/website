@@ -60,28 +60,21 @@ interface TokenBalancesState {
     errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
     isETHConversionDialogVisible: boolean;
-    wethToken: Token;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
     public constructor(props: TokenBalancesProps) {
         super(props);
-        const tokens = _.values(props.tokenByAddress);
-        const wethToken = tokens.filter((token) => token.symbol === ETHER_TOKEN_SYMBOL)[0];
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
             isETHConversionDialogVisible: false,
-            wethToken,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
-        const tokens = _.values(nextProps.tokenByAddress);
-        const wethToken = tokens.filter((token) => token.symbol === ETHER_TOKEN_SYMBOL)[0];
         if (nextProps.userEtherBalance !== this.props.userEtherBalance) {
             this.setState({
                 isBalanceSpinnerVisible: false,
-                wethToken,
             });
         }
     }
@@ -187,7 +180,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     isOpen={this.state.isETHConversionDialogVisible}
                     onComplete={this.onConversionAmountSelectedAsync.bind(this)}
                     onCancelled={this.toggleConversionDialog.bind(this)}
-                    token={this.state.wethToken}/>
+                    token={this.getWrappedEthToken()}/>
             </div>
         );
     }
@@ -334,7 +327,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber): Promise<boolean> {
         this.toggleConversionDialog();
         try {
-            const token = this.state.wethToken;
+            const token = this.getWrappedEthToken();
             let balance = token.balance;
             if (direction === Side.deposit) {
                 await this.props.blockchain.convertEthToWrappedEthTokensAsync(token, value);
@@ -434,5 +427,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const etherToken = _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
         const etherIconUrl = this.props.tokenByAddress[etherToken.address].iconUrl;
         return etherIconUrl;
+    }
+    private getWrappedEthToken() {
+        const tokens = _.values(this.props.tokenByAddress);
+        return _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
     }
 }
