@@ -71,7 +71,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
-            isConvertDialogVisible: false,
+            isETHConversionDialogVisible: false,
             wethToken,
         };
     }
@@ -184,7 +184,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     {this.renderErrorDialogBody()}
                 </Dialog>
                 <EthWethConversionDialog
-                    isOpen={this.state.isConvertDialogVisible}
+                    isOpen={this.state.isETHConversionDialogVisible}
                     onComplete={this.onConversionAmountSelected.bind(this)}
                     onCancelled={this.toggleConversionDialog.bind(this)}
                     token={this.state.wethToken}/>
@@ -328,7 +328,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private toggleConversionDialog() {
         this.setState({
-            isConvertDialogVisible: !this.state.isConvertDialogVisible,
+            isETHConversionDialogVisible: !this.state.isETHConversionDialogVisible,
         });
     }
     private async onConversionAmountSelected(direction: Side, value: BigNumber) {
