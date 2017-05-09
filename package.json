@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "description": "Demo app demonstrating the core functionality of the 0x protocol",
   "scripts": {
-    "build": "node node_modules/webpack/bin/webpack.js",
-    "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base public",
-    "update_contracts": "node node_modules/copyfiles/copyfiles -u 4 ./../contracts/build/contracts/*.json ./contracts;",
+    "build": "webpack",
+    "dev": "webpack-dev-server --content-base public",
+    "update_contracts": "copyfiles -u 4 ./../contracts/build/contracts/*.json ./contracts;",
     "deploy_staging": "npm run build; aws s3 sync ./public/. s3://staging-0xproject --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
-    "deploy_live": "npm run build; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers"
+    "deploy_live": "npm run build; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
+    "testrpc": "testrpc -p 8545 --networkId 50 --verbose"
   },
   "author": "Fabio Berger",
   "license": "Apache-2.0",
@@ -73,6 +74,7 @@
     "typescript": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
-    "webpack-dev-server": "^2.3.0"
+    "webpack-dev-server": "^2.3.0",
+    "ethereumjs-testrpc": "^3.0.5"
   }
 }
