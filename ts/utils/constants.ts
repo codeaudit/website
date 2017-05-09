@@ -13,6 +13,8 @@ export const constants = {
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
     NULL_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROLLBAR_ACCESS_TOKEN: 'a6619002b51c4464928201e6ea94de65',
+    SUCCESS_STATUS: 200,
+    UNAVAILABLE_STATUS: 503,
     TAKER_FEE: new BigNumber(0),
     TESTNET_NAME: 'Kovan',
     TESTNET_NETWORK_ID: 42,

@@ -4,6 +4,7 @@
     "tslint-react"
   ],
   "rules": {
+    "no-magic-numbers": true,
     "ordered-imports": false,
     "quotemark": [true, "single", "avoid-escape", "jsx-double"],
     "callable-types": true,

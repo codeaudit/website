@@ -32,6 +32,7 @@ const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const TOKEN_TABLE_ROW_HEIGHT = 60;
 const MAX_TOKEN_TABLE_HEIGHT = 420;
 const ETHER_TOKEN_SYMBOL = 'WETH';
+const COL_SPAN = 2;
 
 const styles: Styles = {
     bgColor: {
@@ -143,7 +144,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 >
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan={2}>Token</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={COL_SPAN}>Token</TableHeaderColumn>
                             <TableHeaderColumn>Balance</TableHeaderColumn>
                             <TableHeaderColumn>0x allowance</TableHeaderColumn>
                             <TableHeaderColumn>Mint test tokens</TableHeaderColumn>
@@ -173,7 +174,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
                 <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
-                    <TableRowColumn colSpan={2}>
+                    <TableRowColumn colSpan={COL_SPAN}>
                         {this.renderTokenName(token)}
                     </TableRowColumn>
                     <TableRowColumn>{this.renderAmount(token.balance, token.decimals)} {token.symbol}</TableRowColumn>
@@ -319,10 +320,12 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
 
         const response = await fetch(`${constants.ETHER_FAUCET_ENDPOINT}/${this.props.userAddress}`);
         const responseBody = await response.text();
-        if (response.status !== 200) {
+        if (response.status !== constants.SUCCESS_STATUS) {
             utils.consoleLog(`Unexpected status code: ${response.status} -> ${responseBody}`);
             await errorReporter.reportAsync(new Error(`Faucet returned non-200: ${JSON.stringify(response)}`));
-            const errorType = response.status === 503 ? BalanceErrs.faucetQueueIsFull : BalanceErrs.faucetRequestFailed;
+            const errorType = response.status === constants.UNAVAILABLE_STATUS ?
+                              BalanceErrs.faucetQueueIsFull :
+                              BalanceErrs.faucetRequestFailed;
             this.setState({
                 errorType,
             });
