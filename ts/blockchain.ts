@@ -184,7 +184,7 @@ export class Blockchain {
         })];
         this.dispatcher.updateTokenByAddress(tokens);
     }
-    public async convertBetweenEthAndWeth(token: Token, direction: Side, count: BigNumber) {
+    public async convertBetweenEthAndWeth(token: Token, direction: Side, amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
             throw new Error('User has no associated addresses');
         }
@@ -193,12 +193,12 @@ export class Blockchain {
         if (direction === Side.deposit) {
             await wethContract.buyTokens({
                 from: this.userAddress,
-                value: count,
+                value: amount,
             });
-            newBalance = token.balance.plus(count);
+            newBalance = token.balance.plus(amount);
         } else {
-            await wethContract.sellTokens(count, {from: this.userAddress});
-            newBalance = token.balance.minus(count);
+            await wethContract.sellTokens(amount, {from: this.userAddress});
+            newBalance = token.balance.minus(amount);
         }
 
         const tokens = [_.assign({}, token, {
