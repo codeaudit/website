@@ -122,9 +122,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <TableRowColumn>
                                 {this.props.userEtherBalance.toFixed(PRECISION)} ETH
                                 {this.state.isBalanceSpinnerVisible &&
+                                (
                                     <span className="pl1">
                                         <i className="zmdi zmdi-spinner zmdi-hc-spin" />
                                     </span>
+                                )
                                 }
                             </TableRowColumn>
                             <TableRowColumn className="sm-hide xs-hide" />
