@@ -24,8 +24,6 @@ import {
     TableRow,
     TableHeaderColumn,
     TableRowColumn,
-    RadioButtonGroup,
-    RadioButton,
 } from 'material-ui';
 import ReactTooltip = require('react-tooltip');
 import BigNumber = require('bignumber.js');
