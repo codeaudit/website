@@ -185,7 +185,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 </Dialog>
                 <EthWethConversionDialog
                     isOpen={this.state.isETHConversionDialogVisible}
-                    onComplete={this.onConversionAmountSelected.bind(this)}
+                    onComplete={this.onConversionAmountSelectedAsync.bind(this)}
                     onCancelled={this.toggleConversionDialog.bind(this)}
                     token={this.state.wethToken}/>
             </div>
@@ -331,7 +331,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             isETHConversionDialogVisible: !this.state.isETHConversionDialogVisible,
         });
     }
-    private async onConversionAmountSelected(direction: Side, value: BigNumber) {
+    private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber): Promise<boolean> {
         this.toggleConversionDialog();
         try {
             await this.props.blockchain.convertBetweenEthAndWeth(this.state.wethToken, direction, value);
