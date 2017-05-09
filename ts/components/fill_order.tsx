@@ -301,7 +301,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = 'This order has already been completely filled';
         } else if (fillAmount.gt(amountLeftToFill)) {
             const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
-            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${takerToken.symbol}`;
+            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits} ${takerToken.symbol}`;
         } else if (makerBalance.lt(fillAmount)) {
             globalErrMsg = 'Maker no longer has a sufficient balance to complete this order';
         } else if (makerAllowance.lt(fillAmount)) {
