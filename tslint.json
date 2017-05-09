@@ -34,7 +34,7 @@
     "jsx-no-multiline-js": false,
     "jsx-no-string-ref": true,
     "jsx-self-close": true,
-    "jsx-wrap-multiline": false,
+    "jsx-wrap-multiline": true,
     "jsx-no-bind": false
   }
 }

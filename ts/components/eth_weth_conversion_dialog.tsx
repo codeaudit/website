@@ -38,13 +38,15 @@ export class EthWethConversionDialog extends
                 onTouchTap={this.onConvertClick.bind(this)}
             />,
         ];
-        return <Dialog
-            title="I want to convert"
-            titleStyle={{fontWeight: 100}}
-            actions={convertDialogActions}
-            open={this.props.isOpen}>
-            {this.renderConversionDialogBody()}
-        </Dialog>;
+        return (
+            <Dialog
+                title="I want to convert"
+                titleStyle={{fontWeight: 100}}
+                actions={convertDialogActions}
+                open={this.props.isOpen}>
+                {this.renderConversionDialogBody()}
+            </Dialog>
+        );
     }
     private updateValue(side: Side, token: AssetToken) {
         this.setState({value: token.amount});
@@ -54,34 +56,38 @@ export class EthWethConversionDialog extends
         return;
     }
     private renderConversionDialogBody() {
-        return <div>
-            <RadioButtonGroup
-                defaultSelected={this.state.direction}
-                name="conversionDirection"
-                onChange={this.onConversionDirectionChange.bind(this)}>
-                <RadioButton
-                    value={Side.deposit}
-                    label="Ether to ether tokens"
-                />
-                <RadioButton
-                    value={Side.receive}
-                    label="Ether tokens to ether"
-                />
-            </RadioButtonGroup>
+        return (
+            <div>
+                <RadioButtonGroup
+                    defaultSelected={this.state.direction}
+                    name="conversionDirection"
+                    onChange={this.onConversionDirectionChange.bind(this)}>
+                    <RadioButton
+                        value={Side.deposit}
+                        label="Ether to ether tokens"
+                    />
+                    <RadioButton
+                        value={Side.receive}
+                        label="Ether tokens to ether"
+                    />
+                </RadioButtonGroup>
 
-            {(this.state.direction === Side.receive)
-                ? <AmountInput
-                    token={this.props.token}
-                    side={this.state.direction}
-                    shouldShowIncompleteErrs={false}
-                    shouldCheckBalanceAndAllowance={true}
-                    triggerMenuClick={this.onMenuClick.bind(this)}
-                    updateChosenAssetToken={this.updateValue.bind(this)}
-                    assetToken={{address: this.props.token.address, amount: this.state.value}}
-                />
-                : <TextField hintText="Value in ETH" onChange={this.onValueChange.bind(this)}/>
-            }
-        </div>;
+                {(this.state.direction === Side.receive) ?
+                    (
+                        <AmountInput
+                            token={this.props.token}
+                            side={this.state.direction}
+                            shouldShowIncompleteErrs={false}
+                            shouldCheckBalanceAndAllowance={true}
+                            triggerMenuClick={this.onMenuClick.bind(this)}
+                            updateChosenAssetToken={this.updateValue.bind(this)}
+                            assetToken={{address: this.props.token.address, amount: this.state.value}}
+                        />
+                    ) :
+                    <TextField hintText="Value in ETH" onChange={this.onValueChange.bind(this)}/>
+                }
+            </div>
+        );
     }
     private onConversionDirectionChange(_: any, direction: Side) {
         this.setState({direction});
