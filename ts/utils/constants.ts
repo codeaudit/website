@@ -1,3 +1,4 @@
+import {ExchangeContractErrs} from 'ts/types';
 import BigNumber = require('bignumber.js');
 
 export const constants = {
@@ -27,4 +28,12 @@ export const constants = {
         MKR: '/images/token_icons/makerdao.png',
         ZRX: '/images/token_icons/zero_ex.png',
     } as {[symbol: string]: string},
+    exchangeContractErrToMsg: {
+        [ExchangeContractErrs.ERROR_FILL_EXPIRED]: 'The order you attempted to fill is expired',
+        [ExchangeContractErrs.ERROR_CANCEL_EXPIRED]: 'The order you attempted to cancel is expired',
+        [ExchangeContractErrs.ERROR_FILL_NO_VALUE]: 'This order has already been filled or cancelled',
+        [ExchangeContractErrs.ERROR_CANCEL_NO_VALUE]: 'This order has already been filled or cancelled',
+        [ExchangeContractErrs.ERROR_FILL_TRUNCATION]: 'The rounding error was too large when filling this order',
+        [ExchangeContractErrs.ERROR_FILL_BALANCE_ALLOWANCE]: 'Maker or taker has insufficient balance or allowance',
+    },
 };

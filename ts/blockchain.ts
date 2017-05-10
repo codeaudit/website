@@ -5,7 +5,14 @@ import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
-import {BlockchainErrs, Token, SignatureData, Side} from 'ts/types';
+import {
+    BlockchainErrs,
+    Token,
+    SignatureData,
+    Side,
+    ContractEvent,
+    ContractResponse,
+} from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
@@ -109,7 +116,7 @@ export class Blockchain {
             v: signatureData.v,
             rs: [signatureData.r, signatureData.s],
         };
-        await this.exchange.fill(fill.traders,
+        const response: ContractResponse = await this.exchange.fill(fill.traders,
                                  fill.tokens,
                                  fill.feeRecipient,
                                  fill.shouldCheckTransfer,
@@ -121,6 +128,12 @@ export class Blockchain {
                                  fill.rs, {
                                       from: this.userAddress,
                                   });
+        const errEvent = _.find(response.logs, {event: 'LogError'});
+        if (!_.isUndefined(errEvent)) {
+            const errCode = errEvent.args.errorId.toNumber();
+            const humanReadableErrMessage = constants.exchangeContractErrToMsg[errCode];
+            throw new Error(humanReadableErrMessage);
+        }
     }
     public async getFillAmountAsync(orderHash: string) {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
