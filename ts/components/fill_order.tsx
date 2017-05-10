@@ -13,6 +13,7 @@ import {
     BlockchainErrs,
     OrderToken,
     Token,
+    ExchangeContractErrs,
 } from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {AmountInput} from 'ts/components/inputs/amount_input';
@@ -303,7 +304,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = 'This order has already been completely filled';
         } else if (fillAmount.gt(amountLeftToFill)) {
             const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
-            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits}${takerToken.symbol}`;
+            globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits} ${takerToken.symbol}`;
         } else if (makerBalance.lt(fillAmount)) {
             globalErrMsg = 'Maker no longer has a sufficient balance to complete this order';
         } else if (makerAllowance.lt(fillAmount)) {
@@ -337,10 +338,17 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             if (_.includes(errMsg, 'User denied transaction signature')) {
                 return false;
             }
+            const fillTruncationErrMsg = constants.exchangeContractErrToMsg[
+                ExchangeContractErrs.ERROR_FILL_TRUNCATION
+            ];
+            globalErrMsg = 'Failed to fill order, please refresh and try again';
+            if (_.includes(errMsg, fillTruncationErrMsg)) {
+                globalErrMsg = fillTruncationErrMsg;
+            }
             utils.consoleLog(`${err}`);
             await errorReporter.reportAsync(err);
             this.setState({
-                globalErrMsg: 'Failed to fill order, please refresh and try again',
+                globalErrMsg,
             });
             return false;
         }
