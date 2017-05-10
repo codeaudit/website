@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
-import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
+import {AssetToken, Side, Token} from 'ts/types';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import BigNumber = require('bignumber.js');
 
@@ -18,7 +19,6 @@ interface AmountInputProps {
     shouldCheckBalanceAndAllowance?: boolean;
     shouldShowIncompleteErrs: boolean;
     token: Token;
-    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     updateChosenAssetToken: (side: Side, token: AssetToken) => void;
 }
 
@@ -125,12 +125,12 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             errMsg = (
                 <span>
                     Insuffient balance.{' '}
-                    <a
+                    <Link
+                        to="/demo/balances"
                         style={{cursor: 'pointer', color: colors.grey900}}
-                        onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
                         Mint tokens
-                    </a>
+                    </Link>
                 </span>
             );
         } else if (this.props.shouldCheckBalanceAndAllowance && isAmountNumeric &&
@@ -138,12 +138,12 @@ export class AmountInput extends React.Component<AmountInputProps, AmountInputSt
             errMsg = (
                 <span>
                     Insuffient allowance.{' '}
-                    <a
+                    <Link
+                        to="/demo/balances"
                         style={{cursor: 'pointer', color: colors.grey900}}
-                        onClick={this.props.triggerMenuClick.bind(this.props.triggerMenuClick, MenuItemValue.balances)}
                     >
                         Set allowance
-                    </a>
+                    </Link>
                 </span>
             );
         }

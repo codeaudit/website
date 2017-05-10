@@ -25,7 +25,6 @@ import {
     SideToAssetToken,
     SignatureData,
     HashData,
-    MenuItemValue,
     TokenByAddress,
     BlockchainErrs,
 } from 'ts/types';
@@ -50,7 +49,6 @@ interface GenerateOrderFormProps {
     orderSalt: BigNumber;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
-    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
 }
 
 interface GenerateOrderFormState {
@@ -152,7 +150,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     assetToken={this.props.sideToAssetToken[Side.deposit]}
                                     shouldCheckBalanceAndAllowance={true}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    triggerMenuClick={this.props.triggerMenuClick}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                 />
                             </div>
@@ -165,7 +162,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     assetToken={this.props.sideToAssetToken[Side.receive]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    triggerMenuClick={this.props.triggerMenuClick}
                                 />
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Switch, Route} from 'react-router-dom';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {State} from 'ts/redux/reducer';
 import {utils} from 'ts/utils/utils';
@@ -12,12 +13,12 @@ import {MenuItem} from 'ts/components/ui/menu_item';
 import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
-import {HashData, TokenByAddress, MenuItemValue, BlockchainErrs, Order, Fill, Side} from 'ts/types';
-import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
+import {HashData, TokenByAddress, BlockchainErrs, Order, Fill, Side} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
 import {Footer} from 'ts/components/footer';
 import {Loading} from 'ts/components/ui/loading';
+import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import BigNumber = require('bignumber.js');
 
 export interface DemoPassedProps {}
@@ -40,7 +41,6 @@ export interface DemoAllProps {
 interface DemoAllState {
     prevNetworkId: number;
     prevUserAddress: string;
-    selectedMenuItem: MenuItemValue;
 }
 
 const styles: React.CSSProperties = {
@@ -73,15 +73,10 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     private sharedOrderIfExists: Order;
     constructor(props: DemoAllProps) {
         super(props);
-        let selectedMenuItem = MenuItemValue.generate;
         this.sharedOrderIfExists = this.getSharedOrderIfExists();
-        if (!_.isUndefined(this.sharedOrderIfExists)) {
-            selectedMenuItem = MenuItemValue.fill;
-        }
         this.state = {
             prevNetworkId: this.props.networkId,
             prevUserAddress: this.props.userAddress,
-            selectedMenuItem,
         };
     }
     public componentDidMount() {
@@ -119,63 +114,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         const updateShouldBlockchainErrDialogBeOpen = this.props.dispatcher
                 .updateShouldBlockchainErrDialogBeOpen.bind(this.props.dispatcher);
 
-        let visibleComponent;
-        switch (this.state.selectedMenuItem) {
-            case MenuItemValue.generate:
-                visibleComponent = (
-                    <GenerateOrderForm
-                        blockchain={this.blockchain}
-                        hashData={this.props.hashData}
-                        triggerMenuClick={this.triggerMenuClick.bind(this)}
-                        dispatcher={this.props.dispatcher}
-                    />
-                );
-                break;
-            case MenuItemValue.fill:
-                const initialFillOrder = !_.isUndefined(this.props.userSuppliedOrderCache) ?
-                                         this.props.userSuppliedOrderCache :
-                                         this.sharedOrderIfExists;
-                visibleComponent = (
-                    <FillOrder
-                        blockchain={this.blockchain}
-                        blockchainErr={this.props.blockchainErr}
-                        initialOrder={initialFillOrder}
-                        orderFillAmount={this.props.orderFillAmount}
-                        userAddress={this.props.userAddress}
-                        tokenByAddress={this.props.tokenByAddress}
-                        triggerMenuClick={this.triggerMenuClick.bind(this)}
-                        dispatcher={this.props.dispatcher}
-                    />
-                );
-                break;
-
-            case MenuItemValue.balances:
-                visibleComponent = (
-                    <TokenBalances
-                        blockchain={this.blockchain}
-                        blockchainErr={this.props.blockchainErr}
-                        blockchainIsLoaded={this.props.blockchainIsLoaded}
-                        dispatcher={this.props.dispatcher}
-                        tokenByAddress={this.props.tokenByAddress}
-                        userAddress={this.props.userAddress}
-                        userEtherBalance={this.props.userEtherBalance}
-                    />
-                );
-                break;
-
-            case MenuItemValue.tradeHistory:
-                visibleComponent = (
-                    <TradeHistory
-                        tokenByAddress={this.props.tokenByAddress}
-                        userAddress={this.props.userAddress}
-                    />
-                );
-                break;
-
-            default:
-                throw utils.spawnSwitchErr('MenuItemValue', this.state.selectedMenuItem);
-        }
-
         return (
             <div>
                 <TopBar
@@ -190,31 +128,28 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                                 className="col col-2 pr2 pt1"
                                 style={{overflow: 'hidden', backgroundColor: 'rgb(39, 39, 39)', color: 'white'}}
                             >
-                                <MenuItem
-                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.generate)}
-                                >
+                                <MenuItem to="/demo">
                                     {this.renderMenuItemWithIcon('Generate order', 'zmdi-code')}
                                 </MenuItem>
-                                <MenuItem
-                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.fill)}
-                                >
+                                <MenuItem to="/demo/fill">
                                     {this.renderMenuItemWithIcon('Fill order', 'zmdi-mail-send')}
                                 </MenuItem>
-                                <MenuItem
-                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.balances)}
-                                >
+                                <MenuItem to="/demo/balances">
                                     {this.renderMenuItemWithIcon('Balances', 'zmdi-balance-wallet')}
                                 </MenuItem>
-                                <MenuItem
-                                    onClickFn={this.triggerMenuClick.bind(this, MenuItemValue.tradeHistory)}
-                                >
+                                <MenuItem to="/demo/trades">
                                     {this.renderMenuItemWithIcon('Trade history', 'zmdi-book')}
                                 </MenuItem>
                             </div>
                             <div className="col col-10">
                                 <div className="py2" style={{backgroundColor: colors.grey50}}>
                                     {this.props.blockchainIsLoaded ?
-                                        visibleComponent :
+                                        <Switch>
+                                            <Route path="/demo/fill" render={this.renderFillOrder.bind(this)} />
+                                            <Route path="/demo/balances" render={this.renderTokenBalances.bind(this)} />
+                                            <Route path="/demo/trades" component={this.renderTradeHistory.bind(this)} />
+                                            <Route path="/" render={this.renderGenerateOrderForm.bind(this)} />
+                                        </Switch> :
                                         <Loading />
                                     }
                                 </div>
@@ -233,6 +168,52 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             </div>
         );
     }
+    private renderTradeHistory() {
+        return (
+            <TradeHistory
+                tokenByAddress={this.props.tokenByAddress}
+                userAddress={this.props.userAddress}
+            />
+        );
+    }
+    private renderTokenBalances() {
+        return (
+            <TokenBalances
+                blockchain={this.blockchain}
+                blockchainErr={this.props.blockchainErr}
+                blockchainIsLoaded={this.props.blockchainIsLoaded}
+                dispatcher={this.props.dispatcher}
+                tokenByAddress={this.props.tokenByAddress}
+                userAddress={this.props.userAddress}
+                userEtherBalance={this.props.userEtherBalance}
+            />
+        );
+    }
+    private renderFillOrder(match: any, location: Location, history: History) {
+        const initialFillOrder = !_.isUndefined(this.props.userSuppliedOrderCache) ?
+                                 this.props.userSuppliedOrderCache :
+                                 this.sharedOrderIfExists;
+        return (
+            <FillOrder
+                blockchain={this.blockchain}
+                blockchainErr={this.props.blockchainErr}
+                initialOrder={initialFillOrder}
+                orderFillAmount={this.props.orderFillAmount}
+                userAddress={this.props.userAddress}
+                tokenByAddress={this.props.tokenByAddress}
+                dispatcher={this.props.dispatcher}
+            />
+        );
+    }
+    private renderGenerateOrderForm(match: any, location: Location, history: History) {
+        return (
+            <GenerateOrderForm
+                blockchain={this.blockchain}
+                hashData={this.props.hashData}
+                dispatcher={this.props.dispatcher}
+            />
+        );
+    }
     private renderMenuItemWithIcon(title: string, iconName: string) {
         return (
             <div className="flex" style={{fontWeight: 100}}>
@@ -244,17 +225,6 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 </div>
             </div>
         );
-    }
-    private triggerMenuClick(selectedMenuItem: MenuItemValue) {
-        if (!this.props.blockchainIsLoaded) {
-            if (this.props.blockchainErr !== '') {
-              this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
-            }
-            return; // Ignore menu click
-        }
-        this.setState({
-            selectedMenuItem,
-        });
     }
     private getSharedOrderIfExists(): Order {
         const queryString = window.location.search;

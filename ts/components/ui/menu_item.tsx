@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 import {constants} from 'ts/utils/constants';
 import {colors} from 'material-ui/styles';
 
 interface MenuItemProps {
-    onClickFn: () => void;
+    to: string;
 }
 
 interface MenuItemState {
@@ -24,15 +25,16 @@ export class MenuItem extends React.Component<MenuItemProps, MenuItemState> {
             opacity: this.state.isHovering ? 0.5 : 1,
         };
         return (
-            <div
-                className="mx-auto py2"
-                style={menuItemStyles}
-                onClick={this.props.onClickFn}
-                onMouseEnter={this.onToggleHover.bind(this, true)}
-                onMouseLeave={this.onToggleHover.bind(this, false)}
-            >
-                {this.props.children}
-            </div>
+            <Link to={this.props.to} style={{textDecoration: 'none', color: 'white'}}>
+                <div
+                    className="mx-auto py2"
+                    style={menuItemStyles}
+                    onMouseEnter={this.onToggleHover.bind(this, true)}
+                    onMouseLeave={this.onToggleHover.bind(this, false)}
+                >
+                    {this.props.children}
+                </div>
+            </Link>
         );
     }
     private onToggleHover(isHovering: boolean) {
