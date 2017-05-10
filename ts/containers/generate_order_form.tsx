@@ -11,7 +11,6 @@ import {
     SignatureData,
     HashData,
     TokenByAddress,
-    MenuItemValue,
     BlockchainErrs,
 } from 'ts/types';
 import BigNumber = require('bignumber.js');
@@ -19,7 +18,6 @@ import BigNumber = require('bignumber.js');
 interface GenerateOrderFormProps {
     blockchain: Blockchain;
     hashData: HashData;
-    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     dispatcher: Dispatcher;
 }
 

@@ -10,13 +10,6 @@ function strEnum(values: string[]): {[key: string]: string} {
     }, Object.create(null));
 }
 
-export enum MenuItemValue {
-    generate,
-    fill,
-    balances,
-    tradeHistory,
-}
-
 export enum GenerateOrderSteps {
   ChooseAssets,
   GrantAllowance,

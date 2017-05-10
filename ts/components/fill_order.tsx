@@ -8,7 +8,6 @@ import {
     Side,
     TokenByAddress,
     Order,
-    MenuItemValue,
     AssetToken,
     BlockchainErrs,
     OrderToken,
@@ -33,7 +32,6 @@ interface FillOrderProps {
     orderFillAmount: BigNumber;
     userAddress: string;
     tokenByAddress: TokenByAddress;
-    triggerMenuClick: (menuItemValue: MenuItemValue) => void;
     initialOrder: Order;
     dispatcher: Dispatcher;
 }
@@ -162,7 +160,6 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         shouldCheckBalanceAndAllowance={true}
                         shouldShowIncompleteErrs={false} // TODO
                         token={fillToken}
-                        triggerMenuClick={this.props.triggerMenuClick}
                         updateChosenAssetToken={this.onFillAmountUpdated.bind(this)}
                     />
                 </div>
