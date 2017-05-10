@@ -10,7 +10,7 @@ Atom packages:
 - [linter-tslint](https://atom.io/packages/linter-tslint)
 - [atom-typescript](https://atom.io/packages/atom-typescript)
 
-Add the following to your `/etc/host` file:
+Add the following to your `/etc/hosts` file:
 
 ```
 127.0.0.1 0xproject.dev
