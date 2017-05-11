@@ -180,6 +180,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
         const isSmallScreen = this.props.screenWidth === ScreenWidths.SM;
         const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
+        const actionPaddingX = isSmallScreen ? 2 : 24;
         return _.map(this.props.tokenByAddress, (token: Token, address: string) => {
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
@@ -202,7 +203,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         />
                     </TableRowColumn>
                     <TableRowColumn
-                        style={{paddingLeft: isSmallScreen ? 2 : 24, paddingRight: isSmallScreen ? 2 : 24}}
+                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
                     >
                         {isMintable &&
                             <LifeCycleRaisedButton
