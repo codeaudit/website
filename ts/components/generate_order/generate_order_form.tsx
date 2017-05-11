@@ -83,8 +83,9 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         const depositToken = this.props.tokenByAddress[depositTokenAddress];
         const receiveTokenAddress = this.props.sideToAssetToken[Side.receive].address;
         const receiveToken = this.props.tokenByAddress[receiveTokenAddress];
-        const takerExplanation = `If a taker is specified, only they are allowed to fill this order.
-                                  If no taker is specified, anyone is able to fill it.`;
+        const takerExplanation = 'If a taker is specified, only they are<br> \
+                                  allowed to fill this order. If no taker is<br> \
+                                  specified, anyone is able to fill it.';
         return (
             <div className="clearfix mb2 lg-px4 md-px4 sm-px2">
                 <h3>Generate an order</h3>
