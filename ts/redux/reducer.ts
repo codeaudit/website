@@ -13,6 +13,7 @@ import {
     Order,
     Action,
     ActionTypes,
+    ScreenWidths,
 } from 'ts/types';
 import * as DummyTokenAArtifacts from '../contracts/DummyTokenA.json';
 import * as DummyTokenBArtifacts from '../contracts/DummyTokenB.json';
@@ -29,6 +30,7 @@ export interface State {
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
     orderSalt: BigNumber;
+    screenWidth: ScreenWidths;
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
@@ -53,6 +55,7 @@ const INITIAL_STATE: State = {
     },
     orderTakerAddress: '',
     orderSalt: zeroEx.generateSalt(),
+    screenWidth: utils.getScreenWidth(),
     shouldBlockchainErrDialogBeOpen: false,
     sideToAssetToken: {
         [Side.deposit]: {},
@@ -121,6 +124,11 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA:
             return _.assign({}, state, {
                 orderSignatureData: action.data,
+            });
+
+        case ActionTypes.UPDATE_SCREEN_WIDTH:
+            return _.assign({}, state, {
+                screenWidth: action.data,
             });
 
         case ActionTypes.UPDATE_BLOCKCHAIN_IS_LOADED:

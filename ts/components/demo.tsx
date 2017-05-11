@@ -13,7 +13,7 @@ import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
-import {HashData, TokenByAddress, BlockchainErrs, Order, Fill, Side, Styles} from 'ts/types';
+import {HashData, TokenByAddress, BlockchainErrs, Order, Fill, Side, Styles, ScreenWidths} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
 import {Footer} from 'ts/components/footer';
 import {Loading} from 'ts/components/ui/loading';
@@ -30,6 +30,7 @@ export interface DemoAllProps {
     hashData: HashData;
     networkId: number;
     orderFillAmount: BigNumber;
+    screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
     userEtherBalance: number;
     userAddress: string;
@@ -68,21 +69,25 @@ const styles: Styles = {
 export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     private blockchain: Blockchain;
     private sharedOrderIfExists: Order;
+    private throttledScreenWidthUpdate: () => void;
     constructor(props: DemoAllProps) {
         super(props);
         this.sharedOrderIfExists = this.getSharedOrderIfExists();
+        this.throttledScreenWidthUpdate = _.throttle(this.updateScreenWidth.bind(this), 100);
         this.state = {
             prevNetworkId: this.props.networkId,
             prevUserAddress: this.props.userAddress,
         };
     }
     public componentDidMount() {
+        window.addEventListener('resize', this.throttledScreenWidthUpdate);
         window.scrollTo(0, 0);
     }
     public componentWillMount() {
         this.blockchain = new Blockchain(this.props.dispatcher);
     }
     public componentWillUnmount() {
+        window.removeEventListener('resize', this.throttledScreenWidthUpdate);
         // We re-set the entire redux state when the demo is unmounted so that when it is re-rendered
         // the initialization process always occurs from the same base state. This helps avoid
         // initialization inconsistencies (i.e While the demo was unrendered, the user might have
@@ -169,6 +174,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 blockchainErr={this.props.blockchainErr}
                 blockchainIsLoaded={this.props.blockchainIsLoaded}
                 dispatcher={this.props.dispatcher}
+                screenWidth={this.props.screenWidth}
                 tokenByAddress={this.props.tokenByAddress}
                 userAddress={this.props.userAddress}
                 userEtherBalance={this.props.userEtherBalance}
@@ -225,5 +231,9 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
             return;
         }
         return order;
+    }
+    private updateScreenWidth() {
+        const newScreenWidth = utils.getScreenWidth();
+        this.props.dispatcher.updateScreenWidth(newScreenWidth);
     }
 }
