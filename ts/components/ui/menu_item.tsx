@@ -16,6 +16,9 @@ interface MenuItemState {
 }
 
 export class MenuItem extends React.Component<MenuItemProps, MenuItemState> {
+    public static defaultProps: Partial<MenuItemProps> = {
+        onClick: _.noop,
+    };
     public constructor(props: MenuItemProps) {
         super(props);
         this.state = {
