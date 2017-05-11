@@ -1,9 +1,9 @@
-import {Token, InputErrorMsg, FailableNumericCallback} from '../../types';
+import {Token, InputErrorMsg, FailableBigNumberCallback} from '../../types';
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
-import {UpperBoundedNumericInput} from './upper_bounded_numeric_input';
-import {zeroEx} from '../../utils/zero_ex';
+import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_amount_input';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
 import {colors} from 'material-ui/styles';
 import {Link} from 'react-router-dom';
@@ -11,25 +11,20 @@ import {Link} from 'react-router-dom';
 interface TokenAmountInputProps {
     label: string;
     token: Token;
-    checkBalance?: boolean;
-    checkAllowance?: boolean;
     shouldShowIncompleteErrs: boolean;
-    onChange: FailableNumericCallback;
+    onChange: FailableBigNumberCallback;
 }
 
-export class TokenAmountInput extends React.Component<TokenAmountInputProps, {}> {
-    public static defaultProps: Partial<TokenAmountInputProps> = {
-        checkBalance: true,
-        checkAllowance: true,
-    };
+interface  TokenAmountInputState {};
+
+export class TokenAmountInput extends React.Component<TokenAmountInputProps, TokenAmountInputState> {
     public render() {
         return (
             <div className="flex overflow-hidden" style={{height: 84}}>
-                <UpperBoundedNumericInput
+                <BalanceBoundedInput
                     label={this.props.label}
                     balance={zeroEx.toUnitAmount(this.props.token.balance, this.props.token.decimals)}
                     onChange={this.onChange.bind(this)}
-                    checkBalance={this.props.checkBalance}
                     validate={this.validate.bind(this)}
                 />
                 <div style={{paddingTop: 44}}>
@@ -38,16 +33,16 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, {}>
             </div>
         );
     }
-    private onChange(error: InputErrorMsg, amount: BigNumber) {
-        if (!_.isNull(error)) {
-            this.props.onChange(error);
+    private onChange(errorMsg: InputErrorMsg, amount: BigNumber) {
+        if (!_.isNull(errorMsg)) {
+            this.props.onChange(errorMsg);
         } else {
             const weiAmount = zeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
             this.props.onChange(null, weiAmount);
         }
     }
     private validate(amount: BigNumber): InputErrorMsg {
-        if (this.props.checkAllowance && amount.gt(this.props.token.allowance)) {
+        if (amount.gt(this.props.token.allowance)) {
             return (
                 <span>
                     Insufficient allowance.{' '}

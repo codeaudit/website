@@ -1,30 +1,27 @@
 import * as BigNumber from 'bignumber.js';
 import * as _ from 'lodash';
 import * as React from 'React';
-import {FailableNumericCallback, InputErrorMsg} from '../../types';
-import {UpperBoundedNumericInput} from 'ts/components/inputs/upper_bounded_numeric_input';
+import {FailableBigNumberCallback, InputErrorMsg} from 'ts/types';
+import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_amount_input';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
 
 interface EthAmountInputProps {
     label: string;
     balance: BigNumber;
-    checkBalance?: boolean;
-    onChange: FailableNumericCallback;
+    onChange: FailableBigNumberCallback;
 }
 
-export class EthAmountInput extends React.Component<EthAmountInputProps, {}> {
-    public static defaultProps: Partial<EthAmountInputProps> = {
-        checkBalance: true,
-    };
+interface EthAmountInputState {}
+
+export class EthAmountInput extends React.Component<EthAmountInputProps, EthAmountInputState> {
     public render() {
         return (
             <div className="flex overflow-hidden" style={{height: 84}}>
-                <UpperBoundedNumericInput
+                <BalanceBoundedInput
                     label={this.props.label}
                     balance={this.props.balance}
                     onChange={this.onChange}
-                    checkBalance={this.props.checkBalance}
                 />
                 <div style={{paddingTop: 44}}>
                     ETH
@@ -32,9 +29,9 @@ export class EthAmountInput extends React.Component<EthAmountInputProps, {}> {
             </div>
         );
     }
-    private onChange(error: InputErrorMsg, amount: BigNumber) {
-        if (!_.isNull(error)) {
-            this.props.onChange(error);
+    private onChange(errorMsg: InputErrorMsg, amount: BigNumber) {
+        if (!_.isUndefined(errorMsg)) {
+            this.props.onChange(errorMsg);
         } else {
             const weiAmount = zeroEx.toBaseUnitAmount(Number(amount), constants.ETH_DECIMAL_PLACES);
             this.props.onChange(null, weiAmount);

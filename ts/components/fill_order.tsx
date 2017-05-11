@@ -156,7 +156,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 <div className="mx-auto" style={{width: 238, height: 108}}>
                     <TokenAmountInput
                         label="Fill amount"
-                        onChange={this.onChange.bind(this, Side.receive)}
+                        onChange={this.onFillAmountChange.bind(this, Side.receive)}
                         shouldShowIncompleteErrs={false}
                         token={fillToken}
                     />
@@ -175,10 +175,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             </div>
         );
     }
-    private onChange(side: Side, error: InputErrorMsg, amount?: BigNumber) {
-        if (_.isNull(error)) {
-            this.props.dispatcher.updateOrderFillAmount(amount);
-        }
+    private onFillAmountChange(side: Side, errorMsg: InputErrorMsg, amount?: BigNumber) {
+        this.props.dispatcher.updateOrderFillAmount(amount);
     }
     private onFillOrderChanged(e: any) {
         const orderJSON = e.target.value;

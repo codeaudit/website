@@ -13,7 +13,7 @@ import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderJSON} from 'ts/components/order_json';
 import {IdenticonAddressInput} from 'ts/components/inputs/identicon_address_input';
 import {TokenInput} from 'ts/components/inputs/token_input';
-import {TokenAmountInput} from "ts/components/inputs/token_amount_input";
+import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
@@ -213,9 +213,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         );
     }
     private onTokenAmountChange(token: Token, side: Side, error: InputErrorMsg, amount?: BigNumber) {
-        if (_.isNull(error)) {
-            this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
-        }
+        this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
     }
     private onCloseOrderJSONDialog() {
         // Upon closing the order JSON dialog, we update the orderSalt stored in the Redux store

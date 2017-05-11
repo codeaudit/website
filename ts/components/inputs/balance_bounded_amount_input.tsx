@@ -1,49 +1,41 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import BigNumber = require('bignumber.js');
-import {FailableNumericCallback, InputErrorMsg} from '../../types';
+import {FailableBigNumberCallback, InputErrorMsg} from 'ts/types';
 import {TextField} from 'material-ui';
-import {RequiredLabel} from '../ui/required_label';
+import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {Link} from 'react-router-dom';
 
-interface UpperBoundedNumericInputProps {
+interface BalanceBoundedInputProps {
     label: string;
     balance: BigNumber;
-    onChange: FailableNumericCallback;
-    checkBalance?: boolean;
+    onChange: FailableBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     validate?: (amount: BigNumber) => InputErrorMsg;
-    style?: React.CSSProperties;
-    hintStyle?: React.CSSProperties;
-    inputStyle?: React.CSSProperties;
 }
 
-interface UpperBoundedNumericInputState {
-    error: InputErrorMsg;
+interface BalanceBoundedInputState {
+    errorMsg: InputErrorMsg;
     amount: string;
 }
 
-export class UpperBoundedNumericInput extends
-    React.Component<UpperBoundedNumericInputProps, UpperBoundedNumericInputState> {
-    public static defaultProps: Partial<UpperBoundedNumericInputProps> = {
-        checkBalance: true,
+export class BalanceBoundedInput extends
+    React.Component<BalanceBoundedInputProps, BalanceBoundedInputState> {
+    public static defaultProps: Partial<BalanceBoundedInputProps> = {
         shouldShowIncompleteErrs: false,
         validate: (amount: BigNumber) => null,
-        style: {},
-        hintStyle: {},
-        inputStyle: {},
     };
-    constructor(props: UpperBoundedNumericInputProps) {
+    constructor(props: BalanceBoundedInputProps) {
         super(props);
         this.state = {
-            error: null,
+            errorMsg: null,
             amount: '',
         };
     }
     public render() {
-        let errorText = this.state.error;
+        let errorText = this.state.errorMsg;
         if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
             errorText = 'This field is required';
         }
@@ -57,11 +49,8 @@ export class UpperBoundedNumericInput extends
                 floatingLabelText={label}
                 floatingLabelFixed={true}
                 floatingLabelStyle={{color: colors.grey500, width: 206}}
-                style={this.props.style}
                 errorText={errorText}
                 value={this.state.amount}
-                inputStyle={this.props.inputStyle}
-                hintStyle={this.props.hintStyle}
                 hintText={<span style={{textTransform: 'capitalize'}}>amount</span>}
                 onChange={this.onValueChange.bind(this)}
                 underlineStyle={{width: 'calc(100% + 50px)'}}
@@ -69,26 +58,26 @@ export class UpperBoundedNumericInput extends
         );
     }
     private onValueChange(e: any, amount: string) {
-        const error = this.validate(amount);
-        if (!_.isNull(error)) {
-            this.props.onChange(error);
+        const errorMsg = this.validate(amount);
+        if (!_.isUndefined(errorMsg)) {
+            this.props.onChange(errorMsg);
         } else {
             this.props.onChange(null, new BigNumber(amount));
         }
         this.setState({
             amount,
-            error,
+            errorMsg,
         });
     }
-    private validate(amount: string): InputErrorMsg {
-        if (!utils.isNumeric(amount)) {
+    private validate(amountString: string): InputErrorMsg {
+        if (!utils.isNumeric(amountString)) {
             return 'Must be a number';
         }
-        const numericAmount = new BigNumber(amount);
-        if (numericAmount.eq(0)) {
+        const amount = new BigNumber(amountString);
+        if (amount.eq(0)) {
             return 'Cannot be zero';
         }
-        if (this.props.checkBalance && numericAmount.gt(this.props.balance)){
+        if (amount.gt(this.props.balance)){
             return (
                 <span>
                     Insufficient balance.{' '}
@@ -100,6 +89,6 @@ export class UpperBoundedNumericInput extends
                 </span>
             );
         }
-        return this.props.validate(numericAmount);
+        return this.props.validate(amount);
     }
 }
