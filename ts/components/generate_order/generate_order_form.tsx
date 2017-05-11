@@ -86,7 +86,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         const takerExplanation = `If a taker is specified, only they are allowed to fill this order.
                                   If no taker is specified, anyone is able to fill it.`;
         return (
-            <div className="clearfix mb2 px4">
+            <div className="clearfix mb2 lg-px4 md-px4 sm-px2">
                 <h3>Generate an order</h3>
                 <Divider />
                 <div className="mx-auto" style={{maxWidth: 495}}>
