@@ -89,7 +89,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             <div className="clearfix mb2 px4">
                 <h3>Generate an order</h3>
                 <Divider />
-                <div className="mx-auto" style={{width: 495}}>
+                <div className="mx-auto" style={{maxWidth: 495}}>
                     <div className="pt2 flex mx-auto">
                         <IdenticonAddressInput
                             label="Taker (address)"
@@ -107,7 +107,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                     </div>
                     <div className="pt1">
                         <div className="mx-auto clearfix">
-                            <div className="col col-5">
+                            <div className="lg-col md-col lg-col-5 md-col-5 sm-col sm-col-5 sm-pb2">
                                 <TokenInput
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
@@ -118,31 +118,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
-                            </div>
-                            <div className="col col-2">
-                                <div className="p1">
-                                    <SwapIcon
-                                        swapTokensFn={dispatcher.swapAssetTokenSymbols.bind(dispatcher)}
-                                    />
-                                </div>
-                            </div>
-                            <div className="col col-5">
-                                <TokenInput
-                                    blockchain={this.props.blockchain}
-                                    blockchainErr={this.props.blockchainErr}
-                                    dispatcher={this.props.dispatcher}
-                                    label="Token to receive (address)"
-                                    side={Side.receive}
-                                    assetToken={this.props.sideToAssetToken[Side.receive]}
-                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
-                                    tokenByAddress={this.props.tokenByAddress}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="pt1">
-                        <div className="mx-auto clearfix">
-                            <div className="col col-5">
                                 <AmountInput
                                     label="Sell amount (uint)"
                                     side={Side.deposit}
@@ -153,8 +128,24 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                 />
                             </div>
-                            <div className="col col-2 p1" />
-                            <div className="col col-5">
+                            <div className="lg-col md-col lg-col-2 md-col-2 sm-col sm-col-2 xs-hide">
+                                <div className="p1">
+                                    <SwapIcon
+                                        swapTokensFn={dispatcher.swapAssetTokenSymbols.bind(dispatcher)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="lg-col md-col lg-col-5 md-col-5 sm-col sm-col-5 sm-pb2">
+                                <TokenInput
+                                    blockchain={this.props.blockchain}
+                                    blockchainErr={this.props.blockchainErr}
+                                    dispatcher={this.props.dispatcher}
+                                    label="Token to receive (address)"
+                                    side={Side.receive}
+                                    assetToken={this.props.sideToAssetToken[Side.receive]}
+                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    tokenByAddress={this.props.tokenByAddress}
+                                />
                                 <AmountInput
                                     label="Receive amount (uint)"
                                     side={Side.receive}
@@ -166,14 +157,12 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                             </div>
                         </div>
                     </div>
-                    <div className="pt1">
-                        <div className="mx-auto" style={{width: 295}}>
-                            <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
-                            <ExpirationInput
-                                orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                                updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
-                            />
-                        </div>
+                    <div className="pt1 sm-pb2">
+                        <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
+                        <ExpirationInput
+                            orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                            updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
+                        />
                     </div>
                     <div className="pt2">
                         <HashInput

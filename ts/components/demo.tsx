@@ -127,7 +127,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                             >
                                 <DemoMenu menuItemStyle={{color: 'white'}} />
                             </div>
-                            <div className="col col-10">
+                            <div className="col col-12 lg-col-10 md-col-10 sm-col sm-col-12">
                                 <div className="py2" style={{backgroundColor: colors.grey50}}>
                                     {this.props.blockchainIsLoaded ?
                                         <Switch>

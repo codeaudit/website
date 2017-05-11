@@ -32,26 +32,30 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
     }
     public render() {
         return (
-            <div className="flex">
-                <DatePicker
-                    className="mr2"
-                    textFieldStyle={{width: 125}}
-                    hintText="Date"
-                    mode="landscape"
-                    value={this.state.date}
-                    onChange={this.onDateChanged.bind(this)}
-                    shouldDisableDate={this.shouldDisableDate.bind(this)}
-                />
-                <TimePicker
-                    textFieldStyle={{width: 125}}
-                    hintText="Time"
-                    autoOk={true}
-                    value={this.state.time}
-                    onChange={this.onTimeChanged.bind(this)}
-                />
+            <div className="clearfix">
+                <div className="col col-6 overflow-hidden pr3">
+                    <DatePicker
+                        className="overflow-hidden"
+                        hintText="Date"
+                        mode="landscape"
+                        value={this.state.date}
+                        onChange={this.onDateChanged.bind(this)}
+                        shouldDisableDate={this.shouldDisableDate.bind(this)}
+                    />
+                </div>
+                <div className="col col-5 overflow-hidden">
+                    <TimePicker
+                        className="overflow-hidden"
+                        hintText="Time"
+                        autoOk={true}
+                        value={this.state.time}
+                        onChange={this.onTimeChanged.bind(this)}
+                    />
+                </div>
                 <div
                     onClick={this.clearDates.bind(this)}
-                    className="pt2 pl2"
+                    className="col col-1 pt2"
+                    style={{textAlign: 'right'}}
                 >
                     <i style={{fontSize: 16, cursor: 'pointer'}} className="zmdi zmdi-close" />
                 </div>

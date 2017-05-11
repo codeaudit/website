@@ -34,7 +34,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                 <div className="pb2 mx4 flex">
                     <div
                         className="inline-block pl1"
-                        style={{top: '1px'}}
+                        style={{top: 1}}
                     >
                         <CopyIcon data={orderJSON} callToAction="Copy" />
                     </div>
