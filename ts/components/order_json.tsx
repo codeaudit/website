@@ -39,7 +39,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                         <CopyIcon data={orderJSON} callToAction="Copy" />
                     </div>
                 </div>
-                <Paper className="mx4 center">
+                <Paper className="lg-mx4 md-mx4 sm-mx1 center overflow-hidden">
                     <TextField
                         id="orderJSON"
                         style={{width: 570}}
