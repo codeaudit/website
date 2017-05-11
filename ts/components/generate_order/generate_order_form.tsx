@@ -13,7 +13,7 @@ import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderJSON} from 'ts/components/order_json';
 import {IdenticonAddressInput} from 'ts/components/inputs/identicon_address_input';
 import {TokenInput} from 'ts/components/inputs/token_input';
-import {AmountInput} from 'ts/components/inputs/amount_input';
+import {TokenAmountInput} from "ts/components/inputs/token_amount_input";
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
@@ -27,6 +27,8 @@ import {
     HashData,
     TokenByAddress,
     BlockchainErrs,
+    Token,
+    InputErrorMsg,
 } from 'ts/types';
 import BigNumber = require('bignumber.js');
 
@@ -143,24 +145,19 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                     <div className="pt1">
                         <div className="mx-auto clearfix">
                             <div className="col col-5">
-                                <AmountInput
+                                <TokenAmountInput
                                     label="Sell amount (uint)"
-                                    side={Side.deposit}
                                     token={depositToken}
-                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                    shouldCheckBalanceAndAllowance={true}
+                                    onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                 />
                             </div>
                             <div className="col col-2 p1" />
                             <div className="col col-5">
-                                <AmountInput
+                                <TokenAmountInput
                                     label="Receive amount (uint)"
-                                    side={Side.receive}
                                     token={receiveToken}
-                                    assetToken={this.props.sideToAssetToken[Side.receive]}
-                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    onChange={this.onTokenAmountChange.bind(this, receiveToken, Side.receive)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                                 />
                             </div>
@@ -214,6 +211,11 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                 </Dialog>
             </div>
         );
+    }
+    private onTokenAmountChange(token: Token, side: Side, error: InputErrorMsg, amount?: BigNumber) {
+        if (_.isNull(error)) {
+            this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
+        }
     }
     private onCloseOrderJSONDialog() {
         // Upon closing the order JSON dialog, we update the orderSalt stored in the Redux store
