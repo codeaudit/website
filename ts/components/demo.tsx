@@ -21,6 +21,8 @@ import {DemoMenu} from 'ts/components/demo_menu';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import BigNumber = require('bignumber.js');
 
+const THROTTLE_TIMEOUT = 100;
+
 export interface DemoPassedProps {}
 
 export interface DemoAllProps {
@@ -73,7 +75,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     constructor(props: DemoAllProps) {
         super(props);
         this.sharedOrderIfExists = this.getSharedOrderIfExists();
-        this.throttledScreenWidthUpdate = _.throttle(this.updateScreenWidth.bind(this), 100);
+        this.throttledScreenWidthUpdate = _.throttle(this.updateScreenWidth.bind(this), THROTTLE_TIMEOUT);
         this.state = {
             prevNetworkId: this.props.networkId,
             prevUserAddress: this.props.userAddress,
