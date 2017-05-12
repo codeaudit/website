@@ -162,11 +162,13 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 >
                     <div className="lg-pb4 md-pb4 clearfix">
                         <div className="md-col md-col-6 pt4">
-                            <div className="pt4 sm-center xs-center">
-                                <img
-                                    src="/images/0x_city_square.png"
-                                    style={{width: 350}}
-                                />
+                            <div className="pt4 md-pl2 sm-center xs-center">
+                                <div className="pt2">
+                                    <img
+                                        src="/images/0x_city_square.png"
+                                        style={{width: '60%'}}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="md-col md-col-6 sm-col-12 xs-col-12 lg-pt4 md-pt4">
@@ -280,7 +282,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     style={{backgroundColor: '#272727'}}
                 >
                     <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
-                        <div className="sm-col sm-col-6">
+                        <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb3">
                             <h1
                                 className="pt4 sm-center md-pl3 lg-pl0"
                                 style={{...styles.subheader, ...styles.thin}}
@@ -297,9 +299,9 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                 <NewsletterInput />
                             </div>
                         </div>
-                        <div className="sm-col sm-col-6 p4">
+                        <div className="sm-col sm-col-6 p4 sm-hide xs-hide">
                             <div className="center">
-                                <img src="/images/paper_airplane.png" style={{width: 150}} />
+                                <img src="/images/paper_airplane.png" style={{width: 120}} />
                             </div>
                         </div>
                     </div>
