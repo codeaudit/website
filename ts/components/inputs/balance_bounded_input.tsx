@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import BigNumber = require('bignumber.js');
-import {FailableNumberCallback, InputErrorMsg} from 'ts/types';
+import {FailableNumberCallback, InputErrMsg} from 'ts/types';
 import {TextField} from 'material-ui';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
@@ -15,12 +15,12 @@ interface BalanceBoundedInputProps {
     onChange: FailableNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
-    validate: (amount: BigNumber) => InputErrorMsg;
+    validate: (amount: BigNumber) => InputErrMsg;
 }
 
 interface BalanceBoundedInputState {
-    errorMsg: InputErrorMsg;
-    amount: string;
+    errMsg: InputErrMsg;
+    amountString: string;
 }
 
 export class BalanceBoundedInput extends
@@ -32,38 +32,36 @@ export class BalanceBoundedInput extends
         super(props);
         const amountString = this.props.amount ? this.props.amount.toString() : '';
         this.state = {
-            errorMsg: this.validate(amountString),
-            amount: amountString,
+            errMsg: this.validate(amountString),
+            amountString: amountString,
         };
     }
     public componentWillReceiveProps(nextProps: BalanceBoundedInputProps) {
         if (nextProps === this.props) {
             return;
         }
-        const isCurrentAmountNumeric = utils.isNumeric(this.state.amount);
-        if (nextProps.amount) {
+        const isCurrentAmountNumeric = utils.isNumeric(this.state.amountString);
+        if (!_.isUndefined(nextProps.amount)) {
             if (!isCurrentAmountNumeric ||
-                !new BigNumber(this.state.amount).eq(nextProps.amount) ||
+                !new BigNumber(this.state.amountString).eq(nextProps.amount) ||
                 !nextProps.balance.eq(this.props.balance)) {
                 const amountString = nextProps.amount.toString();
                 this.setState({
-                    errorMsg: this.validate(amountString),
-                    amount: amountString,
+                    errMsg: this.validate(amountString),
+                    amountString,
                 });
             }
-        } else {
-            if (isCurrentAmountNumeric) {
-                const amountString = '';
-                this.setState({
-                    errorMsg: this.validate(amountString),
-                    amount: amountString,
-                });
-            }
+        } else if (isCurrentAmountNumeric) {
+            const amountString = '';
+            this.setState({
+                errMsg: this.validate(amountString),
+                amountString,
+            });
         }
     }
     public render() {
-        let errorText = this.state.errorMsg;
-        if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
+        let errorText = this.state.errMsg;
+        if (this.props.shouldShowIncompleteErrs && this.state.amountString === '') {
             errorText = 'This field is required';
         }
         let label: React.ReactNode|string = '';
@@ -77,7 +75,7 @@ export class BalanceBoundedInput extends
                 floatingLabelFixed={true}
                 floatingLabelStyle={{color: colors.grey500, width: 206}}
                 errorText={errorText}
-                value={this.state.amount}
+                value={this.state.amountString}
                 hintText={<span style={{textTransform: 'capitalize'}}>amount</span>}
                 onChange={this.onValueChange.bind(this)}
                 underlineStyle={{width: 'calc(100% + 50px)'}}
@@ -85,10 +83,10 @@ export class BalanceBoundedInput extends
         );
     }
     private onValueChange(e: any, amountString: string) {
-        const errorMsg = this.validate(amountString);
+        const errMsg = this.validate(amountString);
         this.setState({
-            amount: amountString,
-            errorMsg,
+            amountString,
+            errMsg,
         }, () => {
             if (utils.isNumeric(amountString)) {
                 this.props.onChange(Number(amountString));
@@ -97,13 +95,9 @@ export class BalanceBoundedInput extends
             }
         });
     }
-    private validate(amountString: string): InputErrorMsg {
+    private validate(amountString: string): InputErrMsg {
         if (!utils.isNumeric(amountString)) {
-            if  (amountString !== '') {
-                return 'Must be a number';
-            } else {
-                return '';
-            }
+            return amountString !== '' ? 'Must be a number' : '';
         }
         const amount = new BigNumber(amountString);
         if (amount.eq(0)) {

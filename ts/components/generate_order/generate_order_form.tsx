@@ -6,7 +6,6 @@ import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
@@ -28,7 +27,6 @@ import {
     TokenByAddress,
     BlockchainErrs,
     Token,
-    InputErrorMsg,
 } from 'ts/types';
 import BigNumber = require('bignumber.js');
 

@@ -1,10 +1,9 @@
-import {Token, InputErrorMsg, FailableBigNumberCallback, AssetToken} from '../../types';
+import {Token, InputErrMsg, FailableBigNumberCallback, AssetToken} from 'ts/types';
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
 import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
 import {zeroEx} from 'ts/utils/zero_ex';
-import {constants} from 'ts/utils/constants';
 import {colors} from 'material-ui/styles';
 import {Link} from 'react-router-dom';
 
@@ -41,14 +40,14 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
             </div>
         );
     }
-    private onChange(amount: number) {
+    private onChange(amount?: number) {
         let baseUnitAmount;
-        if (amount) {
+        if (!_.isUndefined(amount)) {
             baseUnitAmount = zeroEx.toBaseUnitAmount(amount, this.props.token.decimals);
         }
         this.props.onChange(baseUnitAmount);
     }
-    private validate(amount: BigNumber): InputErrorMsg {
+    private validate(amount: BigNumber): InputErrMsg {
         if (this.props.shouldCheckBalanceAndAllowance && amount.gt(this.props.token.allowance)) {
             return (
                 <span>

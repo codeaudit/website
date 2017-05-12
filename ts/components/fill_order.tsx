@@ -8,12 +8,10 @@ import {
     Side,
     TokenByAddress,
     Order,
-    AssetToken,
     BlockchainErrs,
     OrderToken,
     Token,
     ExchangeContractErrs,
-    InputErrorMsg,
 } from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
