@@ -6,14 +6,13 @@ import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
 import {OrderJSON} from 'ts/components/order_json';
 import {IdenticonAddressInput} from 'ts/components/inputs/identicon_address_input';
 import {TokenInput} from 'ts/components/inputs/token_input';
-import {AmountInput} from 'ts/components/inputs/amount_input';
+import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
 import {HashInput} from 'ts/components/inputs/hash_input';
 import {ExpirationInput} from 'ts/components/inputs/expiration_input';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
@@ -27,6 +26,7 @@ import {
     HashData,
     TokenByAddress,
     BlockchainErrs,
+    Token,
 } from 'ts/types';
 import BigNumber = require('bignumber.js');
 
@@ -119,14 +119,13 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
-                                <AmountInput
+                                <TokenAmountInput
                                     label="Sell amount (uint)"
-                                    side={Side.deposit}
                                     token={depositToken}
                                     assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                    shouldCheckBalanceAndAllowance={true}
+                                    onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    shouldCheckBalanceAndAllowance={true}
                                 />
                             </div>
                             <div className="lg-col md-col lg-col-2 md-col-2 sm-col sm-col-2 xs-hide">
@@ -147,13 +146,13 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
-                                <AmountInput
+                                <TokenAmountInput
                                     label="Receive amount (uint)"
-                                    side={Side.receive}
                                     token={receiveToken}
                                     assetToken={this.props.sideToAssetToken[Side.receive]}
-                                    updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
+                                    onChange={this.onTokenAmountChange.bind(this, receiveToken, Side.receive)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                    shouldCheckBalanceAndAllowance={false}
                                 />
                             </div>
                         </div>
@@ -204,6 +203,9 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                 </Dialog>
             </div>
         );
+    }
+    private onTokenAmountChange(token: Token, side: Side, amount?: BigNumber) {
+        this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
     }
     private onCloseOrderJSONDialog() {
         // Upon closing the order JSON dialog, we update the orderSalt stored in the Redux store

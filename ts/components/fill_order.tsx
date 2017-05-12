@@ -8,14 +8,13 @@ import {
     Side,
     TokenByAddress,
     Order,
-    AssetToken,
     BlockchainErrs,
     OrderToken,
     Token,
     ExchangeContractErrs,
 } from 'ts/types';
 import {ErrorAlert} from 'ts/components/ui/error_alert';
-import {AmountInput} from 'ts/components/inputs/amount_input';
+import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
 import {VisualOrder} from 'ts/components/visual_order';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {Validator} from 'ts/schemas/validator';
@@ -153,14 +152,13 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                     </div>
                 </div>
                 <div className="mx-auto" style={{width: 238, height: 108}}>
-                    <AmountInput
+                    <TokenAmountInput
                         label="Fill amount"
-                        side={Side.receive}
+                        onChange={this.onFillAmountChange.bind(this)}
+                        shouldShowIncompleteErrs={false}
+                        token={fillToken}
                         assetToken={fillAssetToken}
                         shouldCheckBalanceAndAllowance={true}
-                        shouldShowIncompleteErrs={false} // TODO
-                        token={fillToken}
-                        updateChosenAssetToken={this.onFillAmountUpdated.bind(this)}
                     />
                 </div>
                 <div>
@@ -177,8 +175,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             </div>
         );
     }
-    private onFillAmountUpdated(side: Side, assetToken: AssetToken) {
-        this.props.dispatcher.updateOrderFillAmount(assetToken.amount);
+    private onFillAmountChange(amount?: BigNumber) {
+        this.props.dispatcher.updateOrderFillAmount(amount);
     }
     private onFillOrderChanged(e: any) {
         const orderJSON = e.target.value;

@@ -73,10 +73,9 @@ export const zeroEx = {
     // A baseUnit is defined as the smallest denomination of a currency. An amount expressed in baseUnits
     // is the amount expressed in the smallest denomination.
     // E.g: 1 unit of a currency with 18 decimal places is expressed in baseUnits as 1000000000000000000
-    toBaseUnitAmount(amount: number, decimals: number): BigNumber {
-      const amountBn = new BigNumber(amount);
+    toBaseUnitAmount(amount: BigNumber, decimals: number): BigNumber {
       const unit = new BigNumber(10).pow(decimals);
-      const baseUnitAmount = amountBn.times(unit);
+      const baseUnitAmount = amount.times(unit);
       return baseUnitAmount;
     },
     isValidOrderHash(orderHash: string): boolean {
