@@ -39,12 +39,23 @@ export class BalanceBoundedInput extends
         if (nextProps === this.props) {
             return;
         }
+        const isCurrentAmountNumeric = _.isUndefined(this.state.errorMsg) && this.state.amount !== '';
         if (nextProps.amount) {
-            const amountString = nextProps.amount.toString();
-            this.setState({
-                errorMsg: this.validate(amountString),
-                amount: amountString,
-            });
+            if (!isCurrentAmountNumeric || !new BigNumber(this.state.amount).eq(nextProps.amount)) {
+                const amountString = nextProps.amount.toString();
+                this.setState({
+                    errorMsg: this.validate(amountString),
+                    amount: amountString,
+                });
+            }
+        } else {
+            if (isCurrentAmountNumeric) {
+                const amountString = '';
+                this.setState({
+                    errorMsg: this.validate(amountString),
+                    amount: amountString,
+                });
+            }
         }
     }
     public render() {
@@ -72,14 +83,15 @@ export class BalanceBoundedInput extends
     }
     private onValueChange(e: any, amount: string) {
         const errorMsg = this.validate(amount);
-        if (!_.isUndefined(errorMsg)) {
-            this.props.onChange(errorMsg);
-        } else {
-            this.props.onChange(undefined, new BigNumber(amount));
-        }
         this.setState({
             amount,
             errorMsg,
+        }, () => {
+            if (!_.isUndefined(errorMsg)) {
+                this.props.onChange(errorMsg);
+            } else {
+                this.props.onChange(undefined, new BigNumber(amount));
+            }
         });
     }
     private validate(amountString: string): InputErrorMsg {
