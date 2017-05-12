@@ -228,4 +228,5 @@ export interface ContractEvent {
 }
 
 export type InputErrorMsg = React.ReactNode | string | undefined;
-export type FailableBigNumberCallback = (errorMsg: InputErrorMsg, amount?: BigNumber) => void;
+export type FailableBigNumberCallback = (amount?: BigNumber) => void;
+export type FailableNumberCallback = (amount?: number) => void;

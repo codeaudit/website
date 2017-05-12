@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import BigNumber = require('bignumber.js');
-import {FailableBigNumberCallback, InputErrorMsg} from 'ts/types';
+import {FailableNumberCallback, InputErrorMsg} from 'ts/types';
 import {TextField} from 'material-ui';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
@@ -12,7 +12,7 @@ interface BalanceBoundedInputProps {
     label: string;
     balance: BigNumber;
     amount?: BigNumber;
-    onChange: FailableBigNumberCallback;
+    onChange: FailableNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
     validate: (amount: BigNumber) => InputErrorMsg;
@@ -30,9 +30,10 @@ export class BalanceBoundedInput extends
     };
     constructor(props: BalanceBoundedInputProps) {
         super(props);
+        const amountString = this.props.amount ? this.props.amount.toString() : '';
         this.state = {
-            errorMsg: undefined,
-            amount: this.props.amount ? this.props.amount.toString() : '',
+            errorMsg: this.validate(amountString),
+            amount: amountString,
         };
     }
     public componentWillReceiveProps(nextProps: BalanceBoundedInputProps) {
@@ -41,7 +42,9 @@ export class BalanceBoundedInput extends
         }
         const isCurrentAmountNumeric = _.isUndefined(this.state.errorMsg) && this.state.amount !== '';
         if (nextProps.amount) {
-            if (!isCurrentAmountNumeric || !new BigNumber(this.state.amount).eq(nextProps.amount)) {
+            if (!isCurrentAmountNumeric ||
+                !new BigNumber(this.state.amount).eq(nextProps.amount) ||
+                !nextProps.balance.eq(this.props.balance)) {
                 const amountString = nextProps.amount.toString();
                 this.setState({
                     errorMsg: this.validate(amountString),
@@ -81,16 +84,16 @@ export class BalanceBoundedInput extends
             />
         );
     }
-    private onValueChange(e: any, amount: string) {
-        const errorMsg = this.validate(amount);
+    private onValueChange(e: any, amountString: string) {
+        const errorMsg = this.validate(amountString);
         this.setState({
-            amount,
+            amount: amountString,
             errorMsg,
         }, () => {
-            if (!_.isUndefined(errorMsg)) {
-                this.props.onChange(errorMsg);
+            if (utils.isNumeric(amountString)) {
+                this.props.onChange(Number(amountString));
             } else {
-                this.props.onChange(undefined, new BigNumber(amount));
+                this.props.onChange(undefined);
             }
         });
     }

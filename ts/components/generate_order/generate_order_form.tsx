@@ -216,7 +216,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             </div>
         );
     }
-    private onTokenAmountChange(token: Token, side: Side, error: InputErrorMsg, amount?: BigNumber) {
+    private onTokenAmountChange(token: Token, side: Side, amount?: BigNumber) {
         this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
     }
     private onCloseOrderJSONDialog() {

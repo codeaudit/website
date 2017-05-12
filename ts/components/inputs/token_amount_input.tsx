@@ -33,6 +33,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                     onChange={this.onChange.bind(this)}
                     validate={this.validate.bind(this)}
                     shouldCheckBalance={this.props.shouldCheckBalanceAndAllowance}
+                    shouldShowIncompleteErrs={this.props.shouldShowIncompleteErrs}
                 />
                 <div style={{paddingTop: 44}}>
                     {this.props.token.symbol}
@@ -40,13 +41,12 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
             </div>
         );
     }
-    private onChange(errorMsg: InputErrorMsg, amount: BigNumber) {
-        if (!_.isUndefined(errorMsg)) {
-            this.props.onChange(errorMsg);
-        } else {
-            const baseUnitAmount = zeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
-            this.props.onChange(undefined, baseUnitAmount);
+    private onChange(amount: number) {
+        let baseUnitAmount;
+        if (amount) {
+            baseUnitAmount = zeroEx.toBaseUnitAmount(amount, this.props.token.decimals);
         }
+        this.props.onChange(baseUnitAmount);
     }
     private validate(amount: BigNumber): InputErrorMsg {
         if (this.props.shouldCheckBalanceAndAllowance && amount.gt(this.props.token.allowance)) {
