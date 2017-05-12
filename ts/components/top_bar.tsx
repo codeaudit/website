@@ -5,6 +5,7 @@ import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
 import {configs} from 'ts/utils/configs';
 import {Identicon} from 'ts/components/ui/identicon';
+import {DemoMenu} from 'ts/components/demo_menu';
 import {Styles} from 'ts/types';
 import {
     Link as ScrollLink,
@@ -90,6 +91,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 docked={false}
                 onRequestChange={this.onMenuButtonClick.bind(this)}
             >
+                {this.renderDemoMenu()}
                 {this.renderHomepageMenuItem('home')}
                 <a
                     className="text-decoration-none"
@@ -107,12 +109,28 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                         FAQ
                     </MenuItem>
                 </Link>
-                {configs.isDemoEnabled &&
+                {configs.isDemoEnabled && !this.isViewingDemo() &&
                     <Link to="/demo" className="text-decoration-none">
                         <MenuItem>Demo</MenuItem>
                     </Link>
                 }
             </Drawer>
+        );
+    }
+    private renderDemoMenu() {
+        if (!this.isViewingDemo()) {
+            return;
+        }
+
+        return (
+            <div className="lg-hide md-hide">
+                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Demo</div>
+                <DemoMenu
+                    menuItemStyle={{color: 'black'}}
+                    onClick={this.onMenuButtonClick.bind(this)}
+                />
+                <div className="pl1 py1 mt3" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Website</div>
+            </div>
         );
     }
     private renderHomepageMenuItem(location: string) {
@@ -166,5 +184,8 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
         this.setState({
             isDrawerOpen: !this.state.isDrawerOpen,
         });
+    }
+    private isViewingDemo() {
+        return _.includes(this.props.location.pathname, '/demo');
     }
 }

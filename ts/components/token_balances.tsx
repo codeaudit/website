@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {TokenByAddress, Token, BlockchainErrs, BalanceErrs, Styles} from 'ts/types';
+import {TokenByAddress, Token, BlockchainErrs, BalanceErrs, Styles, ScreenWidths} from 'ts/types';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -32,7 +32,8 @@ const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const TOKEN_TABLE_ROW_HEIGHT = 60;
 const MAX_TOKEN_TABLE_HEIGHT = 420;
 const ETHER_TOKEN_SYMBOL = 'WETH';
-const COL_SPAN = 2;
+const TOKEN_COL_SPAN_LG = 2;
+const TOKEN_COL_SPAN_SM = 1;
 
 const styles: Styles = {
     bgColor: {
@@ -45,6 +46,7 @@ interface TokenBalancesProps {
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
+    screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
     userAddress: string;
     userEtherBalance: number;
@@ -84,8 +86,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const tokenTableHeight = allTokenRowHeight < MAX_TOKEN_TABLE_HEIGHT ?
                                  allTokenRowHeight :
                                  MAX_TOKEN_TABLE_HEIGHT;
+        const isSmallScreen = this.props.screenWidth === ScreenWidths.SM;
+        const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
         return (
-            <div className="px4 pb2">
+            <div className="lg-px4 md-px4 sm-px1 pb2">
                 <h3>Test ether</h3>
                 <Divider />
                 <div className="pt2 pb2">
@@ -100,8 +104,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         <TableRow>
                             <TableHeaderColumn>Currency</TableHeaderColumn>
                             <TableHeaderColumn>Balance</TableHeaderColumn>
-                            <TableHeaderColumn />
-                            <TableHeaderColumn>Request from faucet</TableHeaderColumn>
+                            <TableHeaderColumn className="sm-hide xs-hide" />
+                            <TableHeaderColumn>Request{!isSmallScreen && ' from faucet'}</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -120,7 +124,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                                     </span>
                                 }
                             </TableRowColumn>
-                            <TableRowColumn />
+                            <TableRowColumn className="sm-hide xs-hide" />
                             <TableRowColumn>
                                 <LifeCycleRaisedButton
                                     labelReady="Request"
@@ -144,10 +148,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 >
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan={COL_SPAN}>Token</TableHeaderColumn>
-                            <TableHeaderColumn>Balance</TableHeaderColumn>
+                            <TableHeaderColumn
+                                colSpan={tokenColSpan}
+                            >
+                                Token
+                            </TableHeaderColumn>
+                            <TableHeaderColumn style={{paddingLeft: 3}}>Balance</TableHeaderColumn>
                             <TableHeaderColumn>0x allowance</TableHeaderColumn>
-                            <TableHeaderColumn>Mint test tokens</TableHeaderColumn>
+                            <TableHeaderColumn>Mint{!isSmallScreen && ' test tokens'}</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -170,14 +178,21 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         if (!this.props.blockchainIsLoaded || this.props.blockchainErr !== '') {
             return '';
         }
+        const isSmallScreen = this.props.screenWidth === ScreenWidths.SM;
+        const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
+        const actionPaddingX = isSmallScreen ? 2 : 24;
         return _.map(this.props.tokenByAddress, (token: Token, address: string) => {
             const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
             return (
                 <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
-                    <TableRowColumn colSpan={COL_SPAN}>
+                    <TableRowColumn
+                        colSpan={tokenColSpan}
+                    >
                         {this.renderTokenName(token)}
                     </TableRowColumn>
-                    <TableRowColumn>{this.renderAmount(token.balance, token.decimals)} {token.symbol}</TableRowColumn>
+                    <TableRowColumn style={{paddingRight: 3, paddingLeft: 3}}>
+                        {this.renderAmount(token.balance, token.decimals)} {token.symbol}
+                    </TableRowColumn>
                     <TableRowColumn>
                         <AllowanceToggle
                             blockchain={this.props.blockchain}
@@ -187,7 +202,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             userAddress={this.props.userAddress}
                         />
                     </TableRowColumn>
-                    <TableRowColumn>
+                    <TableRowColumn
+                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
+                    >
                         {isMintable &&
                             <LifeCycleRaisedButton
                                 labelReady="Mint"
@@ -218,7 +235,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 <div
                     data-tip={true}
                     data-for={tooltipId}
-                    className="mt2 ml2"
+                    className="mt2 ml2 sm-hide xs-hide"
                 >
                     {token.name}
                 </div>

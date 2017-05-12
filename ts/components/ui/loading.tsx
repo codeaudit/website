@@ -11,8 +11,8 @@ interface LoadingState {}
 export class Loading extends React.Component<LoadingProps, LoadingState> {
     public render() {
         return (
-            <div className="pt4" style={{height: 500}}>
-                <Paper className="mx-auto" style={{width: 400}}>
+            <div className="pt4 sm-px2 sm-pt2 sm-m1" style={{height: 500}}>
+                <Paper className="mx-auto" style={{maxWidth: 400}}>
                     <Video
                         autoPlay={true}
                         loop={true}

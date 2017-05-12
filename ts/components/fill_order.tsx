@@ -81,14 +81,14 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                               '', '', hintSignatureData, this.props.tokenByAddress, hintSalt);
         const hintOrderJSON = `${JSON.stringify(hintOrder, null, '\t').substring(0, 500)}...`;
         return (
-            <div className="clearfix px4" style={{minHeight: 600}}>
+            <div className="clearfix lg-px4 md-px4 sm-px2" style={{minHeight: 600}}>
                 <h3>Fill an order</h3>
                 <Divider />
                 <div className="pt2 pb2">
                     Paste an order JSON snippet below to begin
                 </div>
                 <div className="pb2">Order JSON</div>
-                <Paper className="p1" style={{height: 164}}>
+                <Paper className="p1 overflow-hidden" style={{height: 164}}>
                     <TextField
                         id="orderJSON"
                         hintStyle={{bottom: 0, top: 0}}
@@ -137,8 +137,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         return (
             <div className="pt3 pb1">
                 <span>Order details</span>
-                <div className="px4">
-                    <div className="px4 pt1">
+                <div className="lg-px4 md-px4 sm-px0">
+                    <div className="lg-px4 md-px4 sm-px1 pt1">
                         <VisualOrder
                             orderTakerAddress={orderTaker}
                             orderMakerAddress={this.state.parsedOrder.maker.address}

@@ -1,9 +1,20 @@
 import * as _ from 'lodash';
 import * as dateFormat from 'dateformat';
-import {SideToAssetToken, SignatureData, Order, Side, TokenByAddress, OrderParty} from 'ts/types';
+import {
+    SideToAssetToken,
+    SignatureData,
+    Order,
+    Side,
+    TokenByAddress,
+    OrderParty,
+    ScreenWidths,
+} from 'ts/types';
 import deepEqual = require('deep-equal');
 import ethUtil = require('ethereumjs-util');
 import BigNumber = require('bignumber.js');
+
+const LG_MIN_EM = 64;
+const MD_MIN_EM = 52;
 
 export const utils = {
     assert(condition: boolean, message: string) {
@@ -99,5 +110,22 @@ export const utils = {
             throw new Error('Number of cols must be divisible by 12');
         }
         return colSize;
+    },
+    getScreenWidth() {
+        const documentEl = document.documentElement;
+        const body = document.getElementsByTagName('body')[0];
+        const widthInPx = window.innerWidth || documentEl.clientWidth || body.clientWidth;
+        const bodyStyles: any = window.getComputedStyle(document.querySelector('body'));
+        const widthInEm = widthInPx / parseFloat(bodyStyles['font-size']);
+
+        // This logic mirrors the CSS media queries in BassCSS for the `lg-`, `md-` and `sm-` CSS
+        // class prefixes. Do not edit these.
+        if (widthInEm > LG_MIN_EM) {
+            return ScreenWidths.LG;
+        } else if (widthInEm > MD_MIN_EM) {
+            return ScreenWidths.MD;
+        } else {
+            return ScreenWidths.SM;
+        }
     },
 };

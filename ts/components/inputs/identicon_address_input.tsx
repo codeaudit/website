@@ -22,9 +22,9 @@ export class IdenticonAddressInput extends React.Component<IdenticonAddressInput
         const label = this.props.isRequired ? <RequiredLabel label={this.props.label} /> :
                       this.props.label;
         return (
-            <div className="relative">
+            <div className="relative" style={{width: '100%'}}>
                 <InputLabel text={label} />
-                <div className="flex" style={{width: 474}}>
+                <div className="flex">
                     <div className="col col-1 pb1 pr1" style={{paddingTop: 13}}>
                         <Identicon address={this.props.address} diameter={25} />
                     </div>

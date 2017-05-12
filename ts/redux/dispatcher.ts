@@ -10,6 +10,7 @@ import {
     Fill,
     Order,
     ActionTypes,
+    ScreenWidths,
 } from 'ts/types';
 import BigNumber = require('bignumber.js');
 
@@ -21,6 +22,12 @@ export class Dispatcher {
     public resetState() {
         this.dispatch({
             type: ActionTypes.RESET_STATE,
+        });
+    }
+    public updateScreenWidth(screenWidth: ScreenWidths) {
+        this.dispatch({
+            data: screenWidth,
+            type: ActionTypes.UPDATE_SCREEN_WIDTH,
         });
     }
     public swapAssetTokenSymbols() {

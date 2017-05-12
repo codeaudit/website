@@ -32,16 +32,14 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
                             identiconDiameter={IDENTICON_DIAMETER}
                         />
                     </div>
-                    <div className="col col-2 center" style={{paddingTop: 25}}>
-                        <div style={{paddingBottom: 6}}>
+                    <div className="col col-2 center pt1">
+                        <div className="pb1">
                             {this.renderAmount(this.props.makerAssetToken, this.props.makerToken)}
                         </div>
-                        <div className="relative mx-auto" style={{width: 69, height: 54}}>
-                            <div className="absolute" style={{top: -18, left: 1}}>
-                                <i style={{fontSize: 90}} className="zmdi zmdi-swap" />
-                            </div>
+                        <div className="lg-p2 md-p2 sm-p1">
+                            <i style={{fontSize: 45}} className="zmdi zmdi-swap" />
                         </div>
-                        <div style={{paddingTop: 8}}>
+                        <div className="pt1">
                             {this.renderAmount(this.props.takerAssetToken, this.props.takerToken)}
                         </div>
                     </div>
