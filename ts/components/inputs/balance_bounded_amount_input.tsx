@@ -11,8 +11,10 @@ import {Link} from 'react-router-dom';
 interface BalanceBoundedInputProps {
     label: string;
     balance: BigNumber;
+    amount?: BigNumber;
     onChange: FailableBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
+    shouldCheckBalance: boolean;
     validate?: (amount: BigNumber) => InputErrorMsg;
 }
 
@@ -25,13 +27,13 @@ export class BalanceBoundedInput extends
     React.Component<BalanceBoundedInputProps, BalanceBoundedInputState> {
     public static defaultProps: Partial<BalanceBoundedInputProps> = {
         shouldShowIncompleteErrs: false,
-        validate: (amount: BigNumber) => null,
+        validate: (amount: BigNumber) => undefined,
     };
     constructor(props: BalanceBoundedInputProps) {
         super(props);
         this.state = {
-            errorMsg: null,
-            amount: '',
+            errorMsg: undefined,
+            amount: this.props.amount ? this.props.amount.toString() : '',
         };
     }
     public render() {
@@ -62,7 +64,7 @@ export class BalanceBoundedInput extends
         if (!_.isUndefined(errorMsg)) {
             this.props.onChange(errorMsg);
         } else {
-            this.props.onChange(null, new BigNumber(amount));
+            this.props.onChange(undefined, new BigNumber(amount));
         }
         this.setState({
             amount,
@@ -77,7 +79,7 @@ export class BalanceBoundedInput extends
         if (amount.eq(0)) {
             return 'Cannot be zero';
         }
-        if (amount.gt(this.props.balance)){
+        if (this.props.shouldCheckBalance && amount.gt(this.props.balance)) {
             return (
                 <span>
                     Insufficient balance.{' '}

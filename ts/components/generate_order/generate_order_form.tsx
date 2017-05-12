@@ -148,8 +148,10 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                 <TokenAmountInput
                                     label="Sell amount (uint)"
                                     token={depositToken}
+                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
                                     onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                    shouldCheckBalanceAndAllowance={true}
                                 />
                             </div>
                             <div className="col col-2 p1" />
@@ -157,8 +159,10 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                 <TokenAmountInput
                                     label="Receive amount (uint)"
                                     token={receiveToken}
+                                    assetToken={this.props.sideToAssetToken[Side.receive]}
                                     onChange={this.onTokenAmountChange.bind(this, receiveToken, Side.receive)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                    shouldCheckBalanceAndAllowance={false}
                                 />
                             </div>
                         </div>

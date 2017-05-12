@@ -1,4 +1,4 @@
-import {Token, InputErrorMsg, FailableBigNumberCallback} from '../../types';
+import {Token, InputErrorMsg, FailableBigNumberCallback, AssetToken} from '../../types';
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
@@ -11,21 +11,28 @@ import {Link} from 'react-router-dom';
 interface TokenAmountInputProps {
     label: string;
     token: Token;
+    assetToken: AssetToken;
     shouldShowIncompleteErrs: boolean;
+    shouldCheckBalanceAndAllowance: boolean;
     onChange: FailableBigNumberCallback;
 }
 
-interface  TokenAmountInputState {};
+interface  TokenAmountInputState {}
 
 export class TokenAmountInput extends React.Component<TokenAmountInputProps, TokenAmountInputState> {
     public render() {
+        const amount = this.props.assetToken.amount ?
+            zeroEx.toUnitAmount(this.props.assetToken.amount, this.props.token.decimals) :
+            undefined;
         return (
             <div className="flex overflow-hidden" style={{height: 84}}>
                 <BalanceBoundedInput
                     label={this.props.label}
+                    amount={amount}
                     balance={zeroEx.toUnitAmount(this.props.token.balance, this.props.token.decimals)}
                     onChange={this.onChange.bind(this)}
                     validate={this.validate.bind(this)}
+                    shouldCheckBalance={this.props.shouldCheckBalanceAndAllowance}
                 />
                 <div style={{paddingTop: 44}}>
                     {this.props.token.symbol}
@@ -34,15 +41,15 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
         );
     }
     private onChange(errorMsg: InputErrorMsg, amount: BigNumber) {
-        if (!_.isNull(errorMsg)) {
+        if (!_.isUndefined(errorMsg)) {
             this.props.onChange(errorMsg);
         } else {
-            const weiAmount = zeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
-            this.props.onChange(null, weiAmount);
+            const baseUnitAmount = zeroEx.toBaseUnitAmount(Number(amount), this.props.token.decimals);
+            this.props.onChange(undefined, baseUnitAmount);
         }
     }
     private validate(amount: BigNumber): InputErrorMsg {
-        if (amount.gt(this.props.token.allowance)) {
+        if (this.props.shouldCheckBalanceAndAllowance && amount.gt(this.props.token.allowance)) {
             return (
                 <span>
                     Insufficient allowance.{' '}
@@ -54,6 +61,6 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                 </span>
             );
         }
-        return null;
+        return undefined;
     }
 }
