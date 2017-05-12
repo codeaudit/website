@@ -9,11 +9,12 @@ export const HelpTooltip = (props: HelpTooltipProps) => {
     return (
         <div
             className="inline-block"
-            data-tip={true}
+            data-tip={props.explanation}
             data-for="helpTooltip"
+            data-multiline={true}
         >
             <i style={{fontSize: 16}} className="zmdi zmdi-help" />
-            <ReactTooltip id="helpTooltip">{props.explanation}</ReactTooltip>
+            <ReactTooltip id="helpTooltip" />
         </div>
     );
 };

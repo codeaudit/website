@@ -162,11 +162,13 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 >
                     <div className="lg-pb4 md-pb4 clearfix">
                         <div className="md-col md-col-6 pt4">
-                            <div className="pt4 sm-center xs-center">
-                                <img
-                                    src="/images/0x_city_square.png"
-                                    style={{width: 350}}
-                                />
+                            <div className="pt4 md-pl2 sm-center xs-center">
+                                <div className="pt2">
+                                    <img
+                                        src="/images/0x_city_square.png"
+                                        style={{width: '60%'}}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="md-col md-col-6 sm-col-12 xs-col-12 lg-pt4 md-pt4">
@@ -244,24 +246,29 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             The World is Becoming Tokenized
                         </h1>
                         <div
-                            className="pb4 sm-center sm-px3 md-pl3 lg-pl0"
+                            className="lg-pb4 md-pb4 sm-pb0 sm-center sm-px3 md-pl3 lg-pl0"
                             style={{maxWidth: 750, ...styles.paragraph, ...styles.thin}}
                         >
-                            The Ethereum blockchain has become host to a{' '}
-                            <a href="https://etherscan.io/tokens" target="_blank">
-                                variety of digital assets
-                            </a>, with{' '}
-                            <a href="https://www.icoalert.com/" target="_blank">
-                                more being created every month
-                            </a>. Soon, thousands of assets will be tokenized and moved onto this{' '}
-                            open financial network including traditional securities, currencies and{' '}
-                            scarce digital goods. As the token space continues to develop, the need{' '}
-                            to exchange these assets will be compounded. 0x protocol will act as a{' '}
-                            critical piece of infrastructure for the token economy, allowing Ethereum{' '}
-                            smart contracts to programmatically and seamlessly exchange Ethereum-based assets.
+                            <p>
+                                The Ethereum blockchain has become host to a{' '}
+                                <a href="https://etherscan.io/tokens" target="_blank">
+                                    variety of digital assets
+                                </a>, with{' '}
+                                <a href="https://www.icoalert.com/" target="_blank">
+                                    more being created every month
+                                </a>. Soon, thousands of assets will be tokenized and moved onto this{' '}
+                                open financial network including traditional securities, currencies and{' '}
+                                scarce digital goods.{' '}
+                            </p>
+                            <p>
+                                As the token space continues to develop, the need{' '}
+                                to exchange these assets will be compounded. 0x protocol will act as a{' '}
+                                critical piece of infrastructure for the token economy, allowing Ethereum{' '}
+                                smart contracts to programmatically and seamlessly exchange Ethereum-based assets.{' '}
+                            </p>
                         </div>
                         <div className="lg-py4 md-py4 sm-py2" />
-                        <div className="pt4 pb1 clearfix sm-pl3 md-pl3 lg-pl0">
+                        <div className="pt4 lg-pb1 md-pb1 sm-pb3 clearfix sm-px3 md-pl3 lg-pl0">
                             <Statistics />
                         </div>
                     </div>
@@ -275,7 +282,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     style={{backgroundColor: '#272727'}}
                 >
                     <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
-                        <div className="sm-col sm-col-6">
+                        <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb4">
                             <h1
                                 className="pt4 sm-center md-pl3 lg-pl0"
                                 style={{...styles.subheader, ...styles.thin}}
@@ -292,9 +299,9 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                 <NewsletterInput />
                             </div>
                         </div>
-                        <div className="sm-col sm-col-6 p4">
+                        <div className="sm-col sm-col-6 p4 sm-hide xs-hide">
                             <div className="center">
-                                <img src="/images/paper_airplane.png" style={{width: 150}} />
+                                <img src="/images/paper_airplane.png" style={{width: 120}} />
                             </div>
                         </div>
                     </div>

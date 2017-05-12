@@ -5,7 +5,7 @@ import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Side, HashData, TokenByAddress, BlockchainErrs, Fill, Order} from 'ts/types';
+import {Side, HashData, TokenByAddress, BlockchainErrs, Fill, Order, ScreenWidths} from 'ts/types';
 import {
     Demo as DemoComponent,
     DemoAllProps as DemoComponentAllProps,
@@ -21,6 +21,7 @@ interface MapStateToProps {
     orderFillAmount: number;
     tokenByAddress: TokenByAddress;
     userEtherBalance: number;
+    screenWidth: ScreenWidths;
     shouldBlockchainErrDialogBeOpen: boolean;
     userAddress: string;
     userSuppliedOrderCache: Order;
@@ -62,6 +63,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         networkId: state.networkId,
         orderFillAmount: state.orderFillAmount,
         hashData,
+        screenWidth: state.screenWidth,
         shouldBlockchainErrDialogBeOpen: state.shouldBlockchainErrDialogBeOpen,
         tokenByAddress: state.tokenByAddress,
         userAddress: state.userAddress,

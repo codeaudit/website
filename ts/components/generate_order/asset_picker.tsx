@@ -3,6 +3,8 @@ import * as React from 'react';
 import {Dialog, GridList, GridTile} from 'material-ui';
 import {Token, Side, AssetToken, TokenByAddress, Styles} from 'ts/types';
 
+const TILE_DIMENSION = 146;
+
 interface AssetPickerProps {
     isOpen: boolean;
     side: Side;
@@ -15,18 +17,6 @@ interface AssetPickerProps {
 interface AssetPickerState {
     hoveredAddress: string | undefined;
 }
-
-const styles: Styles = {
-    gridList: {
-        overflowY: 'auto',
-        width: 722,
-    },
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-    },
-};
 
 export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerState> {
     constructor(props: AssetPickerProps) {
@@ -44,14 +34,12 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
                 open={this.props.isOpen}
                 onRequestClose={this.onCloseDialog.bind(this)}
             >
-                <GridList
-                    cellHeight={150}
-                    cols={4}
-                    padding={8}
-                    style={styles.gridList}
+                <div
+                    className="clearfix flex flex-wrap"
+                    style={{overflowY: 'auto', maxWidth: 720, maxHeight: 356, marginBottom: 10}}
                 >
                     {this.renderGridTiles()}
-                </GridList>
+                </div>
             </Dialog>
         );
     }
@@ -69,45 +57,45 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
             return (
                 <div
                     key={address}
-                    style={tileStyles}
+                    style={{width: TILE_DIMENSION, height: TILE_DIMENSION, ...tileStyles}}
+                    className="p2 mx-auto"
                     onClick={this.onChooseAssetAndClose.bind(this, assetToken)}
                     onMouseEnter={this.onToggleHover.bind(this, address, true)}
                     onMouseLeave={this.onToggleHover.bind(this, address, false)}
                 >
-                    <GridTile
-                        style={{height: 160}}
-                        title={token.name}
-                    >
-                        {/* Note: we keep this additional div here because GridTile applies additional */}
-                        {/* transformations to img tag children that we do not want. */}
-                        <div>
-                            <img
-                                style={{width: 100, height: 100, position: 'absolute', left: '22%'}}
-                                src={token.iconUrl}
-                            />
-                        </div>
-                    </GridTile>
+                    <div className="p1 center">
+                        <img
+                            style={{width: 100, height: 100}}
+                            src={token.iconUrl}
+                        />
+                    </div>
+                    <div className="center">{token.name}</div>
                 </div>
             );
         });
         if (!_.isUndefined(this.props.onCustomAssetChosen)) {
+            const otherTokenKey = 'otherToken';
+            const isHovered = this.state.hoveredAddress === otherTokenKey;
+            const tileStyles = {
+                cursor: 'pointer',
+                opacity: isHovered ? 0.8 : 1,
+            };
             gridTiles.push((
                 <div
-                    key="otherToken"
-                    style={{cursor: 'pointer'}}
+                    key={otherTokenKey}
+                    style={{width: TILE_DIMENSION, height: TILE_DIMENSION, ...tileStyles}}
+                    className="p2 mx-auto"
                     onClick={this.props.onCustomAssetChosen.bind(this)}
+                    onMouseEnter={this.onToggleHover.bind(this, otherTokenKey, true)}
+                    onMouseLeave={this.onToggleHover.bind(this, otherTokenKey, false)}
                 >
-                    <GridTile
-                        style={{height: 160}}
-                        title="Another ERC20"
-                    >
-                        <div style={{position: 'absolute', left: 42}}>
-                            <i
-                                style={{fontSize: 105, paddingLeft: 1, paddingRight: 1}}
-                                className="zmdi zmdi-plus-circle"
-                            />
-                        </div>
-                    </GridTile>
+                    <div className="p1 center">
+                        <i
+                            style={{fontSize: 105, paddingLeft: 1, paddingRight: 1}}
+                            className="zmdi zmdi-plus-circle"
+                        />
+                    </div>
+                    <div className="center">Other ERC20 Token</div>
                 </div>
             ));
         }

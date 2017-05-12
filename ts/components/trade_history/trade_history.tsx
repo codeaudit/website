@@ -34,7 +34,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
     }
     public render() {
         return (
-            <div className="px4">
+            <div className="lg-px4 md-px4 sm-px2">
                 <h3>Trade history</h3>
                 <Divider />
                 <div className="pt2" style={{height: 608, overflow: 'scroll'}}>

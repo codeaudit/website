@@ -85,13 +85,14 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         const depositToken = this.props.tokenByAddress[depositTokenAddress];
         const receiveTokenAddress = this.props.sideToAssetToken[Side.receive].address;
         const receiveToken = this.props.tokenByAddress[receiveTokenAddress];
-        const takerExplanation = `If a taker is specified, only they are allowed to fill this order.
-                                  If no taker is specified, anyone is able to fill it.`;
+        const takerExplanation = 'If a taker is specified, only they are<br> \
+                                  allowed to fill this order. If no taker is<br> \
+                                  specified, anyone is able to fill it.';
         return (
-            <div className="clearfix mb2 px4">
+            <div className="clearfix mb2 lg-px4 md-px4 sm-px2">
                 <h3>Generate an order</h3>
                 <Divider />
-                <div className="mx-auto" style={{width: 495}}>
+                <div className="mx-auto" style={{maxWidth: 495}}>
                     <div className="pt2 flex mx-auto">
                         <IdenticonAddressInput
                             label="Taker (address)"
@@ -109,7 +110,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                     </div>
                     <div className="pt1">
                         <div className="mx-auto clearfix">
-                            <div className="col col-5">
+                            <div className="lg-col md-col lg-col-5 md-col-5 sm-col sm-col-5 sm-pb2">
                                 <TokenInput
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
@@ -120,15 +121,23 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
+                                <TokenAmountInput
+                                    label="Sell amount (uint)"
+                                    token={depositToken}
+                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
+                                    onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
+                                    shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                                    shouldCheckBalanceAndAllowance={true}
+                                />
                             </div>
-                            <div className="col col-2">
+                            <div className="lg-col md-col lg-col-2 md-col-2 sm-col sm-col-2 xs-hide">
                                 <div className="p1">
                                     <SwapIcon
                                         swapTokensFn={dispatcher.swapAssetTokenSymbols.bind(dispatcher)}
                                     />
                                 </div>
                             </div>
-                            <div className="col col-5">
+                            <div className="lg-col md-col lg-col-5 md-col-5 sm-col sm-col-5 sm-pb2">
                                 <TokenInput
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
@@ -139,23 +148,6 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="pt1">
-                        <div className="mx-auto clearfix">
-                            <div className="col col-5">
-                                <TokenAmountInput
-                                    label="Sell amount (uint)"
-                                    token={depositToken}
-                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
-                                    onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
-                                    shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    shouldCheckBalanceAndAllowance={true}
-                                />
-                            </div>
-                            <div className="col col-2 p1" />
-                            <div className="col col-5">
                                 <TokenAmountInput
                                     label="Receive amount (uint)"
                                     token={receiveToken}
@@ -167,14 +159,12 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                             </div>
                         </div>
                     </div>
-                    <div className="pt1">
-                        <div className="mx-auto" style={{width: 295}}>
-                            <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
-                            <ExpirationInput
-                                orderExpiryTimestamp={this.props.orderExpiryTimestamp}
-                                updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
-                            />
-                        </div>
+                    <div className="pt1 sm-pb2">
+                        <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
+                        <ExpirationInput
+                            orderExpiryTimestamp={this.props.orderExpiryTimestamp}
+                            updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
+                        />
                     </div>
                     <div className="pt2">
                         <HashInput

@@ -131,6 +131,7 @@ export enum BalanceErrs {
 };
 
 export const ActionTypes = strEnum([
+    'UPDATE_SCREEN_WIDTH',
     'RESET_STATE',
     'ADD_TOKEN_TO_TOKEN_BY_ADDRESS',
     'BLOCKCHAIN_ERR_ENCOUNTERED',
@@ -230,3 +231,10 @@ export interface ContractEvent {
 export type InputErrorMsg = React.ReactNode | string | undefined;
 export type FailableBigNumberCallback = (amount?: BigNumber) => void;
 export type FailableNumberCallback = (amount?: number) => void;
+
+export const ScreenWidths = strEnum([
+  'SM',
+  'MD',
+  'LG',
+]);
+export type ScreenWidths = keyof typeof ScreenWidths;
