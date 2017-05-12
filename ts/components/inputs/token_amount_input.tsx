@@ -40,7 +40,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
             </div>
         );
     }
-    private onChange(amount?: number) {
+    private onChange(amount?: BigNumber) {
         let baseUnitAmount;
         if (!_.isUndefined(amount)) {
             baseUnitAmount = zeroEx.toBaseUnitAmount(amount, this.props.token.decimals);

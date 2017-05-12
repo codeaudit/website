@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import BigNumber = require('bignumber.js');
-import {FailableNumberCallback, InputErrMsg} from 'ts/types';
+import {FailableBigNumberCallback, InputErrMsg} from 'ts/types';
 import {TextField} from 'material-ui';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
@@ -12,7 +12,7 @@ interface BalanceBoundedInputProps {
     label: string;
     balance: BigNumber;
     amount?: BigNumber;
-    onChange: FailableNumberCallback;
+    onChange: FailableBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
     validate: (amount: BigNumber) => InputErrMsg;
@@ -96,7 +96,7 @@ export class BalanceBoundedInput extends
             errMsg,
         }, () => {
             if (utils.isNumeric(amountString)) {
-                this.props.onChange(Number(amountString));
+                this.props.onChange(new BigNumber(amountString));
             } else {
                 this.props.onChange(undefined);
             }
