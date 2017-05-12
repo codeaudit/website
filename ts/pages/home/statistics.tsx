@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Paper} from 'material-ui';
 import {utils} from 'ts/utils/utils';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
@@ -64,16 +65,22 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
             return (
                 <div
                     key={stat.title}
-                    className="sm-col sm-col-${colSize} pr4 pb3"
-                    style={{color: colors.grey700, textShadow: '0 0 4px #fff'}}
+                    className="sm-col sm-col-${colSize} pr3 sm-pl3 pb3"
+                    style={{color: colors.grey700}}
                 >
-                    <div className="center" style={{fontSize: 58, fontWeight: 100}}>{stat.figure}</div>
-                    <div
-                        className="center pt1"
-                        style={{textTransform: 'uppercase', fontSize: 25}}
+                    <Paper
+                        className="p2"
+                        zDepth={1}
+                        style={{backgroundColor: '#f2f2f2'}}
                     >
-                        {stat.title}
-                    </div>
+                        <div className="center" style={{fontSize: 58, fontWeight: 100}}>{stat.figure}</div>
+                        <div
+                            className="center pt1"
+                            style={{textTransform: 'uppercase', fontSize: 25}}
+                        >
+                            {stat.title}
+                        </div>
+                    </Paper>
                 </div>
             );
         });

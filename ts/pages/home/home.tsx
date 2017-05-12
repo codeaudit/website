@@ -246,7 +246,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             The World is Becoming Tokenized
                         </h1>
                         <div
-                            className="pb4 sm-center sm-px3 md-pl3 lg-pl0"
+                            className="lg-pb4 md-pb4 sm-pb0 sm-center sm-px3 md-pl3 lg-pl0"
                             style={{maxWidth: 750, ...styles.paragraph, ...styles.thin}}
                         >
                             <p>
@@ -268,7 +268,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             </p>
                         </div>
                         <div className="lg-py4 md-py4 sm-py2" />
-                        <div className="pt4 pb1 clearfix sm-pl3 md-pl3 lg-pl0">
+                        <div className="pt4 lg-pb1 md-pb1 sm-pb3 clearfix sm-px3 md-pl3 lg-pl0">
                             <Statistics />
                         </div>
                     </div>
@@ -282,7 +282,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     style={{backgroundColor: '#272727'}}
                 >
                     <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
-                        <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb3">
+                        <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb4">
                             <h1
                                 className="pt4 sm-center md-pl3 lg-pl0"
                                 style={{...styles.subheader, ...styles.thin}}
