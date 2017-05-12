@@ -36,6 +36,14 @@ export class BalanceBoundedInput extends
             amount: this.props.amount ? this.props.amount.toString() : '',
         };
     }
+    public componentWillReceiveProps(nextProps: BalanceBoundedInputProps) {
+        if (nextProps === this.props) return;
+        const amountString = nextProps.amount ? nextProps.amount.toString() : '';
+        this.setState({
+            errorMsg: this.validate(amountString),
+            amount: amountString,
+        });
+    }
     public render() {
         let errorText = this.state.errorMsg;
         if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
