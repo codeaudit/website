@@ -115,7 +115,7 @@ export const utils = {
         const documentEl = document.documentElement;
         const body = document.getElementsByTagName('body')[0];
         const widthInPx = window.innerWidth || documentEl.clientWidth || body.clientWidth;
-        const bodyStyles: any = getComputedStyle(document.querySelector('body'));
+        const bodyStyles: any = window.getComputedStyle(document.querySelector('body'));
         const widthInEm = widthInPx / parseFloat(bodyStyles['font-size']);
 
         // This logic mirrors the CSS media queries in BassCSS for the `lg-`, `md-` and `sm-` CSS
