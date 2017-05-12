@@ -33,7 +33,7 @@ export class BalanceBoundedInput extends
         const amountString = this.props.amount ? this.props.amount.toString() : '';
         this.state = {
             errMsg: this.validate(amountString),
-            amountString: amountString,
+            amountString,
         };
     }
     public componentWillReceiveProps(nextProps: BalanceBoundedInputProps) {
@@ -42,9 +42,16 @@ export class BalanceBoundedInput extends
         }
         const isCurrentAmountNumeric = utils.isNumeric(this.state.amountString);
         if (!_.isUndefined(nextProps.amount)) {
-            if (!isCurrentAmountNumeric ||
-                !new BigNumber(this.state.amountString).eq(nextProps.amount) ||
-                !nextProps.balance.eq(this.props.balance)) {
+            let shouldResetState = false;
+            if (!isCurrentAmountNumeric) {
+                shouldResetState = true;
+            } else {
+                const currentAmount = new BigNumber(this.state.amountString);
+                if (!currentAmount.eq(nextProps.amount) || !nextProps.balance.eq(this.props.balance)) {
+                    shouldResetState = true;
+                }
+            }
+            if (shouldResetState) {
                 const amountString = nextProps.amount.toString();
                 this.setState({
                     errMsg: this.validate(amountString),
