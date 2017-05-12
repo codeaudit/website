@@ -40,7 +40,7 @@ export class BalanceBoundedInput extends
         if (nextProps === this.props) {
             return;
         }
-        const isCurrentAmountNumeric = _.isUndefined(this.state.errorMsg) && this.state.amount !== '';
+        const isCurrentAmountNumeric = utils.isNumeric(this.state.amount);
         if (nextProps.amount) {
             if (!isCurrentAmountNumeric ||
                 !new BigNumber(this.state.amount).eq(nextProps.amount) ||
