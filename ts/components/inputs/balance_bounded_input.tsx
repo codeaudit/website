@@ -15,7 +15,7 @@ interface BalanceBoundedInputProps {
     onChange: FailableBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
-    validate?: (amount: BigNumber) => InputErrorMsg;
+    validate: (amount: BigNumber) => InputErrorMsg;
 }
 
 interface BalanceBoundedInputState {
@@ -27,7 +27,6 @@ export class BalanceBoundedInput extends
     React.Component<BalanceBoundedInputProps, BalanceBoundedInputState> {
     public static defaultProps: Partial<BalanceBoundedInputProps> = {
         shouldShowIncompleteErrs: false,
-        validate: (amount: BigNumber) => undefined,
     };
     constructor(props: BalanceBoundedInputProps) {
         super(props);
@@ -37,7 +36,7 @@ export class BalanceBoundedInput extends
         };
     }
     public componentWillReceiveProps(nextProps: BalanceBoundedInputProps) {
-        if (nextProps === this.props) return;
+        if (nextProps === this.props) {return;}
         const amountString = nextProps.amount ? nextProps.amount.toString() : '';
         this.setState({
             errorMsg: this.validate(amountString),
@@ -49,7 +48,7 @@ export class BalanceBoundedInput extends
         if (this.props.shouldShowIncompleteErrs && this.state.amount === '') {
             errorText = 'This field is required';
         }
-        let label: React.ReactNode | string = '';
+        let label: React.ReactNode|string = '';
         if (!_.isUndefined(this.props.label)) {
             label = <RequiredLabel label={this.props.label}/>;
         }

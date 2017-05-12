@@ -2,7 +2,7 @@ import {Token, InputErrorMsg, FailableBigNumberCallback, AssetToken} from '../..
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
-import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_amount_input';
+import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
 import {colors} from 'material-ui/styles';
@@ -61,6 +61,5 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                 </span>
             );
         }
-        return undefined;
     }
 }
