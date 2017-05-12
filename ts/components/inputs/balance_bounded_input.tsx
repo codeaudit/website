@@ -36,12 +36,16 @@ export class BalanceBoundedInput extends
         };
     }
     public componentWillReceiveProps(nextProps: BalanceBoundedInputProps) {
-        if (nextProps === this.props) {return;}
-        const amountString = nextProps.amount ? nextProps.amount.toString() : '';
-        this.setState({
-            errorMsg: this.validate(amountString),
-            amount: amountString,
-        });
+        if (nextProps === this.props) {
+            return;
+        }
+        if (nextProps.amount) {
+            const amountString = nextProps.amount.toString();
+            this.setState({
+                errorMsg: this.validate(amountString),
+                amount: amountString,
+            });
+        }
     }
     public render() {
         let errorText = this.state.errorMsg;
@@ -80,7 +84,11 @@ export class BalanceBoundedInput extends
     }
     private validate(amountString: string): InputErrorMsg {
         if (!utils.isNumeric(amountString)) {
-            return 'Must be a number';
+            if  (amountString !== '') {
+                return 'Must be a number';
+            } else {
+                return '';
+            }
         }
         const amount = new BigNumber(amountString);
         if (amount.eq(0)) {
