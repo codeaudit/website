@@ -1,21 +1,23 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 import {Dialog, FlatButton, RadioButtonGroup, RadioButton, TextField} from 'material-ui';
-import {AssetToken, Side, Token, MenuItemValue} from 'ts/types';
-import {AmountInput} from 'ts/components/inputs/amount_input';
+import {Side, Token} from 'ts/types';
+import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
+import {EthAmountInput} from 'ts/components/inputs/eth_amount_input';
 import * as BigNumber from 'bignumber.js';
-import {zeroEx} from 'ts/utils/zero_ex';
-import {constants} from 'ts/utils/constants';
 
 interface EthWethConversionDialogProps {
     onComplete: (direction: Side, value: BigNumber) => any;
     onCancelled: () => any;
     isOpen: boolean;
     token: Token;
+    etherBalance: BigNumber;
 }
 
 interface EthWethConversionDialogState {
-    value: BigNumber;
+    value?: BigNumber;
     direction: Side;
+    shouldShowIncompleteErrs: boolean;
 }
 
 export class EthWethConversionDialog extends
@@ -23,8 +25,8 @@ export class EthWethConversionDialog extends
     constructor() {
         super();
         this.state = {
-            value: new BigNumber(0),
             direction: Side.deposit,
+            shouldShowIncompleteErrs: false,
         };
     }
     public render() {
@@ -53,13 +55,6 @@ export class EthWethConversionDialog extends
             </Dialog>
         );
     }
-    private updateValue(side: Side, token: AssetToken) {
-        this.setState({value: token.amount});
-    }
-    // TODO to be removed when is not required in amount_input
-    private onMenuClick(menuItemValue: MenuItemValue) {
-        return;
-    }
     private renderConversionDialogBody() {
         return (
             <div>
@@ -76,34 +71,40 @@ export class EthWethConversionDialog extends
                         label="Ether tokens to ether"
                     />
                 </RadioButtonGroup>
-
                 {this.state.direction === Side.receive ?
-                    (
-                        <AmountInput
-                            token={this.props.token}
-                            side={this.state.direction}
-                            shouldShowIncompleteErrs={false}
-                            shouldCheckBalanceAndAllowance={true}
-                            triggerMenuClick={this.onMenuClick.bind(this)}
-                            updateChosenAssetToken={this.updateValue.bind(this)}
-                            assetToken={{address: this.props.token.address, amount: this.state.value}}
-                        />
-                    ) :
-                    <TextField hintText="Value in ETH" onChange={this.onValueChange.bind(this)}/>
+                    <TokenAmountInput
+                        label="Conversion amount"
+                        token={this.props.token}
+                        shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
+                        shouldCheckBalanceAndAllowance={true}
+                        onChange={this.onValueChange.bind(this)}
+                        assetToken={{address: this.props.token.address, amount: this.state.value}}
+                    /> :
+                    <EthAmountInput
+                        label="Value in ETH"
+                        balance={this.props.etherBalance}
+                        amount={this.state.value}
+                        onChange={this.onValueChange.bind(this)}
+                        shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}/>
                 }
             </div>
         );
     }
     private onConversionDirectionChange(e: any, direction: Side) {
         this.setState({
+            value: undefined,
+            shouldShowIncompleteErrs: false,
             direction,
         });
     }
-    private onValueChange(e: any, valueInEth: string) {
-        const valueInWei = zeroEx.toBaseUnitAmount(Number(valueInEth), constants.ETH_DECIMAL_PLACES);
-        this.setState({value: valueInWei});
+    private onValueChange(amount?: BigNumber) {
+        this.setState({value: amount});
     }
     private onConvertClick() {
-        this.props.onComplete(this.state.direction, this.state.value);
+        if (_.isUndefined(this.state.value)) {
+            this.setState({shouldShowIncompleteErrs: true});
+        } else {
+            this.props.onComplete(this.state.direction, this.state.value);
+        }
     }
 }

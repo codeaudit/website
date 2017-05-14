@@ -122,12 +122,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <TableRowColumn>
                                 {this.props.userEtherBalance.toFixed(PRECISION)} ETH
                                 {this.state.isBalanceSpinnerVisible &&
-                                (
                                     <span className="pl1">
                                         <i className="zmdi zmdi-spinner zmdi-hc-spin" />
-                                    </span>
-                                )
-                                }
+                                    </span>}
                             </TableRowColumn>
                             <TableRowColumn className="sm-hide xs-hide" />
                             <TableRowColumn>
@@ -180,6 +177,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     isOpen={this.state.isETHConversionDialogVisible}
                     onComplete={this.onConversionAmountSelectedAsync.bind(this)}
                     onCancelled={this.toggleConversionDialog.bind(this)}
+                    etherBalance={new BigNumber(this.props.userEtherBalance)}
                     token={this.getWrappedEthToken()}/>
             </div>
         );
@@ -214,20 +212,16 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     </TableRowColumn>
                     <TableRowColumn
                         style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}>
-                        {isMintable ? (
-                            <LifeCycleRaisedButton
-                                labelReady="Mint"
-                                labelLoading="Minting..."
-                                labelComplete="Minted!"
-                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                            />
-                        ) : null}
-                        {token.symbol === ETHER_TOKEN_SYMBOL ? (
-                            <RaisedButton
-                                label="Convert"
-                                onClick={this.toggleConversionDialog.bind(this)}
-                            />
-                        ) : null}
+                        {isMintable && <LifeCycleRaisedButton
+                                            labelReady="Mint"
+                                            labelLoading="Minting..."
+                                            labelComplete="Minted!"
+                                            onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                                        />}
+                        {token.symbol === ETHER_TOKEN_SYMBOL && <RaisedButton
+                                                                    label="Convert"
+                                                                    onClick={this.toggleConversionDialog.bind(this)}
+                                                                />}
                     </TableRowColumn>
                 </TableRow>
             );
@@ -324,23 +318,22 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             isETHConversionDialogVisible: !this.state.isETHConversionDialogVisible,
         });
     }
-    private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber): Promise<boolean> {
+    private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber) {
         this.toggleConversionDialog();
         try {
             const token = this.getWrappedEthToken();
             let balance = token.balance;
             if (direction === Side.deposit) {
-                await this.props.blockchain.convertEthToWrappedEthTokensAsync(token, value);
+                await this.props.blockchain.convertEthToWrappedEthTokensAsync(value);
                 balance = balance.plus(value);
             } else {
-                await this.props.blockchain.convertWrappedEthTokensToEthAsync(token, value);
+                await this.props.blockchain.convertWrappedEthTokensToEthAsync(value);
                 balance = balance.minus(value);
             }
             const updatedToken = _.assign({}, token, {
                 balance,
             });
             this.props.dispatcher.updateTokenByAddress([updatedToken]);
-            return true;
         } catch (err) {
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User has no associated addresses')) {
@@ -356,7 +349,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             this.setState({
                 errorType: BalanceErrs.wethConversionFailed,
             });
-            return false;
         }
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
@@ -430,6 +422,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private getWrappedEthToken() {
         const tokens = _.values(this.props.tokenByAddress);
-        return _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
+        const wrappedEthToken = _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
+        return wrappedEthToken;
     }
 }

@@ -22,7 +22,7 @@ import * as ExchangeArtifacts from '../contracts/Exchange.json';
 import * as TokenRegistryArtifacts from '../contracts/TokenRegistry.json';
 import * as TokenArtifacts from '../contracts/Token.json';
 import * as MintableArtifacts from '../contracts/Mintable.json';
-import * as DummyEtherTokenArtifacts from '../contracts/DummyEtherToken.json';
+import * as EtherTokenArtifacts from '../contracts/EtherToken.json';
 import contract = require('truffle-contract');
 import BigNumber = require('bignumber.js');
 import ethUtil = require('ethereumjs-util');
@@ -184,22 +184,22 @@ export class Blockchain {
         })];
         this.dispatcher.updateTokenByAddress(tokens);
     }
-    public async convertEthToWrappedEthTokensAsync(token: Token, amount: BigNumber) {
+    public async convertEthToWrappedEthTokensAsync(amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
             throw new Error('User has no associated addresses');
         }
-        const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
-        await wethContract.buyTokens({
+        const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
+        await wethContract.deposit({
             from: this.userAddress,
             value: amount,
         });
     }
-    public async convertWrappedEthTokensToEthAsync(token: Token, amount: BigNumber) {
+    public async convertWrappedEthTokensToEthAsync(amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
             throw new Error('User has no associated addresses');
         }
-        const wethContract = await this.instantiateContractIfExistsAsync(DummyEtherTokenArtifacts, token.address);
-        await wethContract.sellTokens(amount, {from: this.userAddress});
+        const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
+        await wethContract.withdraw(amount, {from: this.userAddress});
     }
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);

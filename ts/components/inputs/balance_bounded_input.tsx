@@ -15,7 +15,7 @@ interface BalanceBoundedInputProps {
     onChange: FailableBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
-    validate: (amount: BigNumber) => InputErrMsg;
+    validate?: (amount: BigNumber) => InputErrMsg;
 }
 
 interface BalanceBoundedInputState {
@@ -122,6 +122,10 @@ export class BalanceBoundedInput extends
                 </span>
             );
         }
-        return this.props.validate(amount);
+        if (_.isUndefined(this.props.validate)){
+            return undefined;
+        } else {
+            return this.props.validate(amount);
+        }
     }
 }
