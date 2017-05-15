@@ -33,13 +33,13 @@ export class Party extends React.Component<PartyProps, PartyState> {
                              identiconDiameter : MIN_ADDRESS_WIDTH;
         return (
             <div style={{overflow: 'hidden'}}>
-                <div className="pb1">{label}</div>
+                <div className="pb1 center">{label}</div>
                 <Identicon
                     address={this.props.address}
                     diameter={identiconDiameter}
                 />
                 <div
-                    className="mx-auto pt1"
+                    className="mx-auto center pt1"
                     style={{...styles.address, width: addressWidth}}
                 >
                     {!_.isEmpty(address) &&

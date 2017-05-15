@@ -52,31 +52,6 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         }
 
         return _.map(this.state.sortedFills, (fill, index) => {
-            const tokens = _.values(this.props.tokenByAddress);
-            const depositToken = _.find(tokens, (token) => {
-                return token.address === fill.tokenM;
-            });
-            const receiveToken = _.find(tokens, (token) => {
-                return token.address === fill.tokenT;
-            });
-            // For now we don't show history items for orders using custom ERC20
-            // tokens the client does not know how to display.
-            // TODO: Try to retrieve the name/symbol of an unknown token in order to display it
-            if (_.isUndefined(depositToken) || _.isUndefined(receiveToken)) {
-                return;
-            }
-            const exchangeRate = fill.valueM.div(fill.valueT);
-            const fillValueM = exchangeRate.times(fill.filledValueT);
-            const sideToAssetToken = {
-                deposit: {
-                    amount: fillValueM,
-                    address: depositToken.address,
-                },
-                receive: {
-                    amount: fill.filledValueT,
-                    address: receiveToken.address,
-                },
-            };
             return (
                 <Paper
                     key={`${fill.orderHash}-${fill.filledValueT}-${index}`}
@@ -84,10 +59,9 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                     style={{margin: '3px 3px 15px 3px'}}
                 >
                     <TradeHistoryItem
-                        orderTakerAddress={fill.taker}
-                        orderMakerAddress={fill.maker}
-                        sideToAssetToken={sideToAssetToken}
+                        fill={fill}
                         tokenByAddress={this.props.tokenByAddress}
+                        userAddress={this.props.userAddress}
                     />
                 </Paper>
             );
