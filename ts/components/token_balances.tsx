@@ -192,7 +192,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         );
         const tableRows = _.map(
             tokensStartingWithEtherToken,
-            this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX)
+            this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX),
         );
         return tableRows;
     }
