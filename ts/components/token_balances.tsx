@@ -8,16 +8,14 @@ import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
-import {Side} from 'ts/types';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
-import {EthWethConversionDialog} from 'ts/components/eth_weth_conversion_dialog';
+import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
 import {
     Dialog,
     Divider,
     FlatButton,
-    RaisedButton,
     Table,
     TableHeader,
     TableBody,
@@ -60,8 +58,6 @@ interface TokenBalancesProps {
 interface TokenBalancesState {
     errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
-    isEthConversionDialogVisible: boolean;
-    isEthConversionHappening: boolean;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
@@ -70,8 +66,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
-            isEthConversionDialogVisible: false,
-            isEthConversionHappening: false,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
@@ -178,13 +172,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 >
                     {this.renderErrorDialogBody()}
                 </Dialog>
-                <EthWethConversionDialog
-                    isOpen={this.state.isEthConversionDialogVisible}
-                    onComplete={this.onConversionAmountSelectedAsync.bind(this)}
-                    onCancelled={this.toggleConversionDialog.bind(this)}
-                    etherBalance={this.props.userEtherBalance}
-                    token={this.getWrappedEthToken()}
-                />
             </div>
         );
     }
@@ -237,15 +224,22 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         />
                     }
                     {token.symbol === ETHER_TOKEN_SYMBOL &&
-                        <RaisedButton
-                            disabled={this.state.isEthConversionHappening}
-                            label="Convert"
-                            onClick={this.toggleConversionDialog.bind(this)}
+                        <EthWethConversionButton
+                            blockchain={this.props.blockchain}
+                            dispatcher={this.props.dispatcher}
+                            ethToken={this.getWrappedEthToken()}
+                            userEtherBalance={this.props.userEtherBalance}
+                            onError={this.onEthWethConversionFailed.bind(this)}
                         />
                     }
                 </TableRowColumn>
             </TableRow>
         );
+    }
+    private onEthWethConversionFailed() {
+        this.setState({
+            errorType: BalanceErrs.wethConversionFailed,
+        });
     }
     private renderAmount(amount: BigNumber, decimals: number) {
       const unitAmount = zeroEx.toUnitAmount(amount, decimals);
@@ -331,51 +325,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private onErrorOccurred(errorType: BalanceErrs) {
         this.setState({
             errorType,
-        });
-    }
-    private toggleConversionDialog() {
-        this.setState({
-            isEthConversionDialogVisible: !this.state.isEthConversionDialogVisible,
-        });
-    }
-    private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber) {
-        this.setState({
-            isEthConversionHappening: true,
-        });
-        this.toggleConversionDialog();
-        const token = this.getWrappedEthToken();
-        let balance = token.balance;
-        try {
-            if (direction === Side.deposit) {
-                await this.props.blockchain.convertEthToWrappedEthTokensAsync(value);
-                const ethAmount = zeroEx.toUnitAmount(value, constants.ETH_DECIMAL_PLACES);
-                this.props.dispatcher.showFlashMessage(`Successfully converted ${ethAmount.toString()} ETH to WETH`);
-                balance = balance.plus(value);
-            } else {
-                await this.props.blockchain.convertWrappedEthTokensToEthAsync(value);
-                const tokenAmount = zeroEx.toUnitAmount(value, token.decimals);
-                this.props.dispatcher.showFlashMessage(`Successfully converted ${tokenAmount.toString()} WETH to ETH`);
-                balance = balance.minus(value);
-            }
-            const updatedToken = _.assign({}, token, {
-                balance,
-            });
-            this.props.dispatcher.updateTokenByAddress([updatedToken]);
-        } catch (err) {
-            const errMsg = '' + err;
-            if (_.includes(errMsg, 'User has no associated addresses')) {
-                this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
-            } else if (!_.includes(errMsg, 'User denied transaction')) {
-                utils.consoleLog(`Unexpected error encountered: ${err}`);
-                utils.consoleLog(err.stack);
-                await errorReporter.reportAsync(err);
-                this.setState({
-                    errorType: BalanceErrs.wethConversionFailed,
-                });
-            }
-        }
-        this.setState({
-            isEthConversionHappening: false,
         });
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
