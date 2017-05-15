@@ -60,6 +60,7 @@ interface TokenBalancesState {
     errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
     isEthConversionDialogVisible: boolean;
+    isEthConversionHappening: boolean;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
@@ -69,6 +70,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             errorType: undefined,
             isBalanceSpinnerVisible: false,
             isEthConversionDialogVisible: false,
+            isEthConversionHappening: false,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
@@ -249,6 +251,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     }
                     {token.symbol === ETHER_TOKEN_SYMBOL &&
                     <RaisedButton
+                        disabled={this.state.isEthConversionHappening}
                         label="Convert"
                         onClick={this.toggleConversionDialog.bind(this)}
                     />
@@ -349,6 +352,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         });
     }
     private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber) {
+        this.setState({
+            isEthConversionHappening: true,
+        });
         this.toggleConversionDialog();
         const token = this.getWrappedEthToken();
         let balance = token.balance;
@@ -384,6 +390,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 errorType: BalanceErrs.wethConversionFailed,
             });
         }
+        this.setState({
+            isEthConversionHappening: false,
+        });
     }
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
