@@ -52,7 +52,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
             const isHovered = this.state.hoveredAddress === address;
             const tileStyles = {
                 cursor: 'pointer',
-                opacity: isHovered ? 0.8 : 1,
+                opacity: isHovered ? 0.6 : 1,
             };
             return (
                 <div
@@ -78,7 +78,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
             const isHovered = this.state.hoveredAddress === otherTokenKey;
             const tileStyles = {
                 cursor: 'pointer',
-                opacity: isHovered ? 0.8 : 1,
+                opacity: isHovered ? 0.6 : 1,
             };
             gridTiles.push((
                 <div

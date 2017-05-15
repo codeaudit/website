@@ -38,6 +38,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                         className="overflow-hidden"
                         hintText="Date"
                         mode="landscape"
+                        autoOk={true}
                         value={this.state.date}
                         onChange={this.onDateChanged.bind(this)}
                         shouldDisableDate={this.shouldDisableDate.bind(this)}

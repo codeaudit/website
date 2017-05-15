@@ -28,12 +28,13 @@ import {
 import ReactTooltip = require('react-tooltip');
 import BigNumber = require('bignumber.js');
 
+const ETHER_ICON_PATH = '/images/ether.png';
+
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
 const ARTIFICIAL_ETHER_REQUEST_DELAY = 1000;
 const TOKEN_TABLE_ROW_HEIGHT = 60;
 const MAX_TOKEN_TABLE_HEIGHT = 420;
-const ETHER_TOKEN_SYMBOL = 'WETH';
 const TOKEN_COL_SPAN_LG = 2;
 const TOKEN_COL_SPAN_SM = 1;
 
@@ -77,7 +78,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         }
     }
     public render() {
-        const etherIconUrl = this.getEtherIconUrl();
         const errorDialogActions = [
             <FlatButton
                 label="Ok"
@@ -116,7 +116,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             <TableRowColumn className="py1">
                                 <img
                                     style={{width: ICON_DIMENSION, height: ICON_DIMENSION}}
-                                    src={etherIconUrl}
+                                    src={ETHER_ICON_PATH}
                                 />
                             </TableRowColumn>
                             <TableRowColumn>
