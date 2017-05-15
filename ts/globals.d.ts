@@ -152,3 +152,5 @@ declare module 'web3' {
 
     export = Web3;
 }
+
+declare module 'thenby';

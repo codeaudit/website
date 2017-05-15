@@ -27,6 +27,7 @@ import {
 } from 'material-ui';
 import ReactTooltip = require('react-tooltip');
 import BigNumber = require('bignumber.js');
+import firstBy = require('thenby');
 
 const ETHER_ICON_PATH = '/images/ether.png';
 const ETHER_TOKEN_SYMBOL = 'WETH';
@@ -195,27 +196,13 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
         const actionPaddingX = isSmallScreen ? 2 : 24;
         const tokens = _.values(this.props.tokenByAddress);
-        const genericComparator = (a: any, b: any): number => {
-            if (a < b) {
-                return -1;
-            } else if (a > b) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-        const ethTokenFirstComparator = (first: Token, second: Token): number => {
-            if (first.symbol === ETHER_TOKEN_SYMBOL) {
-                return -1;
-            } else if (second.symbol === ETHER_TOKEN_SYMBOL) {
-                return 1;
-            } else {
-                // Just to keep the comparator transitive
-                return genericComparator(first.address, second.address);
-            }
-        }
-        const tokensStartingWithEtherToken = tokens.sort(ethTokenFirstComparator);
-        return _.map(tokensStartingWithEtherToken, this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX));
+        const tokensStartingWithEtherToken = tokens.sort(
+            firstBy((v: Token) => (v.symbol !== ETHER_TOKEN_SYMBOL))
+            .thenBy('address'),
+        );
+        const tableRows = _.map(tokensStartingWithEtherToken,
+            this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX));
+        return tableRows;
     }
     private renderTokenRow(tokenColSpan: number, actionPaddingX: number, token: Token) {
         const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
@@ -242,19 +229,19 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
                 >
                     {isMintable &&
-                    <LifeCycleRaisedButton
-                        labelReady="Mint"
-                        labelLoading="Minting..."
-                        labelComplete="Minted!"
-                        onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                    />
+                        <LifeCycleRaisedButton
+                            labelReady="Mint"
+                            labelLoading="Minting..."
+                            labelComplete="Minted!"
+                            onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                        />
                     }
                     {token.symbol === ETHER_TOKEN_SYMBOL &&
-                    <RaisedButton
-                        disabled={this.state.isEthConversionHappening}
-                        label="Convert"
-                        onClick={this.toggleConversionDialog.bind(this)}
-                    />
+                        <RaisedButton
+                            disabled={this.state.isEthConversionHappening}
+                            label="Convert"
+                            onClick={this.toggleConversionDialog.bind(this)}
+                        />
                     }
                 </TableRowColumn>
             </TableRow>
@@ -378,17 +365,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             const errMsg = '' + err;
             if (_.includes(errMsg, 'User has no associated addresses')) {
                 this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
-                return false;
+            } else if (!_.includes(errMsg, 'User denied transaction')) {
+                utils.consoleLog(`Unexpected error encountered: ${err}`);
+                utils.consoleLog(err.stack);
+                await errorReporter.reportAsync(err);
+                this.setState({
+                    errorType: BalanceErrs.wethConversionFailed,
+                });
             }
-            if (_.includes(errMsg, 'User denied transaction')) {
-                return false;
-            }
-            utils.consoleLog(`Unexpected error encountered: ${err}`);
-            utils.consoleLog(err.stack);
-            await errorReporter.reportAsync(err);
-            this.setState({
-                errorType: BalanceErrs.wethConversionFailed,
-            });
         }
         this.setState({
             isEthConversionHappening: false,
