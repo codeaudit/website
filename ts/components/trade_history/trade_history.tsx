@@ -32,6 +32,9 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
     public componentWillUnmount() {
         this.stopPollingForFills();
     }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
     public render() {
         return (
             <div className="lg-px4 md-px4 sm-px2">

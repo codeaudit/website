@@ -56,6 +56,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         };
         this.validator = new Validator();
     }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
     public render() {
         const addresses = _.keys(this.props.tokenByAddress);
         const hintSideToAssetToken = {

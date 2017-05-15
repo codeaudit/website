@@ -77,6 +77,9 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         };
         this.validator = new Validator();
     }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
     public render() {
         const dispatcher = this.props.dispatcher;
         const depositTokenAddress = this.props.sideToAssetToken[Side.deposit].address;
