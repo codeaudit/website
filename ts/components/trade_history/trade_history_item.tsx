@@ -43,7 +43,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
             display: 'inline-block',
         };
         const amountColClassNames = 'col col-12 lg-col-4 md-col-4 lg-py2 md-py2 sm-py1 lg-pr2 md-pr2 \
-                                  lg-right-align md-right-align sm-center';
+                                     lg-right-align md-right-align sm-center';
         return (
             <div className="clearfix">
                 <div className="col col-12 lg-col-1 md-col-1 pt2 lg-pl3 md-pl3">
