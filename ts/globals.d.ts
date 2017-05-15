@@ -44,6 +44,7 @@ declare module 'bignumber.js' {
         public eq(value: BigNumber|number): BigNumber;
         public minus(value: BigNumber): BigNumber;
         public round(numDecimals?: BigNumber|number): BigNumber;
+        public toFixed(decimals: number): string;
     }
 
     // A standalone class is not exportable, so there is an empty module
