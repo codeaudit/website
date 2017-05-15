@@ -12,7 +12,7 @@ interface EthAmountInputProps {
     amount?: BigNumber;
     onChange: FailableBigNumberCallback;
     shouldShowIncompleteErrs: boolean;
-    onBeforeBalanceIncreaseClick?: () => void;
+    onBalanceIncreaseClick?: () => void;
 }
 
 interface EthAmountInputState {}
@@ -31,7 +31,7 @@ export class EthAmountInput extends React.Component<EthAmountInputProps, EthAmou
                     onChange={this.onChange.bind(this)}
                     shouldCheckBalance={true}
                     shouldShowIncompleteErrs={this.props.shouldShowIncompleteErrs}
-                    onBeforeBalanceIncreaseClick={this.props.onBeforeBalanceIncreaseClick}
+                    onBalanceIncreaseClick={this.props.onBalanceIncreaseClick}
                 />
                 <div style={{paddingTop: 44}}>
                     ETH

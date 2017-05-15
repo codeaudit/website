@@ -15,7 +15,7 @@ interface TokenAmountInputProps {
     shouldCheckBalance: boolean;
     shouldCheckAllowance: boolean;
     onChange: FailableBigNumberCallback;
-    onBeforeBalanceIncreaseClick?: () => void;
+    onBalanceIncreaseClick?: () => void;
 }
 
 interface  TokenAmountInputState {}
@@ -35,7 +35,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                     validate={this.validate.bind(this)}
                     shouldCheckBalance={this.props.shouldCheckBalance}
                     shouldShowIncompleteErrs={this.props.shouldShowIncompleteErrs}
-                    onBeforeBalanceIncreaseClick={this.props.onBeforeBalanceIncreaseClick}
+                    onBalanceIncreaseClick={this.props.onBalanceIncreaseClick}
                 />
                 <div style={{paddingTop: 44}}>
                     {this.props.token.symbol}

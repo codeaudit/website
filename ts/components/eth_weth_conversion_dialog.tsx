@@ -80,14 +80,14 @@ export class EthWethConversionDialog extends
                         shouldCheckAllowance={false}
                         onChange={this.onValueChange.bind(this)}
                         assetToken={{address: this.props.token.address, amount: this.state.value}}
-                        onBeforeBalanceIncreaseClick={this.props.onCancelled}/> :
+                        onBalanceIncreaseClick={this.props.onCancelled}/> :
                     <EthAmountInput
                         label="Value in ETH"
                         balance={this.props.etherBalance}
                         amount={this.state.value}
                         onChange={this.onValueChange.bind(this)}
                         shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                        onBeforeBalanceIncreaseClick={this.props.onCancelled}/>
+                        onBalanceIncreaseClick={this.props.onCancelled}/>
                 }
             </div>
         );

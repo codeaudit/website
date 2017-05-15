@@ -6,6 +6,7 @@ import {TextField} from 'material-ui';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
+import {Link} from 'react-router-dom';
 
 interface BalanceBoundedInputProps {
     label: string;
@@ -15,7 +16,7 @@ interface BalanceBoundedInputProps {
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
     validate?: (amount: BigNumber) => InputErrMsg;
-    onBeforeBalanceIncreaseClick?: () => void;
+    onBalanceIncreaseClick?: () => void;
 }
 
 interface BalanceBoundedInputState {
@@ -27,7 +28,6 @@ export class BalanceBoundedInput extends
     React.Component<BalanceBoundedInputProps, BalanceBoundedInputState> {
     public static defaultProps: Partial<BalanceBoundedInputProps> = {
         shouldShowIncompleteErrs: false,
-        onBeforeBalanceIncreaseClick: () => undefined,
     };
     public static contextTypes: React.ValidationMap<any> = {
         router: React.PropTypes.object.isRequired,
@@ -118,14 +118,7 @@ export class BalanceBoundedInput extends
             return (
                 <span>
                     Insufficient balance.{' '}
-                    <div
-                        onClick={this.onIncreaseBalanceClick.bind(this)}
-                        style={{cursor: 'pointer',
-                            color: colors.grey900,
-                            textDecoration: 'underline',
-                            display: 'inline'}}>
-                        Increase balance
-                    </div>
+                    {this.renderIncreaseBalanceLink()}
                 </span>
             );
         }
@@ -135,8 +128,26 @@ export class BalanceBoundedInput extends
             return this.props.validate(amount);
         }
     }
-    private onIncreaseBalanceClick() {
-        this.props.onBeforeBalanceIncreaseClick();
-        this.context.router.history.push('/demo/blances');
+    private renderIncreaseBalanceLink() {
+        if (_.isUndefined(this.props.onBalanceIncreaseClick)) {
+            return (
+                <Link
+                    to="/demo/balances"
+                    style={{cursor: 'pointer', color: colors.grey900}}>
+                    Increase balance
+                </Link>
+            );
+        } else {
+            return (
+                <div
+                    onClick={this.props.onBalanceIncreaseClick}
+                    style={{cursor: 'pointer',
+                        color: colors.grey900,
+                        textDecoration: 'underline',
+                        display: 'inline'}}>
+                    Increase balance
+                </div>
+            );
+        }
     }
 }
