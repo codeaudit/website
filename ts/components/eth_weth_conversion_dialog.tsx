@@ -35,7 +35,7 @@ export class EthWethConversionDialog extends
         const convertDialogActions = [
             <FlatButton
                 label="Cancel"
-                onTouchTap={this.props.onCancelled}
+                onTouchTap={this.onCancel.bind(this)}
             />,
             <FlatButton
                 label="Convert"
@@ -117,5 +117,11 @@ export class EthWethConversionDialog extends
         } else {
             this.props.onComplete(this.state.direction, this.state.value);
         }
+    }
+    private onCancel() {
+        this.setState({
+            value: undefined,
+        });
+        this.props.onCancelled();
     }
 }
