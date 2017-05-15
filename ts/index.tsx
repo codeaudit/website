@@ -14,8 +14,8 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const CUSTOM_GREY = 'rgb(39, 39, 39)';
-const CUSTOM_GREEN = '#7af4bb';
-const CUSTOM_DARKER_GREEN = '#2bee93';
+const CUSTOM_GREEN = 'rgb(102, 222, 117)';
+const CUSTOM_DARKER_GREEN = 'rgb(77, 197, 92)';
 
 import 'basscss/css/basscss.css';
 import 'less/all.less';
