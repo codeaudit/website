@@ -200,7 +200,7 @@ export class Blockchain {
         }
         const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
         await wethContract.withdraw(amount, {
-            from: this.userAddress
+            from: this.userAddress,
         });
     }
     public async doesContractExistAtAddressAsync(address: string) {
