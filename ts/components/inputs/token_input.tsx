@@ -44,7 +44,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         const label = <RequiredLabel label={this.props.label} />;
         const iconStyles = {
             cursor: 'pointer',
-            opacity: this.state.isHoveringIcon ? 0.8 : 1,
+            opacity: this.state.isHoveringIcon ? 0.5 : 1,
         };
         return (
             <div className="relative">
