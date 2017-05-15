@@ -1,6 +1,6 @@
 import * as BigNumber from 'bignumber.js';
 import * as _ from 'lodash';
-import * as React from 'React';
+import * as React from 'react';
 import {ValidatedBigNumberCallback, InputErrMsg} from 'ts/types';
 import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
 import {zeroEx} from 'ts/utils/zero_ex';
