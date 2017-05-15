@@ -76,7 +76,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
                 <div className="col col-12 lg-col-1 md-col-1 lg-pr3 md-pr3 lg-py3 md-py3 sm-pb1 sm-center">
                     <div className="pt1 lg-right md-right sm-mx-auto" style={{width: 13}}>
                         <a
-                            href={`https://etherscan.io/tx/${fill.transactionHash}`}
+                            href={`${constants.ETHER_SCAN_ENDPOINT}/tx/${fill.transactionHash}`}
                             target="_blank"
                         >
                             <i className="zmdi zmdi-open-in-new" />
