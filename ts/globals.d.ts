@@ -12,6 +12,7 @@ declare module 'whatwg-fetch';
 declare module 'react-html5video';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
+declare module 'thenby';
 
 declare module '*.json' {
     const json: any;
@@ -33,6 +34,7 @@ declare module 'bignumber.js' {
         constructor(value: number|string);
         public toNumber(): number;
         public toString(base?: number): string;
+        public toFixed(dp?: number, rm?: number): string;
         public div(value: BigNumber): BigNumber;
         public pow(exponent: BigNumber|number): BigNumber;
         public times(value: BigNumber|number): BigNumber;

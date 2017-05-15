@@ -126,10 +126,11 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                 <TokenAmountInput
                                     label="Sell amount (uint)"
                                     token={depositToken}
-                                    assetToken={this.props.sideToAssetToken[Side.deposit]}
+                                    amount={this.props.sideToAssetToken[Side.deposit].amount}
                                     onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    shouldCheckBalanceAndAllowance={true}
+                                    shouldCheckBalance={true}
+                                    shouldCheckAllowance={true}
                                 />
                             </div>
                             <div className="lg-col md-col lg-col-2 md-col-2 sm-col sm-col-2 xs-hide">
@@ -153,10 +154,11 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                 <TokenAmountInput
                                     label="Receive amount (uint)"
                                     token={receiveToken}
-                                    assetToken={this.props.sideToAssetToken[Side.receive]}
+                                    amount={this.props.sideToAssetToken[Side.receive].amount}
                                     onChange={this.onTokenAmountChange.bind(this, receiveToken, Side.receive)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    shouldCheckBalanceAndAllowance={false}
+                                    shouldCheckBalance={false}
+                                    shouldCheckAllowance={false}
                                 />
                             </div>
                         </div>
@@ -210,7 +212,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             </div>
         );
     }
-    private onTokenAmountChange(token: Token, side: Side, amount?: BigNumber) {
+    private onTokenAmountChange(token: Token, side: Side, isValid: boolean, amount?: BigNumber) {
         this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
     }
     private onCloseOrderJSONDialog() {

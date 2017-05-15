@@ -130,7 +130,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_ORDER_SIGNATURE_DATA,
          });
     }
-    public updateUserEtherBalance(balance: number) {
+    public updateUserEtherBalance(balance: BigNumber) {
         this.dispatch({
              data: balance,
             type: ActionTypes.UPDATE_USER_ETHER_BALANCE,
@@ -146,6 +146,17 @@ export class Dispatcher {
         this.dispatch({
             data: amount,
             type: ActionTypes.UPDATE_ORDER_FILL_AMOUNT,
+        });
+    }
+    public showFlashMessage(msg: string) {
+        this.dispatch({
+            data: msg,
+            type: ActionTypes.SHOW_FLASH_MESSAGE,
+        });
+    }
+    public hideFlashMessage() {
+        this.dispatch({
+            type: ActionTypes.HIDE_FLASH_MESSAGE,
         });
     }
 }

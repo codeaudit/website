@@ -128,6 +128,7 @@ export enum BalanceErrs {
     faucetRequestFailed,
     faucetQueueIsFull,
     mintingFailed,
+    wethConversionFailed,
     allowanceSettingFailed,
 };
 
@@ -153,6 +154,8 @@ export const ActionTypes = strEnum([
     'UPDATE_USER_SUPPLIED_ORDER_CACHE',
     'UPDATE_ORDER_FILL_AMOUNT',
     'UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN',
+    'SHOW_FLASH_MESSAGE',
+    'HIDE_FLASH_MESSAGE',
 ]);
 export type ActionTypes = keyof typeof ActionTypes;
 
@@ -230,7 +233,7 @@ export interface ContractEvent {
 }
 
 export type InputErrMsg = React.ReactNode | string | undefined;
-export type FailableBigNumberCallback = (amount?: BigNumber) => void;
+export type ValidatedBigNumberCallback = (isValid: boolean, amount?: BigNumber) => void;
 export const ScreenWidths = strEnum([
   'SM',
   'MD',

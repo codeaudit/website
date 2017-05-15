@@ -53,14 +53,14 @@ export class Web3Wrapper {
             return undefined;
         }
     }
-    public getBalanceInEthAsync(owner: string): Promise<number> {
+    public getBalanceInEthAsync(owner: string): Promise<BigNumber> {
         return new Promise((resolve, reject) => {
             this.web3.eth.getBalance(owner, (err: Error, balanceInWei: any) => {
                 if (err) {
                     reject(err);
                 } else {
                     const balanceEth = this.call('fromWei', [(balanceInWei as BigNumber), 'ether']);
-                    resolve(balanceEth.toNumber());
+                    resolve(balanceEth);
                 }
             });
         });
@@ -148,7 +148,7 @@ export class Web3Wrapper {
         }
 
         let prevNetworkId: number;
-        let prevUserEtherBalanceInWei = 0;
+        let prevUserEtherBalanceInWei = new BigNumber(0);
         let prevUserAddress: string;
         this.dispatcher.updateNetworkId(prevNetworkId);
         this.watchNetworkAndBalanceIntervalId = window.setInterval(async () => {
@@ -173,7 +173,7 @@ export class Web3Wrapper {
             // Check for user ether balance changes
             if (!_.isUndefined(userAddressIfExists)) {
                 const balance = await this.getBalanceInEthAsync(userAddressIfExists);
-                if (balance !== prevUserEtherBalanceInWei) {
+                if (!balance.eq(prevUserEtherBalanceInWei)) {
                     prevUserEtherBalanceInWei = balance;
                     this.dispatcher.updateUserEtherBalance(balance);
                 }

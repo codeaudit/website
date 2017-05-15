@@ -69,6 +69,7 @@ const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): Connect
         userAddress: state.userAddress,
         userEtherBalance: state.userEtherBalance,
         userSuppliedOrderCache: state.userSuppliedOrderCache,
+        flashMessage: state.flashMessage,
     };
 };
 

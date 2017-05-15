@@ -11,11 +11,11 @@ import {configs} from 'ts/utils/configs';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
+import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
 import {
     Dialog,
     Divider,
     FlatButton,
-    RaisedButton,
     Table,
     TableHeader,
     TableBody,
@@ -25,8 +25,10 @@ import {
 } from 'material-ui';
 import ReactTooltip = require('react-tooltip');
 import BigNumber = require('bignumber.js');
+import firstBy = require('thenby');
 
 const ETHER_ICON_PATH = '/images/ether.png';
+const ETHER_TOKEN_SYMBOL = 'WETH';
 
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
@@ -50,7 +52,7 @@ interface TokenBalancesProps {
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
     userAddress: string;
-    userEtherBalance: number;
+    userEtherBalance: BigNumber;
 }
 
 interface TokenBalancesState {
@@ -61,7 +63,6 @@ interface TokenBalancesState {
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
     public constructor(props: TokenBalancesProps) {
         super(props);
-        const tokens = _.values(props.tokenByAddress);
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
@@ -184,41 +185,65 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const isSmallScreen = this.props.screenWidth === ScreenWidths.SM;
         const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
         const actionPaddingX = isSmallScreen ? 2 : 24;
-        return _.map(this.props.tokenByAddress, (token: Token, address: string) => {
-            const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
-            return (
-                <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
-                    <TableRowColumn
-                        colSpan={tokenColSpan}
-                    >
-                        {this.renderTokenName(token)}
-                    </TableRowColumn>
-                    <TableRowColumn style={{paddingRight: 3, paddingLeft: 3}}>
-                        {this.renderAmount(token.balance, token.decimals)} {token.symbol}
-                    </TableRowColumn>
-                    <TableRowColumn>
-                        <AllowanceToggle
+        const tokens = _.values(this.props.tokenByAddress);
+        const tokensStartingWithEtherToken = tokens.sort(
+            firstBy((t: Token) => (t.symbol !== ETHER_TOKEN_SYMBOL))
+            .thenBy('address'),
+        );
+        const tableRows = _.map(
+            tokensStartingWithEtherToken,
+            this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX)
+        );
+        return tableRows;
+    }
+    private renderTokenRow(tokenColSpan: number, actionPaddingX: number, token: Token) {
+        const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
+        return (
+            <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
+                <TableRowColumn
+                    colSpan={tokenColSpan}
+                >
+                    {this.renderTokenName(token)}
+                </TableRowColumn>
+                <TableRowColumn style={{paddingRight: 3, paddingLeft: 3}}>
+                    {this.renderAmount(token.balance, token.decimals)} {token.symbol}
+                </TableRowColumn>
+                <TableRowColumn>
+                    <AllowanceToggle
+                        blockchain={this.props.blockchain}
+                        dispatcher={this.props.dispatcher}
+                        token={token}
+                        onErrorOccurred={this.onErrorOccurred.bind(this)}
+                        userAddress={this.props.userAddress}
+                    />
+                </TableRowColumn>
+                <TableRowColumn
+                    style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
+                >
+                    {isMintable &&
+                        <LifeCycleRaisedButton
+                            labelReady="Mint"
+                            labelLoading="Minting..."
+                            labelComplete="Minted!"
+                            onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                        />
+                    }
+                    {token.symbol === ETHER_TOKEN_SYMBOL &&
+                        <EthWethConversionButton
                             blockchain={this.props.blockchain}
                             dispatcher={this.props.dispatcher}
-                            token={token}
-                            onErrorOccurred={this.onErrorOccurred.bind(this)}
-                            userAddress={this.props.userAddress}
+                            ethToken={this.getWrappedEthToken()}
+                            userEtherBalance={this.props.userEtherBalance}
+                            onError={this.onEthWethConversionFailed.bind(this)}
                         />
-                    </TableRowColumn>
-                    <TableRowColumn
-                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
-                    >
-                        {isMintable &&
-                            <LifeCycleRaisedButton
-                                labelReady="Mint"
-                                labelLoading="Minting..."
-                                labelComplete="Minted!"
-                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                            />
-                        }
-                    </TableRowColumn>
-                </TableRow>
-            );
+                    }
+                </TableRowColumn>
+            </TableRow>
+        );
+    }
+    private onEthWethConversionFailed() {
+        this.setState({
+            errorType: BalanceErrs.wethConversionFailed,
         });
     }
     private renderAmount(amount: BigNumber, decimals: number) {
@@ -276,6 +301,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 return (
                     <div>
                         Minting your test tokens failed unexpectedly. Please refresh the page and try again.
+                    </div>
+                );
+
+            case BalanceErrs.wethConversionFailed:
+                return (
+                    <div>
+                        Converting between Ether and wrapped Ether tokens failed unexpectedly.
+                        Please refresh the page and try again.
                     </div>
                 );
 
@@ -361,5 +394,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.setState({
             errorType: undefined,
         });
+    }
+    private getWrappedEthToken() {
+        const tokens = _.values(this.props.tokenByAddress);
+        const wrappedEthToken = _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
+        return wrappedEthToken;
     }
 }

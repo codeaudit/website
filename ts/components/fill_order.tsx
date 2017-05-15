@@ -164,8 +164,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         onChange={this.onFillAmountChange.bind(this)}
                         shouldShowIncompleteErrs={false}
                         token={fillToken}
-                        assetToken={fillAssetToken}
-                        shouldCheckBalanceAndAllowance={true}
+                        amount={fillAssetToken.amount}
+                        shouldCheckBalance={true}
+                        shouldCheckAllowance={true}
                     />
                 </div>
                 <div>
@@ -201,7 +202,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             </div>
         );
     }
-    private onFillAmountChange(amount?: BigNumber) {
+    private onFillAmountChange(isValid: boolean, amount?: BigNumber) {
         this.props.dispatcher.updateOrderFillAmount(amount);
     }
     private onFillOrderChanged(e: any) {

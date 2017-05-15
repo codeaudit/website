@@ -19,6 +19,6 @@ export const configs = {
             canSendTransactions: true,
         },
     },
-    symbolsOfMintableTokens: ['MKR', 'MLN', 'WETH', 'GNT', 'DGD', 'REP', 'ZRX'],
+    symbolsOfMintableTokens: ['MKR', 'MLN', 'GNT', 'DGD', 'REP', 'ZRX'],
     isDemoEnabled: isDevelopment || isStaging,
 };
