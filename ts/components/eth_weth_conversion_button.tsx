@@ -56,7 +56,6 @@ export class EthWethConversionButton extends
             isEthConversionDialogVisible: !this.state.isEthConversionDialogVisible,
         });
     }
-
     private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber) {
         this.setState({
             isEthConversionHappening: true,

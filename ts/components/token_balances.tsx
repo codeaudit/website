@@ -187,11 +187,13 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const actionPaddingX = isSmallScreen ? 2 : 24;
         const tokens = _.values(this.props.tokenByAddress);
         const tokensStartingWithEtherToken = tokens.sort(
-            firstBy((v: Token) => (v.symbol !== ETHER_TOKEN_SYMBOL))
+            firstBy((t: Token) => (t.symbol !== ETHER_TOKEN_SYMBOL))
             .thenBy('address'),
         );
-        const tableRows = _.map(tokensStartingWithEtherToken,
-            this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX));
+        const tableRows = _.map(
+            tokensStartingWithEtherToken,
+            this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX)
+        );
         return tableRows;
     }
     private renderTokenRow(tokenColSpan: number, actionPaddingX: number, token: Token) {
