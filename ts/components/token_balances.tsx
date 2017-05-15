@@ -75,6 +75,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             });
         }
     }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
     public render() {
         const errorDialogActions = [
             <FlatButton

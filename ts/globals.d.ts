@@ -80,6 +80,8 @@ declare module 'web3' {
 
             sign(address: string, message: string, callback: (err: Error, signData: string) => void): string;
 
+            getBlock(blockHash: string, callback: (err: Error, blockObj: any) => void): BigNumber;
+
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethcontract
             contract(abi: IAbiDefinition[]): IContract;
 

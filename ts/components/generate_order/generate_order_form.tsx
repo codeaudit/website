@@ -8,7 +8,7 @@ import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
-import {ErrorAlert} from 'ts/components/ui/error_alert';
+import {Alert} from 'ts/components/ui/alert';
 import {OrderJSON} from 'ts/components/order_json';
 import {IdenticonAddressInput} from 'ts/components/inputs/identicon_address_input';
 import {TokenInput} from 'ts/components/inputs/token_input';
@@ -27,6 +27,7 @@ import {
     TokenByAddress,
     BlockchainErrs,
     Token,
+    AlertTypes,
 } from 'ts/types';
 import BigNumber = require('bignumber.js');
 
@@ -76,6 +77,9 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             signingState: SigningState.UNSIGNED,
         };
         this.validator = new Validator();
+    }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
     }
     public render() {
         const dispatcher = this.props.dispatcher;
@@ -183,7 +187,9 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                 onClickAsyncFn={this.onSignClickedAsync.bind(this)}
                             />
                         </div>
-                        {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
+                        {this.state.globalErrMsg !== '' &&
+                            <Alert type={AlertTypes.ERROR} message={this.state.globalErrMsg} />
+                        }
                     </div>
                 </div>
                 <Dialog

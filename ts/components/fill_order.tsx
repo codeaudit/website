@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -12,8 +13,9 @@ import {
     OrderToken,
     Token,
     ExchangeContractErrs,
+    AlertTypes,
 } from 'ts/types';
-import {ErrorAlert} from 'ts/components/ui/error_alert';
+import {Alert} from 'ts/components/ui/alert';
 import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
 import {VisualOrder} from 'ts/components/visual_order';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
@@ -41,6 +43,7 @@ interface FillOrderState {
     orderJSON: string;
     orderJSONErrMsg: string;
     parsedOrder: Order;
+    didFillOrderSucceed: boolean;
 }
 
 export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
@@ -50,11 +53,15 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         this.state = {
             globalErrMsg: '',
             isValidOrder: false,
+            didFillOrderSucceed: true,
             orderJSON: _.isUndefined(this.props.initialOrder) ? '' : JSON.stringify(this.props.initialOrder),
             orderJSONErrMsg: '',
             parsedOrder: this.props.initialOrder,
         };
         this.validator = new Validator();
+    }
+    public componentDidMount() {
+        window.scrollTo(0, 0);
     }
     public render() {
         const addresses = _.keys(this.props.tokenByAddress);
@@ -104,7 +111,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 </Paper>
                 <div>
                     {this.state.orderJSONErrMsg !== '' &&
-                        <ErrorAlert message={this.state.orderJSONErrMsg} />
+                        <Alert type={AlertTypes.ERROR} message={this.state.orderJSONErrMsg} />
                     }
                     {!_.isUndefined(this.state.parsedOrder) && this.renderVisualOrder()}
                 </div>
@@ -170,9 +177,28 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         onClickAsyncFn={this.onFillOrderClickAsync.bind(this)}
                     />
                     {this.state.globalErrMsg !== '' &&
-                        <ErrorAlert message={this.state.globalErrMsg} />
+                        <Alert type={AlertTypes.ERROR} message={this.state.globalErrMsg} />
+                    }
+                    {this.state.didFillOrderSucceed &&
+                        <Alert
+                            type={AlertTypes.SUCCESS}
+                            message={this.renderSuccessMsg()}
+                        />
                     }
                 </div>
+            </div>
+        );
+    }
+    private renderSuccessMsg() {
+        return (
+            <div>
+                Order successfully filled. See the trade details in your{' '}
+                <Link
+                    to="/demo/trades"
+                    style={{color: 'white'}}
+                >
+                    trade history
+                </Link>
             </div>
         );
     }
@@ -180,6 +206,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         this.props.dispatcher.updateOrderFillAmount(amount);
     }
     private onFillOrderChanged(e: any) {
+        this.setState({
+            didFillOrderSucceed: false,
+        });
         const orderJSON = e.target.value;
         let orderJSONErrMsg = '';
         let parsedOrder: Order;
@@ -243,6 +272,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             return false;
         }
+
+        this.setState({
+            didFillOrderSucceed: false,
+        });
 
         const parsedOrder = this.state.parsedOrder;
         const makerTokenAddress = parsedOrder.maker.token.address;
@@ -328,6 +361,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                                                        parsedOrder.signature,
                                                        parsedOrderSalt,
                                                    );
+            this.setState({
+                didFillOrderSucceed: true,
+            });
             return true;
         } catch (err) {
             const errMsg = `${err}`;

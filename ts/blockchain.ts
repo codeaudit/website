@@ -263,7 +263,7 @@ export class Blockchain {
             fromBlock,
             toBlock: 'latest',
         });
-        exchangeLogFillEvent.watch((err: Error, result: any) => {
+        exchangeLogFillEvent.watch(async (err: Error, result: any) => {
             if (err) {
                 // Note: it's not entirely clear from the documentation which
                 // errors will be thrown by `watch`. For now, let's log the error
@@ -281,6 +281,7 @@ export class Blockchain {
                 if (!isUserMakerOrTaker) {
                     return; // We aren't interested in the fill event
                 }
+                const blockTimestamp = await this.web3Wrapper.getBlockTimestampAsync(result.blockHash);
                 const fill = {
                     expiration: args.expiration.toNumber(),
                     filledValueT: args.filledValueT,
@@ -293,6 +294,7 @@ export class Blockchain {
                     transactionHash: result.transactionHash,
                     valueM: args.valueM,
                     valueT: args.valueT,
+                    blockTimestamp,
                 };
                 tradeHistoryStorage.addFillToUser(this.userAddress, fill);
             }

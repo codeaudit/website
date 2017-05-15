@@ -120,6 +120,7 @@ export interface Fill {
     filledValueT: BigNumber;
     orderHash: string;
     transactionHash: string;
+    blockTimestamp: number;
 }
 
 export enum BalanceErrs {
@@ -239,3 +240,8 @@ export const ScreenWidths = strEnum([
   'LG',
 ]);
 export type ScreenWidths = keyof typeof ScreenWidths;
+
+export enum AlertTypes {
+    ERROR,
+    SUCCESS,
+}

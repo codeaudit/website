@@ -4,9 +4,9 @@ import {colors} from 'material-ui/styles';
 import {TextField, Dialog} from 'material-ui';
 import {constants} from 'ts/utils/constants';
 import {Blockchain} from 'ts/blockchain';
-import {Token, TokenByAddress} from 'ts/types';
+import {Token, TokenByAddress, AlertTypes} from 'ts/types';
 import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
-import {ErrorAlert} from 'ts/components/ui/error_alert';
+import {Alert} from 'ts/components/ui/alert';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import BigNumber = require('bignumber.js');
@@ -104,7 +104,9 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
                             onClickAsyncFn={this.onAddNewTokenClickAsync.bind(this)}
                         />
                     </div>
-                    {this.state.globalErrMsg !== '' && <ErrorAlert message={this.state.globalErrMsg} />}
+                    {this.state.globalErrMsg !== '' &&
+                        <Alert type={AlertTypes.ERROR} message={this.state.globalErrMsg} />
+                    }
                 </div>
             </Dialog>
         );
