@@ -119,11 +119,8 @@ export class BalanceBoundedInput extends
                 </span>
             );
         }
-        if (_.isUndefined(this.props.validate)){
-            return undefined;
-        } else {
-            return this.props.validate(amount);
-        }
+        const errMsg = _.isUndefined(this.props.validate) ? undefined : this.props.validate(amount);
+        return errMsg;
     }
     private renderIncreaseBalanceLink() {
         if (_.isUndefined(this.props.onBalanceIncreaseClick)) {
