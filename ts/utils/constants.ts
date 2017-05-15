@@ -23,7 +23,7 @@ export const constants = {
     iconUrlBySymbol: {
         REP: '/images/token_icons/augur.png',
         DGD: '/images/token_icons/digixdao.png',
-        WETH: '/images/token_icons/ether.png',
+        WETH: '/images/token_icons/ether_erc20.png',
         MLN: '/images/token_icons/melon.png',
         GNT: '/images/token_icons/golem.png',
         MKR: '/images/token_icons/makerdao.png',
