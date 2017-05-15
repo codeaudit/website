@@ -29,9 +29,6 @@ export class BalanceBoundedInput extends
     public static defaultProps: Partial<BalanceBoundedInputProps> = {
         shouldShowIncompleteErrs: false,
     };
-    public static contextTypes: React.ValidationMap<any> = {
-        router: React.PropTypes.object.isRequired,
-    };
     constructor(props: BalanceBoundedInputProps) {
         super(props);
         const amountString = this.props.amount ? this.props.amount.toString() : '';
