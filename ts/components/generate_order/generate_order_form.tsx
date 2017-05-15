@@ -125,7 +125,8 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     assetToken={this.props.sideToAssetToken[Side.deposit]}
                                     onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    shouldCheckBalanceAndAllowance={true}
+                                    shouldCheckBalance={true}
+                                    shouldCheckAllowance={true}
                                 />
                             </div>
                             <div className="lg-col md-col lg-col-2 md-col-2 sm-col sm-col-2 xs-hide">
@@ -152,7 +153,8 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     assetToken={this.props.sideToAssetToken[Side.receive]}
                                     onChange={this.onTokenAmountChange.bind(this, receiveToken, Side.receive)}
                                     shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                                    shouldCheckBalanceAndAllowance={false}
+                                    shouldCheckBalance={false}
+                                    shouldCheckAllowance={false}
                                 />
                             </div>
                         </div>

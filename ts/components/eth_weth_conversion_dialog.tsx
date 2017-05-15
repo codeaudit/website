@@ -76,7 +76,8 @@ export class EthWethConversionDialog extends
                         label="Conversion amount"
                         token={this.props.token}
                         shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                        shouldCheckBalanceAndAllowance={true}
+                        shouldCheckBalance={true}
+                        shouldCheckAllowance={false}
                         onChange={this.onValueChange.bind(this)}
                         assetToken={{address: this.props.token.address, amount: this.state.value}}
                     /> :

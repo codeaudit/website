@@ -12,7 +12,8 @@ interface TokenAmountInputProps {
     token: Token;
     assetToken: AssetToken;
     shouldShowIncompleteErrs: boolean;
-    shouldCheckBalanceAndAllowance: boolean;
+    shouldCheckBalance: boolean;
+    shouldCheckAllowance: boolean;
     onChange: FailableBigNumberCallback;
 }
 
@@ -31,7 +32,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                     balance={zeroEx.toUnitAmount(this.props.token.balance, this.props.token.decimals)}
                     onChange={this.onChange.bind(this)}
                     validate={this.validate.bind(this)}
-                    shouldCheckBalance={this.props.shouldCheckBalanceAndAllowance}
+                    shouldCheckBalance={this.props.shouldCheckBalance}
                     shouldShowIncompleteErrs={this.props.shouldShowIncompleteErrs}
                 />
                 <div style={{paddingTop: 44}}>
@@ -48,7 +49,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
         this.props.onChange(baseUnitAmount);
     }
     private validate(amount: BigNumber): InputErrMsg {
-        if (this.props.shouldCheckBalanceAndAllowance && amount.gt(this.props.token.allowance)) {
+        if (this.props.shouldCheckAllowance && amount.gt(this.props.token.allowance)) {
             return (
                 <span>
                     Insufficient allowance.{' '}

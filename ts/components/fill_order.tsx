@@ -158,7 +158,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                         shouldShowIncompleteErrs={false}
                         token={fillToken}
                         assetToken={fillAssetToken}
-                        shouldCheckBalanceAndAllowance={true}
+                        shouldCheckBalance={true}
+                        shouldCheckAllowance={true}
                     />
                 </div>
                 <div>
