@@ -14,6 +14,9 @@ import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const CUSTOM_GREY = 'rgb(39, 39, 39)';
+const CUSTOM_GREEN = '#7af4bb';
+const CUSTOM_DARKER_GREEN = '#2bee93';
+
 import 'basscss/css/basscss.css';
 import 'less/all.less';
 
@@ -43,6 +46,10 @@ const muiTheme = getMuiTheme({
         headerColor: CUSTOM_GREY,
         selectColor: CUSTOM_GREY,
         selectTextColor: CUSTOM_GREY,
+    },
+    toggle: {
+        thumbOnColor: CUSTOM_GREEN,
+        trackOnColor: CUSTOM_DARKER_GREEN,
     },
 });
 
