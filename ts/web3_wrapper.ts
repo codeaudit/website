@@ -89,6 +89,17 @@ export class Web3Wrapper {
             });
         });
     }
+    public getBlockTimestampAsync(blockHash: string): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.web3.eth.getBlock(blockHash, (err: Error, blockObject: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(blockObject.timestamp);
+                }
+            });
+        });
+    }
     public get(propertyPath: string) {
         const propPathSegments = propertyPath.split('.');
         let web3SubObj = this.web3 as any;

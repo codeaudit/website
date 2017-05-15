@@ -120,6 +120,7 @@ export interface Fill {
     filledValueT: BigNumber;
     orderHash: string;
     transactionHash: string;
+    blockTimestamp: number;
 }
 
 export enum BalanceErrs {
