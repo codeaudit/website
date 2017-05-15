@@ -55,24 +55,26 @@ export class EthWethConversionDialog extends
     }
     private renderConversionDialogBody() {
         return (
-            <div>
+            <div className="mx-auto" style={{maxWidth: 300}}>
                 <RadioButtonGroup
+                    className="pb1"
                     defaultSelected={this.state.direction}
                     name="conversionDirection"
                     onChange={this.onConversionDirectionChange.bind(this)}
                 >
                     <RadioButton
+                        className="pb1"
                         value={Side.deposit}
-                        label="Ether to ether tokens"
+                        label="Ether to wrapped Ether tokens"
                     />
                     <RadioButton
                         value={Side.receive}
-                        label="Ether tokens to ether"
+                        label="Wrapped Ether tokens to Ether"
                     />
                 </RadioButtonGroup>
                 {this.state.direction === Side.receive ?
                     <TokenAmountInput
-                        label="Conversion amount"
+                        label="Amount to convert"
                         token={this.props.token}
                         shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
                         shouldCheckBalance={true}
@@ -82,7 +84,7 @@ export class EthWethConversionDialog extends
                         onVisitBalancesPageClick={this.props.onCancelled}
                     /> :
                     <EthAmountInput
-                        label="Value in ETH"
+                        label="Amount to convert"
                         balance={this.props.etherBalance}
                         amount={this.state.value}
                         onChange={this.onValueChange.bind(this)}
