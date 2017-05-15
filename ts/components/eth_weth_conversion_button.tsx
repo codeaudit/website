@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import BigNumber = require('bignumber.js');
-import {RaisedButton} from 'material-ui/RaisedButton';
+import {RaisedButton} from 'material-ui';
 import {EthWethConversionDialog} from 'ts/components/eth_weth_conversion_dialog';
 import {Side, Token} from 'ts/types';
 import {zeroEx} from 'ts/utils/zero_ex';
