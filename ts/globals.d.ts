@@ -33,6 +33,7 @@ declare module 'bignumber.js' {
         constructor(value: number|string);
         public toNumber(): number;
         public toString(base?: number): string;
+        public toFixed(dp?: number, rm?: number): string;
         public div(value: BigNumber): BigNumber;
         public pow(exponent: BigNumber|number): BigNumber;
         public times(value: BigNumber|number): BigNumber;

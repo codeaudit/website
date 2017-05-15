@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import BigNumber = require('bignumber.js');
-import {FailableBigNumberCallback, InputErrMsg} from 'ts/types';
+import {ValidatedBigNumberCallback, InputErrMsg} from 'ts/types';
 import {TextField} from 'material-ui';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
@@ -12,11 +12,11 @@ interface BalanceBoundedInputProps {
     label: string;
     balance: BigNumber;
     amount?: BigNumber;
-    onChange: FailableBigNumberCallback;
+    onChange: ValidatedBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
     validate?: (amount: BigNumber) => InputErrMsg;
-    onBalanceIncreaseClick?: () => void;
+    onVisitBalancesPageClick?: () => void;
 }
 
 interface BalanceBoundedInputState {
@@ -96,10 +96,11 @@ export class BalanceBoundedInput extends
             amountString,
             errMsg,
         }, () => {
+            const isValid = _.isUndefined(errMsg);
             if (utils.isNumeric(amountString)) {
-                this.props.onChange(new BigNumber(amountString));
+                this.props.onChange(isValid, new BigNumber(amountString));
             } else {
-                this.props.onChange(undefined);
+                this.props.onChange(isValid);
             }
         });
     }
@@ -123,23 +124,29 @@ export class BalanceBoundedInput extends
         return errMsg;
     }
     private renderIncreaseBalanceLink() {
-        if (_.isUndefined(this.props.onBalanceIncreaseClick)) {
+        const increaseBalanceText = 'Increase balance';
+        const linkStyle = {
+            cursor: 'pointer',
+            color: colors.grey900,
+            textDecoration: 'underline',
+            display: 'inline',
+        };
+        if (_.isUndefined(this.props.onVisitBalancesPageClick)) {
             return (
                 <Link
                     to="/demo/balances"
-                    style={{cursor: 'pointer', color: colors.grey900}}>
-                    Increase balance
+                    style={linkStyle}
+                >
+                    {increaseBalanceText}
                 </Link>
             );
         } else {
             return (
                 <div
-                    onClick={this.props.onBalanceIncreaseClick}
-                    style={{cursor: 'pointer',
-                        color: colors.grey900,
-                        textDecoration: 'underline',
-                        display: 'inline'}}>
-                    Increase balance
+                    onClick={this.props.onVisitBalancesPageClick}
+                    style={linkStyle}
+                >
+                    {increaseBalanceText}
                 </div>
             );
         }

@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Snackbar} from 'material-ui';
 import {Dispatcher} from 'ts/redux/dispatcher';
 
-const SHOW_LENGTH_MS = 2000;
+const SHOW_DURATION_MS = 4000;
 
 interface FlashMessageProps {
     dispatcher: Dispatcher;
@@ -19,7 +19,7 @@ export class FlashMessage extends React.Component<FlashMessageProps, FlashMessag
                 <Snackbar
                     open={true}
                     message={this.props.flashMessage}
-                    autoHideDuration={SHOW_LENGTH_MS}
+                    autoHideDuration={SHOW_DURATION_MS}
                     onRequestClose={this.onClose.bind(this)}
                 />
             );

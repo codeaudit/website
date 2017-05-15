@@ -35,7 +35,7 @@ export interface State {
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
     userAddress: string;
-    userEtherBalance: number;
+    userEtherBalance: BigNumber;
     // Note: cache of supplied orderJSON in fill order step. Do not use for anything else.
     userSuppliedOrderCache: Order;
     flashMessage: string;
@@ -64,7 +64,7 @@ const INITIAL_STATE: State = {
     },
     tokenByAddress: {},
     userAddress: '',
-    userEtherBalance: 0,
+    userEtherBalance: new BigNumber(0),
     userSuppliedOrderCache: undefined,
     flashMessage: undefined,
 };

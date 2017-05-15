@@ -199,7 +199,9 @@ export class Blockchain {
             throw new Error('User has no associated addresses');
         }
         const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
-        await wethContract.withdraw(amount, {from: this.userAddress});
+        await wethContract.withdraw(amount, {
+            from: this.userAddress
+        });
     }
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);

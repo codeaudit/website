@@ -130,7 +130,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_ORDER_SIGNATURE_DATA,
          });
     }
-    public updateUserEtherBalance(balance: number) {
+    public updateUserEtherBalance(balance: BigNumber) {
         this.dispatch({
              data: balance,
             type: ActionTypes.UPDATE_USER_ETHER_BALANCE,

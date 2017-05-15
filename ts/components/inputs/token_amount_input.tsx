@@ -1,4 +1,4 @@
-import {Token, InputErrMsg, FailableBigNumberCallback, AssetToken} from 'ts/types';
+import {Token, InputErrMsg, ValidatedBigNumberCallback} from 'ts/types';
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
@@ -10,20 +10,20 @@ import {Link} from 'react-router-dom';
 interface TokenAmountInputProps {
     label: string;
     token: Token;
-    assetToken: AssetToken;
+    amount?: BigNumber;
     shouldShowIncompleteErrs: boolean;
     shouldCheckBalance: boolean;
     shouldCheckAllowance: boolean;
-    onChange: FailableBigNumberCallback;
-    onBalanceIncreaseClick?: () => void;
+    onChange: ValidatedBigNumberCallback;
+    onVisitBalancesPageClick?: () => void;
 }
 
 interface  TokenAmountInputState {}
 
 export class TokenAmountInput extends React.Component<TokenAmountInputProps, TokenAmountInputState> {
     public render() {
-        const amount = this.props.assetToken.amount ?
-            zeroEx.toUnitAmount(this.props.assetToken.amount, this.props.token.decimals) :
+        const amount = this.props.amount ?
+            zeroEx.toUnitAmount(this.props.amount, this.props.token.decimals) :
             undefined;
         return (
             <div className="flex overflow-hidden" style={{height: 84}}>
@@ -35,7 +35,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                     validate={this.validate.bind(this)}
                     shouldCheckBalance={this.props.shouldCheckBalance}
                     shouldShowIncompleteErrs={this.props.shouldShowIncompleteErrs}
-                    onBalanceIncreaseClick={this.props.onBalanceIncreaseClick}
+                    onVisitBalancesPageClick={this.props.onVisitBalancesPageClick}
                 />
                 <div style={{paddingTop: 44}}>
                     {this.props.token.symbol}
@@ -43,12 +43,12 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
             </div>
         );
     }
-    private onChange(amount?: BigNumber) {
+    private onChange(isValid: boolean, amount?: BigNumber) {
         let baseUnitAmount;
         if (!_.isUndefined(amount)) {
             baseUnitAmount = zeroEx.toBaseUnitAmount(amount, this.props.token.decimals);
         }
-        this.props.onChange(baseUnitAmount);
+        this.props.onChange(isValid, baseUnitAmount);
     }
     private validate(amount: BigNumber): InputErrMsg {
         if (this.props.shouldCheckAllowance && amount.gt(this.props.token.allowance)) {

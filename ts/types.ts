@@ -232,7 +232,7 @@ export interface ContractEvent {
 }
 
 export type InputErrMsg = React.ReactNode | string | undefined;
-export type FailableBigNumberCallback = (amount?: BigNumber) => void;
+export type ValidatedBigNumberCallback = (isValid: boolean, amount?: BigNumber) => void;
 export const ScreenWidths = strEnum([
   'SM',
   'MD',

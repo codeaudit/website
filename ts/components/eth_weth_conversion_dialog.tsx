@@ -7,8 +7,8 @@ import {EthAmountInput} from 'ts/components/inputs/eth_amount_input';
 import * as BigNumber from 'bignumber.js';
 
 interface EthWethConversionDialogProps {
-    onComplete: (direction: Side, value: BigNumber) => any;
-    onCancelled: () => any;
+    onComplete: (direction: Side, value: BigNumber) => void;
+    onCancelled: () => void;
     isOpen: boolean;
     token: Token;
     etherBalance: BigNumber;
@@ -18,6 +18,7 @@ interface EthWethConversionDialogState {
     value?: BigNumber;
     direction: Side;
     shouldShowIncompleteErrs: boolean;
+    hasErrors: boolean;
 }
 
 export class EthWethConversionDialog extends
@@ -27,23 +28,20 @@ export class EthWethConversionDialog extends
         this.state = {
             direction: Side.deposit,
             shouldShowIncompleteErrs: false,
+            hasErrors: true,
         };
     }
     public render() {
         const convertDialogActions = [
-            (
-                <FlatButton
-                    label="Cancel"
-                    onTouchTap={this.props.onCancelled}
-                />
-            ),
-            (
-                <FlatButton
-                    label="Convert"
-                    primary={true}
-                    onTouchTap={this.onConvertClick.bind(this)}
-                />
-            ),
+            <FlatButton
+                label="Cancel"
+                onTouchTap={this.props.onCancelled}
+            />,
+            <FlatButton
+                label="Convert"
+                primary={true}
+                onTouchTap={this.onConvertClick.bind(this)}
+            />,
         ];
         return (
             <Dialog
@@ -61,7 +59,8 @@ export class EthWethConversionDialog extends
                 <RadioButtonGroup
                     defaultSelected={this.state.direction}
                     name="conversionDirection"
-                    onChange={this.onConversionDirectionChange.bind(this)}>
+                    onChange={this.onConversionDirectionChange.bind(this)}
+                >
                     <RadioButton
                         value={Side.deposit}
                         label="Ether to ether tokens"
@@ -79,15 +78,17 @@ export class EthWethConversionDialog extends
                         shouldCheckBalance={true}
                         shouldCheckAllowance={false}
                         onChange={this.onValueChange.bind(this)}
-                        assetToken={{address: this.props.token.address, amount: this.state.value}}
-                        onBalanceIncreaseClick={this.props.onCancelled}/> :
+                        amount={this.state.value}
+                        onVisitBalancesPageClick={this.props.onCancelled}
+                    /> :
                     <EthAmountInput
                         label="Value in ETH"
                         balance={this.props.etherBalance}
                         amount={this.state.value}
                         onChange={this.onValueChange.bind(this)}
                         shouldShowIncompleteErrs={this.state.shouldShowIncompleteErrs}
-                        onBalanceIncreaseClick={this.props.onCancelled}/>
+                        onVisitBalancesPageClick={this.props.onCancelled}
+                    />
                 }
             </div>
         );
@@ -97,14 +98,20 @@ export class EthWethConversionDialog extends
             value: undefined,
             shouldShowIncompleteErrs: false,
             direction,
+            hasErrors: true,
         });
     }
-    private onValueChange(amount?: BigNumber) {
-        this.setState({value: amount});
+    private onValueChange(isValid: boolean, amount?: BigNumber) {
+        this.setState({
+            value: amount,
+            hasErrors: !isValid,
+        });
     }
     private onConvertClick() {
-        if (_.isUndefined(this.state.value)) {
-            this.setState({shouldShowIncompleteErrs: true});
+        if (this.state.hasErrors) {
+            this.setState({
+                shouldShowIncompleteErrs: true,
+            });
         } else {
             this.props.onComplete(this.state.direction, this.state.value);
         }

@@ -53,13 +53,13 @@ interface TokenBalancesProps {
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
     userAddress: string;
-    userEtherBalance: number;
+    userEtherBalance: BigNumber;
 }
 
 interface TokenBalancesState {
     errorType: BalanceErrs;
     isBalanceSpinnerVisible: boolean;
-    isETHConversionDialogVisible: boolean;
+    isEthConversionDialogVisible: boolean;
 }
 
 export class TokenBalances extends React.Component<TokenBalancesProps, TokenBalancesState> {
@@ -68,7 +68,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.state = {
             errorType: undefined,
             isBalanceSpinnerVisible: false,
-            isETHConversionDialogVisible: false,
+            isEthConversionDialogVisible: false,
         };
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
@@ -125,7 +125,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                                 {this.state.isBalanceSpinnerVisible &&
                                     <span className="pl1">
                                         <i className="zmdi zmdi-spinner zmdi-hc-spin" />
-                                    </span>}
+                                    </span>
+                                }
                             </TableRowColumn>
                             <TableRowColumn className="sm-hide xs-hide" />
                             <TableRowColumn>
@@ -175,11 +176,12 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                     {this.renderErrorDialogBody()}
                 </Dialog>
                 <EthWethConversionDialog
-                    isOpen={this.state.isETHConversionDialogVisible}
+                    isOpen={this.state.isEthConversionDialogVisible}
                     onComplete={this.onConversionAmountSelectedAsync.bind(this)}
                     onCancelled={this.toggleConversionDialog.bind(this)}
-                    etherBalance={new BigNumber(this.props.userEtherBalance)}
-                    token={this.getWrappedEthToken()}/>
+                    etherBalance={this.props.userEtherBalance}
+                    token={this.getWrappedEthToken()}
+                />
             </div>
         );
     }
@@ -212,17 +214,22 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                         />
                     </TableRowColumn>
                     <TableRowColumn
-                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}>
-                        {isMintable && <LifeCycleRaisedButton
-                                            labelReady="Mint"
-                                            labelLoading="Minting..."
-                                            labelComplete="Minted!"
-                                            onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                                        />}
-                        {token.symbol === ETHER_TOKEN_SYMBOL && <RaisedButton
-                                                                    label="Convert"
-                                                                    onClick={this.toggleConversionDialog.bind(this)}
-                                                                />}
+                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
+                    >
+                        {isMintable &&
+                            <LifeCycleRaisedButton
+                                labelReady="Mint"
+                                labelLoading="Minting..."
+                                labelComplete="Minted!"
+                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                            />
+                        }
+                        {token.symbol === ETHER_TOKEN_SYMBOL &&
+                            <RaisedButton
+                                label="Convert"
+                                onClick={this.toggleConversionDialog.bind(this)}
+                            />
+                        }
                     </TableRowColumn>
                 </TableRow>
             );
@@ -316,14 +323,14 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     private toggleConversionDialog() {
         this.setState({
-            isETHConversionDialogVisible: !this.state.isETHConversionDialogVisible,
+            isEthConversionDialogVisible: !this.state.isEthConversionDialogVisible,
         });
     }
     private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber) {
         this.toggleConversionDialog();
+        const token = this.getWrappedEthToken();
+        let balance = token.balance;
         try {
-            const token = this.getWrappedEthToken();
-            let balance = token.balance;
             if (direction === Side.deposit) {
                 await this.props.blockchain.convertEthToWrappedEthTokensAsync(value);
                 const ethAmount = zeroEx.toUnitAmount(value, constants.ETH_DECIMAL_PLACES);
@@ -418,12 +425,6 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         this.setState({
             errorType: undefined,
         });
-    }
-    private getEtherIconUrl() {
-        const tokens = _.values(this.props.tokenByAddress);
-        const etherToken = _.find(tokens, {symbol: ETHER_TOKEN_SYMBOL});
-        const etherIconUrl = this.props.tokenByAddress[etherToken.address].iconUrl;
-        return etherIconUrl;
     }
     private getWrappedEthToken() {
         const tokens = _.values(this.props.tokenByAddress);

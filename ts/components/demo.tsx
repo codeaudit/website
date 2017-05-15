@@ -35,7 +35,7 @@ export interface DemoAllProps {
     orderFillAmount: BigNumber;
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
-    userEtherBalance: number;
+    userEtherBalance: BigNumber;
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
     userSuppliedOrderCache: Order;
@@ -160,7 +160,8 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     />
                     <FlashMessage
                         dispatcher={this.props.dispatcher}
-                        flashMessage={this.props.flashMessage}/>
+                        flashMessage={this.props.flashMessage}
+                    />
                 </div>
                 <Footer />
             </div>
