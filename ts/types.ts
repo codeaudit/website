@@ -236,3 +236,8 @@ export const ScreenWidths = strEnum([
   'LG',
 ]);
 export type ScreenWidths = keyof typeof ScreenWidths;
+
+export enum AlertTypes {
+    ERROR,
+    SUCCESS,
+}
