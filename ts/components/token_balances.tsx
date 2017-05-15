@@ -325,9 +325,13 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             let balance = token.balance;
             if (direction === Side.deposit) {
                 await this.props.blockchain.convertEthToWrappedEthTokensAsync(value);
+                const ethAmount = zeroEx.toUnitAmount(value, constants.ETH_DECIMAL_PLACES);
+                this.props.dispatcher.showFlashMessage(`Successfully converted ${ethAmount.toString()} ETH to WETH`);
                 balance = balance.plus(value);
             } else {
                 await this.props.blockchain.convertWrappedEthTokensToEthAsync(value);
+                const tokenAmount = zeroEx.toUnitAmount(value, token.decimals);
+                this.props.dispatcher.showFlashMessage(`Successfully converted ${tokenAmount.toString()} WETH to ETH`);
                 balance = balance.minus(value);
             }
             const updatedToken = _.assign({}, token, {

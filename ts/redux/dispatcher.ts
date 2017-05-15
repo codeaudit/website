@@ -148,4 +148,15 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_ORDER_FILL_AMOUNT,
         });
     }
+    public showFlashMessage(msg: string) {
+        this.dispatch({
+            data: msg,
+            type: ActionTypes.SHOW_FLASH_MESSAGE,
+        });
+    }
+    public hideFlashMessage() {
+        this.dispatch({
+            type: ActionTypes.HIDE_FLASH_MESSAGE,
+        });
+    }
 }

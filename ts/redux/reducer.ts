@@ -38,6 +38,7 @@ export interface State {
     userEtherBalance: number;
     // Note: cache of supplied orderJSON in fill order step. Do not use for anything else.
     userSuppliedOrderCache: Order;
+    flashMessage: string;
 };
 
 const INITIAL_STATE: State = {
@@ -65,6 +66,7 @@ const INITIAL_STATE: State = {
     userAddress: '',
     userEtherBalance: 0,
     userSuppliedOrderCache: undefined,
+    flashMessage: undefined,
 };
 
 export function reducer(state: State = INITIAL_STATE, action: Action) {
@@ -198,6 +200,16 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case ActionTypes.UPDATE_USER_ADDRESS:
             return _.assign({}, state, {
                 userAddress: action.data,
+            });
+
+        case ActionTypes.SHOW_FLASH_MESSAGE:
+            return _.assign({}, state, {
+                flashMessage: action.data,
+            });
+
+        case ActionTypes.HIDE_FLASH_MESSAGE:
+            return _.assign({}, state, {
+                flashMessage: undefined,
             });
 
         default:

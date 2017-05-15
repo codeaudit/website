@@ -20,6 +20,7 @@ import {Loading} from 'ts/components/ui/loading';
 import {DemoMenu} from 'ts/components/demo_menu';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import BigNumber = require('bignumber.js');
+import {FlashMessage} from "ts/components/ui/flash_message";
 
 const THROTTLE_TIMEOUT = 100;
 
@@ -39,6 +40,7 @@ export interface DemoAllProps {
     shouldBlockchainErrDialogBeOpen: boolean;
     userSuppliedOrderCache: Order;
     location: Location;
+    flashMessage?: string;
 }
 
 interface DemoAllState {
@@ -156,6 +158,9 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                         userAddress={this.props.userAddress}
                         toggleDialogFn={updateShouldBlockchainErrDialogBeOpen}
                     />
+                    <FlashMessage
+                        dispatcher={this.props.dispatcher}
+                        flashMessage={this.props.flashMessage}/>
                 </div>
                 <Footer />
             </div>
