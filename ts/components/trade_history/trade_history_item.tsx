@@ -129,7 +129,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
                     {this.renderAmount(givenAmount, givenToken.symbol, givenToken.decimals)}
                 </div>
                 <div style={{color: colors.grey400, fontSize: 14}}>
-                    {exchangeRate.toNumber().toFixed(PRECISION)} {receiveToken.symbol}/{givenToken.symbol}
+                    {exchangeRate.toFixed(PRECISION)} {receiveToken.symbol}/{givenToken.symbol}
                 </div>
             </div>
         );
@@ -155,7 +155,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         const unitAmount = zeroEx.toUnitAmount(amount, decimals);
         return (
             <span>
-                {unitAmount.toNumber().toFixed(PRECISION)} {symbol}
+                {unitAmount.toFixed(PRECISION)} {symbol}
             </span>
         );
     }
