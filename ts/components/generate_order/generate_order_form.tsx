@@ -97,7 +97,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                 <div className="mx-auto" style={{maxWidth: 495}}>
                     <div className="pt2 flex mx-auto">
                         <IdenticonAddressInput
-                            label="Taker (address)"
+                            label="Taker"
                             blockchain={this.props.blockchain}
                             address={this.props.orderTakerAddress}
                             updateOrderAddress={dispatcher.updateOrderTakerAddress.bind(dispatcher)}
@@ -117,14 +117,14 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
                                     dispatcher={this.props.dispatcher}
-                                    label="Token to sell (address)"
+                                    label="Token to sell"
                                     side={Side.deposit}
                                     assetToken={this.props.sideToAssetToken[Side.deposit]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
                                 <TokenAmountInput
-                                    label="Sell amount (uint)"
+                                    label="Sell amount"
                                     token={depositToken}
                                     amount={this.props.sideToAssetToken[Side.deposit].amount}
                                     onChange={this.onTokenAmountChange.bind(this, depositToken, Side.deposit)}
@@ -145,14 +145,14 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
                                     dispatcher={this.props.dispatcher}
-                                    label="Token to receive (address)"
+                                    label="Token to receive"
                                     side={Side.receive}
                                     assetToken={this.props.sideToAssetToken[Side.receive]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
                                     tokenByAddress={this.props.tokenByAddress}
                                 />
                                 <TokenAmountInput
-                                    label="Receive amount (uint)"
+                                    label="Receive amount"
                                     token={receiveToken}
                                     amount={this.props.sideToAssetToken[Side.receive].amount}
                                     onChange={this.onTokenAmountChange.bind(this, receiveToken, Side.receive)}
@@ -164,7 +164,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                         </div>
                     </div>
                     <div className="pt1 sm-pb2">
-                        <div style={{fontSize: 12, color: colors.grey500}}>Expiration (uint)</div>
+                        <div style={{fontSize: 12, color: colors.grey500}}>Expiration</div>
                         <ExpirationInput
                             orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                             updateOrderExpiry={dispatcher.updateOrderExpiry.bind(dispatcher)}
@@ -175,7 +175,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                             blockchain={this.props.blockchain}
                             blockchainIsLoaded={this.props.blockchainIsLoaded}
                             hashData={this.props.hashData}
-                            label="Hash (byte32)"
+                            label="Hash"
                         />
                     </div>
                     <div className="pt2">
