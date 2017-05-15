@@ -13,6 +13,7 @@ import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+const CUSTOM_GREY = 'rgb(39, 39, 39)';
 import 'basscss/css/basscss.css';
 import 'less/all.less';
 
@@ -27,6 +28,21 @@ const muiTheme = getMuiTheme({
         primary1Color: colors.cyanA400,
         primary2Color: colors.cyanA400,
         textColor: colors.grey700,
+    },
+    datePicker: {
+        color: colors.grey700,
+        textColor: 'white',
+        calendarTextColor: 'white',
+        selectColor: CUSTOM_GREY,
+        selectTextColor: 'white',
+    },
+    timePicker: {
+        color: colors.grey700,
+        textColor: 'white',
+        accentColor: 'white',
+        headerColor: CUSTOM_GREY,
+        selectColor: CUSTOM_GREY,
+        selectTextColor: CUSTOM_GREY,
     },
 });
 
