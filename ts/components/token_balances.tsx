@@ -192,48 +192,70 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const isSmallScreen = this.props.screenWidth === ScreenWidths.SM;
         const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
         const actionPaddingX = isSmallScreen ? 2 : 24;
-        return _.map(this.props.tokenByAddress, (token: Token, address: string) => {
-            const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
-            return (
-                <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
-                    <TableRowColumn
-                        colSpan={tokenColSpan}
-                    >
-                        {this.renderTokenName(token)}
-                    </TableRowColumn>
-                    <TableRowColumn style={{paddingRight: 3, paddingLeft: 3}}>
-                        {this.renderAmount(token.balance, token.decimals)} {token.symbol}
-                    </TableRowColumn>
-                    <TableRowColumn>
-                        <AllowanceToggle
-                            blockchain={this.props.blockchain}
-                            dispatcher={this.props.dispatcher}
-                            token={token}
-                            onErrorOccurred={this.onErrorOccurred.bind(this)}
-                            userAddress={this.props.userAddress}
-                        />
-                    </TableRowColumn>
-                    <TableRowColumn
-                        style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
-                    >
-                        {isMintable &&
-                            <LifeCycleRaisedButton
-                                labelReady="Mint"
-                                labelLoading="Minting..."
-                                labelComplete="Minted!"
-                                onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
-                            />
-                        }
-                        {token.symbol === ETHER_TOKEN_SYMBOL &&
-                            <RaisedButton
-                                label="Convert"
-                                onClick={this.toggleConversionDialog.bind(this)}
-                            />
-                        }
-                    </TableRowColumn>
-                </TableRow>
-            );
-        });
+        const tokens = _.values(this.props.tokenByAddress);
+        const genericComparator = (a: any, b: any): number => {
+            if (a < b) {
+                return -1;
+            } else if (a > b) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        const ethTokenFirstComparator = (first: Token, second: Token): number => {
+            if (first.symbol === ETHER_TOKEN_SYMBOL) {
+                return -1;
+            } else if (second.symbol === ETHER_TOKEN_SYMBOL) {
+                return 1;
+            } else {
+                // Just to keep the comparator transitive
+                return genericComparator(first.address, second.address);
+            }
+        }
+        const tokensStartingWithEtherToken = tokens.sort(ethTokenFirstComparator);
+        return _.map(tokensStartingWithEtherToken, this.renderTokenRow.bind(this, tokenColSpan, actionPaddingX));
+    }
+    private renderTokenRow(tokenColSpan: number, actionPaddingX: number, token: Token) {
+        const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
+        return (
+            <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
+                <TableRowColumn
+                    colSpan={tokenColSpan}
+                >
+                    {this.renderTokenName(token)}
+                </TableRowColumn>
+                <TableRowColumn style={{paddingRight: 3, paddingLeft: 3}}>
+                    {this.renderAmount(token.balance, token.decimals)} {token.symbol}
+                </TableRowColumn>
+                <TableRowColumn>
+                    <AllowanceToggle
+                        blockchain={this.props.blockchain}
+                        dispatcher={this.props.dispatcher}
+                        token={token}
+                        onErrorOccurred={this.onErrorOccurred.bind(this)}
+                        userAddress={this.props.userAddress}
+                    />
+                </TableRowColumn>
+                <TableRowColumn
+                    style={{paddingLeft: actionPaddingX, paddingRight: actionPaddingX}}
+                >
+                    {isMintable &&
+                    <LifeCycleRaisedButton
+                        labelReady="Mint"
+                        labelLoading="Minting..."
+                        labelComplete="Minted!"
+                        onClickAsyncFn={this.onMintTestTokensAsync.bind(this, token)}
+                    />
+                    }
+                    {token.symbol === ETHER_TOKEN_SYMBOL &&
+                    <RaisedButton
+                        label="Convert"
+                        onClick={this.toggleConversionDialog.bind(this)}
+                    />
+                    }
+                </TableRowColumn>
+            </TableRow>
+        );
     }
     private renderAmount(amount: BigNumber, decimals: number) {
       const unitAmount = zeroEx.toUnitAmount(amount, decimals);
