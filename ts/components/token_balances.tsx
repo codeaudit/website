@@ -29,6 +29,7 @@ import ReactTooltip = require('react-tooltip');
 import BigNumber = require('bignumber.js');
 
 const ETHER_ICON_PATH = '/images/ether.png';
+const ETHER_TOKEN_SYMBOL = 'WETH';
 
 const PRECISION = 5;
 const ICON_DIMENSION = 40;
