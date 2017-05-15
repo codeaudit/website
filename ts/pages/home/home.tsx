@@ -167,7 +167,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 >
                     <div className="lg-pb4 md-pb4 clearfix">
                         <div className="md-col md-col-6 pt4">
-                            <div className="pt4 md-pl2 sm-center xs-center">
+                            <div className="pt4 md-pl2 sm-center xs-center sm-hide xs-hide">
                                 <div className="pt2">
                                     <img
                                         src="/images/0x_city_square.png"
@@ -179,11 +179,16 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         <div className="md-col md-col-6 sm-col-12 xs-col-12 lg-pt4 md-pt4">
                             <div className="lg-pt4 md-pt4 sm-px4 md-px0 lg-px0">
                                 <div className="pt3 sm-hide xs-hide">
+                                    <img src="/images/0x_logo_with_text.png" style={{width: 180}} />
+                                </div>
+                                <div className="pt4 md-hide lg-hide center">
                                     <img src="/images/0x_logo.png" style={{width: 125}} />
                                 </div>
-                                <div className="py2 sm-h2 sm-center">
-                                    <span className="lg-hide md-hide">0x: </span>
-                                    The Protocol for Trading Tokens
+                                <div className="pt2 lg-pb2 md-pb2 sm-pb3 sm-h2 sm-center">
+                                    <span className="lg-hide md-hide">
+                                        <img src="/images/0x_logo_text_only.png" style={{width: 30}} />:
+                                    </span>
+                                    {' '}The Protocol for Trading Tokens
                                 </div>
                                 <div className="flex sm-hide xs-hide">
                                     <a
