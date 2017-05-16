@@ -323,7 +323,11 @@ export class Blockchain {
                   url,
                   decimals,
                 ] = await this.tokenRegistry.getTokenMetaData.call(address);
+                // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
+                // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
+                const iconUrl = constants.iconUrlBySymbol[symbol];
                 const token: Token = {
+                    iconUrl,
                     address,
                     allowance,
                     balance,
@@ -331,12 +335,6 @@ export class Blockchain {
                     symbol,
                     decimals: decimals.toNumber(),
                 };
-                // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
-                // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
-                const iconUrl = constants.iconUrlBySymbol[symbol];
-                if (!_.isUndefined(iconUrl)) {
-                    token.iconUrl = iconUrl;
-                }
                 tokens.push(token);
             }
             return tokens;

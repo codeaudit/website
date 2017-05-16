@@ -44,13 +44,13 @@ export const Direction = strEnum([
 export type Direction = keyof typeof Direction;
 
 export interface Token {
-    iconUrl?: string;
-    name?: string;
-    address?: string;
-    symbol?: string;
-    balance?: BigNumber;
-    allowance?: BigNumber;
-    decimals?: number;
+    iconUrl: string;
+    name: string;
+    address: string;
+    symbol: string;
+    balance: BigNumber;
+    allowance: BigNumber;
+    decimals: number;
 };
 
 export interface TokenByAddress {

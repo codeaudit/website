@@ -393,8 +393,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             return false;
         }
     }
-    private addTokenToCustomTokensIfUnseen(token: OrderToken) {
-        const existingToken = this.props.tokenByAddress[token.address];
+    private addTokenToCustomTokensIfUnseen(orderToken: OrderToken) {
+        const existingToken = this.props.tokenByAddress[orderToken.address];
 
         // If a token with the address already exists, we trust the tokens retrieved from the
         // tokenRegistry or supplied by the current user over ones from an orderJSON. Thus, we
@@ -409,21 +409,29 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         // we append something to make it visibly clear to the end user that this is a different underlying
         // token then the identically named one they already had locally.
         const existingTokens = _.values(this.props.tokenByAddress);
-        const isUniqueName = _.isUndefined(_.find(existingTokens, {name: token.name}));
+        const isUniqueName = _.isUndefined(_.find(existingTokens, {name: orderToken.name}));
         if (!isUniqueName) {
-            token.name = `${token.name} [Imported]`;
+            orderToken.name = `${orderToken.name} [Imported]`;
         }
 
-        const isUniqueSymbol = _.isUndefined(_.find(existingTokens, {symbol: token.symbol}));
+        const isUniqueSymbol = _.isUndefined(_.find(existingTokens, {symbol: orderToken.symbol}));
         if (!isUniqueSymbol) {
-            token.symbol = `*${token.symbol}*`;
+            orderToken.symbol = `*${orderToken.symbol}*`;
         }
 
         // Add default token icon url
-        (token as Token).iconUrl = constants.DEFAULT_TOKEN_ICON_URL;
+        const token: Token = {
+            ...orderToken,
+            iconUrl: constants.DEFAULT_TOKEN_ICON_URL,
+            balance: new BigNumber(0),
+            allowance: new BigNumber(0),
+        };
 
         // Add the custom token to local storage and to the redux store
         customTokenStorage.addCustomToken(this.props.blockchain.networkId, token);
         this.props.dispatcher.addTokenToTokenByAddress(token);
+
+        // FireAndForget update balance & allowance
+        this.props.blockchain.updateTokenBalancesAndAllowancesAsync([token]);
     }
 }
