@@ -24,7 +24,7 @@ export class Loading extends React.Component<LoadingProps, LoadingState> {
                                 controls={[]}
                                 poster="/images/loading_poster.png"
                             >
-                                <source src="/videos/loading.mp4" type="video/mp4" />
+                                <source src="/videos/loading_480p.mov" type="video/mp4" />
                             </Video>
                         </div>
                     }
