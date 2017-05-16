@@ -60,6 +60,11 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         };
         this.validator = new Validator();
     }
+    public componentWillMount() {
+        if (!_.isEmpty(this.state.orderJSON)) {
+            this.validateFillOrder(this.state.orderJSON);
+        }
+    }
     public componentDidMount() {
         window.scrollTo(0, 0);
     }
@@ -210,6 +215,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             didFillOrderSucceed: false,
         });
         const orderJSON = e.target.value;
+        this.validateFillOrder(orderJSON);
+    }
+    private validateFillOrder(orderJSON: string) {
         let orderJSONErrMsg = '';
         let parsedOrder: Order;
         try {
