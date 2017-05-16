@@ -76,7 +76,7 @@ export class Blockchain {
             from: this.userAddress,
         });
         const allowance = amountInBaseUnits;
-        this.dispatcher.updateTokenAllowanceByAddress(token.address, allowance);
+        this.dispatcher.replaceTokenAllowanceByAddress(token.address, allowance);
     }
     public async isValidSignatureAsync(maker: string, signatureData: SignatureData) {
       if (!this.doesUserAddressExist()) {

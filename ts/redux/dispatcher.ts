@@ -124,20 +124,20 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_TOKEN_BY_ADDRESS,
          });
     }
-    public updateTokenAllowanceByAddress(address: string, allowance: BigNumber) {
+    public replaceTokenAllowanceByAddress(address: string, allowance: BigNumber) {
         this.dispatch({
             data: {
               address,
               allowance,
             },
-            type: ActionTypes.UPDATE_TOKEN_ALLOWANCE_BY_ADDRESS,
+            type: ActionTypes.REPLACE_TOKEN_ALLOWANCE_BY_ADDRESS,
         });
     }
-    public updateTokenBalanceByAddress(address: string, balanceToAdd: BigNumber) {
+    public updateTokenBalanceByAddress(address: string, balanceDelta: BigNumber) {
         this.dispatch({
             data: {
                 address,
-                balanceToAdd,
+                balanceDelta,
             },
             type: ActionTypes.UPDATE_TOKEN_BALANCE_BY_ADDRESS,
         });
