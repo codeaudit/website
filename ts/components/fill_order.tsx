@@ -301,8 +301,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
         const amountLeftToFill = receiveAssetToken.amount.minus(amountAlreadyFilled);
         const specifiedTakerAddressIfExists = parsedOrder.taker.address.toLowerCase();
-        const receiveFillAmount = this.props.orderFillAmount;
-        const depositFillAmount = receiveFillAmount.times(depositAssetToken.amount).div(receiveAssetToken.amount);
+        const takerFillAmount = this.props.orderFillAmount;
+        const makerFillAmount = takerFillAmount.times(depositAssetToken.amount).div(receiveAssetToken.amount);
         const takerAddress = this.props.userAddress;
         const takerToken = this.props.tokenByAddress[takerTokenAddress];
         let isValidSignature = false;
@@ -329,10 +329,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const currentDate = new Date();
         const currentUnixTimestamp = currentDate.getTime() / 1000;
         let globalErrMsg = '';
-        if (_.isUndefined(receiveFillAmount)) {
+        if (_.isUndefined(takerFillAmount)) {
             globalErrMsg = 'You must specify a fill amount';
-        } else if (receiveFillAmount.lte(0) || receiveFillAmount.gt(takerToken.balance) ||
-            receiveFillAmount.gt(takerToken.allowance)) {
+        } else if (takerFillAmount.lte(0) || takerFillAmount.gt(takerToken.balance) ||
+            takerFillAmount.gt(takerToken.allowance)) {
             globalErrMsg = 'You must fix the above errors in order to fill this order';
         } else if (specifiedTakerAddressIfExists !== '' && specifiedTakerAddressIfExists !== takerAddress) {
             globalErrMsg = `This order can only be filled by ${specifiedTakerAddressIfExists}`;
@@ -340,12 +340,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             globalErrMsg = `This order has expired`;
         } else if (amountLeftToFill.eq(0)) {
             globalErrMsg = 'This order has already been completely filled';
-        } else if (receiveFillAmount.gt(amountLeftToFill)) {
+        } else if (takerFillAmount.gt(amountLeftToFill)) {
             const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
             globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits} ${takerToken.symbol}`;
-        } else if (makerBalance.lt(depositFillAmount)) {
+        } else if (makerBalance.lt(makerFillAmount)) {
             globalErrMsg = 'Maker no longer has a sufficient balance to complete this order';
-        } else if (makerAllowance.lt(depositFillAmount)) {
+        } else if (makerAllowance.lt(makerFillAmount)) {
             globalErrMsg = 'Maker does not have a high enough allowance set to complete this order';
         } else if (!isValidSignature) {
             globalErrMsg = 'Order signature is not valid';
