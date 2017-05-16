@@ -28,7 +28,7 @@ export class AssetPicker extends React.Component<AssetPickerProps, AssetPickerSt
     public render() {
         return (
             <Dialog
-                title="Choose a token"
+                title="Select Token"
                 titleStyle={{fontWeight: 100}}
                 modal={false}
                 open={this.props.isOpen}

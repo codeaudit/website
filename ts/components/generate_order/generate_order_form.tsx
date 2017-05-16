@@ -117,7 +117,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
                                     dispatcher={this.props.dispatcher}
-                                    label="Token to sell"
+                                    label="Selling"
                                     side={Side.deposit}
                                     assetToken={this.props.sideToAssetToken[Side.deposit]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
@@ -145,7 +145,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                                     blockchain={this.props.blockchain}
                                     blockchainErr={this.props.blockchainErr}
                                     dispatcher={this.props.dispatcher}
-                                    label="Token to receive"
+                                    label="Buying"
                                     side={Side.receive}
                                     assetToken={this.props.sideToAssetToken[Side.receive]}
                                     updateChosenAssetToken={dispatcher.updateChosenAssetToken.bind(dispatcher)}
@@ -175,7 +175,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                             blockchain={this.props.blockchain}
                             blockchainIsLoaded={this.props.blockchainIsLoaded}
                             hashData={this.props.hashData}
-                            label="Hash"
+                            label="Order Hash"
                         />
                     </div>
                     <div className="pt2">
