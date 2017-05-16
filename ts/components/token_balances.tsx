@@ -331,7 +331,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 );
 
             case undefined:
-                return; // No error to show
+                return null; // No error to show
 
             default:
                 throw utils.spawnSwitchErr('errorType', this.state.errorType);

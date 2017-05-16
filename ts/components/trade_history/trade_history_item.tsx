@@ -35,7 +35,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         // tokens the client does not know how to display.
         // TODO: Try to retrieve the name/symbol of an unknown token in order to display it
         if (_.isUndefined(tokenT) || _.isUndefined(tokenM)) {
-            return;
+            return null;
         }
 
         const amountColStyle: React.CSSProperties = {
