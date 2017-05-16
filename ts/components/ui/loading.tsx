@@ -16,15 +16,17 @@ export class Loading extends React.Component<LoadingProps, LoadingState> {
                 <Paper className="mx-auto" style={{maxWidth: 400}}>
                     {utils.isUserOnMobile() ?
                         <img className="p1" src="/gifs/loading.gif" width="96%" /> :
-                        <Video
-                            autoPlay={true}
-                            loop={true}
-                            muted={true}
-                            controls={[]}
-                            poster="/images/loading_poster.png"
-                        >
-                            <source src="/videos/loading.mp4" type="video/mp4" />
-                        </Video>
+                        <div style={{pointerEvents: 'none'}}>
+                            <Video
+                                autoPlay={true}
+                                loop={true}
+                                muted={true}
+                                controls={[]}
+                                poster="/images/loading_poster.png"
+                            >
+                                <source src="/videos/loading.mp4" type="video/mp4" />
+                            </Video>
+                        </div>
                     }
                     <div className="center pt2" style={{paddingBottom: 11}}>Connecting to the blockchain...</div>
                 </Paper>
