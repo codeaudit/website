@@ -70,49 +70,55 @@ const INITIAL_STATE: State = {
 };
 
 export function reducer(state: State = INITIAL_STATE, action: Action) {
-    let newSideToAssetToken: SideToAssetToken;
     switch (action.type) {
         case ActionTypes.RESET_STATE:
             return INITIAL_STATE;
 
-        case ActionTypes.UPDATE_ORDER_SALT:
+        case ActionTypes.UPDATE_ORDER_SALT: {
             return _.assign({}, state, {
                 orderSalt: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_ORDER_FILL_AMOUNT:
+        case ActionTypes.UPDATE_ORDER_FILL_AMOUNT: {
             return _.assign({}, state, {
                 orderFillAmount: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN:
+        case ActionTypes.UPDATE_SHOULD_BLOCKCHAIN_ERR_DIALOG_BE_OPEN: {
             return _.assign({}, state, {
                 shouldBlockchainErrDialogBeOpen: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_USER_ETHER_BALANCE:
+        case ActionTypes.UPDATE_USER_ETHER_BALANCE: {
             return _.assign({}, state, {
                 userEtherBalance: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE:
+        case ActionTypes.UPDATE_USER_SUPPLIED_ORDER_CACHE: {
             return _.assign({}, state, {
                 userSuppliedOrderCache: action.data,
             });
+        }
 
-        case ActionTypes.CLEAR_TOKEN_BY_ADDRESS:
+        case ActionTypes.CLEAR_TOKEN_BY_ADDRESS: {
             return _.assign({}, state, {
                 tokenByAddress: {},
             });
+        }
 
-        case ActionTypes.ADD_TOKEN_TO_TOKEN_BY_ADDRESS:
+        case ActionTypes.ADD_TOKEN_TO_TOKEN_BY_ADDRESS: {
             const newTokenByAddress = state.tokenByAddress;
             newTokenByAddress[action.data.address] = action.data;
             return _.assign({}, state, {
                 tokenByAddress: newTokenByAddress,
             });
+        }
 
-        case ActionTypes.UPDATE_TOKEN_BY_ADDRESS:
+        case ActionTypes.UPDATE_TOKEN_BY_ADDRESS: {
             const tokenByAddress = state.tokenByAddress;
             const tokens = action.data;
             _.each(tokens, (token) => {
@@ -122,33 +128,39 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
             return _.assign({}, state, {
                 tokenByAddress,
             });
+        }
 
-        case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA:
+        case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA: {
             return _.assign({}, state, {
                 orderSignatureData: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_SCREEN_WIDTH:
+        case ActionTypes.UPDATE_SCREEN_WIDTH: {
             return _.assign({}, state, {
                 screenWidth: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_BLOCKCHAIN_IS_LOADED:
+        case ActionTypes.UPDATE_BLOCKCHAIN_IS_LOADED: {
             return _.assign({}, state, {
                 blockchainIsLoaded: action.data,
             });
+        }
 
-        case ActionTypes.BLOCKCHAIN_ERR_ENCOUNTERED:
+        case ActionTypes.BLOCKCHAIN_ERR_ENCOUNTERED: {
             return _.assign({}, state, {
                 blockchainErr: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_NETWORK_ID:
+        case ActionTypes.UPDATE_NETWORK_ID: {
             return _.assign({}, state, {
                 networkId: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_GENERATE_ORDER_STEP:
+        case ActionTypes.UPDATE_GENERATE_ORDER_STEP: {
             const direction = action.data;
             let nextGenerateOrderStep = state.generateOrderStep;
             if (direction === Direction.forward) {
@@ -159,58 +171,67 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
             return _.assign({}, state, {
                 generateOrderStep: nextGenerateOrderStep,
             });
+        }
 
-        case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN:
-            newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
+        case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN: {
+            const newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
                 [action.data.side]: action.data.token,
             });
             return _.assign({}, state, {
                 sideToAssetToken: newSideToAssetToken,
             });
+        }
 
-        case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN_ADDRESS:
+        case ActionTypes.UPDATE_CHOSEN_ASSET_TOKEN_ADDRESS: {
             const newAssetToken = state.sideToAssetToken[action.data.side];
             newAssetToken.address = action.data.address;
-            newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
+            const newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
                 [action.data.side]: newAssetToken,
             });
             return _.assign({}, state, {
                 sideToAssetToken: newSideToAssetToken,
             });
+        }
 
-        case ActionTypes.SWAP_ASSET_TOKENS:
-            newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
+        case ActionTypes.SWAP_ASSET_TOKENS: {
+            const newSideToAssetToken = _.assign({}, state.sideToAssetToken, {
                 [Side.deposit]: state.sideToAssetToken[Side.receive],
                 [Side.receive]: state.sideToAssetToken[Side.deposit],
             });
             return _.assign({}, state, {
                 sideToAssetToken: newSideToAssetToken,
             });
+        }
 
-        case ActionTypes.UPDATE_ORDER_EXPIRY:
+        case ActionTypes.UPDATE_ORDER_EXPIRY: {
             return _.assign({}, state, {
                 orderExpiryTimestamp: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_ORDER_TAKER_ADDRESS:
+        case ActionTypes.UPDATE_ORDER_TAKER_ADDRESS: {
             return _.assign({}, state, {
                 orderTakerAddress: action.data,
             });
+        }
 
-        case ActionTypes.UPDATE_USER_ADDRESS:
+        case ActionTypes.UPDATE_USER_ADDRESS: {
             return _.assign({}, state, {
                 userAddress: action.data,
             });
+        }
 
-        case ActionTypes.SHOW_FLASH_MESSAGE:
+        case ActionTypes.SHOW_FLASH_MESSAGE: {
             return _.assign({}, state, {
                 flashMessage: action.data,
             });
+        }
 
-        case ActionTypes.HIDE_FLASH_MESSAGE:
+        case ActionTypes.HIDE_FLASH_MESSAGE: {
             return _.assign({}, state, {
                 flashMessage: undefined,
             });
+        }
 
         default:
             return state;
