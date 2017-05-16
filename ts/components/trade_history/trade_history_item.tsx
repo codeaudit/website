@@ -99,19 +99,19 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         if (this.props.userAddress === fill.maker && this.props.userAddress === fill.taker) {
             receiveAmount = new BigNumber(0);
             givenAmount = new BigNumber(0);
-            receiveToken = tokenM;
-            givenToken = tokenT;
+            receiveToken = tokenT;
+            givenToken = tokenM;
         } else if (this.props.userAddress === fill.maker) {
             receiveAmount = fill.filledValueT;
             givenAmount = fillValueM;
-            receiveToken = tokenT;
-            givenToken = tokenM;
+            receiveToken = tokenM;
+            givenToken = tokenT;
             exchangeRate = new BigNumber(1).div(exchangeRate);
         } else if (this.props.userAddress === fill.taker) {
             receiveAmount = fillValueM;
             givenAmount = fill.filledValueT;
-            receiveToken = tokenM;
-            givenToken = tokenT;
+            receiveToken = tokenT;
+            givenToken = tokenM;
         }
 
         return (
@@ -130,7 +130,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
                     {this.renderAmount(givenAmount, givenToken.symbol, givenToken.decimals)}
                 </div>
                 <div style={{color: colors.grey400, fontSize: 14}}>
-                    {exchangeRate.toFixed(PRECISION)} {receiveToken.symbol}/{givenToken.symbol}
+                    {exchangeRate.toFixed(PRECISION)} {givenToken.symbol}/{receiveToken.symbol}
                 </div>
             </div>
         );
