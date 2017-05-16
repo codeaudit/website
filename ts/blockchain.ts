@@ -179,8 +179,8 @@ export class Blockchain {
         await mintableContract.mint(MINT_AMOUNT, {
             from: this.userAddress,
         });
-        const balanceToAdd = MINT_AMOUNT;
-        this.dispatcher.updateTokenBalanceByAddress(token.address, balanceToAdd);
+        const balanceDelta = MINT_AMOUNT;
+        this.dispatcher.updateTokenBalanceByAddress(token.address, balanceDelta);
     }
     public async convertEthToWrappedEthTokensAsync(amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
