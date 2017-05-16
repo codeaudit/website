@@ -99,19 +99,19 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         if (this.props.userAddress === fill.maker && this.props.userAddress === fill.taker) {
             receiveAmount = new BigNumber(0);
             givenAmount = new BigNumber(0);
-            receiveToken = tokenT;
-            givenToken = tokenM;
+            receiveToken = tokenM;
+            givenToken = tokenT;
         } else if (this.props.userAddress === fill.maker) {
             receiveAmount = fill.filledValueT;
             givenAmount = fillValueM;
-            receiveToken = tokenM;
-            givenToken = tokenT;
+            receiveToken = tokenT;
+            givenToken = tokenM;
             exchangeRate = new BigNumber(1).div(exchangeRate);
         } else if (this.props.userAddress === fill.taker) {
             receiveAmount = fillValueM;
             givenAmount = fill.filledValueT;
-            receiveToken = tokenT;
-            givenToken = tokenM;
+            receiveToken = tokenM;
+            givenToken = tokenT;
         }
 
         return (
