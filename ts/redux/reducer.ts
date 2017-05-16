@@ -112,8 +112,8 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
                 tokenByAddress: newTokenByAddress,
             });
 
-        case ActionTypes.UPDATE_TOKEN_BY_ADDRESS:
-            let tokenByAddress = state.tokenByAddress;
+        case ActionTypes.UPDATE_TOKEN_BY_ADDRESS: {
+            const tokenByAddress = state.tokenByAddress;
             const tokens = action.data;
             _.each(tokens, (token) => {
                 const updatedToken = _.assign({}, tokenByAddress[token.address], token);
@@ -122,26 +122,29 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
             return _.assign({}, state, {
                 tokenByAddress,
             });
+        }
 
-        case ActionTypes.UPDATE_TOKEN_ALLOWANCE_BY_ADDRESS:
-            tokenByAddress = state.tokenByAddress;
+        case ActionTypes.UPDATE_TOKEN_ALLOWANCE_BY_ADDRESS: {
+            const tokenByAddress = state.tokenByAddress;
             const allowance = action.data.allowance;
-            let tokenAddress = action.data.address;
+            const tokenAddress = action.data.address;
             tokenByAddress[tokenAddress] = _.assign({}, tokenByAddress[tokenAddress], { allowance });
             return _.assign({}, state, {
                 tokenByAddress,
             });
+        }
 
-        case ActionTypes.UPDATE_TOKEN_BALANCE_BY_ADDRESS:
-            tokenByAddress = state.tokenByAddress;
+        case ActionTypes.UPDATE_TOKEN_BALANCE_BY_ADDRESS: {
+            const tokenByAddress = state.tokenByAddress;
             const balanceToAdd = action.data.balanceToAdd;
-            tokenAddress = action.data.address;
+            const tokenAddress = action.data.address;
             const currBalance = tokenByAddress[tokenAddress].balance;
             tokenByAddress[tokenAddress] = _.assign({}, tokenByAddress[tokenAddress],
                                                     { balance: currBalance.plus(balanceToAdd) });
             return _.assign({}, state, {
                 tokenByAddress,
             });
+        }
 
         case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA:
             return _.assign({}, state, {
