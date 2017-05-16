@@ -236,6 +236,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
         const order = JSON.parse(decodeURIComponent(orderPair[1]));
         const validationResult = validator.validate(order, orderSchema);
         if (validationResult.errors.length > 0) {
+            utils.consoleLog(`Invalid shared order: ${validationResult.errors}`);
             return;
         }
         return order;
