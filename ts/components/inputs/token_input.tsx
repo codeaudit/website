@@ -4,7 +4,6 @@ import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {RequiredLabel} from 'ts/components/ui/required_label';
 import {AssetToken, Side, TokenByAddress, BlockchainErrs, Token} from 'ts/types';
 import {AssetPicker} from 'ts/components/generate_order/asset_picker';
 import {NewTokenDialog} from 'ts/components/generate_order/new_token_dialog';
@@ -41,7 +40,6 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
     }
     public render() {
         const token = this.props.tokenByAddress[this.props.assetToken.address];
-        const label = <RequiredLabel label={this.props.label} />;
         const iconStyles = {
             cursor: 'pointer',
             opacity: this.state.isHoveringIcon ? 0.5 : 1,
@@ -49,7 +47,7 @@ export class TokenInput extends React.Component<TokenInputProps, TokenInputState
         return (
             <div className="relative">
                 <div className="pb1">
-                    <InputLabel text={label} />
+                    <InputLabel text={this.props.label} />
                 </div>
                 <Paper
                     zDepth={1}

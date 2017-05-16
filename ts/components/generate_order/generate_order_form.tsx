@@ -97,7 +97,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                 <h3>Generate an order</h3>
                 <Divider />
                 <div className="mx-auto" style={{maxWidth: 495}}>
-                    <div className="pt2">
+                    <div className="pt3">
                         <div className="mx-auto clearfix">
                             <div className="lg-col md-col lg-col-5 md-col-5 sm-col sm-col-5 sm-pb2">
                                 <TokenInput
@@ -172,7 +172,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                             </div>
                         </div>
                     </div>
-                    <div className="pt2">
+                    <div>
                         <HashInput
                             blockchain={this.props.blockchain}
                             blockchainIsLoaded={this.props.blockchainIsLoaded}
