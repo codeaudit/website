@@ -130,6 +130,31 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
             });
         }
 
+        case ActionTypes.REPLACE_TOKEN_ALLOWANCE_BY_ADDRESS: {
+            const tokenByAddress = state.tokenByAddress;
+            const allowance = action.data.allowance;
+            const tokenAddress = action.data.address;
+            tokenByAddress[tokenAddress] = _.assign({}, tokenByAddress[tokenAddress], {
+                allowance,
+            });
+            return _.assign({}, state, {
+                tokenByAddress,
+            });
+        }
+
+        case ActionTypes.UPDATE_TOKEN_BALANCE_BY_ADDRESS: {
+            const tokenByAddress = state.tokenByAddress;
+            const balanceDelta = action.data.balanceDelta;
+            const tokenAddress = action.data.address;
+            const currBalance = tokenByAddress[tokenAddress].balance;
+            tokenByAddress[tokenAddress] = _.assign({}, tokenByAddress[tokenAddress], {
+                balance: currBalance.plus(balanceDelta),
+            });
+            return _.assign({}, state, {
+                tokenByAddress,
+            });
+        }
+
         case ActionTypes.UPDATE_ORDER_SIGNATURE_DATA: {
             return _.assign({}, state, {
                 orderSignatureData: action.data,
