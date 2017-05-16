@@ -53,7 +53,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         this.state = {
             globalErrMsg: '',
             isValidOrder: false,
-            didFillOrderSucceed: true,
+            didFillOrderSucceed: false,
             orderJSON: _.isUndefined(this.props.initialOrder) ? '' : JSON.stringify(this.props.initialOrder),
             orderJSONErrMsg: '',
             parsedOrder: this.props.initialOrder,
