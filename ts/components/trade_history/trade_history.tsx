@@ -77,9 +77,11 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
     private startPollingForFills() {
         this.fillPollingIntervalId = window.setInterval(() => {
             const sortedFills = this.getSortedFills();
-            this.setState({
-                sortedFills,
-            });
+            if (!utils.deepEqual(sortedFills, this.state.sortedFills)) {
+                this.setState({
+                    sortedFills,
+                });
+            }
         }, FILL_POLLING_INTERVAL);
     }
     private stopPollingForFills() {
