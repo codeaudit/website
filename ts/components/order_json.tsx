@@ -31,7 +31,12 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         const orderJSON = JSON.stringify(order);
         return (
             <div>
-                <div className="pb2 mx4 flex">
+                <div className="pb2">
+                    You have successfully generated and cryptographically signed an order! The{' '}
+                    following JSON contains the order parameters and cryptographic signature that{' '}
+                    your counterparty will need to execute a trade with you.
+                </div>
+                <div className="pb2 flex">
                     <div
                         className="inline-block pl1"
                         style={{top: 1}}
@@ -39,10 +44,10 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                         <CopyIcon data={orderJSON} callToAction="Copy" />
                     </div>
                 </div>
-                <Paper className="lg-mx4 md-mx4 sm-mx1 center overflow-hidden">
+                <Paper className="center overflow-hidden">
                     <TextField
                         id="orderJSON"
-                        style={{width: 570}}
+                        style={{width: 710}}
                         value={JSON.stringify(order, null, '\t')}
                         multiLine={true}
                         rows={2}
