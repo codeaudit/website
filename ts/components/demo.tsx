@@ -199,6 +199,7 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                 blockchainErr={this.props.blockchainErr}
                 initialOrder={initialFillOrder}
                 orderFillAmount={this.props.orderFillAmount}
+                networkId={this.props.networkId}
                 userAddress={this.props.userAddress}
                 tokenByAddress={this.props.tokenByAddress}
                 dispatcher={this.props.dispatcher}

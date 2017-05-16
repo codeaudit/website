@@ -106,6 +106,8 @@ export interface Order {
     expiration: string;
     salt: string;
     signature: SignatureData;
+    exchangeContract: string;
+    networkId: number;
 }
 
 export interface Fill {

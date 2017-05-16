@@ -56,8 +56,8 @@ export const utils = {
         const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
         return formattedDate;
     },
-    generateOrder(sideToAssetToken: SideToAssetToken, orderExpiryTimestamp: BigNumber,
-                  orderTakerAddress: string, orderMakerAddress: string,
+    generateOrder(networkId: number, exchangeContract: string, sideToAssetToken: SideToAssetToken,
+                  orderExpiryTimestamp: BigNumber, orderTakerAddress: string, orderMakerAddress: string,
                   signatureData: SignatureData, tokenByAddress: TokenByAddress, orderSalt: BigNumber): Order {
         const makerToken = tokenByAddress[sideToAssetToken[Side.deposit].address];
         const takerToken = tokenByAddress[sideToAssetToken[Side.receive].address];
@@ -85,6 +85,8 @@ export const utils = {
             expiration: orderExpiryTimestamp.toString(10),
             salt: orderSalt.toString(10),
             signature: signatureData,
+            exchangeContract,
+            networkId,
         };
         return order;
     },
