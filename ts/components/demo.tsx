@@ -20,7 +20,7 @@ import {Loading} from 'ts/components/ui/loading';
 import {DemoMenu} from 'ts/components/demo_menu';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import BigNumber = require('bignumber.js');
-import {FlashMessage} from "ts/components/ui/flash_message";
+import {FlashMessage} from 'ts/components/ui/flash_message';
 
 const THROTTLE_TIMEOUT = 100;
 
