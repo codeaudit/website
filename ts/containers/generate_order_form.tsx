@@ -29,6 +29,7 @@ interface ConnectedState {
     userAddress: string;
     orderTakerAddress: string;
     orderSalt: BigNumber;
+    networkId: number;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
 }
@@ -40,6 +41,7 @@ const mapStateToProps = (state: State, ownProps: GenerateOrderFormProps): Connec
     orderSignatureData: state.orderSignatureData,
     orderTakerAddress: state.orderTakerAddress,
     orderSalt: state.orderSalt,
+    networkId: state.networkId,
     sideToAssetToken: state.sideToAssetToken,
     tokenByAddress: state.tokenByAddress,
     userAddress: state.userAddress,

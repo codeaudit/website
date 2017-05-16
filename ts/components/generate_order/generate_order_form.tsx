@@ -44,6 +44,7 @@ interface GenerateOrderFormProps {
     dispatcher: Dispatcher;
     hashData: HashData;
     orderExpiryTimestamp: BigNumber;
+    networkId: number;
     userAddress: string;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
@@ -90,6 +91,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         const takerExplanation = 'If a taker is specified, only they are<br> \
                                   allowed to fill this order. If no taker is<br> \
                                   specified, anyone is able to fill it.';
+        const exchangeContractIfExists = this.props.blockchain.getExchangeContractAddressIfExists();
         return (
             <div className="clearfix mb2 lg-px4 md-px4 sm-px2">
                 <h3>Generate an order</h3>
@@ -200,11 +202,13 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
                     onRequestClose={this.onCloseOrderJSONDialog.bind(this)}
                 >
                     <OrderJSON
+                        exchangeContractIfExists={exchangeContractIfExists}
                         orderExpiryTimestamp={this.props.orderExpiryTimestamp}
                         orderSignatureData={this.props.orderSignatureData}
                         orderTakerAddress={this.props.orderTakerAddress}
                         orderMakerAddress={this.props.userAddress}
                         orderSalt={this.props.orderSalt}
+                        networkId={this.props.networkId}
                         sideToAssetToken={this.props.sideToAssetToken}
                         tokenByAddress={this.props.tokenByAddress}
                     />
@@ -282,12 +286,10 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         let globalErrMsg = '';
         try {
             const signatureData = await this.props.blockchain.sendSignRequestAsync(orderHash);
-            const order = utils.generateOrder(this.props.sideToAssetToken,
-                                                  hashData.orderExpiryTimestamp,
-                                                  this.props.orderTakerAddress,
-                                                  this.props.userAddress, signatureData,
-                                                  this.props.tokenByAddress,
-                                                  hashData.orderSalt);
+            const order = utils.generateOrder(this.props.networkId, exchangeContractAddr, this.props.sideToAssetToken,
+                                              hashData.orderExpiryTimestamp, this.props.orderTakerAddress,
+                                              this.props.userAddress, signatureData, this.props.tokenByAddress,
+                                              hashData.orderSalt);
             const validationResult = this.validator.validate(order, orderSchema);
             if (validationResult.errors.length > 0) {
                 globalErrMsg = 'Order signing failed. Please refresh and try again';

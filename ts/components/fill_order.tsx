@@ -31,6 +31,7 @@ interface FillOrderProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
     orderFillAmount: BigNumber;
+    networkId: number;
     userAddress: string;
     tokenByAddress: TokenByAddress;
     initialOrder: Order;
@@ -88,8 +89,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             v: 27,
         };
         const hintSalt = zeroEx.generateSalt();
-        const hintOrder = utils.generateOrder(hintSideToAssetToken, hintOrderExpiryTimestamp,
-                              '', '', hintSignatureData, this.props.tokenByAddress, hintSalt);
+        const exchangeContract = this.props.blockchain.getExchangeContractAddressIfExists();
+        const hintOrder = utils.generateOrder(this.props.networkId, exchangeContract, hintSideToAssetToken,
+                                              hintOrderExpiryTimestamp, '', '', hintSignatureData,
+                                              this.props.tokenByAddress, hintSalt);
         const hintOrderJSON = `${JSON.stringify(hintOrder, null, '\t').substring(0, 500)}...`;
         return (
             <div className="clearfix lg-px4 md-px4 sm-px2" style={{minHeight: 600}}>
@@ -245,7 +248,13 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const isValidSignature = zeroEx.isValidSignature(signature.hash, signature.v,
                                                        signature.r, signature.s,
                                                        parsedOrder.maker.address);
-            if (orderHash !== signature.hash) {
+            if (exchangeContractAddr !== parsedOrder.exchangeContract) {
+                orderJSONErrMsg = 'This order was made using a deprecated 0x Exchange contract.';
+                parsedOrder = undefined;
+            } else if (this.props.networkId !== parsedOrder.networkId) {
+                orderJSONErrMsg = `This order was made on a different Ethereum network (id: ${parsedOrder.networkId}).`;
+                parsedOrder = undefined;
+            } else if (orderHash !== signature.hash) {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
                 parsedOrder = undefined;
             } else if (!isValidSignature) {

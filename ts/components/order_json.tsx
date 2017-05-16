@@ -11,11 +11,13 @@ import {errorReporter} from 'ts/utils/error_reporter';
 import BigNumber = require('bignumber.js');
 
 interface OrderJSONProps {
+    exchangeContractIfExists: string;
     orderExpiryTimestamp: BigNumber;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
     orderMakerAddress: string;
     orderSalt: BigNumber;
+    networkId: number;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
 }
@@ -24,10 +26,11 @@ interface OrderJSONState {}
 
 export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
     public render() {
-        const order = utils.generateOrder(this.props.sideToAssetToken,
-            this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress,
-            this.props.orderSalt);
+        const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
+                                          this.props.sideToAssetToken, this.props.orderExpiryTimestamp,
+                                          this.props.orderTakerAddress, this.props.orderMakerAddress,
+                                          this.props.orderSignatureData, this.props.tokenByAddress,
+                                          this.props.orderSalt);
         const orderJSON = JSON.stringify(order);
         return (
             <div>
@@ -124,8 +127,8 @@ You can see and fill it here: ${shareLink}`);
         return (bodyObj as any).data.url;
     }
     private getOrderUrl() {
-        const order = utils.generateOrder(this.props.sideToAssetToken,
-            this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
+        const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
+            this.props.sideToAssetToken, this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
             this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress,
             this.props.orderSalt);
         const orderJSONString = JSON.stringify(order);

@@ -6,7 +6,9 @@ export const orderSchema = {
         salt: {type: 'string'},
         signature: {$ref: '/SignatureData'},
         expiration: {type: 'string'},
+        exchangeContract: {type: 'string'},
+        networkId: {type: 'number'},
     },
-    required: ['maker', 'taker', 'salt', 'signature', 'expiration'],
+    required: ['maker', 'taker', 'salt', 'signature', 'expiration', 'exchangeContract', 'networkId'],
     type: 'object',
 };
