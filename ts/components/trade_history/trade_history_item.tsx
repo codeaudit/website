@@ -136,10 +136,15 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     }
     private renderDate() {
         const blockMoment = moment.unix(this.props.fill.blockTimestamp);
+        if (!blockMoment.isValid()) {
+            return null;
+        }
+
         const dayOfMonth = blockMoment.format('D');
         const monthAbreviation = blockMoment.format('MMM');
         const formattedBlockDate = blockMoment.format('H:mmA - MMMM D, YYYY');
         const dateTooltipId = `${this.props.fill.transactionHash}-date`;
+
         return (
             <div
                 data-tip={true}
