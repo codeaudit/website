@@ -61,7 +61,7 @@ export class OrderAddressInput extends React.Component<OrderAddressInputProps, O
         );
     }
     private onOrderTakerAddressUpdated(e: any) {
-        const address = e.target.value;
+        const address = e.target.value.toLowerCase();
         const isValidAddress = this.props.blockchain.isValidAddress(address) ||
             address === '';
         const errMsg = isValidAddress ? '' : 'Invalid ethereum address';
