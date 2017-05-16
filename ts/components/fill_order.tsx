@@ -245,7 +245,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const isValidSignature = zeroEx.isValidSignature(signature.hash, signature.v,
                                                        signature.r, signature.s,
                                                        parsedOrder.maker.address);
-            if (orderHash !== parsedOrder.signature.hash) {
+            if (orderHash !== signature.hash) {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
                 parsedOrder = undefined;
             } else if (!isValidSignature) {
