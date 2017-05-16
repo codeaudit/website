@@ -34,6 +34,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         // For now we don't show history items for orders using custom ERC20
         // tokens the client does not know how to display.
         // TODO: Try to retrieve the name/symbol of an unknown token in order to display it
+        // Be sure to remove similar logic in trade_history.tsx
         if (_.isUndefined(tokenT) || _.isUndefined(tokenM)) {
             return null;
         }
@@ -88,8 +89,8 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     }
     private renderAmounts(tokenM: Token, tokenT: Token) {
         const fill = this.props.fill;
-        let exchangeRate = fill.valueM.div(fill.valueT);
-        const fillValueM = exchangeRate.times(fill.filledValueT);
+        let exchangeRate = fill.valueT.div(fill.valueM);
+        const fillValueM = fill.filledValueT.div(exchangeRate);
 
         let receiveAmount;
         let receiveToken;

@@ -47,7 +47,8 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         );
     }
     private renderTrades() {
-        if (this.state.sortedFills.length === 0) {
+        const numNonCustomFills = this.numFillsWithoutCustomERC20Tokens();
+        if (numNonCustomFills === 0) {
             return this.renderEmptyNotice();
         }
 
@@ -73,6 +74,26 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                 No filled orders yet.
             </Paper>
         );
+    }
+    private numFillsWithoutCustomERC20Tokens() {
+        let numNonCustomFills = 0;
+        const tokens = _.values(this.props.tokenByAddress);
+        _.each(this.state.sortedFills, (fill) => {
+            const tokenT = _.find(tokens, (token) => {
+                return token.address === fill.tokenM;
+            });
+            const tokenM = _.find(tokens, (token) => {
+                return token.address === fill.tokenT;
+            });
+            // For now we don't show history items for orders using custom ERC20
+            // tokens the client does not know how to display.
+            // TODO: Try to retrieve the name/symbol of an unknown token in order to display it
+            // Be sure to remove similar logic in trade_history_item.tsx
+            if (!_.isUndefined(tokenT) && !_.isUndefined(tokenM)) {
+                numNonCustomFills += 1;
+            }
+        });
+        return numNonCustomFills;
     }
     private startPollingForFills() {
         this.fillPollingIntervalId = window.setInterval(() => {
