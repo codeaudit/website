@@ -75,8 +75,8 @@ export class Blockchain {
         await tokenContract.approve(this.proxy.address, amountInBaseUnits, {
             from: this.userAddress,
         });
-        token.allowance = amountInBaseUnits;
-        this.dispatcher.updateTokenByAddress([token]);
+        const allowance = amountInBaseUnits;
+        this.dispatcher.updateTokenAllowanceByAddress(token.address, allowance);
     }
     public async isValidSignatureAsync(maker: string, signatureData: SignatureData) {
       if (!this.doesUserAddressExist()) {
@@ -179,10 +179,8 @@ export class Blockchain {
         await mintableContract.mint(MINT_AMOUNT, {
             from: this.userAddress,
         });
-        const tokens = [_.assign({}, token, {
-            balance: token.balance.plus(MINT_AMOUNT),
-        })];
-        this.dispatcher.updateTokenByAddress(tokens);
+        const balanceToAdd = MINT_AMOUNT;
+        this.dispatcher.updateTokenBalanceByAddress(token.address, balanceToAdd);
     }
     public async convertEthToWrappedEthTokensAsync(amount: BigNumber) {
         if (!this.doesUserAddressExist()) {
