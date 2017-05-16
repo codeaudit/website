@@ -9,6 +9,7 @@ import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
+import {HelpTooltip} from 'ts/components/ui/help_tooltip';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
 import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
@@ -92,6 +93,9 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                                  MAX_TOKEN_TABLE_HEIGHT;
         const isSmallScreen = this.props.screenWidth === ScreenWidths.SM;
         const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
+        const allowanceExplanation = '0x smart contracts require access to your<br> \
+                                  token balances in order to execute trades.<br> \
+                                  Toggle an allowance to start trading that token.';
         return (
             <div className="lg-px4 md-px4 sm-px1 pb2">
                 <h3>Test ether</h3>
@@ -158,7 +162,13 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                                 Token
                             </TableHeaderColumn>
                             <TableHeaderColumn style={{paddingLeft: 3}}>Balance</TableHeaderColumn>
-                            <TableHeaderColumn>0x allowance</TableHeaderColumn>
+                            <TableHeaderColumn>
+                                <div className="inline-block">0x allowance</div>
+                                <HelpTooltip
+                                    style={{paddingLeft: 4}}
+                                    explanation={allowanceExplanation}
+                                />
+                            </TableHeaderColumn>
                             <TableHeaderColumn>Mint{!isSmallScreen && ' test tokens'}</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
