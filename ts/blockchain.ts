@@ -135,6 +135,7 @@ export class Blockchain {
             const humanReadableErrMessage = constants.exchangeContractErrToMsg[errCode];
             throw new Error(humanReadableErrMessage);
         }
+        return response;
     }
     public async getFillAmountAsync(orderHash: string) {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');

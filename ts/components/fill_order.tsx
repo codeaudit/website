@@ -45,6 +45,7 @@ interface FillOrderState {
     orderJSONErrMsg: string;
     parsedOrder: Order;
     didFillOrderSucceed: boolean;
+    amountAlreadyFilled: BigNumber;
 }
 
 export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
@@ -58,6 +59,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             orderJSON: _.isUndefined(this.props.initialOrder) ? '' : JSON.stringify(this.props.initialOrder),
             orderJSONErrMsg: '',
             parsedOrder: this.props.initialOrder,
+            amountAlreadyFilled: new BigNumber(0),
         };
         this.validator = new Validator();
     }
@@ -129,15 +131,17 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     private renderVisualOrder() {
         const takerTokenAddress = this.state.parsedOrder.taker.token.address;
         const takerToken = this.props.tokenByAddress[takerTokenAddress];
+        const orderTakerAmount = new BigNumber(this.state.parsedOrder.taker.amount);
+        const orderMakerAmount = new BigNumber(this.state.parsedOrder.maker.amount);
         const takerAssetToken = {
-            amount: new BigNumber(this.state.parsedOrder.taker.amount),
+            amount: orderTakerAmount.minus(this.state.amountAlreadyFilled),
             symbol: takerToken.symbol,
         };
         const fillToken = this.props.tokenByAddress[takerToken.address];
         const makerTokenAddress = this.state.parsedOrder.maker.token.address;
         const makerToken = this.props.tokenByAddress[makerTokenAddress];
         const makerAssetToken = {
-            amount: new BigNumber(this.state.parsedOrder.maker.amount),
+            amount: orderMakerAmount.times(takerAssetToken.amount).div(orderTakerAmount),
             symbol: makerToken.symbol,
         };
         const fillAssetToken = {
@@ -220,7 +224,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const orderJSON = e.target.value;
         this.validateFillOrder(orderJSON);
     }
-    private validateFillOrder(orderJSON: string) {
+    private async validateFillOrder(orderJSON: string) {
         let orderJSONErrMsg = '';
         let parsedOrder: Order;
         try {
@@ -277,13 +281,16 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             // Clear cache entry if user updates orderJSON to invalid entry
             this.props.dispatcher.updateUserSuppliedOrderCache(undefined);
         }
-
+        const orderHash = parsedOrder.signature.hash;
+        const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
         this.setState({
             orderJSON,
             orderJSONErrMsg,
             parsedOrder,
+            amountAlreadyFilled: new BigNumber(amountAlreadyFilled),
         });
     }
+
     private async onFillOrderClickAsync(): Promise<boolean> {
         if (this.props.blockchainErr !== '' || this.props.userAddress === '') {
             this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
@@ -368,7 +375,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
 
         const parsedOrderSalt = new BigNumber(parsedOrder.salt);
         try {
-            await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
+            const response = await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
                                                        parsedOrder.taker.address,
                                                        this.props.tokenByAddress[makerTokenAddress].address,
                                                        this.props.tokenByAddress[takerTokenAddress].address,
@@ -379,8 +386,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                                                        parsedOrder.signature,
                                                        parsedOrderSalt,
                                                    );
+            const orderFilledAmount = response.logs[0].args.filledValueT;
             this.setState({
                 didFillOrderSucceed: true,
+                amountAlreadyFilled: this.state.amountAlreadyFilled.plus(orderFilledAmount),
             });
             return true;
         } catch (err) {
