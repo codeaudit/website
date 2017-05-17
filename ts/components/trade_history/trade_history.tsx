@@ -55,6 +55,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         return _.map(this.state.sortedFills, (fill, index) => {
             return (
                 <TradeHistoryItem
+                    key={`${fill.orderHash}-${fill.filledValueT}-${index}`}
                     fill={fill}
                     tokenByAddress={this.props.tokenByAddress}
                     userAddress={this.props.userAddress}

@@ -48,7 +48,6 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
                                      lg-right-align md-right-align sm-center';
         return (
             <Paper
-                key={`${fill.orderHash}-${fill.filledValueT}-${fill.blockTimestamp}`}
                 className="py1"
                 style={{margin: '3px 3px 15px 3px'}}
             >
