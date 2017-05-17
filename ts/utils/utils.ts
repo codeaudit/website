@@ -33,7 +33,7 @@ export const utils = {
     // whether a user has set an expiry date or not. It is set unrealistically high so as not to collide
     // with actual values a user would select.
     initialOrderExpiryUnixTimestampSec(): BigNumber {
-        const m = moment('2050');
+        const m = moment('2050-01-01');
         return new BigNumber(m.unix());
     },
     convertToUnixTimestampSeconds(date: moment.Moment, time?: moment.Moment): BigNumber {
