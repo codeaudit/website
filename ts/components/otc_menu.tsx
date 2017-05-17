@@ -22,14 +22,14 @@ export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
                     to="/otc"
                     onClick={this.props.onClick.bind(this)}
                 >
-                    {this.renderMenuItemWithIcon('Generate order', 'zmdi-code')}
+                    {this.renderMenuItemWithIcon('Generate order', 'zmdi-arrow-right-top')}
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
                     to="/otc/fill"
                     onClick={this.props.onClick.bind(this)}
                 >
-                    {this.renderMenuItemWithIcon('Fill order', 'zmdi-mail-send')}
+                    {this.renderMenuItemWithIcon('Fill order', 'zmdi-arrow-left-bottom')}
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
@@ -43,7 +43,7 @@ export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
                     to="/otc/trades"
                     onClick={this.props.onClick.bind(this)}
                 >
-                    {this.renderMenuItemWithIcon('Trade history', 'zmdi-book')}
+                    {this.renderMenuItemWithIcon('Trade history', 'zmdi-format-list-bulleted')}
                 </MenuItem>
             </div>
         );
