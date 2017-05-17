@@ -163,7 +163,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             </TableHeaderColumn>
                             <TableHeaderColumn style={{paddingLeft: 3}}>Balance</TableHeaderColumn>
                             <TableHeaderColumn>
-                                <div className="inline-block">0x allowance</div>
+                                <div className="inline-block">Allow 0x access</div>
                                 <HelpTooltip
                                     style={{paddingLeft: 4}}
                                     explanation={allowanceExplanation}
@@ -317,7 +317,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             case BalanceErrs.wethConversionFailed:
                 return (
                     <div>
-                        Converting between Ether and wrapped Ether tokens failed unexpectedly.
+                        Converting between Ether and Ether Tokens failed unexpectedly.
                         Please refresh the page and try again.
                     </div>
                 );

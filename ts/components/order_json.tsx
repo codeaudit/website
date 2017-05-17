@@ -64,7 +64,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                 </Paper>
                 <div className="pt3 pb2 center">
                     <div>
-                        Share your signed order with someone willing to fill it
+                        Share your signed order!
                     </div>
                     <div className="mx-auto pt2 flex" style={{width: 91}}>
                         <div>
