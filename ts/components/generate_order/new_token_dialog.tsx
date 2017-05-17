@@ -76,7 +76,7 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
                             onChange={this.onTokenSymbolChanged.bind(this)}
                         />
                     </div>
-                    <div className="pt2">
+                    <div>
                         <OrderAddressInput
                             isRequired={true}
                             label="Contract address"
