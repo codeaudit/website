@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as BigNumber from 'bignumber.js';
 import * as ReactTooltip from 'react-tooltip';
 import * as moment from 'moment';
+import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
@@ -46,45 +47,51 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         const amountColClassNames = 'col col-12 lg-col-4 md-col-4 lg-py2 md-py2 sm-py1 lg-pr2 md-pr2 \
                                      lg-right-align md-right-align sm-center';
         return (
-            <div className="clearfix">
-                <div className="col col-12 lg-col-1 md-col-1 pt2 lg-pl3 md-pl3">
-                    {this.renderDate()}
-                </div>
-                <div
-                    className="col col-12 lg-col-6 md-col-6 lg-pl3 md-pl3"
-                    style={{fontSize: 12, fontWeight: 100}}
-                >
-                    <div className="flex sm-mx-auto xs-mx-auto" style={{paddingTop: 4, width: 168}}>
-                        <Party
-                            label="Maker"
-                            address={fill.maker}
-                            identiconDiameter={IDENTICON_DIAMETER}
-                        />
-                        <i style={{fontSize: 30}} className="zmdi zmdi-swap py3" />
-                        <Party
-                            label="Taker"
-                            address={fill.taker}
-                            identiconDiameter={IDENTICON_DIAMETER}
-                        />
+            <Paper
+                key={`${fill.orderHash}-${fill.filledValueT}-${fill.blockTimestamp}`}
+                className="py1"
+                style={{margin: '3px 3px 15px 3px'}}
+            >
+                <div className="clearfix">
+                    <div className="col col-12 lg-col-1 md-col-1 pt2 lg-pl3 md-pl3">
+                        {this.renderDate()}
+                    </div>
+                    <div
+                        className="col col-12 lg-col-6 md-col-6 lg-pl3 md-pl3"
+                        style={{fontSize: 12, fontWeight: 100}}
+                    >
+                        <div className="flex sm-mx-auto xs-mx-auto" style={{paddingTop: 4, width: 168}}>
+                            <Party
+                                label="Maker"
+                                address={fill.maker}
+                                identiconDiameter={IDENTICON_DIAMETER}
+                            />
+                            <i style={{fontSize: 30}} className="zmdi zmdi-swap py3" />
+                            <Party
+                                label="Taker"
+                                address={fill.taker}
+                                identiconDiameter={IDENTICON_DIAMETER}
+                            />
+                        </div>
+                    </div>
+                    <div
+                        className={amountColClassNames}
+                        style={amountColStyle}
+                    >
+                        {this.renderAmounts(tokenM, tokenT)}
+                    </div>
+                    <div className="col col-12 lg-col-1 md-col-1 lg-pr3 md-pr3 lg-py3 md-py3 sm-pb1 sm-center">
+                        <div className="pt1 lg-right md-right sm-mx-auto" style={{width: 13}}>
+                            <a
+                                href={`${constants.ETHER_SCAN_ENDPOINT}/tx/${fill.transactionHash}`}
+                                target="_blank"
+                            >
+                                <i className="zmdi zmdi-open-in-new" />
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div
-                    className={amountColClassNames}
-                    style={amountColStyle}
-                >
-                    {this.renderAmounts(tokenM, tokenT)}
-                </div>
-                <div className="col col-12 lg-col-1 md-col-1 lg-pr3 md-pr3 lg-py3 md-py3 sm-pb1 sm-center">
-                    <div className="pt1 lg-right md-right sm-mx-auto" style={{width: 13}}>
-                        <a
-                            href={`${constants.ETHER_SCAN_ENDPOINT}/tx/${fill.transactionHash}`}
-                            target="_blank"
-                        >
-                            <i className="zmdi zmdi-open-in-new" />
-                        </a>
-                    </div>
-                </div>
-            </div>
+            </Paper>
         );
     }
     private renderAmounts(tokenM: Token, tokenT: Token) {

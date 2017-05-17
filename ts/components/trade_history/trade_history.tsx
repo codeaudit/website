@@ -54,17 +54,11 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
 
         return _.map(this.state.sortedFills, (fill, index) => {
             return (
-                <Paper
-                    key={`${fill.orderHash}-${fill.filledValueT}-${index}`}
-                    className="py1"
-                    style={{margin: '3px 3px 15px 3px'}}
-                >
-                    <TradeHistoryItem
-                        fill={fill}
-                        tokenByAddress={this.props.tokenByAddress}
-                        userAddress={this.props.userAddress}
-                    />
-                </Paper>
+                <TradeHistoryItem
+                    fill={fill}
+                    tokenByAddress={this.props.tokenByAddress}
+                    userAddress={this.props.userAddress}
+                />
             );
         });
     }
