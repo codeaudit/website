@@ -277,7 +277,14 @@ export class Blockchain {
                 const args = result.args;
                 const isBlockPending = _.isNull(args.blockNumber);
                 if (!isBlockPending) {
-                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, result.blockNumber);
+                    // Hack: I've observed the behavior where a client won't register certain fill events
+                    // and lowering the cache blockNumber fixes the issue. As a quick fix for now, simply
+                    // set the cached blockNumber 50 below the one returned. This way, upon refreshing, a user
+                    // would still attempt to re-fetch events from the previous 50 blocks, but won't need to
+                    // re-fetch all events in all blocks.
+                    // TODO: Debug if this is a race condition, and apply a more precise fix
+                    const blockNumberToSet = result.blockNumber - 50 < 0 ? 0 : result.blockNumber - 50;
+                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, blockNumberToSet);
                 }
                 const isUserMakerOrTaker = args.maker === this.userAddress ||
                                            args.taker === this.userAddress ||
