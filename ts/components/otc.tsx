@@ -13,7 +13,17 @@ import {Blockchain} from 'ts/blockchain';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
 import {TradeHistory} from 'ts/components/trade_history/trade_history';
-import {HashData, TokenByAddress, BlockchainErrs, Order, Fill, Side, Styles, ScreenWidths} from 'ts/types';
+import {
+    HashData,
+    TokenByAddress,
+    BlockchainErrs,
+    Order,
+    Fill,
+    Side,
+    Styles,
+    ScreenWidths,
+    Token,
+} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
 import {Footer} from 'ts/components/footer';
 import {Loading} from 'ts/components/ui/loading';
@@ -107,9 +117,9 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
         }
         if (nextProps.userAddress !== this.state.prevUserAddress) {
             this.blockchain.userAddressUpdatedFireAndForgetAsync(nextProps.userAddress);
-            const tokens = _.values(nextProps.tokenByAddress);
             if (nextProps.userAddress !== '' && nextProps.blockchainIsLoaded) {
-                this.blockchain.updateTokenBalancesAndAllowancesAsync(tokens);
+                const tokens = _.values(nextProps.tokenByAddress);
+                this.updateBalanceAndAllowanceWithLoadingScreenAsync(tokens);
             }
             this.setState({
                 prevUserAddress: nextProps.userAddress,
@@ -246,5 +256,10 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
     private updateScreenWidth() {
         const newScreenWidth = utils.getScreenWidth();
         this.props.dispatcher.updateScreenWidth(newScreenWidth);
+    }
+    private async updateBalanceAndAllowanceWithLoadingScreenAsync(tokens: Token[]) {
+        this.props.dispatcher.updateBlockchainIsLoaded(false);
+        await this.blockchain.updateTokenBalancesAndAllowancesAsync(tokens);
+        this.props.dispatcher.updateBlockchainIsLoaded(true);
     }
 }
