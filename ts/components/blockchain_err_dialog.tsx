@@ -95,6 +95,10 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
                     <a href={constants.METAMASK_CHROME_STORE_URL} target="_blank">
                         Metamask
                     </a>. Once installed and set up, refresh this page.
+                    <div className="pt1">
+                        <span className="bold">Note:</span>
+                        {' '}If you already have Metamask installed, make sure it is unlocked.
+                    </div>
                 </div>
                 <h4>2. Use the Mist browser</h4>
                 <div>
