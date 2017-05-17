@@ -106,28 +106,30 @@ export class Blockchain {
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
-        const fill = {
-            traders: [maker, taker],
-            tokens: [makerTokenAddress, takerTokenAddress],
+        const orderAddresses = [
+            maker,
+            taker,
+            makerTokenAddress,
+            takerTokenAddress,
             feeRecipient,
-            shouldCheckTransfer,
-            values: [makerTokenAmount.toString(), takerTokenAmount.toString()],
-            fees: [makerFee, takerFee],
-            expirationAndSalt: [expirationUnixTimestampSec, salt.toString()],
-            fillValueT: fillAmount.toString(),
-            v: signatureData.v,
-            rs: [signatureData.r, signatureData.s],
-        };
-        const response: ContractResponse = await this.exchange.fill(fill.traders,
-                                 fill.tokens,
-                                 fill.feeRecipient,
-                                 fill.shouldCheckTransfer,
-                                 fill.values,
-                                 fill.fees,
-                                 fill.expirationAndSalt,
-                                 fill.fillValueT,
-                                 fill.v,
-                                 fill.rs, {
+        ];
+        const orderValues = [
+            makerTokenAmount,
+            takerTokenAmount,
+            makerFee,
+            takerFee,
+            expirationUnixTimestampSec,
+            salt.toString(10),
+        ];
+        const fillAmountT = fillAmount.toString(10);
+        const response: ContractResponse = await this.exchange.fill(
+                                 orderAddresses,
+                                 orderValues,
+                                 fillAmountT,
+                                 shouldCheckTransfer,
+                                 signatureData.v,
+                                 signatureData.r,
+                                 signatureData.s, {
                                       from: this.userAddress,
                                   });
         const errEvent = _.find(response.logs, {event: 'LogError'});
@@ -139,7 +141,7 @@ export class Blockchain {
     }
     public async getFillAmountAsync(orderHash: string) {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
-        const fillAmount = await this.exchange.fills.call(orderHash);
+        const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
         return fillAmount.toNumber();
     }
     public getExchangeContractAddressIfExists() {
@@ -276,7 +278,9 @@ export class Blockchain {
                 if (!isBlockPending) {
                     tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, result.blockNumber);
                 }
-                const isUserMakerOrTaker = args.maker === this.userAddress || args.taker === this.userAddress;
+                const isUserMakerOrTaker = args.maker === this.userAddress ||
+                                           args.taker === this.userAddress ||
+                                           args.filledBy === this.userAddress;
                 if (!isUserMakerOrTaker) {
                     return; // We aren't interested in the fill event
                 }
@@ -287,7 +291,7 @@ export class Blockchain {
                     logIndex: result.logIndex,
                     maker: args.maker,
                     orderHash: args.orderHash,
-                    taker: args.taker,
+                    taker: args.filledBy,
                     tokenM: args.tokenM,
                     tokenT: args.tokenT,
                     transactionHash: result.transactionHash,
