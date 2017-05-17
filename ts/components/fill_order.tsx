@@ -389,6 +389,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                                                    );
             this.setState({
                 didFillOrderSucceed: true,
+                globalErrMsg: '',
             });
             return true;
         } catch (err) {
