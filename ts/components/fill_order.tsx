@@ -66,7 +66,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     }
     public componentWillMount() {
         if (!_.isEmpty(this.state.orderJSON)) {
-            this.validateFillOrder(this.state.orderJSON);
+            this.validateFillOrderFireAndForgetAsync(this.state.orderJSON);
         }
     }
     public componentDidMount() {
@@ -224,9 +224,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             didFillOrderSucceed: false,
         });
         const orderJSON = e.target.value;
-        this.validateFillOrder(orderJSON);
+        this.validateFillOrderFireAndForgetAsync(orderJSON);
     }
-    private async validateFillOrder(orderJSON: string) {
+    private async validateFillOrderFireAndForgetAsync(orderJSON: string) {
         let orderJSONErrMsg = '';
         let parsedOrder: Order;
         try {
