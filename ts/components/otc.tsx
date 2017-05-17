@@ -17,16 +17,16 @@ import {HashData, TokenByAddress, BlockchainErrs, Order, Fill, Side, Styles, Scr
 import {TopBar} from 'ts/components/top_bar';
 import {Footer} from 'ts/components/footer';
 import {Loading} from 'ts/components/ui/loading';
-import {DemoMenu} from 'ts/components/demo_menu';
+import {OTCMenu} from 'ts/components/otc_menu';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
 import BigNumber = require('bignumber.js');
 import {FlashMessage} from 'ts/components/ui/flash_message';
 
 const THROTTLE_TIMEOUT = 100;
 
-export interface DemoPassedProps {}
+export interface OTCPassedProps {}
 
-export interface DemoAllProps {
+export interface OTCAllProps {
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
@@ -43,7 +43,7 @@ export interface DemoAllProps {
     flashMessage?: string;
 }
 
-interface DemoAllState {
+interface OTCAllState {
     prevNetworkId: number;
     prevUserAddress: string;
 }
@@ -70,11 +70,11 @@ const styles: Styles = {
     },
 };
 
-export class Demo extends React.Component<DemoAllProps, DemoAllState> {
+export class OTC extends React.Component<OTCAllProps, OTCAllState> {
     private blockchain: Blockchain;
     private sharedOrderIfExists: Order;
     private throttledScreenWidthUpdate: () => void;
-    constructor(props: DemoAllProps) {
+    constructor(props: OTCAllProps) {
         super(props);
         this.sharedOrderIfExists = this.getSharedOrderIfExists();
         this.throttledScreenWidthUpdate = _.throttle(this.updateScreenWidth.bind(this), THROTTLE_TIMEOUT);
@@ -92,13 +92,13 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
     }
     public componentWillUnmount() {
         window.removeEventListener('resize', this.throttledScreenWidthUpdate);
-        // We re-set the entire redux state when the demo is unmounted so that when it is re-rendered
+        // We re-set the entire redux state when the OTC is unmounted so that when it is re-rendered
         // the initialization process always occurs from the same base state. This helps avoid
-        // initialization inconsistencies (i.e While the demo was unrendered, the user might have
+        // initialization inconsistencies (i.e While the OTC was unrendered, the user might have
         // become disconnected from their backing Ethereum node, changes user accounts, etc...)
         this.props.dispatcher.resetState();
     }
-    public componentWillReceiveProps(nextProps: DemoAllProps) {
+    public componentWillReceiveProps(nextProps: OTCAllProps) {
         if (nextProps.networkId !== this.state.prevNetworkId) {
             this.blockchain.networkIdUpdatedFireAndForgetAsync(nextProps.networkId);
             this.setState({
@@ -127,22 +127,22 @@ export class Demo extends React.Component<DemoAllProps, DemoAllState> {
                     blockchainIsLoaded={this.props.blockchainIsLoaded}
                     location={this.props.location}
                 />
-                <div id="demo" className="mx-auto max-width-4 pt4">
+                <div id="otc" className="mx-auto max-width-4 pt4">
                     <Paper className="mb3 mt2">
                         <div className="mx-auto flex">
                             <div
                                 className="col col-2 pr2 pt1 sm-hide xs-hide"
                                 style={{overflow: 'hidden', backgroundColor: 'rgb(39, 39, 39)', color: 'white'}}
                             >
-                                <DemoMenu menuItemStyle={{color: 'white'}} />
+                                <OTCMenu menuItemStyle={{color: 'white'}} />
                             </div>
                             <div className="col col-12 lg-col-10 md-col-10 sm-col sm-col-12">
                                 <div className="py2" style={{backgroundColor: colors.grey50}}>
                                     {this.props.blockchainIsLoaded ?
                                         <Switch>
-                                            <Route path="/demo/fill" render={this.renderFillOrder.bind(this)} />
-                                            <Route path="/demo/balances" render={this.renderTokenBalances.bind(this)} />
-                                            <Route path="/demo/trades" component={this.renderTradeHistory.bind(this)} />
+                                            <Route path="/otc/fill" render={this.renderFillOrder.bind(this)} />
+                                            <Route path="/otc/balances" render={this.renderTokenBalances.bind(this)} />
+                                            <Route path="/otc/trades" component={this.renderTradeHistory.bind(this)} />
                                             <Route path="/" render={this.renderGenerateOrderForm.bind(this)} />
                                         </Switch> :
                                         <Loading />

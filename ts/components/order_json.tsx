@@ -137,7 +137,7 @@ You can see and fill it here: ${shareLink}`);
             this.props.orderFeeRecipient, this.props.orderSignatureData, this.props.tokenByAddress,
             this.props.orderSalt);
         const orderJSONString = JSON.stringify(order);
-        const orderUrl = `${configs.BASE_URL}/demo/fill?order=${orderJSONString}`;
+        const orderUrl = `${configs.BASE_URL}/otc/fill?order=${orderJSONString}`;
         return orderUrl;
     }
 }

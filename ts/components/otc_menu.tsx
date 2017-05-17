@@ -3,15 +3,15 @@ import * as React from 'react';
 import {MenuItem} from 'ts/components/ui/menu_item';
 import {Link} from 'react-router-dom';
 
-export interface DemoMenuProps {
+export interface OTCMenuProps {
     menuItemStyle: React.CSSProperties;
     onClick?: () => void;
 }
 
-interface DemoMenuState {}
+interface OTCMenuState {}
 
-export class DemoMenu extends React.Component<DemoMenuProps, DemoMenuState> {
-    public static defaultProps: Partial<DemoMenuProps> = {
+export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
+    public static defaultProps: Partial<OTCMenuProps> = {
         onClick: _.noop,
     };
     public render() {
@@ -19,28 +19,28 @@ export class DemoMenu extends React.Component<DemoMenuProps, DemoMenuState> {
             <div>
                 <MenuItem
                     style={this.props.menuItemStyle}
-                    to="/demo"
+                    to="/otc"
                     onClick={this.props.onClick.bind(this)}
                 >
                     {this.renderMenuItemWithIcon('Generate order', 'zmdi-code')}
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
-                    to="/demo/fill"
+                    to="/otc/fill"
                     onClick={this.props.onClick.bind(this)}
                 >
                     {this.renderMenuItemWithIcon('Fill order', 'zmdi-mail-send')}
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
-                    to="/demo/balances"
+                    to="/otc/balances"
                     onClick={this.props.onClick.bind(this)}
                 >
                     {this.renderMenuItemWithIcon('Balances', 'zmdi-balance-wallet')}
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
-                    to="/demo/trades"
+                    to="/otc/trades"
                     onClick={this.props.onClick.bind(this)}
                 >
                     {this.renderMenuItemWithIcon('Trade history', 'zmdi-book')}

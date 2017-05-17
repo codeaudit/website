@@ -1,7 +1,7 @@
 {
-  "name": "0xDemoDapp",
+  "name": "Website",
   "version": "0.0.0",
-  "description": "Demo app demonstrating the core functionality of the 0x protocol",
+  "description": "Website and 0x OTC dapp",
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --content-base public",

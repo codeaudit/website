@@ -86,7 +86,7 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
             <div>
                 <div>
                     We were unable to access an Ethereum wallet you control. In order to interact
-                    {' '}with the demo dApp, we need a way to interact with one of your Ethereum wallets.
+                    {' '}with the OTC dApp, we need a way to interact with one of your Ethereum wallets.
                     {' '}There are two easy ways you can enable us to do that:
                 </div>
                 <h4>1. Chrome extension Ethereum wallet</h4>
@@ -116,7 +116,7 @@ export class BlockchainErrDialog extends React.Component<BlockchainErrDialogProp
                 <div>
                     The 0x smart contracts are not deployed on the Ethereum network you are
                     {' '}currently connected to (network Id: {this.props.blockchain.networkId}).
-                    {' '}In order to use this demo app, please connect to the {constants.TESTNET_NAME}
+                    {' '}In order to use the OTC DApp, please connect to the {constants.TESTNET_NAME}
                     {' '}testnet (network Id: {constants.TESTNET_NETWORK_ID}).
                 </div>
                 <h4>Metamask</h4>

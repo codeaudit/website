@@ -101,7 +101,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 <h3>Test ether</h3>
                 <Divider />
                 <div className="pt2 pb2">
-                    In order to try out the 0x protocol demo app, request some test ether to pay for
+                    In order to try out the 0x OTC Dapp, request some test ether to pay for
                     gas costs. It might take a bit of time for the test ether to show up.
                 </div>
                 <Table

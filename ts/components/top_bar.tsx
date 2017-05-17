@@ -5,7 +5,7 @@ import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
 import {configs} from 'ts/utils/configs';
 import {Identicon} from 'ts/components/ui/identicon';
-import {DemoMenu} from 'ts/components/demo_menu';
+import {OTCMenu} from 'ts/components/otc_menu';
 import {Styles} from 'ts/types';
 import {
     Link as ScrollLink,
@@ -91,7 +91,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 docked={false}
                 onRequestChange={this.onMenuButtonClick.bind(this)}
             >
-                {this.renderDemoMenu()}
+                {this.renderOTCMenu()}
                 {this.renderHomepageMenuItem('home')}
                 <a
                     className="text-decoration-none"
@@ -109,23 +109,23 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                         FAQ
                     </MenuItem>
                 </Link>
-                {configs.isDemoEnabled && !this.isViewingDemo() &&
-                    <Link to="/demo" className="text-decoration-none">
-                        <MenuItem>Demo</MenuItem>
+                {configs.isOTCEnabled && !this.isViewingOTC() &&
+                    <Link to="/otc" className="text-decoration-none">
+                        <MenuItem>OTC DApp</MenuItem>
                     </Link>
                 }
             </Drawer>
         );
     }
-    private renderDemoMenu() {
-        if (!this.isViewingDemo()) {
+    private renderOTCMenu() {
+        if (!this.isViewingOTC()) {
             return;
         }
 
         return (
             <div className="lg-hide md-hide">
-                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Demo</div>
-                <DemoMenu
+                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>OTC DApp</div>
+                <OTCMenu
                     menuItemStyle={{color: 'black'}}
                     onClick={this.onMenuButtonClick.bind(this)}
                 />
@@ -185,7 +185,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             isDrawerOpen: !this.state.isDrawerOpen,
         });
     }
-    private isViewingDemo() {
-        return _.includes(this.props.location.pathname, '/demo');
+    private isViewingOTC() {
+        return _.includes(this.props.location.pathname, '/otc');
     }
 }
