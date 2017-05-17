@@ -37,7 +37,7 @@ export const utils = {
         const m = moment('2050');
         return new BigNumber(m.unix());
     },
-    convertToUnixTimestampSeconds(date: moment.Moment, time: moment.Moment): BigNumber {
+    convertToUnixTimestampSeconds(date?: moment.Moment, time?: moment.Moment): BigNumber {
         const finalMoment = _.isUndefined(date) ? moment() : date;
         if (!_.isUndefined(time)) {
             finalMoment.hours(time.hours());

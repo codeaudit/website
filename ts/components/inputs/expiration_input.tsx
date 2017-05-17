@@ -10,27 +10,27 @@ interface ExpirationInputProps {
 }
 
 interface ExpirationInputState {
-    date: moment.Moment;
-    time: moment.Moment;
+    dateMoment: moment.Moment;
+    timeMoment: moment.Moment;
 }
 
 export class ExpirationInput extends React.Component<ExpirationInputProps, ExpirationInputState> {
-    private earliestPickerableMoment: moment.Moment;
+    private earliestPickableMoment: moment.Moment;
     constructor(props: ExpirationInputProps) {
         super(props);
         // Set the earliest pickable date to today at 00:00, so users can only pick the current or later dates
-        this.earliestPickerableMoment = moment().startOf('day');
-        const expireMoment = utils.convertToMomentFromUnixTimestamp(props.orderExpiryTimestamp);
+        this.earliestPickableMoment = moment().startOf('day');
+        const expirationMoment = utils.convertToMomentFromUnixTimestamp(props.orderExpiryTimestamp);
         const initialOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
         const didUserSetExpiry = !initialOrderExpiryTimestamp.eq(props.orderExpiryTimestamp);
         this.state = {
-            date: didUserSetExpiry ? expireMoment : undefined,
-            time: didUserSetExpiry ? expireMoment : undefined,
+            dateMoment: didUserSetExpiry ? expirationMoment : undefined,
+            timeMoment: didUserSetExpiry ? expirationMoment : undefined,
         };
     }
     public render() {
-        const date = this.state.date ? this.state.date.toDate() : undefined;
-        const time = this.state.time ? this.state.time.toDate() : undefined;
+        const date = this.state.dateMoment ? this.state.dateMoment.toDate() : undefined;
+        const time = this.state.timeMoment ? this.state.timeMoment.toDate() : undefined;
         return (
             <div className="clearfix">
                 <div className="col col-6 overflow-hidden pr3">
@@ -64,30 +64,30 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
         );
     }
     private shouldDisableDate(date: Date): boolean {
-        return moment(date).startOf('day').isBefore(this.earliestPickerableMoment);
+        return moment(date).startOf('day').isBefore(this.earliestPickableMoment);
     }
     private clearDates() {
         this.setState({
-            date: undefined,
-            time: undefined,
+            dateMoment: undefined,
+            timeMoment: undefined,
         });
         const defaultDateTime = utils.initialOrderExpiryUnixTimestampSec();
         this.props.updateOrderExpiry(defaultDateTime);
     }
     private onDateChanged(e: any, date: Date) {
-        const newDate = moment(date);
+        const dateMoment = moment(date);
         this.setState({
-            date: newDate,
+            dateMoment,
         });
-        const timestamp = utils.convertToUnixTimestampSeconds(newDate, this.state.time);
+        const timestamp = utils.convertToUnixTimestampSeconds(dateMoment, this.state.timeMoment);
         this.props.updateOrderExpiry(timestamp);
     }
     private onTimeChanged(e: any, time: Date) {
-        const newTime = moment(time);
+        const timeMoment = moment(time);
         this.setState({
-            time: newTime,
+            timeMoment,
         });
-        const timestamp = utils.convertToUnixTimestampSeconds(this.state.date, newTime);
+        const timestamp = utils.convertToUnixTimestampSeconds(this.state.dateMoment, timeMoment);
         this.props.updateOrderExpiry(timestamp);
     }
 }
