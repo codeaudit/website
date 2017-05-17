@@ -9,6 +9,7 @@ import {
     OrderParty,
     ScreenWidths,
 } from 'ts/types';
+import {constants} from 'ts/utils/constants';
 import deepEqual = require('deep-equal');
 import ethUtil = require('ethereumjs-util');
 import BigNumber = require('bignumber.js');
@@ -58,7 +59,8 @@ export const utils = {
     },
     generateOrder(networkId: number, exchangeContract: string, sideToAssetToken: SideToAssetToken,
                   orderExpiryTimestamp: BigNumber, orderTakerAddress: string, orderMakerAddress: string,
-                  signatureData: SignatureData, tokenByAddress: TokenByAddress, orderSalt: BigNumber): Order {
+                  makerFee: BigNumber, takerFee: BigNumber, feeRecipient: string, signatureData: SignatureData,
+                  tokenByAddress: TokenByAddress, orderSalt: BigNumber): Order {
         const makerToken = tokenByAddress[sideToAssetToken[Side.deposit].address];
         const takerToken = tokenByAddress[sideToAssetToken[Side.receive].address];
         const order = {
@@ -71,6 +73,7 @@ export const utils = {
                     address: makerToken.address,
                 },
                 amount: sideToAssetToken[Side.deposit].amount.toString(10),
+                feeAmount: makerFee.toString(10),
             },
             taker: {
                 address: orderTakerAddress,
@@ -81,8 +84,10 @@ export const utils = {
                     address: takerToken.address,
                 },
                 amount: sideToAssetToken[Side.receive].amount.toString(10),
+                feeAmount: takerFee.toString(10),
             },
             expiration: orderExpiryTimestamp.toString(10),
+            feeRecipient,
             salt: orderSalt.toString(10),
             signature: signatureData,
             exchangeContract,

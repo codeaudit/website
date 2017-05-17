@@ -91,8 +91,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const hintSalt = zeroEx.generateSalt();
         const exchangeContract = this.props.blockchain.getExchangeContractAddressIfExists();
         const hintOrder = utils.generateOrder(this.props.networkId, exchangeContract, hintSideToAssetToken,
-                                              hintOrderExpiryTimestamp, '', '', hintSignatureData,
-                                              this.props.tokenByAddress, hintSalt);
+                                              hintOrderExpiryTimestamp, '', '', constants.MAKER_FEE,
+                                              constants.TAKER_FEE, constants.FEE_RECIPIENT_ADDRESS,
+                                              hintSignatureData, this.props.tokenByAddress, hintSalt);
         const hintOrderJSON = `${JSON.stringify(hintOrder, null, '\t').substring(0, 500)}...`;
         return (
             <div className="clearfix lg-px4 md-px4 sm-px2" style={{minHeight: 600}}>
@@ -238,10 +239,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const takerAmount = new BigNumber(parsedOrder.taker.amount);
             const expiration = new BigNumber(parsedOrder.expiration);
             const salt = new BigNumber(parsedOrder.salt);
+            const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
+            const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
             const orderHash = zeroEx.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
                             parsedOrder.taker.address, parsedOrder.maker.token.address,
-                            parsedOrder.taker.token.address, constants.FEE_RECIPIENT_ADDRESS,
-                            makerAmount, takerAmount, constants.MAKER_FEE, constants.TAKER_FEE,
+                            parsedOrder.taker.token.address, parsedOrder.feeRecipient,
+                            makerAmount, takerAmount, parsedMakerFee, parsedTakerFee,
                             expiration, salt);
 
             const signature = parsedOrder.signature;
@@ -367,6 +370,8 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         }
 
         const parsedOrderSalt = new BigNumber(parsedOrder.salt);
+        const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
+        const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
         try {
             await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
                                                        parsedOrder.taker.address,
@@ -374,7 +379,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                                                        this.props.tokenByAddress[takerTokenAddress].address,
                                                        depositAssetToken.amount,
                                                        receiveAssetToken.amount,
+                                                       parsedMakerFee,
+                                                       parsedTakerFee,
                                                        parsedOrderExpiration,
+                                                       parsedOrder.feeRecipient,
                                                        this.props.orderFillAmount,
                                                        parsedOrder.signature,
                                                        parsedOrderSalt,

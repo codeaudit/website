@@ -97,7 +97,8 @@ export class Blockchain {
     }
     public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
                                 takerTokenAddress: string, makerTokenAmount: BigNumber,
-                                takerTokenAmount: BigNumber, expirationUnixTimestampSec: BigNumber,
+                                takerTokenAmount: BigNumber, makerFee: BigNumber, takerFee: BigNumber,
+                                expirationUnixTimestampSec: BigNumber, feeRecipient: string,
                                 fillAmount: BigNumber, signatureData: SignatureData, salt: BigNumber) {
         if (!this.doesUserAddressExist()) {
             throw new Error('Cannot fill order if no user accounts accessible');
@@ -108,10 +109,10 @@ export class Blockchain {
         const fill = {
             traders: [maker, taker],
             tokens: [makerTokenAddress, takerTokenAddress],
-            feeRecipient: constants.FEE_RECIPIENT_ADDRESS,
+            feeRecipient,
             shouldCheckTransfer,
             values: [makerTokenAmount.toString(), takerTokenAmount.toString()],
-            fees: [constants.MAKER_FEE, constants.TAKER_FEE],
+            fees: [makerFee, takerFee],
             expirationAndSalt: [expirationUnixTimestampSec, salt.toString()],
             fillValueT: fillAmount.toString(),
             v: signatureData.v,

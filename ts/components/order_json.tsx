@@ -17,6 +17,9 @@ interface OrderJSONProps {
     orderTakerAddress: string;
     orderMakerAddress: string;
     orderSalt: BigNumber;
+    orderMakerFee: BigNumber;
+    orderTakerFee: BigNumber;
+    orderFeeRecipient: string;
     networkId: number;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
@@ -29,8 +32,9 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
                                           this.props.sideToAssetToken, this.props.orderExpiryTimestamp,
                                           this.props.orderTakerAddress, this.props.orderMakerAddress,
-                                          this.props.orderSignatureData, this.props.tokenByAddress,
-                                          this.props.orderSalt);
+                                          this.props.orderMakerFee, this.props.orderTakerFee,
+                                          this.props.orderFeeRecipient, this.props.orderSignatureData,
+                                          this.props.tokenByAddress, this.props.orderSalt);
         const orderJSON = JSON.stringify(order);
         return (
             <div>
@@ -129,7 +133,8 @@ You can see and fill it here: ${shareLink}`);
     private getOrderUrl() {
         const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
             this.props.sideToAssetToken, this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress,
+            this.props.orderMakerAddress, this.props.orderMakerFee, this.props.orderTakerFee,
+            this.props.orderFeeRecipient, this.props.orderSignatureData, this.props.tokenByAddress,
             this.props.orderSalt);
         const orderJSONString = JSON.stringify(order);
         const orderUrl = `${configs.BASE_URL}/demo/fill?order=${orderJSONString}`;
