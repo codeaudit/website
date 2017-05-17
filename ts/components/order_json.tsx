@@ -112,7 +112,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         const encodedBody = encodeURIComponent(`I generated an order with the 0x protocol.
 You can see and fill it here: ${shareLink}`);
         const mailToLink = `mailto:mail@example.org?subject=${encodedSubject}&body=${encodedBody}`;
-        window.location.href = mailToLink;
+        window.open(mailToLink, '_blank');
     }
     private async generateShareLinkAsync(): Promise<string> {
         const longUrl = encodeURIComponent(this.getOrderUrl());
