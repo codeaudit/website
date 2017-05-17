@@ -106,28 +106,30 @@ export class Blockchain {
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
-        const fill = {
-            traders: [maker, taker],
-            tokens: [makerTokenAddress, takerTokenAddress],
+        const orderAddresses = [
+            maker,
+            taker,
+            makerTokenAddress,
+            takerTokenAddress,
             feeRecipient,
-            shouldCheckTransfer,
-            values: [makerTokenAmount.toString(), takerTokenAmount.toString()],
-            fees: [makerFee, takerFee],
-            expirationAndSalt: [expirationUnixTimestampSec, salt.toString()],
-            fillValueT: fillAmount.toString(),
-            v: signatureData.v,
-            rs: [signatureData.r, signatureData.s],
-        };
-        const response: ContractResponse = await this.exchange.fill(fill.traders,
-                                 fill.tokens,
-                                 fill.feeRecipient,
-                                 fill.shouldCheckTransfer,
-                                 fill.values,
-                                 fill.fees,
-                                 fill.expirationAndSalt,
-                                 fill.fillValueT,
-                                 fill.v,
-                                 fill.rs, {
+        ];
+        const orderValues = [
+            makerTokenAmount,
+            takerTokenAmount,
+            makerFee,
+            takerFee,
+            expirationUnixTimestampSec,
+            salt.toString(10),
+        ];
+        const fillAmountT = fillAmount.toString(10);
+        const response: ContractResponse = await this.exchange.fill(
+                                 orderAddresses,
+                                 orderValues,
+                                 fillAmountT,
+                                 shouldCheckTransfer,
+                                 signatureData.v,
+                                 signatureData.r,
+                                 signatureData.s, {
                                       from: this.userAddress,
                                   });
         const errEvent = _.find(response.logs, {event: 'LogError'});
