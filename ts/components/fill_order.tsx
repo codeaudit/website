@@ -387,6 +387,10 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                                                        parsedOrder.signature,
                                                        parsedOrderSalt,
                                                    );
+            // After fill completes, let's update the token balances
+            const makerToken = this.props.tokenByAddress[makerTokenAddress];
+            const tokens = [makerToken, takerToken];
+            await this.props.blockchain.updateTokenBalancesAndAllowancesAsync(tokens);
             this.setState({
                 didFillOrderSucceed: true,
                 globalErrMsg: '',
