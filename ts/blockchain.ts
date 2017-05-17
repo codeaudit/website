@@ -141,7 +141,7 @@ export class Blockchain {
     }
     public async getFillAmountAsync(orderHash: string) {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
-        const fillAmount = await this.exchange.fills.call(orderHash);
+        const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
         return fillAmount.toNumber();
     }
     public getExchangeContractAddressIfExists() {
