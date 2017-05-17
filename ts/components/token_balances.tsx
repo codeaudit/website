@@ -95,7 +95,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         const tokenColSpan = isSmallScreen ? TOKEN_COL_SPAN_SM : TOKEN_COL_SPAN_LG;
         const allowanceExplanation = '0x smart contracts require access to your<br> \
                                   token balances in order to execute trades.<br> \
-                                  Toggle an allowance to start trading that token.';
+                                  Toggling permissions sets an allowance for the<br> \
+                                  smart contract so you can start trading that token.';
         return (
             <div className="lg-px4 md-px4 sm-px1 pb2">
                 <h3>Test ether</h3>
@@ -163,7 +164,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             </TableHeaderColumn>
                             <TableHeaderColumn style={{paddingLeft: 3}}>Balance</TableHeaderColumn>
                             <TableHeaderColumn>
-                                <div className="inline-block">Allow 0x access</div>
+                                <div className="inline-block">{!isSmallScreen && 'Trade '}Permissions</div>
                                 <HelpTooltip
                                     style={{paddingLeft: 4}}
                                     explanation={allowanceExplanation}
