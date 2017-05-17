@@ -173,8 +173,8 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
         const maxLength = 30;
         if (name === '') {
             nameErrText = 'Name is required';
-        } else if (!this.isAlphaNumeric(name)) {
-            nameErrText = 'Must be alphanumeric';
+        } else if (!this.isValidName(name)) {
+            nameErrText = 'Name should only contain letters, digits and spaces';
         } else if (name.length > maxLength) {
             nameErrText = `Max length is ${maxLength}`;
         }
@@ -225,8 +225,8 @@ export class NewTokenDialog extends React.Component<NewTokenDialogProps, NewToke
             address,
         });
     }
-    private isAlphaNumeric(input: string) {
-        return /^[a-z0-9]+$/i.test(input);
+    private isValidName(input: string) {
+        return /^[a-z0-9 ]+$/i.test(input);
     }
     private isInteger(input: string) {
         return /^[0-9]+$/i.test(input);
