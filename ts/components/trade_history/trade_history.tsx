@@ -11,6 +11,7 @@ const FILL_POLLING_INTERVAL = 1000;
 interface TradeHistoryProps {
     tokenByAddress: TokenByAddress;
     userAddress: string;
+    networkId: number;
 }
 
 interface TradeHistoryState {
@@ -104,7 +105,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         clearInterval(this.fillPollingIntervalId);
     }
     private getSortedFills() {
-        const fillsByHash = tradeHistoryStorage.getUserFillsByHash(this.props.userAddress);
+        const fillsByHash = tradeHistoryStorage.getUserFillsByHash(this.props.userAddress, this.props.networkId);
         const fills = _.values(fillsByHash);
         const sortedFills = _.sortBy(fills, [(fill: Fill) => fill.blockTimestamp * -1]);
         return sortedFills;

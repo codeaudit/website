@@ -257,7 +257,7 @@ export class Blockchain {
         utils.assert(!_.isUndefined(this.exchange), 'Exchange contract must be instantiated.');
         utils.assert(this.doesUserAddressExist(), 'User must have address available.');
 
-        const fromBlock = tradeHistoryStorage.getFillsLatestBlock(this.userAddress);
+        const fromBlock = tradeHistoryStorage.getFillsLatestBlock(this.userAddress, this.networkId);
         const exchangeLogFillEvent = this.exchange.LogFill(filterIndexObj, {
             fromBlock,
             toBlock: 'latest',
@@ -274,7 +274,7 @@ export class Blockchain {
                 const args = result.args;
                 const isBlockPending = _.isNull(args.blockNumber);
                 if (!isBlockPending) {
-                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, result.blockNumber);
+                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, result.blockNumber);
                 }
                 const isUserMakerOrTaker = args.maker === this.userAddress || args.taker === this.userAddress;
                 if (!isUserMakerOrTaker) {
@@ -295,7 +295,7 @@ export class Blockchain {
                     valueT: args.valueT,
                     blockTimestamp,
                 };
-                tradeHistoryStorage.addFillToUser(this.userAddress, fill);
+                tradeHistoryStorage.addFillToUser(this.userAddress, this.networkId, fill);
             }
         });
         this.exchangeLogFillEvents.push(exchangeLogFillEvent);

@@ -172,6 +172,7 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
             <TradeHistory
                 tokenByAddress={this.props.tokenByAddress}
                 userAddress={this.props.userAddress}
+                networkId={this.props.networkId}
             />
         );
     }

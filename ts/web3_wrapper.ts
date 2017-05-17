@@ -156,10 +156,6 @@ export class Web3Wrapper {
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
-                if (!_.isUndefined(prevUserAddress)) {
-                    tradeHistoryStorage.clearUserFillsByHash(prevUserAddress);
-                    tradeHistoryStorage.clearFillsLatestBlock(prevUserAddress);
-                }
                 this.dispatcher.updateNetworkId(currentNetworkId);
             }
 
