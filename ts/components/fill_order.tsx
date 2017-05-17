@@ -14,6 +14,7 @@ import {
     Token,
     ExchangeContractErrs,
     AlertTypes,
+    ContractResponse,
 } from 'ts/types';
 import {Alert} from 'ts/components/ui/alert';
 import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
@@ -380,7 +381,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
         const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
         try {
-            const response: any = await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
+            const response: ContractResponse = await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
                                                        parsedOrder.taker.address,
                                                        this.props.tokenByAddress[makerTokenAddress].address,
                                                        this.props.tokenByAddress[takerTokenAddress].address,
