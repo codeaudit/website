@@ -22,7 +22,7 @@ export class Identicon extends React.Component<IdenticonProps, IdenticonState> {
         const innerHtml: string = jazzIcon.innerHTML;
         return (
             <div
-                className="circle mx-auto relative"
+                className="circle mx-auto relative transitionFix"
                 style={{width: diameter, height: diameter, overflow: 'hidden'}}
             >
                 <div

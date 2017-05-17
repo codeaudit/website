@@ -27,3 +27,14 @@ a {
   background-color: rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
+
+// Hack: For some reason the animation applied to the material-ui textfield causes the overflow
+// applied to other elements to fail while the animation is underway. Adding this class to the
+// affected component fixes the issue
+// Source: http://stackoverflow.com/questions/14383632/webkit-border-radius-and-overflow-bug-when-using-any-animation-transition
+.transitionFix {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+}
