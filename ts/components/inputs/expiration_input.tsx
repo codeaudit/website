@@ -34,7 +34,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
         const time = this.state.timeMoment ? this.state.timeMoment.toDate() : undefined;
         return (
             <div className="clearfix">
-                <div className="col col-6 overflow-hidden pr3">
+                <div className="col col-6 overflow-hidden pr3 flex relative">
                     <DatePicker
                         className="overflow-hidden"
                         hintText="Date"
@@ -44,8 +44,14 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                         onChange={this.onDateChanged.bind(this)}
                         shouldDisableDate={this.shouldDisableDate.bind(this)}
                     />
+                    <div
+                        className="absolute"
+                        style={{fontSize: 20, right: 40, top: 13, pointerEvents: 'none'}}
+                    >
+                        <i className="zmdi zmdi-calendar" />
+                    </div>
                 </div>
-                <div className="col col-5 overflow-hidden">
+                <div className="col col-5 overflow-hidden flex relative">
                     <TimePicker
                         className="overflow-hidden"
                         hintText="Time"
@@ -53,6 +59,12 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                         value={time}
                         onChange={this.onTimeChanged.bind(this)}
                     />
+                    <div
+                        className="absolute"
+                        style={{fontSize: 20, right: 9, top: 13, pointerEvents: 'none'}}
+                    >
+                        <i className="zmdi zmdi-time" />
+                    </div>
                 </div>
                 <div
                     onClick={this.clearDates.bind(this)}
