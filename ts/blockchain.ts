@@ -278,7 +278,9 @@ export class Blockchain {
                 if (!isBlockPending) {
                     tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, result.blockNumber);
                 }
-                const isUserMakerOrTaker = args.maker === this.userAddress || args.taker === this.userAddress;
+                const isUserMakerOrTaker = args.maker === this.userAddress ||
+                                           args.taker === this.userAddress ||
+                                           args.filledBy === this.userAddress;
                 if (!isUserMakerOrTaker) {
                     return; // We aren't interested in the fill event
                 }
@@ -289,7 +291,7 @@ export class Blockchain {
                     logIndex: result.logIndex,
                     maker: args.maker,
                     orderHash: args.orderHash,
-                    taker: args.taker,
+                    taker: args.filledBy,
                     tokenM: args.tokenM,
                     tokenT: args.tokenT,
                     transactionHash: result.transactionHash,
