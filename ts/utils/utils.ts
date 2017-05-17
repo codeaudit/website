@@ -9,7 +9,7 @@ import {
     OrderParty,
     ScreenWidths,
 } from 'ts/types';
-import {constants} from 'ts/utils/constants';
+import * as moment from 'moment';
 import deepEqual = require('deep-equal');
 import ethUtil = require('ethereumjs-util');
 import BigNumber = require('bignumber.js');
@@ -34,27 +34,23 @@ export const utils = {
     // whether a user has set an expiry date or not. It is set unrealistically high so as not to collide
     // with actual values a user would select.
     initialOrderExpiryUnixTimestampSec(): BigNumber {
-        const d = new Date('2050');
-        return new BigNumber(d.getTime() / 1000);
+        const m = moment('2050');
+        return new BigNumber(m.unix());
     },
-    convertToUnixTimestampSeconds(dateDate: Date, dateTime: Date): BigNumber {
-        const finalDate = !_.isUndefined(dateDate) ? dateDate : new Date();
-        if (!_.isUndefined(dateTime)) {
-            const hrs = dateTime.getHours();
-            const mins = dateTime.getMinutes();
-            finalDate.setHours(dateTime.getHours());
-            finalDate.setMinutes(dateTime.getMinutes());
+    convertToUnixTimestampSeconds(date: moment.Moment, time: moment.Moment): BigNumber {
+        const finalMoment = _.isUndefined(date) ? moment() : date;
+        if (!_.isUndefined(time)) {
+            finalMoment.hours(time.hours());
+            finalMoment.minutes(time.minutes());
         }
-        return new BigNumber(finalDate.getTime() / 1000);
+        return new BigNumber(finalMoment.unix());
     },
-    convertToDateTimeFromUnixTimestamp(unixTimestampSec: BigNumber) {
-        const unixTimestampMs = unixTimestampSec.times(1000);
-        const d = new Date(unixTimestampMs.toNumber());
-        return d;
+    convertToMomentFromUnixTimestamp(unixTimestampSec: BigNumber): moment.Moment {
+        return moment.unix(unixTimestampSec.toNumber());
     },
     convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: BigNumber): string {
-        const d = this.convertToDateTimeFromUnixTimestamp(unixTimestampSec);
-        const formattedDate: string = dateFormat(d, 'h:MMtt mmmm dS yyyy');
+        const m = this.convertToMomentFromUnixTimestamp(unixTimestampSec);
+        const formattedDate: string = m.format('h:MMa MMMM D YYYY');
         return formattedDate;
     },
     generateOrder(networkId: number, exchangeContract: string, sideToAssetToken: SideToAssetToken,

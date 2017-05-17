@@ -26,6 +26,7 @@ import {Blockchain} from 'ts/blockchain';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 import BigNumber = require('bignumber.js');
+import * as moment from 'moment';
 
 interface FillOrderProps {
     blockchain: Blockchain;
@@ -338,8 +339,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
           makerAllowance,
         ] = await this.props.blockchain.getTokenBalanceAndAllowanceAsync(parsedOrder.maker.address,
                                                                          parsedOrder.maker.token.address);
-        const currentDate = new Date();
-        const currentUnixTimestamp = currentDate.getTime() / 1000;
+        const currentUnixTimestamp = moment().unix();
         let globalErrMsg = '';
         if (_.isUndefined(takerFillAmount)) {
             globalErrMsg = 'You must specify a fill amount';

@@ -19,6 +19,7 @@ const CUSTOM_DARKER_GREEN = 'rgb(77, 197, 92)';
 
 import 'basscss/css/basscss.css';
 import 'less/all.less';
+import {utils} from 'ts/utils/utils';
 
 const muiTheme = getMuiTheme({
     appBar: {
@@ -52,6 +53,8 @@ const muiTheme = getMuiTheme({
         trackOnColor: CUSTOM_DARKER_GREEN,
     },
 });
+
+console.log(utils.convertToReadableDateTimeFromUnixTimestamp(utils.initialOrderExpiryUnixTimestampSec()));
 
 const store: ReduxStore<State> = createStore(reducer);
 render(

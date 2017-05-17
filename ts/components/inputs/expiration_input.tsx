@@ -1,8 +1,8 @@
-import * as _ from 'lodash';
 import * as React from 'react';
 import {DatePicker, TimePicker} from 'material-ui';
 import {utils} from 'ts/utils/utils';
 import BigNumber = require('bignumber.js');
+import * as moment from 'moment';
 
 interface ExpirationInputProps {
     orderExpiryTimestamp: BigNumber;
@@ -10,27 +10,27 @@ interface ExpirationInputProps {
 }
 
 interface ExpirationInputState {
-    date: Date;
-    time: Date;
+    date: moment.Moment;
+    time: moment.Moment;
 }
 
 export class ExpirationInput extends React.Component<ExpirationInputProps, ExpirationInputState> {
-    private earliestPickerableDateMs: number;
+    private earliestPickerableMoment: moment.Moment;
     constructor(props: ExpirationInputProps) {
         super(props);
         // Set the earliest pickable date to today at 00:00, so users can only pick the current or later dates
-        const earliestPickableDate = new Date();
-        earliestPickableDate.setHours(0, 0, 0, 0);
-        this.earliestPickerableDateMs = Date.parse(earliestPickableDate.toISOString());
-        const dateTime = utils.convertToDateTimeFromUnixTimestamp(props.orderExpiryTimestamp);
+        this.earliestPickerableMoment = moment().startOf('day');
+        const expireMoment = utils.convertToMomentFromUnixTimestamp(props.orderExpiryTimestamp);
         const initialOrderExpiryTimestamp = utils.initialOrderExpiryUnixTimestampSec();
         const didUserSetExpiry = !initialOrderExpiryTimestamp.eq(props.orderExpiryTimestamp);
         this.state = {
-            date: didUserSetExpiry ? dateTime : undefined,
-            time: didUserSetExpiry ? dateTime : undefined,
+            date: didUserSetExpiry ? expireMoment : undefined,
+            time: didUserSetExpiry ? expireMoment : undefined,
         };
     }
     public render() {
+        const date = this.state.date ? this.state.date.toDate() : undefined;
+        const time = this.state.time ? this.state.time.toDate() : undefined;
         return (
             <div className="clearfix">
                 <div className="col col-6 overflow-hidden pr3">
@@ -39,7 +39,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                         hintText="Date"
                         mode="landscape"
                         autoOk={true}
-                        value={this.state.date}
+                        value={date}
                         onChange={this.onDateChanged.bind(this)}
                         shouldDisableDate={this.shouldDisableDate.bind(this)}
                     />
@@ -49,7 +49,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
                         className="overflow-hidden"
                         hintText="Time"
                         autoOk={true}
-                        value={this.state.time}
+                        value={time}
                         onChange={this.onTimeChanged.bind(this)}
                     />
                 </div>
@@ -64,8 +64,7 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
         );
     }
     private shouldDisableDate(date: Date): boolean {
-        const unixTimestampMs = Date.parse(date.toISOString());
-        return unixTimestampMs < this.earliestPickerableDateMs;
+        return moment(date).startOf('day').isBefore(this.earliestPickerableMoment);
     }
     private clearDates() {
         this.setState({
@@ -76,17 +75,19 @@ export class ExpirationInput extends React.Component<ExpirationInputProps, Expir
         this.props.updateOrderExpiry(defaultDateTime);
     }
     private onDateChanged(e: any, date: Date) {
+        const newDate = moment(date);
         this.setState({
-            date,
+            date: newDate,
         });
-        const timestamp = utils.convertToUnixTimestampSeconds(date, this.state.time);
+        const timestamp = utils.convertToUnixTimestampSeconds(newDate, this.state.time);
         this.props.updateOrderExpiry(timestamp);
     }
-    private onTimeChanged(e: any, dateTime: Date) {
+    private onTimeChanged(e: any, time: Date) {
+        const newTime = moment(time);
         this.setState({
-            time: dateTime,
+            time: newTime,
         });
-        const timestamp = utils.convertToUnixTimestampSeconds(this.state.date, dateTime);
+        const timestamp = utils.convertToUnixTimestampSeconds(this.state.date, newTime);
         this.props.updateOrderExpiry(timestamp);
     }
 }
