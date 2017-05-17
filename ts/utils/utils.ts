@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import * as dateFormat from 'dateformat';
 import {
     SideToAssetToken,
     SignatureData,
@@ -37,8 +36,8 @@ export const utils = {
         const m = moment('2050');
         return new BigNumber(m.unix());
     },
-    convertToUnixTimestampSeconds(date?: moment.Moment, time?: moment.Moment): BigNumber {
-        const finalMoment = _.isUndefined(date) ? moment() : date;
+    convertToUnixTimestampSeconds(date: moment.Moment, time?: moment.Moment): BigNumber {
+        const finalMoment = date;
         if (!_.isUndefined(time)) {
             finalMoment.hours(time.hours());
             finalMoment.minutes(time.minutes());
