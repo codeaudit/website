@@ -97,7 +97,8 @@ export class Blockchain {
     }
     public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
                                 takerTokenAddress: string, makerTokenAmount: BigNumber,
-                                takerTokenAmount: BigNumber, expirationUnixTimestampSec: BigNumber,
+                                takerTokenAmount: BigNumber, makerFee: BigNumber, takerFee: BigNumber,
+                                expirationUnixTimestampSec: BigNumber, feeRecipient: string,
                                 fillAmount: BigNumber, signatureData: SignatureData, salt: BigNumber) {
         if (!this.doesUserAddressExist()) {
             throw new Error('Cannot fill order if no user accounts accessible');
@@ -105,28 +106,30 @@ export class Blockchain {
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
-        const fill = {
-            traders: [maker, taker],
-            tokens: [makerTokenAddress, takerTokenAddress],
-            feeRecipient: constants.FEE_RECIPIENT_ADDRESS,
-            shouldCheckTransfer,
-            values: [makerTokenAmount.toString(), takerTokenAmount.toString()],
-            fees: [constants.MAKER_FEE, constants.TAKER_FEE],
-            expirationAndSalt: [expirationUnixTimestampSec, salt.toString()],
-            fillValueT: fillAmount.toString(),
-            v: signatureData.v,
-            rs: [signatureData.r, signatureData.s],
-        };
-        const response: ContractResponse = await this.exchange.fill(fill.traders,
-                                 fill.tokens,
-                                 fill.feeRecipient,
-                                 fill.shouldCheckTransfer,
-                                 fill.values,
-                                 fill.fees,
-                                 fill.expirationAndSalt,
-                                 fill.fillValueT,
-                                 fill.v,
-                                 fill.rs, {
+        const orderAddresses = [
+            maker,
+            taker,
+            makerTokenAddress,
+            takerTokenAddress,
+            feeRecipient,
+        ];
+        const orderValues = [
+            makerTokenAmount,
+            takerTokenAmount,
+            makerFee,
+            takerFee,
+            expirationUnixTimestampSec,
+            salt.toString(10),
+        ];
+        const fillAmountT = fillAmount.toString(10);
+        const response: ContractResponse = await this.exchange.fill(
+                                 orderAddresses,
+                                 orderValues,
+                                 fillAmountT,
+                                 shouldCheckTransfer,
+                                 signatureData.v,
+                                 signatureData.r,
+                                 signatureData.s, {
                                       from: this.userAddress,
                                   });
         const errEvent = _.find(response.logs, {event: 'LogError'});
@@ -139,7 +142,7 @@ export class Blockchain {
     }
     public async getFillAmountAsync(orderHash: string) {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
-        const fillAmount = await this.exchange.fills.call(orderHash);
+        const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
         return fillAmount.toNumber();
     }
     public getExchangeContractAddressIfExists() {
@@ -257,7 +260,7 @@ export class Blockchain {
         utils.assert(!_.isUndefined(this.exchange), 'Exchange contract must be instantiated.');
         utils.assert(this.doesUserAddressExist(), 'User must have address available.');
 
-        const fromBlock = tradeHistoryStorage.getFillsLatestBlock(this.userAddress);
+        const fromBlock = tradeHistoryStorage.getFillsLatestBlock(this.userAddress, this.networkId);
         const exchangeLogFillEvent = this.exchange.LogFill(filterIndexObj, {
             fromBlock,
             toBlock: 'latest',
@@ -274,9 +277,11 @@ export class Blockchain {
                 const args = result.args;
                 const isBlockPending = _.isNull(args.blockNumber);
                 if (!isBlockPending) {
-                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, result.blockNumber);
+                    tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, result.blockNumber);
                 }
-                const isUserMakerOrTaker = args.maker === this.userAddress || args.taker === this.userAddress;
+                const isUserMakerOrTaker = args.maker === this.userAddress ||
+                                           args.taker === this.userAddress ||
+                                           args.filledBy === this.userAddress;
                 if (!isUserMakerOrTaker) {
                     return; // We aren't interested in the fill event
                 }
@@ -287,7 +292,7 @@ export class Blockchain {
                     logIndex: result.logIndex,
                     maker: args.maker,
                     orderHash: args.orderHash,
-                    taker: args.taker,
+                    taker: args.filledBy,
                     tokenM: args.tokenM,
                     tokenT: args.tokenT,
                     transactionHash: result.transactionHash,
@@ -295,7 +300,7 @@ export class Blockchain {
                     valueT: args.valueT,
                     blockTimestamp,
                 };
-                tradeHistoryStorage.addFillToUser(this.userAddress, fill);
+                tradeHistoryStorage.addFillToUser(this.userAddress, this.networkId, fill);
             }
         });
         this.exchangeLogFillEvents.push(exchangeLogFillEvent);

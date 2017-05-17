@@ -7,10 +7,10 @@ import {constants} from 'ts/utils/constants';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Side, HashData, TokenByAddress, BlockchainErrs, Fill, Order, ScreenWidths} from 'ts/types';
 import {
-    Demo as DemoComponent,
-    DemoAllProps as DemoComponentAllProps,
-    DemoPassedProps as DemoComponentPassedProps,
-} from 'ts/components/demo';
+    OTC as OTCComponent,
+    OTCAllProps as OTCComponentAllProps,
+    OTCPassedProps as OTCComponentPassedProps,
+} from 'ts/components/otc';
 import BigNumber = require('bignumber.js');
 
 interface MapStateToProps {
@@ -33,7 +33,7 @@ interface ConnectedDispatch {
     dispatcher: Dispatcher;
 }
 
-const mapStateToProps = (state: State, ownProps: DemoComponentAllProps): ConnectedState => {
+const mapStateToProps = (state: State, ownProps: OTCComponentAllProps): ConnectedState => {
     const receiveAssetToken = state.sideToAssetToken[Side.receive];
     const depositAssetToken = state.sideToAssetToken[Side.deposit];
     const receiveAddress = !_.isUndefined(receiveAssetToken.address) ?
@@ -77,5 +77,5 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): ConnectedDispatch => ({
     dispatcher: new Dispatcher(dispatch),
 });
 
-export const Demo: React.ComponentClass<DemoComponentPassedProps> =
-  connect(mapStateToProps, mapDispatchToProps)(DemoComponent);
+export const OTC: React.ComponentClass<OTCComponentPassedProps> =
+  connect(mapStateToProps, mapDispatchToProps)(OTCComponent);

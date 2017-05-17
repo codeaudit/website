@@ -11,6 +11,7 @@ const FILL_POLLING_INTERVAL = 1000;
 interface TradeHistoryProps {
     tokenByAddress: TokenByAddress;
     userAddress: string;
+    networkId: number;
 }
 
 interface TradeHistoryState {
@@ -54,17 +55,12 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
 
         return _.map(this.state.sortedFills, (fill, index) => {
             return (
-                <Paper
+                <TradeHistoryItem
                     key={`${fill.orderHash}-${fill.filledValueT}-${index}`}
-                    className="py1"
-                    style={{margin: '3px 3px 15px 3px'}}
-                >
-                    <TradeHistoryItem
-                        fill={fill}
-                        tokenByAddress={this.props.tokenByAddress}
-                        userAddress={this.props.userAddress}
-                    />
-                </Paper>
+                    fill={fill}
+                    tokenByAddress={this.props.tokenByAddress}
+                    userAddress={this.props.userAddress}
+                />
             );
         });
     }
@@ -109,7 +105,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
         clearInterval(this.fillPollingIntervalId);
     }
     private getSortedFills() {
-        const fillsByHash = tradeHistoryStorage.getUserFillsByHash(this.props.userAddress);
+        const fillsByHash = tradeHistoryStorage.getUserFillsByHash(this.props.userAddress, this.props.networkId);
         const fills = _.values(fillsByHash);
         const sortedFills = _.sortBy(fills, [(fill: Fill) => fill.blockTimestamp * -1]);
         return sortedFills;

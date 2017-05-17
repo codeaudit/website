@@ -56,7 +56,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
                 <span>
                     Insufficient allowance.{' '}
                     <Link
-                        to="/demo/balances"
+                        to="/otc/balances"
                         style={{cursor: 'pointer', color: colors.grey900}}>
                             Set allowance
                     </Link>

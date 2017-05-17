@@ -6,10 +6,11 @@ import BigNumber = require('bignumber.js');
 
 const FILLS_KEY = 'fills';
 const FILLS_LATEST_BLOCK = 'fillsLatestBlock';
+const GENESIS_BLOCK_NUMBER = 0;
 
 export const tradeHistoryStorage = {
-    addFillToUser(userAddress: string, fill: Fill) {
-        const fillsByHash = this.getUserFillsByHash(userAddress);
+    addFillToUser(userAddress: string, networkId: number, fill: Fill) {
+        const fillsByHash = this.getUserFillsByHash(userAddress, networkId);
         const fillHash = this._getFillHash(fill);
         const doesFillExist = !_.isUndefined(fillsByHash[fillHash]);
         if (doesFillExist) {
@@ -17,11 +18,11 @@ export const tradeHistoryStorage = {
         }
         fillsByHash[fillHash] = fill;
         const userFillsJSONString = JSON.stringify(fillsByHash);
-        const userFillsKey = `${FILLS_KEY}-${userAddress}`;
+        const userFillsKey = this._getUserFillsKey(userAddress, networkId);
         localStorage.setItem(userFillsKey, userFillsJSONString);
     },
-    getUserFillsByHash(userAddress: string): {[fillHash: string]: Fill} {
-        const userFillsKey = `${FILLS_KEY}-${userAddress}`;
+    getUserFillsByHash(userAddress: string, networkId: number): {[fillHash: string]: Fill} {
+        const userFillsKey = this._getUserFillsKey(userAddress, networkId);
         const userFillsJSONString = localStorage.getItemIfExists(userFillsKey);
         if (_.isEmpty(userFillsJSONString)) {
             return {};
@@ -34,26 +35,26 @@ export const tradeHistoryStorage = {
         });
         return userFillsByHash;
     },
-    clearUserFillsByHash(userAddress: string) {
-        const userFillsKey = `${FILLS_KEY}-${userAddress}`;
-        localStorage.removeItem(userFillsKey);
-    },
-    getFillsLatestBlock(userAddress: string): number {
-        const userFillsLatestBlockKey = `${FILLS_LATEST_BLOCK}-${userAddress}`;
+    getFillsLatestBlock(userAddress: string, networkId: number): number {
+        const userFillsLatestBlockKey = this._getFillsLatestBlockKey(userAddress, networkId);
         const blockNumberStr = localStorage.getItemIfExists(userFillsLatestBlockKey);
         if (_.isEmpty(blockNumberStr)) {
-            return 0; // Start with the genesis block
+            return GENESIS_BLOCK_NUMBER;
         }
         const blockNumber = _.parseInt(blockNumberStr);
         return blockNumber;
     },
-    setFillsLatestBlock(userAddress: string, blockNumber: number) {
-        const userFillsLatestBlockKey = `${FILLS_LATEST_BLOCK}-${userAddress}`;
+    setFillsLatestBlock(userAddress: string, networkId: number, blockNumber: number) {
+        const userFillsLatestBlockKey = this._getFillsLatestBlockKey(userAddress, networkId);
         localStorage.setItem(userFillsLatestBlockKey, `${blockNumber}`);
     },
-    clearFillsLatestBlock(userAddress: string) {
-        const userFillsLatestBlockKey = `${FILLS_LATEST_BLOCK}-${userAddress}`;
-        localStorage.removeItem(userFillsLatestBlockKey);
+    _getUserFillsKey(userAddress: string, networkId: number) {
+        const userFillsKey = `${FILLS_KEY}-${userAddress}-${networkId}`;
+        return userFillsKey;
+    },
+    _getFillsLatestBlockKey(userAddress: string, networkId: number) {
+        const userFillsLatestBlockKey = `${FILLS_LATEST_BLOCK}-${userAddress}-${networkId}`;
+        return userFillsLatestBlockKey;
     },
     _getFillHash(fill: Fill): string {
         const fillJSON = JSON.stringify(fill);

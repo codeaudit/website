@@ -17,6 +17,9 @@ interface OrderJSONProps {
     orderTakerAddress: string;
     orderMakerAddress: string;
     orderSalt: BigNumber;
+    orderMakerFee: BigNumber;
+    orderTakerFee: BigNumber;
+    orderFeeRecipient: string;
     networkId: number;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
@@ -29,8 +32,9 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
                                           this.props.sideToAssetToken, this.props.orderExpiryTimestamp,
                                           this.props.orderTakerAddress, this.props.orderMakerAddress,
-                                          this.props.orderSignatureData, this.props.tokenByAddress,
-                                          this.props.orderSalt);
+                                          this.props.orderMakerFee, this.props.orderTakerFee,
+                                          this.props.orderFeeRecipient, this.props.orderSignatureData,
+                                          this.props.tokenByAddress, this.props.orderSalt);
         const orderJSON = JSON.stringify(order);
         return (
             <div>
@@ -60,7 +64,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                 </Paper>
                 <div className="pt3 pb2 center">
                     <div>
-                        Share your signed order with someone willing to fill it
+                        Share your signed order!
                     </div>
                     <div className="mx-auto pt2 flex" style={{width: 91}}>
                         <div>
@@ -108,7 +112,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         const encodedBody = encodeURIComponent(`I generated an order with the 0x protocol.
 You can see and fill it here: ${shareLink}`);
         const mailToLink = `mailto:mail@example.org?subject=${encodedSubject}&body=${encodedBody}`;
-        window.location.href = mailToLink;
+        window.open(mailToLink, '_blank');
     }
     private async generateShareLinkAsync(): Promise<string> {
         const longUrl = encodeURIComponent(this.getOrderUrl());
@@ -129,10 +133,11 @@ You can see and fill it here: ${shareLink}`);
     private getOrderUrl() {
         const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
             this.props.sideToAssetToken, this.props.orderExpiryTimestamp, this.props.orderTakerAddress,
-            this.props.orderMakerAddress, this.props.orderSignatureData, this.props.tokenByAddress,
+            this.props.orderMakerAddress, this.props.orderMakerFee, this.props.orderTakerFee,
+            this.props.orderFeeRecipient, this.props.orderSignatureData, this.props.tokenByAddress,
             this.props.orderSalt);
         const orderJSONString = JSON.stringify(order);
-        const orderUrl = `${configs.BASE_URL}/demo/fill?order=${orderJSONString}`;
+        const orderUrl = `${configs.BASE_URL}/otc/fill?order=${orderJSONString}`;
         return orderUrl;
     }
 }

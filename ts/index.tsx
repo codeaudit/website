@@ -6,7 +6,7 @@ import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
 import {NotFound} from 'ts/pages/not_found';
-import {Demo} from 'ts/containers/demo';
+import {OTC} from 'ts/containers/otc';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
@@ -62,8 +62,8 @@ render(
                     <div>
                         <Switch>
                             <Route exact={true} path="/" component={Home as any} />
-                            {configs.isDemoEnabled &&
-                                <Route path="/demo" component={Demo as any} />
+                            {configs.isOTCEnabled &&
+                                <Route path="/otc" component={OTC as any} />
                             }
                             <Route path="/faq" component={FAQ as any} />
                             <Route component={NotFound as any} />

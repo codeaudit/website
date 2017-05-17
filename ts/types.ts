@@ -98,12 +98,14 @@ export interface OrderParty {
     address: string;
     token: OrderToken;
     amount: string;
+    feeAmount: string;
 }
 
 export interface Order {
     maker: OrderParty;
     taker: OrderParty;
     expiration: string;
+    feeRecipient: string;
     salt: string;
     signature: SignatureData;
     exchangeContract: string;

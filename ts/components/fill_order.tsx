@@ -26,6 +26,7 @@ import {Blockchain} from 'ts/blockchain';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
 import BigNumber = require('bignumber.js');
+import * as moment from 'moment';
 
 interface FillOrderProps {
     blockchain: Blockchain;
@@ -93,8 +94,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const hintSalt = zeroEx.generateSalt();
         const exchangeContract = this.props.blockchain.getExchangeContractAddressIfExists();
         const hintOrder = utils.generateOrder(this.props.networkId, exchangeContract, hintSideToAssetToken,
-                                              hintOrderExpiryTimestamp, '', '', hintSignatureData,
-                                              this.props.tokenByAddress, hintSalt);
+                                              hintOrderExpiryTimestamp, '', '', constants.MAKER_FEE,
+                                              constants.TAKER_FEE, constants.FEE_RECIPIENT_ADDRESS,
+                                              hintSignatureData, this.props.tokenByAddress, hintSalt);
         const hintOrderJSON = `${JSON.stringify(hintOrder, null, '\t').substring(0, 500)}...`;
         return (
             <div className="clearfix lg-px4 md-px4 sm-px2" style={{minHeight: 600}}>
@@ -206,7 +208,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             <div>
                 Order successfully filled. See the trade details in your{' '}
                 <Link
-                    to="/demo/trades"
+                    to="/otc/trades"
                     style={{color: 'white'}}
                 >
                     trade history
@@ -242,10 +244,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const takerAmount = new BigNumber(parsedOrder.taker.amount);
             const expiration = new BigNumber(parsedOrder.expiration);
             const salt = new BigNumber(parsedOrder.salt);
+            const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
+            const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
             const orderHash = zeroEx.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
                             parsedOrder.taker.address, parsedOrder.maker.token.address,
-                            parsedOrder.taker.token.address, constants.FEE_RECIPIENT_ADDRESS,
-                            makerAmount, takerAmount, constants.MAKER_FEE, constants.TAKER_FEE,
+                            parsedOrder.taker.token.address, parsedOrder.feeRecipient,
+                            makerAmount, takerAmount, parsedMakerFee, parsedTakerFee,
                             expiration, salt);
 
             const signature = parsedOrder.signature;
@@ -342,8 +346,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
           makerAllowance,
         ] = await this.props.blockchain.getTokenBalanceAndAllowanceAsync(parsedOrder.maker.address,
                                                                          parsedOrder.maker.token.address);
-        const currentDate = new Date();
-        const currentUnixTimestamp = currentDate.getTime() / 1000;
+        const currentUnixTimestamp = moment().unix();
         let globalErrMsg = '';
         if (_.isUndefined(takerFillAmount)) {
             globalErrMsg = 'You must specify a fill amount';
@@ -374,21 +377,31 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         }
 
         const parsedOrderSalt = new BigNumber(parsedOrder.salt);
+        const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
+        const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
         try {
-            const response = await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
+            const response: any = await this.props.blockchain.fillOrderAsync(parsedOrder.maker.address,
                                                        parsedOrder.taker.address,
                                                        this.props.tokenByAddress[makerTokenAddress].address,
                                                        this.props.tokenByAddress[takerTokenAddress].address,
                                                        depositAssetToken.amount,
                                                        receiveAssetToken.amount,
+                                                       parsedMakerFee,
+                                                       parsedTakerFee,
                                                        parsedOrderExpiration,
+                                                       parsedOrder.feeRecipient,
                                                        this.props.orderFillAmount,
                                                        parsedOrder.signature,
                                                        parsedOrderSalt,
                                                    );
+            // After fill completes, let's update the token balances
+            const makerToken = this.props.tokenByAddress[makerTokenAddress];
+            const tokens = [makerToken, takerToken];
+            await this.props.blockchain.updateTokenBalancesAndAllowancesAsync(tokens);
             const orderFilledAmount = response.logs[0].args.filledValueT;
             this.setState({
                 didFillOrderSucceed: true,
+                globalErrMsg: '',
                 amountAlreadyFilled: this.state.amountAlreadyFilled.plus(orderFilledAmount),
             });
             return true;

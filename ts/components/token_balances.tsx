@@ -101,7 +101,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                 <h3>Test ether</h3>
                 <Divider />
                 <div className="pt2 pb2">
-                    In order to try out the 0x protocol demo app, request some test ether to pay for
+                    In order to try out the 0x OTC Dapp, request some test ether to pay for
                     gas costs. It might take a bit of time for the test ether to show up.
                 </div>
                 <Table
@@ -163,7 +163,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                             </TableHeaderColumn>
                             <TableHeaderColumn style={{paddingLeft: 3}}>Balance</TableHeaderColumn>
                             <TableHeaderColumn>
-                                <div className="inline-block">0x allowance</div>
+                                <div className="inline-block">Allow 0x access</div>
                                 <HelpTooltip
                                     style={{paddingLeft: 4}}
                                     explanation={allowanceExplanation}
@@ -317,7 +317,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             case BalanceErrs.wethConversionFailed:
                 return (
                     <div>
-                        Converting between Ether and wrapped Ether tokens failed unexpectedly.
+                        Converting between Ether and Ether Tokens failed unexpectedly.
                         Please refresh the page and try again.
                     </div>
                 );
