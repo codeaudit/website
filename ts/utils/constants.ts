@@ -7,7 +7,7 @@ export const constants = {
     BITLY_ENDPOINT: 'https://api-ssl.bitly.com',
     DEFAULT_TOKEN_ICON_URL: '/images/token_icons/default.png',
     ETHER_SCAN_ENDPOINT: 'https://kovan.etherscan.io',
-    ETHER_FAUCET_ENDPOINT: 'http://faucet.0xproject.com/rain',
+    ETHER_FAUCET_ENDPOINT: 'https://faucet.0xproject.com/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',
     INFURA_TESTNET_URL: 'https://kovan.infura.io/T5WSC8cautR4KXyYgsRs',
     MAKER_FEE: new BigNumber(0),
