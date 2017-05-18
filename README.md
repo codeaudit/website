@@ -1,14 +1,21 @@
-0x Website
------------
+<img src="https://github.com/0xProject/branding/blob/master/0x_Black_CMYK.png" width="200px" >
 
-### Dev Setup
+---
 
-Node version v6.9.5
+[0x][website-url] is an open protocol that facilitates trustless, low friction exchange of Ethereum-based assets. A full description of the protocol may be found in our [whitepaper][whitepaper-url].
 
-Atom packages:
+This repository contains our website and OTC (over-the-counter exchange) DApp, which facilitates trustless over-the-counter trading of Ethereum-based tokens using 0x protocol.
 
-- [linter-tslint](https://atom.io/packages/linter-tslint)
-- [atom-typescript](https://atom.io/packages/atom-typescript)
+[website-url]: https://0xproject.com/
+[whitepaper-url]: https://0xproject.com/pdfs/0x_white_paper.pdf
+
+[![Slack Status](http://slack.0xProject.com/badge.svg)](http://slack.0xProject.com)
+[![Join the chat at https://gitter.im/0xProject/contracts](https://badges.gitter.im/0xProject/contracts.svg)](https://gitter.im/0xProject/contracts?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+### Local Dev Setup
+
+Requires Node version 6.9.5 or higher.
 
 Add the following to your `/etc/hosts` file:
 
@@ -16,20 +23,36 @@ Add the following to your `/etc/hosts` file:
 127.0.0.1 0xproject.dev
 ```
 
-### Install
+Clone the [0x contracts repo](https://github.com/0xProject/contracts) into the same parent directory as this project.
+
+Install dependencies:
 
 ```
 npm install
 ```
 
+Import smart contract artifacts from `contracts` repo:
+
+```
+npm run update_contracts
+```
+
+Start dev server:
+
 ```
 npm run dev
 ```
 
-Visit: [http://0xproject.dev:8080](http://0xproject.dev:8080) in your browser.
+Visit [0xproject.dev:8080](http://0xproject.dev:8080) in your browser.
 
-### Resources
 
-- [Icon set](http://zavoloklom.github.io/material-design-iconic-font/icons.html#directional)
-- [CSS toolkit](http://basscss.com/)
-- [Material UI Library](http://www.material-ui.com/#/)
+##### Recommended Atom packages:
+
+- [atom-typescript](https://atom.io/packages/atom-typescript)
+- [linter-tslint](https://atom.io/packages/linter-tslint)
+
+##### Resources
+
+- [Material Design Icon Font](http://zavoloklom.github.io/material-design-iconic-font/icons.html#directional)
+- [BassCSS toolkit](http://basscss.com/)
+- [Material-UI](http://www.material-ui.com/#/)
