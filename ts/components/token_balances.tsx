@@ -221,7 +221,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
                                                          EtherscanLinkSuffixes.address);
         const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
         return (
-            <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
+            <TableRow key={token.address} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
                 <TableRowColumn
                     colSpan={tokenColSpan}
                 >
