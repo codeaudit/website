@@ -282,17 +282,19 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             }
         }
 
+        let amountAlreadyFilled = new BigNumber(0);
         if (orderJSONErrMsg !== '') {
             // Clear cache entry if user updates orderJSON to invalid entry
             this.props.dispatcher.updateUserSuppliedOrderCache(undefined);
+        } else {
+            const orderHash = parsedOrder.signature.hash;
+            amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
         }
-        const orderHash = parsedOrder.signature.hash;
-        const amountAlreadyFilled = await this.props.blockchain.getFillAmountAsync(orderHash);
         this.setState({
             orderJSON,
             orderJSONErrMsg,
             parsedOrder,
-            amountAlreadyFilled: new BigNumber(amountAlreadyFilled),
+            amountAlreadyFilled,
         });
     }
 

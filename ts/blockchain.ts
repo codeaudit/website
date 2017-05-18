@@ -140,10 +140,10 @@ export class Blockchain {
         }
         return response;
     }
-    public async getFillAmountAsync(orderHash: string) {
+    public async getFillAmountAsync(orderHash: string): Promise<BigNumber> {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
         const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
-        return fillAmount.toNumber();
+        return fillAmount;
     }
     public getExchangeContractAddressIfExists() {
         return this.exchange ? this.exchange.address : undefined;
