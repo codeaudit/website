@@ -37,7 +37,7 @@ export class Web3Wrapper {
     public async getFirstAccountIfExistsAsync() {
         const addresses = await this.callAsync('eth.getAccounts');
         if (_.isEmpty(addresses)) {
-            return undefined;
+            return '';
         }
         return (addresses as string[])[0];
     }
@@ -167,7 +167,7 @@ export class Web3Wrapper {
             }
 
             // Check for user ether balance changes
-            if (!_.isUndefined(userAddressIfExists)) {
+            if (userAddressIfExists !== '') {
                 const balance = await this.getBalanceInEthAsync(userAddressIfExists);
                 if (!balance.eq(prevUserEtherBalanceInWei)) {
                     prevUserEtherBalanceInWei = balance;
