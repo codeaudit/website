@@ -257,11 +257,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             const isValidSignature = zeroEx.isValidSignature(signature.hash, signature.v,
                                                        signature.r, signature.s,
                                                        parsedOrder.maker.address);
-            if (exchangeContractAddr !== parsedOrder.exchangeContract) {
-                orderJSONErrMsg = 'This order was made using a deprecated 0x Exchange contract.';
+            if (this.props.networkId !== parsedOrder.networkId) {
+                orderJSONErrMsg = `This order was made on another Ethereum network
+                                   (id: ${parsedOrder.networkId}). Connect to this network to fill.`;
                 parsedOrder = undefined;
-            } else if (this.props.networkId !== parsedOrder.networkId) {
-                orderJSONErrMsg = `This order was made on a different Ethereum network (id: ${parsedOrder.networkId}).`;
+            } else if (exchangeContractAddr !== parsedOrder.exchangeContract) {
+                orderJSONErrMsg = 'This order was made using a deprecated 0x Exchange contract.';
                 parsedOrder = undefined;
             } else if (orderHash !== signature.hash) {
                 orderJSONErrMsg = 'Order hash does not match supplied plaintext values';
