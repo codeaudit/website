@@ -95,8 +95,12 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     }
     private renderAmounts(tokenM: Token, tokenT: Token) {
         const fill = this.props.fill;
-        let exchangeRate = fill.valueT.div(fill.valueM);
-        const fillValueM = fill.filledValueT.div(exchangeRate);
+        const valueTInUnits = zeroEx.toUnitAmount(fill.valueT, tokenT.decimals);
+        const valueMInUnits = zeroEx.toUnitAmount(fill.valueM, tokenM.decimals);
+        let exchangeRate = valueTInUnits.div(valueMInUnits);
+        const filledValueTInUnits = zeroEx.toUnitAmount(fill.filledValueT, tokenT.decimals);
+        const fillValueMInUnits = filledValueTInUnits.div(exchangeRate);
+        const fillValueM = zeroEx.toBaseUnitAmount(fillValueMInUnits, tokenM.decimals);
 
         let receiveAmount;
         let receiveToken;
