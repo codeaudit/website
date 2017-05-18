@@ -129,15 +129,20 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
     public render() {
         const updateShouldBlockchainErrDialogBeOpen = this.props.dispatcher
                 .updateShouldBlockchainErrDialogBeOpen.bind(this.props.dispatcher);
-
+        const otcStyle: React.CSSProperties = {
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        };
         return (
-            <div>
+            <div style={otcStyle}>
                 <TopBar
                     userAddress={this.props.userAddress}
                     blockchainIsLoaded={this.props.blockchainIsLoaded}
                     location={this.props.location}
                 />
-                <div id="otc" className="mx-auto max-width-4 pt4">
+                <div id="otc" className="mx-auto max-width-4 pt4" style={{width: '100%'}}>
                     <Paper className="mb3 mt2">
                         <div className="mx-auto flex">
                             <div
