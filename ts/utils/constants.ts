@@ -38,4 +38,10 @@ export const constants = {
         [ExchangeContractErrs.ERROR_FILL_TRUNCATION]: 'The rounding error was too large when filling this order',
         [ExchangeContractErrs.ERROR_FILL_BALANCE_ALLOWANCE]: 'Maker or taker has insufficient balance or allowance',
     },
+    networkNameById: {
+        1: 'Frontier',
+        3: 'Ropsten',
+        4: 'Rinkeby',
+        42: 'Kovan',
+    } as {[symbol: number]: string},
 };

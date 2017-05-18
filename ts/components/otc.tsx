@@ -197,6 +197,7 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
                 tokenByAddress={this.props.tokenByAddress}
                 userAddress={this.props.userAddress}
                 userEtherBalance={this.props.userEtherBalance}
+                networkId={this.props.networkId}
             />
         );
     }

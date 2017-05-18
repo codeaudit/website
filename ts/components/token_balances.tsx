@@ -54,6 +54,7 @@ interface TokenBalancesProps {
     tokenByAddress: TokenByAddress;
     userAddress: string;
     userEtherBalance: BigNumber;
+    networkId: number;
 }
 
 interface TokenBalancesState {
@@ -208,13 +209,19 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         return tableRows;
     }
     private renderTokenRow(tokenColSpan: number, actionPaddingX: number, token: Token) {
+        const tokenLink = utils.getEtherScanAddressLinkIfExists(token.address, this.props.networkId);
         const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
         return (
             <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
                 <TableRowColumn
                     colSpan={tokenColSpan}
                 >
-                    {this.renderTokenName(token)}
+                    {_.isUndefined(tokenLink) ?
+                        this.renderTokenName(token) :
+                        <a href={tokenLink} target="_blank" style={{textDecoration: 'none'}}>
+                            {this.renderTokenName(token)}
+                        </a>
+                    }
                 </TableRowColumn>
                 <TableRowColumn style={{paddingRight: 3, paddingLeft: 3}}>
                     {this.renderAmount(token.balance, token.decimals)} {token.symbol}

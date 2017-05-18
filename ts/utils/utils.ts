@@ -12,6 +12,8 @@ import * as moment from 'moment';
 import deepEqual = require('deep-equal');
 import ethUtil = require('ethereumjs-util');
 import BigNumber = require('bignumber.js');
+import {constants} from 'ts/utils/constants';
+
 
 const LG_MIN_EM = 64;
 const MD_MIN_EM = 52;
@@ -139,4 +141,12 @@ export const utils = {
         /* tslint:enable */
         return check;
     },
+    getEtherScanAddressLinkIfExists(address: string, networkId: number): string {
+        const networkName = constants.networkNameById[networkId];
+        if (_.isUndefined(networkName)) {
+            return undefined;
+        }
+        const etherScanPrefix = networkName === 'Frontier' ? '' : `${networkName.toLowerCase()}.`;
+        return `https://${etherScanPrefix}etherscan.io/address/${address}`;
+    }
 };
