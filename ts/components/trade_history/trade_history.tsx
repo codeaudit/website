@@ -60,6 +60,7 @@ export class TradeHistory extends React.Component<TradeHistoryProps, TradeHistor
                     fill={fill}
                     tokenByAddress={this.props.tokenByAddress}
                     userAddress={this.props.userAddress}
+                    networkId={this.props.networkId}
                 />
             );
         });

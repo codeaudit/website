@@ -7,7 +7,7 @@ import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {Direction, Side, AssetToken, TokenByAddress, Fill, Token} from 'ts/types';
+import {Direction, Side, AssetToken, TokenByAddress, Fill, Token, EtherscanLinkSuffixes} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
 import {zeroEx} from 'ts/utils/zero_ex';
 
@@ -18,6 +18,7 @@ interface TradeHistoryItemProps {
     fill: Fill;
     tokenByAddress: TokenByAddress;
     userAddress: string;
+    networkId: number;
 }
 
 interface TradeHistoryItemState {}
@@ -46,6 +47,12 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         };
         const amountColClassNames = 'col col-12 lg-col-4 md-col-4 lg-py2 md-py2 sm-py1 lg-pr2 md-pr2 \
                                      lg-right-align md-right-align sm-center';
+
+        const transactionLinkIfExists = utils.getEtherScanLinkIfExists(fill.transactionHash,
+                                                                       this.props.networkId,
+                                                                       EtherscanLinkSuffixes.tx);
+        const hasTransactionLink = !_.isUndefined(transactionLinkIfExists);
+        const transactionTooltipId = `${fill.transactionHash}-tooltip`;
         return (
             <Paper
                 className="py1"
@@ -81,12 +88,23 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
                     </div>
                     <div className="col col-12 lg-col-1 md-col-1 lg-pr3 md-pr3 lg-py3 md-py3 sm-pb1 sm-center">
                         <div className="pt1 lg-right md-right sm-mx-auto" style={{width: 13}}>
-                            <a
-                                href={`${constants.ETHER_SCAN_ENDPOINT}/tx/${fill.transactionHash}`}
-                                target="_blank"
-                            >
-                                <i className="zmdi zmdi-open-in-new" />
-                            </a>
+                            {hasTransactionLink ?
+                                <a
+                                    href={transactionLinkIfExists}
+                                    target="_blank"
+                                >
+                                    <i className="zmdi zmdi-open-in-new" />
+                                </a> :
+                                <div
+                                    data-tip={true}
+                                    data-for={transactionTooltipId}
+                                >
+                                    <i className="zmdi zmdi-open-in-new" />
+                                    <ReactTooltip id={transactionTooltipId}>
+                                        Your network (id: {this.props.networkId}) is not supported by Etherscan
+                                    </ReactTooltip>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

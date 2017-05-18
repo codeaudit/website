@@ -251,3 +251,9 @@ export enum AlertTypes {
     ERROR,
     SUCCESS,
 }
+
+export const EtherscanLinkSuffixes = strEnum([
+  'address',
+  'tx',
+]);
+export type EtherscanLinkSuffixes = keyof typeof EtherscanLinkSuffixes;
