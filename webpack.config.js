@@ -1,17 +1,19 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const PRODUCTION = process.env.NODE_ENV === 'production';
+
 module.exports = {
     entry: ['./ts/index.tsx'],
     output: {
         path: path.join(__dirname, '/public'),
         filename: 'bundle.js',
     },
-    devtool: 'source-map',
+    devtool: PRODUCTION ? 'cheap-module-source-map' : 'source-map',
     resolve: {
         modules: [
             path.join(__dirname, '/ts'),
-            'node_modules'
+            'node_modules',
         ],
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         alias: {
@@ -36,19 +38,28 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loaders: ['style-loader', 'css-loader']
+                loaders: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.json$/,
-                loader: 'json-loader'
-            }
+                loader: 'json-loader',
+            },
         ],
     },
     devServer: {
         port: 8080,
         historyApiFallback: {
-          index: 'index.html'
+          index: 'index.html',
       },
-      disableHostCheck: true
+      disableHostCheck: true,
     },
+    plugins: PRODUCTION ?
+        [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': JSON.stringify('production'),
+                },
+            }),
+            new webpack.optimize.AggressiveMergingPlugin(),
+        ] : [],
 };
