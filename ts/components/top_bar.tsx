@@ -109,7 +109,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                         FAQ
                     </MenuItem>
                 </Link>
-                {configs.isOTCEnabled && !this.isViewingOTC() &&
+                {!this.isViewingOTC() &&
                     <Link to="/otc" className="text-decoration-none">
                         <MenuItem>OTC DApp</MenuItem>
                     </Link>

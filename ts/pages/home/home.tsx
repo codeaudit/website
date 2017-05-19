@@ -231,22 +231,11 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             label="FAQ"
                                         />
                                     </Link>
-                                    {configs.isOTCEnabled ?
-                                        <Link to="/otc">
-                                            <FlatButton
-                                                label="OTC DApp"
-                                            />
-                                        </Link> :
-                                        <div
-                                            data-tip={true}
-                                            data-for="otcTooltip"
-                                        >
-                                            <FlatButton
-                                                label="OTC DApp"
-                                            />
-                                            <ReactTooltip id="otcTooltip">Coming soon!</ReactTooltip>
-                                        </div>
-                                    }
+                                    <Link to="/otc">
+                                        <FlatButton
+                                            label="OTC DApp"
+                                        />
+                                    </Link>
                                 </div>
                             </div>
                         </div>
