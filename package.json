@@ -3,12 +3,11 @@
   "version": "0.0.0",
   "description": "Website and 0x OTC dapp",
   "scripts": {
-    "build:dev": "webpack",
-    "build:prod": "NODE_ENV=production webpack && uglifyjs public/bundle.js -c -m -o public/bundle.js",
+    "build": "webpack",
     "dev": "webpack-dev-server --content-base public",
     "update_contracts": "copyfiles -u 4 ./../contracts/build/contracts/*.json ./contracts;",
-    "deploy_staging": "npm run build:prod; aws s3 sync ./public/. s3://staging-0xproject --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
-    "deploy_live": "npm run build:prod; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
+    "deploy_staging": "npm run build; aws s3 sync ./public/. s3://staging-0xproject --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
+    "deploy_live": "npm run build; aws s3 sync ./public/. s3://0xproject.com --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
     "testrpc": "testrpc -p 8545 --networkId 50"
   },
   "author": "Fabio Berger",
@@ -79,7 +78,6 @@
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-dev-server": "^2.3.0",
-    "uglify-es": "^3.0.9",
     "ethereumjs-testrpc": "^3.0.5"
   }
 }
