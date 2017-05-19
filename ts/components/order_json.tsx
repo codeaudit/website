@@ -25,9 +25,18 @@ interface OrderJSONProps {
     tokenByAddress: TokenByAddress;
 }
 
-interface OrderJSONState {}
+interface OrderJSONState {
+    shareLink: string;
+}
 
 export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
+    constructor(props: OrderJSONProps) {
+        super(props);
+        this.state = {
+            shareLink: '',
+        };
+        this.setShareLinkAsync();
+    }
     public render() {
         const order = utils.generateOrder(this.props.networkId, this.props.exchangeContractIfExists,
                                           this.props.sideToAssetToken, this.props.orderExpiryTimestamp,
@@ -66,7 +75,15 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                     <div>
                         Share your signed order!
                     </div>
-                    <div className="mx-auto pt2 flex" style={{width: 91}}>
+                    <div>
+                        <div className="mx-auto overflow-hidden" style={{width: 152}}>
+                            <TextField
+                                id={this.state.shareLink}
+                                value={this.state.shareLink}
+                            />
+                        </div>
+                    </div>
+                    <div className="mx-auto pt1 flex" style={{width: 91}}>
                         <div>
                             <i
                                 style={{cursor: 'pointer', fontSize: 29}}
@@ -94,25 +111,28 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
         );
     }
     private async shareViaTwitterAsync() {
-        const shareLink = await this.generateShareLinkAsync();
-        const tweetText = encodeURIComponent(`Fill my order using the 0x protocol: ${shareLink}`);
+        const tweetText = encodeURIComponent(`Fill my order using the 0x protocol: ${this.state.shareLink}`);
         window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, 'Share your order', 'width=500,height=400');
     }
     private async shareViaFacebook() {
-        const shareLink = this.getOrderUrl();
         (window as any).FB.ui({
             display: 'popup',
-            href: shareLink,
+            href: this.state.shareLink,
             method: 'share',
         }, _.noop);
     }
     private async shareViaEmailAsync() {
-        const shareLink = await this.generateShareLinkAsync();
         const encodedSubject = encodeURIComponent('Let\'s trade using the 0x protocol');
         const encodedBody = encodeURIComponent(`I generated an order with the 0x protocol.
-You can see and fill it here: ${shareLink}`);
+You can see and fill it here: ${this.state.shareLink}`);
         const mailToLink = `mailto:mail@example.org?subject=${encodedSubject}&body=${encodedBody}`;
         window.open(mailToLink, '_blank');
+    }
+    private async setShareLinkAsync() {
+        const shareLink = await this.generateShareLinkAsync();
+        this.setState({
+            shareLink,
+        });
     }
     private async generateShareLinkAsync(): Promise<string> {
         const longUrl = encodeURIComponent(this.getOrderUrl());
