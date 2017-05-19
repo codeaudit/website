@@ -331,7 +331,7 @@ export class Blockchain {
                 // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
                 const iconUrl = constants.iconUrlBySymbol[symbol];
                 const token: Token = {
-                    iconUrl,
+                    iconUrl: !_.isUndefined(iconUrl) ? iconUrl : constants.DEFAULT_TOKEN_ICON_URL,
                     address,
                     allowance,
                     balance,
