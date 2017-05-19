@@ -19,10 +19,10 @@ export class Web3Wrapper {
             'toWei',
             'eth.getBalance',
             'fromWei',
+            'eth.accounts',
         ];
         this.callbackMethods = [
             'version.getNetwork',
-            'eth.getAccounts',
         ];
 
         if (!_.isUndefined(web3Instance) && !_.isNull(web3Instance)) {
@@ -34,12 +34,12 @@ export class Web3Wrapper {
     public doesExist() {
         return !_.isUndefined(this.web3);
     }
-    public async getFirstAccountIfExistsAsync() {
-        const addresses = await this.callAsync('eth.getAccounts');
+    public async getFirstAccountIfExistsAsync(): Promise<string> {
+        const addresses: string[] = this.web3.eth.accounts;
         if (_.isEmpty(addresses)) {
             return '';
         }
-        return (addresses as string[])[0];
+        return addresses[0];
     }
     public async getNetworkIdIfExists() {
         if (!this.doesExist()) {
