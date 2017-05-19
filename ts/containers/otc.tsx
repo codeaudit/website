@@ -11,7 +11,7 @@ import {
     OTCAllProps as OTCComponentAllProps,
     OTCPassedProps as OTCComponentPassedProps,
 } from 'ts/components/otc';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 interface MapStateToProps {
     blockchainErr: BlockchainErrs;

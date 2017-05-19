@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import BN = require('bn.js');
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import ethUtil = require('ethereumjs-util');
 import ethABI = require('ethereumjs-abi');
 import {constants} from 'ts/utils/constants';

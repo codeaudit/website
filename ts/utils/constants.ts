@@ -1,5 +1,5 @@
 import {ExchangeContractErrs} from 'ts/types';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 export const constants = {
     BACKEND_BASE_URL: 'https://api.0xproject.com',

@@ -33,7 +33,7 @@ import {
     TableRowColumn,
 } from 'material-ui';
 import ReactTooltip = require('react-tooltip');
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import firstBy = require('thenby');
 
 const ETHER_ICON_PATH = '/images/ether.png';

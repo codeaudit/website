@@ -26,7 +26,7 @@ import {Dispatcher} from 'ts/redux/dispatcher';
 import {Blockchain} from 'ts/blockchain';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import * as moment from 'moment';
 
 interface FillOrderProps {

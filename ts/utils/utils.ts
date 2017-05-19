@@ -12,7 +12,7 @@ import {
 import * as moment from 'moment';
 import deepEqual = require('deep-equal');
 import ethUtil = require('ethereumjs-util');
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import {constants} from 'ts/utils/constants';
 
 const LG_MIN_EM = 64;

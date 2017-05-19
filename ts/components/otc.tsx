@@ -29,7 +29,7 @@ import {Footer} from 'ts/components/footer';
 import {Loading} from 'ts/components/ui/loading';
 import {OTCMenu} from 'ts/components/otc_menu';
 import {BlockchainErrDialog} from 'ts/components/blockchain_err_dialog';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import {FlashMessage} from 'ts/components/ui/flash_message';
 
 const THROTTLE_TIMEOUT = 100;
