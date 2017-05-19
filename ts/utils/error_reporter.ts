@@ -19,6 +19,7 @@ const rollbarConfig = {
         'Script error',
         'TypeError: Failed to fetch',
         'Exchange has not been deployed to detected network (network/artifact mismatch)',
+        'undefined is not an object (evaluating \'__gCrWeb.autofill.extractForms\')',
     ],
 };
 import Rollbar = require('../../public/js/rollbar.umd.nojson.min.js');
