@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import {ProviderTypes} from 'ts/types';
-import {constants} from 'ts/utils/constants';
 
 const BASE_URL = window.location.origin;
 
