@@ -13,7 +13,7 @@ import {
     TokenByAddress,
     BlockchainErrs,
 } from 'ts/types';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 interface GenerateOrderFormProps {
     blockchain: Blockchain;

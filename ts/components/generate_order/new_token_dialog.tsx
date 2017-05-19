@@ -9,7 +9,7 @@ import {OrderAddressInput} from 'ts/components/inputs/order_address_input';
 import {Alert} from 'ts/components/ui/alert';
 import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 import {RequiredLabel} from 'ts/components/ui/required_label';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 interface NewTokenDialogProps {
     blockchain: Blockchain;

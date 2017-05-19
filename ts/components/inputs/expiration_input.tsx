@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import {DatePicker, TimePicker} from 'material-ui';
 import {utils} from 'ts/utils/utils';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import * as moment from 'moment';
 
 interface ExpirationInputProps {

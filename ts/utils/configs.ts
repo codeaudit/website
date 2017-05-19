@@ -7,7 +7,6 @@ const BASE_URL = window.location.origin;
 const isDevelopment = _.includes(BASE_URL, 'http://0xproject.dev:8080') ||
                       _.includes(BASE_URL, 'http://localhost:8080') ||
                       _.includes(BASE_URL, 'http://127.0.0.1');
-const isStaging = _.includes(BASE_URL, constants.STAGING_DOMAIN);
 
 export const configs = {
     BASE_URL,
@@ -21,5 +20,4 @@ export const configs = {
         },
     },
     symbolsOfMintableTokens: ['MKR', 'MLN', 'GNT', 'DGD', 'REP', 'ZRX'],
-    isOTCEnabled: isDevelopment || isStaging,
 };

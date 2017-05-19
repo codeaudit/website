@@ -1,7 +1,15 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {TokenByAddress, Token, BlockchainErrs, BalanceErrs, Styles, ScreenWidths} from 'ts/types';
+import {
+    TokenByAddress,
+    Token,
+    BlockchainErrs,
+    BalanceErrs,
+    Styles,
+    ScreenWidths,
+    EtherscanLinkSuffixes,
+} from 'ts/types';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -25,7 +33,7 @@ import {
     TableRowColumn,
 } from 'material-ui';
 import ReactTooltip = require('react-tooltip');
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import firstBy = require('thenby');
 
 const ETHER_ICON_PATH = '/images/ether.png';
@@ -209,10 +217,11 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         return tableRows;
     }
     private renderTokenRow(tokenColSpan: number, actionPaddingX: number, token: Token) {
-        const tokenLink = utils.getEtherScanAddressLinkIfExists(token.address, this.props.networkId);
+        const tokenLink = utils.getEtherScanLinkIfExists(token.address, this.props.networkId,
+                                                         EtherscanLinkSuffixes.address);
         const isMintable = _.includes(configs.symbolsOfMintableTokens, token.symbol);
         return (
-            <TableRow key={token.iconUrl} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
+            <TableRow key={token.address} style={{height: TOKEN_TABLE_ROW_HEIGHT}}>
                 <TableRowColumn
                     colSpan={tokenColSpan}
                 >

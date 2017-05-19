@@ -12,7 +12,7 @@ import {
     ActionTypes,
     ScreenWidths,
 } from 'ts/types';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 export class Dispatcher {
     private dispatch: Dispatch<State>;

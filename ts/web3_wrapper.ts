@@ -3,7 +3,7 @@ import Web3 = require('web3');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
 import {Side} from 'ts/types';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
 
 export class Web3Wrapper {

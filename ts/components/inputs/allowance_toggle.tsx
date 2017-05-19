@@ -7,7 +7,7 @@ import {Token, BalanceErrs} from 'ts/types';
 import {utils} from 'ts/utils/utils';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {zeroEx} from 'ts/utils/zero_ex';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 const DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS = 1000000;
 

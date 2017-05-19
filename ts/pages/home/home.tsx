@@ -119,14 +119,19 @@ const investors: Partner[] = [
         url: 'http://polychain.capital/',
     },
     {
+        name: 'Blockchain Capital',
+        logo: '/images/logos/blockchain_capital.png',
+        url: 'http://blockchain.capital/',
+    },
+    {
+        name: 'Fintech Blockchain Group',
+        logo: '/images/logos/FBG.png',
+        url: '',
+    },
+    {
         name: 'Pantera Capital',
         logo: '/images/logos/pantera_capital.png',
         url: 'https://panteracapital.com/',
-    },
-    {
-        name: 'Blockchain Capital',
-        logo: '/images/logos/blockchain_capital.png',
-        url: 'http://http://blockchain.capital/',
     },
 ];
 
@@ -226,22 +231,11 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             label="FAQ"
                                         />
                                     </Link>
-                                    {configs.isOTCEnabled ?
-                                        <Link to="/otc">
-                                            <FlatButton
-                                                label="OTC DApp"
-                                            />
-                                        </Link> :
-                                        <div
-                                            data-tip={true}
-                                            data-for="otcTooltip"
-                                        >
-                                            <FlatButton
-                                                label="OTC DApp"
-                                            />
-                                            <ReactTooltip id="otcTooltip">Coming soon!</ReactTooltip>
-                                        </div>
-                                    }
+                                    <Link to="/otc">
+                                        <FlatButton
+                                            label="OTC DApp"
+                                        />
+                                    </Link>
                                 </div>
                             </div>
                         </div>

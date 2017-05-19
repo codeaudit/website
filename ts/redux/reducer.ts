@@ -18,7 +18,7 @@ import {
 import * as DummyTokenAArtifacts from '../contracts/DummyTokenA.json';
 import * as DummyTokenBArtifacts from '../contracts/DummyTokenB.json';
 import * as DummyEtherTokenArtifacts from '../contracts/DummyEtherToken.json';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 export interface State {
     blockchainErr: BlockchainErrs;

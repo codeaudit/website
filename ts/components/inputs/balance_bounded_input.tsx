@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import {ValidatedBigNumberCallback, InputErrMsg} from 'ts/types';
 import {TextField} from 'material-ui';
 import {RequiredLabel} from 'ts/components/ui/required_label';

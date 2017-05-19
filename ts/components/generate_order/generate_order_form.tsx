@@ -29,7 +29,7 @@ import {
     Token,
     AlertTypes,
 } from 'ts/types';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 enum SigningState {
     UNSIGNED,

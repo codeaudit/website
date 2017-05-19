@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import BN = require('bn.js');
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import ethUtil = require('ethereumjs-util');
 import ethABI = require('ethereumjs-abi');
 import {constants} from 'ts/utils/constants';
@@ -46,7 +46,7 @@ export const zeroEx = {
             const isNumber = _.isFinite(arg);
             if (isNumber) {
                 argTypes.push(SolidityTypes.uint8);
-            } else if ((arg as BigNumber).isBigNumber) {
+            } else if (_.isObject(arg) && (arg as BigNumber).isBigNumber) {
                 argTypes.push(SolidityTypes.uint256);
                 args[i] = new BN(arg.toString(10), 10);
             } else if (ethUtil.isValidAddress(arg)) {

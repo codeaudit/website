@@ -24,7 +24,7 @@ import * as TokenArtifacts from '../contracts/Token.json';
 import * as MintableArtifacts from '../contracts/Mintable.json';
 import * as EtherTokenArtifacts from '../contracts/EtherToken.json';
 import contract = require('truffle-contract');
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 import ethUtil = require('ethereumjs-util');
 
 const MINT_AMOUNT = new BigNumber('100000000000000000000');

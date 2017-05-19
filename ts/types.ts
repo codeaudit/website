@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import BigNumber = require('bignumber.js');
+import * as BigNumber from 'bignumber.js';
 
 // Utility function to create a K:V from a list of strings
 // Adapted from: https://basarat.gitbooks.io/typescript/content/docs/types/literal-types.html
@@ -251,3 +251,9 @@ export enum AlertTypes {
     ERROR,
     SUCCESS,
 }
+
+export const EtherscanLinkSuffixes = strEnum([
+  'address',
+  'tx',
+]);
+export type EtherscanLinkSuffixes = keyof typeof EtherscanLinkSuffixes;
