@@ -14,6 +14,12 @@ const rollbarConfig = {
         environment: configs.ENVIRONMENT,
     },
     uncaughtErrorLevel: 'error',
+    hostWhiteList: [constants.PRODUCTION_DOMAIN, constants.STAGING_DOMAIN],
+    ignoredMessages: [
+        'Script error',
+        'TypeError: Failed to fetch',
+        'Exchange has not been deployed to detected network (network/artifact mismatch)',
+    ],
 };
 import Rollbar = require('../../public/js/rollbar.umd.nojson.min.js');
 const rollbar = Rollbar.init(rollbarConfig);
