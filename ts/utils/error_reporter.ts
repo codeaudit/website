@@ -14,6 +14,18 @@ const rollbarConfig = {
         environment: configs.ENVIRONMENT,
     },
     uncaughtErrorLevel: 'error',
+    hostWhiteList: [constants.PRODUCTION_DOMAIN, constants.STAGING_DOMAIN],
+    ignoredMessages: [
+        // Errors from the third-party scripts
+        'Script error',
+        // Network errors or ad-blockers
+        'TypeError: Failed to fetch',
+        'Exchange has not been deployed to detected network (network/artifact mismatch)',
+        // Source: https://groups.google.com/a/chromium.org/forum/#!topic/chromium-discuss/7VU0_VvC7mE
+        'undefined is not an object (evaluating \'__gCrWeb.autofill.extractForms\')',
+        // Source: http://stackoverflow.com/questions/43399818/securityerror-from-facebook-and-cross-domain-messaging/43400129
+        'SecurityError (DOM Exception 18)',
+    ],
 };
 import Rollbar = require('../../public/js/rollbar.umd.nojson.min.js');
 const rollbar = Rollbar.init(rollbarConfig);
