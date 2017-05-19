@@ -16,9 +16,12 @@ const rollbarConfig = {
     uncaughtErrorLevel: 'error',
     hostWhiteList: [constants.PRODUCTION_DOMAIN, constants.STAGING_DOMAIN],
     ignoredMessages: [
+        // Errors from the third-party scripts
         'Script error',
+        // Network errors or ad-blockers
         'TypeError: Failed to fetch',
         'Exchange has not been deployed to detected network (network/artifact mismatch)',
+        // https://groups.google.com/a/chromium.org/forum/#!topic/chromium-discuss/7VU0_VvC7mE
         'undefined is not an object (evaluating \'__gCrWeb.autofill.extractForms\')',
     ],
 };
