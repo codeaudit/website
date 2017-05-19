@@ -311,40 +311,43 @@ export class Blockchain {
             this.exchangeLogFillEvents = [];
         }
     }
-    private async getTokenRegistryTokensAsync() {
+    private async getTokenRegistryTokensAsync(): Promise<Token[]> {
         if (this.tokenRegistry) {
             const addresses = await this.tokenRegistry.getTokenAddresses.call();
-            const tokens = [];
-            for (const address of addresses) {
-                const [
-                  balance,
-                  allowance,
-                ] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, address);
-                const [
-                  tokenAddress,
-                  name,
-                  symbol,
-                  url,
-                  decimals,
-                ] = await this.tokenRegistry.getTokenMetaData.call(address);
-                // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
-                // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
-                const iconUrl = constants.iconUrlBySymbol[symbol];
-                const token: Token = {
-                    iconUrl: !_.isUndefined(iconUrl) ? iconUrl : constants.DEFAULT_TOKEN_ICON_URL,
-                    address,
-                    allowance,
-                    balance,
-                    name,
-                    symbol,
-                    decimals: decimals.toNumber(),
-                };
-                tokens.push(token);
-            }
-            return tokens;
+            const tokenPromises: Array<Promise<Token>> = addresses.map(
+                (address: string) => (this.getTokenRegistryTokenAsync(address))
+            );
+            const tokensPromise: Promise<Token[]> = Promise.all(tokenPromises);
+            return tokensPromise;
         } else {
             return [];
         }
+    }
+    private async getTokenRegistryTokenAsync(address: string): Promise<Token> {
+        const [
+            balance,
+            allowance,
+        ] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, address);
+        const [
+            tokenAddress,
+            name,
+            symbol,
+            url,
+            decimals,
+        ] = await this.tokenRegistry.getTokenMetaData.call(address);
+        // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
+        // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
+        const iconUrl = constants.iconUrlBySymbol[symbol];
+        const token: Token = {
+            iconUrl: !_.isUndefined(iconUrl) ? iconUrl : constants.DEFAULT_TOKEN_ICON_URL,
+            address,
+            allowance,
+            balance,
+            name,
+            symbol,
+            decimals: decimals.toNumber(),
+        };
+        return token;
     }
     private async getCustomTokensAsync() {
         const customTokens = customTokenStorage.getCustomTokens(this.networkId);
