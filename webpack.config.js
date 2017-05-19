@@ -1,13 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const PRODUCTION = process.env.NODE_ENV === 'production';
+
 module.exports = {
     entry: ['./ts/index.tsx'],
     output: {
         path: path.join(__dirname, '/public'),
         filename: 'bundle.js',
     },
-    devtool: 'source-map',
+    devtool: PRODUCTION ? 'cheap-module-source-map' : 'source-map',
     resolve: {
         modules: [
             path.join(__dirname, '/ts'),
@@ -51,4 +53,13 @@ module.exports = {
       },
       disableHostCheck: true
     },
+    plugins: PRODUCTION ?
+        [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': JSON.stringify('production')
+                }
+            }),
+            new webpack.optimize.AggressiveMergingPlugin(),
+        ] : []
 };
