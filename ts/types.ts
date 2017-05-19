@@ -257,3 +257,12 @@ export const EtherscanLinkSuffixes = strEnum([
   'tx',
 ]);
 export type EtherscanLinkSuffixes = keyof typeof EtherscanLinkSuffixes;
+
+export const BlockchainCallErrs = strEnum([
+  'CONTRACT_DOES_NOT_EXIST',
+  'USER_HAS_NO_ASSOCIATED_ADDRESSES',
+  'UNHANDLED_ERROR',
+  'TOKEN_ADDRESS_IS_INVALID',
+  'INVALID_SIGNATURE',
+]);
+export type BlockchainCallErrs = keyof typeof BlockchainCallErrs;

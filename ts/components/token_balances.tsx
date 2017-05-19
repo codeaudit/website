@@ -9,6 +9,7 @@ import {
     Styles,
     ScreenWidths,
     EtherscanLinkSuffixes,
+    BlockchainCallErrs,
 } from 'ts/types';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
@@ -365,7 +366,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             return true;
         } catch (err) {
             const errMsg = '' + err;
-            if (_.includes(errMsg, 'User has no associated addresses')) {
+            if (_.includes(errMsg, BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES)) {
                 this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
                 return false;
             }

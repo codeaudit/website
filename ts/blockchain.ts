@@ -12,6 +12,7 @@ import {
     Side,
     ContractEvent,
     ContractResponse,
+    BlockchainCallErrs,
 } from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {errorReporter} from 'ts/utils/error_reporter';
@@ -65,12 +66,9 @@ export class Blockchain {
         }
     }
     public async setExchangeAllowanceAsync(token: Token, amountInBaseUnits: BigNumber) {
-        if (!this.isValidAddress(token.address)) {
-            throw new Error('tokenAddress is not a valid address');
-        }
-        if (!this.doesUserAddressExist()) {
-            throw new Error('Cannot set allowance if no user accounts accessible');
-        }
+        utils.assert(this.isValidAddress(token.address), BlockchainCallErrs.TOKEN_ADDRESS_IS_INVALID);
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
+
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
         await tokenContract.approve(this.proxy.address, amountInBaseUnits, {
             from: this.userAddress,
@@ -79,30 +77,26 @@ export class Blockchain {
         this.dispatcher.replaceTokenAllowanceByAddress(token.address, allowance);
     }
     public async isValidSignatureAsync(maker: string, signatureData: SignatureData) {
-      if (!this.doesUserAddressExist()) {
-          throw new Error('Cannot check for validSignature if no user accounts accessible');
-      }
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
-      const isValidSignature = await this.exchange.isValidSignature.call(
-        maker,
-        signatureData.hash,
-        signatureData.v,
-        signatureData.r,
-        signatureData.s,
-        {
-          from: this.userAddress,
-        },
-      );
-      return isValidSignature;
+        const isValidSignature = await this.exchange.isValidSignature.call(
+            maker,
+            signatureData.hash,
+            signatureData.v,
+            signatureData.r,
+            signatureData.s,
+            {
+                from: this.userAddress,
+            },
+        );
+        return isValidSignature;
     }
     public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
                                 takerTokenAddress: string, makerTokenAmount: BigNumber,
                                 takerTokenAmount: BigNumber, makerFee: BigNumber, takerFee: BigNumber,
                                 expirationUnixTimestampSec: BigNumber, feeRecipient: string,
                                 fillAmount: BigNumber, signatureData: SignatureData, salt: BigNumber) {
-        if (!this.doesUserAddressExist()) {
-            throw new Error('Cannot fill order if no user accounts accessible');
-        }
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
@@ -170,15 +164,14 @@ export class Blockchain {
         signatureData.s = ethUtil.bufferToHex(signatureData.s);
         const isValidSignature = zeroEx.isValidSignature(orderHashHex, v, r, s, makerAddress);
         if (!isValidSignature) {
-            throw new Error('Cannot recover original address from generated signature');
+            throw new Error(BlockchainCallErrs.INVALID_SIGNATURE);
         }
         this.dispatcher.updateSignatureData(signatureData);
         return signatureData;
     }
     public async mintTestTokensAsync(token: Token) {
-        if (!this.doesUserAddressExist()) {
-            throw new Error('User has no associated addresses');
-        }
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
+
         const mintableContract = await this.instantiateContractIfExistsAsync(MintableArtifacts, token.address);
         await mintableContract.mint(MINT_AMOUNT, {
             from: this.userAddress,
@@ -187,9 +180,8 @@ export class Blockchain {
         this.dispatcher.updateTokenBalanceByAddress(token.address, balanceDelta);
     }
     public async convertEthToWrappedEthTokensAsync(amount: BigNumber) {
-        if (!this.doesUserAddressExist()) {
-            throw new Error('User has no associated addresses');
-        }
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
+
         const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
         await wethContract.deposit({
             from: this.userAddress,
@@ -197,9 +189,8 @@ export class Blockchain {
         });
     }
     public async convertWrappedEthTokensToEthAsync(amount: BigNumber) {
-        if (!this.doesUserAddressExist()) {
-            throw new Error('User has no associated addresses');
-        }
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
+
         const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
         await wethContract.withdraw(amount, {
             from: this.userAddress,
@@ -258,7 +249,7 @@ export class Blockchain {
     }
     private startListeningForExchangeLogFillEvents(filterIndexObj: object) {
         utils.assert(!_.isUndefined(this.exchange), 'Exchange contract must be instantiated.');
-        utils.assert(this.doesUserAddressExist(), 'User must have address available.');
+        utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         const fromBlock = tradeHistoryStorage.getFillsLatestBlock(this.userAddress, this.networkId);
         const exchangeLogFillEvent = this.exchange.LogFill(filterIndexObj, {
@@ -388,7 +379,7 @@ export class Blockchain {
             this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
         } catch (err) {
             const errMsg = err + '';
-            if (_.includes(errMsg, 'CONTRACT_DOES_NOT_EXIST')) {
+            if (_.includes(errMsg, BlockchainCallErrs.CONTRACT_DOES_NOT_EXIST)) {
                 this.dispatcher.encounteredBlockchainError(BlockchainErrs.A_CONTRACT_NOT_DEPLOYED_ON_NETWORK);
                 this.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
                 return;
@@ -422,7 +413,7 @@ export class Blockchain {
         if (!_.isUndefined(contractAddress)) {
             const doesContractExist = await this.doesContractExistAtAddressAsync(contractAddress);
             if (!doesContractExist) {
-                throw new Error('CONTRACT_DOES_NOT_EXIST');
+                throw new Error(BlockchainCallErrs.CONTRACT_DOES_NOT_EXIST);
             }
         }
 
@@ -438,10 +429,10 @@ export class Blockchain {
             const errMsg = `${err}`;
             utils.consoleLog(`Notice: Error encountered: ${err} ${err.stack}`);
             if (_.includes(errMsg, 'not been deployed to detected network')) {
-                throw new Error('CONTRACT_DOES_NOT_EXIST');
+                throw new Error(BlockchainCallErrs.CONTRACT_DOES_NOT_EXIST);
             } else {
                 await errorReporter.reportAsync(err);
-                throw new Error('UNHANDLED_ERROR');
+                throw new Error(BlockchainCallErrs.UNHANDLED_ERROR);
             }
         }
     }

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as BigNumber from 'bignumber.js';
 import {RaisedButton} from 'material-ui';
+import {BlockchainCallErrs} from 'ts/types';
 import {EthWethConversionDialog} from 'ts/components/eth_weth_conversion_dialog';
 import {Side, Token} from 'ts/types';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -82,7 +83,7 @@ export class EthWethConversionButton extends
             this.props.dispatcher.updateTokenByAddress([updatedToken]);
         } catch (err) {
             const errMsg = '' + err;
-            if (_.includes(errMsg, 'User has no associated addresses')) {
+            if (_.includes(errMsg, BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES)) {
                 this.props.dispatcher.updateShouldBlockchainErrDialogBeOpen(true);
             } else if (!_.includes(errMsg, 'User denied transaction')) {
                 utils.consoleLog(`Unexpected error encountered: ${err}`);
