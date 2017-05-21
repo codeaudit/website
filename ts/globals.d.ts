@@ -75,8 +75,6 @@ declare module 'web3' {
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethdefaultaccount
             defaultAccount: string;
 
-            accounts: string[];
-
             compile: {
                 // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethcompilesolidity
                 solidity(sourceString: string, cb?: (err: any, result: any) => void): object,
