@@ -31,12 +31,6 @@ export const BlockchainErrs = strEnum([
 ]);
 export type BlockchainErrs = keyof typeof BlockchainErrs;
 
-export const ProviderTypes = strEnum([
-  'injectedWeb3',
-  'publicNode',
-]);
-export type ProviderTypes = keyof typeof ProviderTypes;
-
 export const Direction = strEnum([
   'forward',
   'backward',
