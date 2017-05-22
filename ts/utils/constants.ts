@@ -46,4 +46,7 @@ export const constants = {
         4: 'Rinkeby',
         42: 'Kovan',
     } as {[symbol: number]: string},
+    contractsThatPreferInjectedWeb3: {
+        Exchange: true,
+    } as {[contractName: string]: boolean},
 };
