@@ -67,6 +67,10 @@ declare module 'web3' {
         // It's weird that the providers are in an instance, instead of in the librairy
         public static providers: typeof providers;
 
+        public version: {
+            getNetwork(): number;
+        };
+
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3eth
         public eth: {
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethcoinbase
@@ -97,12 +101,16 @@ declare module 'web3' {
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter
             filter(value: string|IFilterObject): IFilterResult;
+
+            getAccounts(): string[];
         };
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3setprovider
         public setProvider(provider: providers.IProvider): void;
 
         public fromWei(amount: BigNumber, unit: string): BigNumber;
+
+        public isAddress(address: string): boolean;
     }
 
     // I usally start interface namesby an I but do as you want

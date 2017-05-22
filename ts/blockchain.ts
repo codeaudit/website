@@ -144,7 +144,7 @@ export class Blockchain {
     }
     public isValidAddress(address: string): boolean {
         const lowercaseAddress = address.toLowerCase();
-        return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
+        return this.web3Wrapper.isAddress(lowercaseAddress);
     }
     public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
         const orderHashBuff = ethUtil.toBuffer(orderHashHex);
