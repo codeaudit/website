@@ -325,17 +325,22 @@ export class Blockchain {
         }
     }
     private async getTokenRegistryTokenAsync(address: string): Promise<Token> {
+        const tokenDataPromises = [
+            this.getTokenBalanceAndAllowanceAsync(this.userAddress, address),
+            this.tokenRegistry.getTokenMetaData.call(address),
+        ];
+        const tokenData = await Promise.all(tokenDataPromises);
         const [
             balance,
             allowance,
-        ] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, address);
+        ] = tokenData[0];
         const [
             tokenAddress,
             name,
             symbol,
             url,
             decimals,
-        ] = await this.tokenRegistry.getTokenMetaData.call(address);
+        ] = tokenData[1];
         // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
         // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
         const iconUrl = constants.iconUrlBySymbol[symbol];
