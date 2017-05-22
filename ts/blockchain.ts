@@ -404,12 +404,11 @@ export class Blockchain {
             }
         }
         this.dispatcher.clearTokenByAddress();
-        const tokens = _.flatten(
-            await Promise.all([
+        const tokenArrays = await Promise.all([
                 this.getTokenRegistryTokensAsync(),
                 this.getCustomTokensAsync(),
-            ]),
-        );
+        ]);
+        const tokens = _.flatten(tokenArrays);
         this.dispatcher.updateTokenByAddress(tokens);
         this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, tokens[0].address);
         this.dispatcher.updateChosenAssetTokenAddress(Side.receive, tokens[1].address);
