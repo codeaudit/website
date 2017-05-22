@@ -80,7 +80,7 @@ export class Provider {
     }
     // Defaults to Infura.io Testnet
     private getPublicNodeProvider() {
-        const providerObj = this.getClientSideFilteringProvider(constants.INFURA_TESTNET_URL);
+        const providerObj = this.getClientSideFilteringProvider(constants.HOSTED_TESTNET_URL);
         return providerObj;
     }
     private getClientSideFilteringProvider(rpcUrl: string) {
