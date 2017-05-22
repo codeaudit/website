@@ -19,4 +19,5 @@ export const configs = {
         },
     },
     symbolsOfMintableTokens: ['MKR', 'MLN', 'GNT', 'DGD', 'REP', 'ZRX'],
+    mostPopularTradingPairSymbols: ['WETH', 'GNT'],
 };

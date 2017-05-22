@@ -5,6 +5,7 @@ import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
+import {configs} from 'ts/utils/configs';
 import {
     BlockchainErrs,
     Token,
@@ -410,8 +411,12 @@ export class Blockchain {
         ]);
         const tokens = _.flatten(tokenArrays);
         this.dispatcher.updateTokenByAddress(tokens);
-        this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, tokens[0].address);
-        this.dispatcher.updateChosenAssetTokenAddress(Side.receive, tokens[1].address);
+        const mostPopularTradingPairTokens: Token[] = [
+            _.find(tokens, {symbol: configs.mostPopularTradingPairSymbols[0]}),
+            _.find(tokens, {symbol: configs.mostPopularTradingPairSymbols[1]}),
+        ];
+        this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, mostPopularTradingPairTokens[0].address);
+        this.dispatcher.updateChosenAssetTokenAddress(Side.receive, mostPopularTradingPairTokens[1].address);
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
     private async instantiateContractIfExistsAsync(artifact: any, address?: string): Promise<ContractInstance> {
