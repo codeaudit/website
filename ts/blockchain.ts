@@ -399,9 +399,12 @@ export class Blockchain {
             }
         }
         this.dispatcher.clearTokenByAddress();
-        let tokens = await this.getTokenRegistryTokensAsync();
-        const customTokens = await this.getCustomTokensAsync();
-        tokens = [...tokens, ...customTokens];
+        const tokens = _.flatten(
+            await Promise.all([
+                this.getTokenRegistryTokensAsync(),
+                this.getCustomTokensAsync(),
+            ]),
+        );
         this.dispatcher.updateTokenByAddress(tokens);
         this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, tokens[0].address);
         this.dispatcher.updateChosenAssetTokenAddress(Side.receive, tokens[1].address);
