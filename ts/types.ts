@@ -267,4 +267,4 @@ export const BlockchainCallErrs = strEnum([
 ]);
 export type BlockchainCallErrs = keyof typeof BlockchainCallErrs;
 
-export type ContractInstance = any;
+export type ContractInstance = any; // TODO: add type definition for Contract

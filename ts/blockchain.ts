@@ -35,10 +35,10 @@ export class Blockchain {
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private provider: Provider;
-    private exchange: any; // TODO: add type definition for Contract
+    private exchange: ContractInstance;
     private exchangeLogFillEvents: any[];
-    private proxy: any;
-    private tokenRegistry: any;
+    private proxy: ContractInstance;
+    private tokenRegistry: ContractInstance;
     private userAddress: string;
     constructor(dispatcher: Dispatcher) {
         this.dispatcher = dispatcher;
