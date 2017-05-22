@@ -24,6 +24,7 @@ export const constants = {
     TESTNET_NETWORK_ID: 42,
     TESTRPC_NETWORK_ID: 50,
     ETH_DECIMAL_PLACES: 18,
+    MINT_AMOUNT: new BigNumber('100000000000000000000'),
     iconUrlBySymbol: {
         REP: '/images/token_icons/augur.png',
         DGD: '/images/token_icons/digixdao.png',
