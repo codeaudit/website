@@ -107,6 +107,8 @@ declare module 'web3' {
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3setprovider
         public setProvider(provider: providers.IProvider): void;
 
+        public currentProvider(): any;
+
         public fromWei(amount: BigNumber, unit: string): BigNumber;
 
         public isAddress(address: string): boolean;
