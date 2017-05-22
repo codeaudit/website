@@ -260,3 +260,8 @@ export const BlockchainCallErrs = strEnum([
   'INVALID_SIGNATURE',
 ]);
 export type BlockchainCallErrs = keyof typeof BlockchainCallErrs;
+
+export enum Environments {
+    DEVELOPMENT,
+    PRODUCTION,
+}

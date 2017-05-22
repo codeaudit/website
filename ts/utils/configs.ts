@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import {Environments} from 'ts/types';
 
 const BASE_URL = window.location.origin;
 
@@ -8,6 +9,6 @@ const isDevelopment = _.includes(BASE_URL, 'http://0xproject.dev:8080') ||
 
 export const configs = {
     BASE_URL,
-    ENVIRONMENT: isDevelopment ? 'development' : 'production',
+    ENVIRONMENT: isDevelopment ? Environments.DEVELOPMENT : Environments.PRODUCTION,
     symbolsOfMintableTokens: ['MKR', 'MLN', 'GNT', 'DGD', 'REP', 'ZRX'],
 };
