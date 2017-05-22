@@ -48,5 +48,8 @@ export const constants = {
     } as {[symbol: number]: string},
     contractsThatPreferInjectedWeb3: {
         Exchange: true,
+        Mintable: true,
+        Token: true,
+        EtherToken: true,
     } as {[contractName: string]: boolean},
 };
