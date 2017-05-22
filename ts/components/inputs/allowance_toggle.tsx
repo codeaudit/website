@@ -68,11 +68,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
             isSpinnerVisible: true,
         });
 
-        // Hack: for some reason setting allowance to 0 causes a `base fee exceeds gas limit` exception
-        // on testrpc. Any edits to this hack should include changes to the `isAllowanceSet` method below
-        // Setting it to 0 is not an issue on the Kovan testnet.
-        // TODO: Debug issue in testrpc and submit a PR, then remove this hack
-        let newAllowanceAmountInUnits = 1;
+        let newAllowanceAmountInUnits = 0;
         if (!this.isAllowanceSet()) {
             newAllowanceAmountInUnits = DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS;
         }
@@ -97,6 +93,6 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
     private isAllowanceSet() {
         const token = this.props.token;
         const allowanceInUnits = zeroEx.toUnitAmount(token.allowance, token.decimals);
-        return !allowanceInUnits.eq(0) && !allowanceInUnits.eq(1);
+        return !allowanceInUnits.eq(0);
     }
 }
