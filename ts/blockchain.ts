@@ -385,7 +385,7 @@ export class Blockchain {
         try {
             const contractsPromises = _.map(
                 [ExchangeArtifacts, TokenRegistryArtifacts, ProxyArtifacts],
-                (artifacts: any) => (this.instantiateContractIfExistsAsync(artifacts)),
+                (artifacts: any) => this.instantiateContractIfExistsAsync(artifacts),
             );
             const contracts = await Promise.all(contractsPromises);
             this.exchange = contracts[0];
