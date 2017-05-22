@@ -10,9 +10,9 @@ import {
     Token,
     SignatureData,
     Side,
-    ContractEvent,
     ContractResponse,
     BlockchainCallErrs,
+    ContractInstance,
 } from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {errorReporter} from 'ts/utils/error_reporter';
@@ -383,9 +383,14 @@ export class Blockchain {
 
         this.dispatcher.updateBlockchainIsLoaded(false);
         try {
-            this.exchange = await this.instantiateContractIfExistsAsync(ExchangeArtifacts);
-            this.tokenRegistry = await this.instantiateContractIfExistsAsync(TokenRegistryArtifacts);
-            this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
+            const contractsPromises = _.map(
+                [ExchangeArtifacts, TokenRegistryArtifacts, ProxyArtifacts],
+                (artifacts: any) => (this.instantiateContractIfExistsAsync(artifacts)),
+            );
+            const contracts = await Promise.all(contractsPromises);
+            this.exchange = contracts[0];
+            this.tokenRegistry = contracts[1];
+            this.proxy = contracts[2];
         } catch (err) {
             const errMsg = err + '';
             if (_.includes(errMsg, BlockchainCallErrs.CONTRACT_DOES_NOT_EXIST)) {
@@ -410,7 +415,7 @@ export class Blockchain {
         this.dispatcher.updateChosenAssetTokenAddress(Side.receive, tokens[1].address);
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
-    private async instantiateContractIfExistsAsync(artifact: any, address?: string) {
+    private async instantiateContractIfExistsAsync(artifact: any, address?: string): Promise<ContractInstance> {
         const c = await contract(artifact);
         c.setProvider(this.provider.getProviderObj());
 
