@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
@@ -34,7 +33,6 @@ export class Blockchain {
     public networkId: number;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
-    private provider: Provider;
     private exchange: any; // TODO: add type definition for Contract
     private exchangeLogFillEvents: any[];
     private proxy: any;
@@ -361,12 +359,7 @@ export class Blockchain {
     private async onPageLoadInitFireAndForgetAsync() {
         await this.onPageLoadAsync(); // wait for page to load
 
-        // Once page loaded, we can instantiate provider
-        this.provider = new Provider();
-
-        const web3Instance = new Web3();
-        web3Instance.setProvider(this.provider.getProviderObj());
-        this.web3Wrapper = new Web3Wrapper(web3Instance, this.dispatcher);
+        this.web3Wrapper = new Web3Wrapper(this.dispatcher);
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),
@@ -400,7 +393,7 @@ export class Blockchain {
     }
     private async instantiateContractIfExistsAsync(artifact: any, address?: string) {
         const c = await contract(artifact);
-        c.setProvider(this.provider.getProviderObj());
+        c.setProvider(this.web3Wrapper.getProviderObj());
 
         const artifactNetworkConfigs = artifact.networks[this.networkId];
         let contractAddress;

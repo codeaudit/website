@@ -3,6 +3,7 @@ import Web3 = require('web3');
 import * as BigNumber from 'bignumber.js';
 import promisify = require('es6-promisify');
 import {Dispatcher} from 'ts/redux/dispatcher';
+import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {Side} from 'ts/types';
 import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
@@ -10,13 +11,14 @@ import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
 export class Web3Wrapper {
     private dispatcher: Dispatcher;
     private web3: Web3;
+    private provider: Provider;
     private watchNetworkAndBalanceIntervalId: number;
-    constructor(web3Instance: Web3, dispatcher: Dispatcher) {
+    constructor(dispatcher: Dispatcher) {
         this.dispatcher = dispatcher;
-
-        if (!_.isUndefined(web3Instance) && !_.isNull(web3Instance)) {
-            this.web3 = web3Instance;
-        }
+        // Once page loaded, we can instantiate provider
+        this.provider = new Provider();
+        this.web3 = new Web3();
+        this.web3.setProvider(this.provider.getProviderObj());
 
         this.startEmittingNetworkConnectionAndUserBalanceStateAsync();
     }
@@ -28,6 +30,9 @@ export class Web3Wrapper {
             return false;
         }
         return this.web3.isAddress(address);
+    }
+    public getProviderObj() {
+        return this.provider.getProviderObj();
     }
     public async getFirstAccountIfExistsAsync() {
         const addresses = await promisify(this.web3.eth.getAccounts)();
