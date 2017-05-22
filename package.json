@@ -39,7 +39,7 @@
     "react-tooltip": "^3.2.7",
     "redux": "^3.6.0",
     "thenby": "^1.2.3",
-    "truffle-contract": "^1.1.10",
+    "truffle-contract": "git+ssh://git@github.com/0xProject/truffle-contract.git",
     "web3": "^0.18.2",
     "web3-provider-engine": "^11.0.0",
     "whatwg-fetch": "^2.0.3"

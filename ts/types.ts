@@ -266,3 +266,5 @@ export const BlockchainCallErrs = strEnum([
   'INVALID_SIGNATURE',
 ]);
 export type BlockchainCallErrs = keyof typeof BlockchainCallErrs;
+
+export type ContractInstance = any; // TODO: add type definition for Contract

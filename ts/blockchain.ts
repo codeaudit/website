@@ -10,9 +10,9 @@ import {
     Token,
     SignatureData,
     Side,
-    ContractEvent,
     ContractResponse,
     BlockchainCallErrs,
+    ContractInstance,
 } from 'ts/types';
 import {Web3Wrapper} from 'ts/web3_wrapper';
 import {errorReporter} from 'ts/utils/error_reporter';
@@ -35,10 +35,10 @@ export class Blockchain {
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private provider: Provider;
-    private exchange: any; // TODO: add type definition for Contract
+    private exchange: ContractInstance;
     private exchangeLogFillEvents: any[];
-    private proxy: any;
-    private tokenRegistry: any;
+    private proxy: ContractInstance;
+    private tokenRegistry: ContractInstance;
     private userAddress: string;
     constructor(dispatcher: Dispatcher) {
         this.dispatcher = dispatcher;
@@ -311,40 +311,49 @@ export class Blockchain {
             this.exchangeLogFillEvents = [];
         }
     }
-    private async getTokenRegistryTokensAsync() {
+    private async getTokenRegistryTokensAsync(): Promise<Token[]> {
         if (this.tokenRegistry) {
             const addresses = await this.tokenRegistry.getTokenAddresses.call();
-            const tokens = [];
-            for (const address of addresses) {
-                const [
-                  balance,
-                  allowance,
-                ] = await this.getTokenBalanceAndAllowanceAsync(this.userAddress, address);
-                const [
-                  tokenAddress,
-                  name,
-                  symbol,
-                  url,
-                  decimals,
-                ] = await this.tokenRegistry.getTokenMetaData.call(address);
-                // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
-                // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
-                const iconUrl = constants.iconUrlBySymbol[symbol];
-                const token: Token = {
-                    iconUrl: !_.isUndefined(iconUrl) ? iconUrl : constants.DEFAULT_TOKEN_ICON_URL,
-                    address,
-                    allowance,
-                    balance,
-                    name,
-                    symbol,
-                    decimals: decimals.toNumber(),
-                };
-                tokens.push(token);
-            }
-            return tokens;
+            const tokenPromises: Array<Promise<Token>> = _.map(
+                addresses,
+                (address: string) => (this.getTokenRegistryTokenAsync(address)),
+            );
+            const tokensPromise: Promise<Token[]> = Promise.all(tokenPromises);
+            return tokensPromise;
         } else {
             return [];
         }
+    }
+    private async getTokenRegistryTokenAsync(address: string): Promise<Token> {
+        const tokenDataPromises = [
+            this.getTokenBalanceAndAllowanceAsync(this.userAddress, address),
+            this.tokenRegistry.getTokenMetaData.call(address),
+        ];
+        const tokenData = await Promise.all(tokenDataPromises);
+        const [
+            balance,
+            allowance,
+        ] = tokenData[0];
+        const [
+            tokenAddress,
+            name,
+            symbol,
+            url,
+            decimals,
+        ] = tokenData[1];
+        // HACK: For now we have a hard-coded list of iconUrls for the dummyTokens
+        // TODO: Refactor this out and pull the iconUrl directly from the TokenRegistry
+        const iconUrl = constants.iconUrlBySymbol[symbol];
+        const token: Token = {
+            iconUrl: !_.isUndefined(iconUrl) ? iconUrl : constants.DEFAULT_TOKEN_ICON_URL,
+            address,
+            allowance,
+            balance,
+            name,
+            symbol,
+            decimals: decimals.toNumber(),
+        };
+        return token;
     }
     private async getCustomTokensAsync() {
         const customTokens = customTokenStorage.getCustomTokens(this.networkId);
@@ -374,9 +383,14 @@ export class Blockchain {
 
         this.dispatcher.updateBlockchainIsLoaded(false);
         try {
-            this.exchange = await this.instantiateContractIfExistsAsync(ExchangeArtifacts);
-            this.tokenRegistry = await this.instantiateContractIfExistsAsync(TokenRegistryArtifacts);
-            this.proxy = await this.instantiateContractIfExistsAsync(ProxyArtifacts);
+            const contractsPromises = _.map(
+                [ExchangeArtifacts, TokenRegistryArtifacts, ProxyArtifacts],
+                (artifacts: any) => this.instantiateContractIfExistsAsync(artifacts),
+            );
+            const contracts = await Promise.all(contractsPromises);
+            this.exchange = contracts[0];
+            this.tokenRegistry = contracts[1];
+            this.proxy = contracts[2];
         } catch (err) {
             const errMsg = err + '';
             if (_.includes(errMsg, BlockchainCallErrs.CONTRACT_DOES_NOT_EXIST)) {
@@ -390,15 +404,17 @@ export class Blockchain {
             }
         }
         this.dispatcher.clearTokenByAddress();
-        let tokens = await this.getTokenRegistryTokensAsync();
-        const customTokens = await this.getCustomTokensAsync();
-        tokens = [...tokens, ...customTokens];
+        const tokenArrays = await Promise.all([
+                this.getTokenRegistryTokensAsync(),
+                this.getCustomTokensAsync(),
+        ]);
+        const tokens = _.flatten(tokenArrays);
         this.dispatcher.updateTokenByAddress(tokens);
         this.dispatcher.updateChosenAssetTokenAddress(Side.deposit, tokens[0].address);
         this.dispatcher.updateChosenAssetTokenAddress(Side.receive, tokens[1].address);
         this.dispatcher.updateBlockchainIsLoaded(true);
     }
-    private async instantiateContractIfExistsAsync(artifact: any, address?: string) {
+    private async instantiateContractIfExistsAsync(artifact: any, address?: string): Promise<ContractInstance> {
         const c = await contract(artifact);
         c.setProvider(this.provider.getProviderObj());
 
