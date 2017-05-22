@@ -314,8 +314,9 @@ export class Blockchain {
     private async getTokenRegistryTokensAsync(): Promise<Token[]> {
         if (this.tokenRegistry) {
             const addresses = await this.tokenRegistry.getTokenAddresses.call();
-            const tokenPromises: Array<Promise<Token>> = addresses.map(
-                (address: string) => (this.getTokenRegistryTokenAsync(address))
+            const tokenPromises: Array<Promise<Token>> = _.map(
+                addresses,
+                (address: string) => (this.getTokenRegistryTokenAsync(address)),
             );
             const tokensPromise: Promise<Token[]> = Promise.all(tokenPromises);
             return tokensPromise;
