@@ -11,4 +11,5 @@ export const configs = {
     BASE_URL,
     ENVIRONMENT: isDevelopment ? Environments.DEVELOPMENT : Environments.PRODUCTION,
     symbolsOfMintableTokens: ['MKR', 'MLN', 'GNT', 'DGD', 'REP', 'ZRX'],
+    mostPopularTradingPairSymbols: ['WETH', 'GNT'],
 };

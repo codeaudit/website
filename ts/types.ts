@@ -265,3 +265,5 @@ export enum Environments {
     DEVELOPMENT,
     PRODUCTION,
 }
+
+export type ContractInstance = any; // TODO: add type definition for Contract
