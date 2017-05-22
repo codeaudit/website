@@ -29,6 +29,7 @@ import * as BigNumber from 'bignumber.js';
 import ethUtil = require('ethereumjs-util');
 
 const MINT_AMOUNT = new BigNumber('100000000000000000000');
+const ALLOWANCE_TO_ZERO_GAS_AMOUNT = 45730;
 
 export class Blockchain {
     public networkId: number;
@@ -73,7 +74,7 @@ export class Blockchain {
         // Hack: for some reason default estimated gas amount causes `base fee exceeds gas limit` exception
         // on testrpc. Probably related to https://github.com/ethereumjs/testrpc/issues/294
         // TODO: Debug issue in testrpc and submit a PR, then remove this hack
-        const gas = this.networkId === constants.TESTRPC_NETWORK_ID ? 45730 : undefined;
+        const gas = this.networkId === constants.TESTRPC_NETWORK_ID ? ALLOWANCE_TO_ZERO_GAS_AMOUNT : undefined;
         await tokenContract.approve(this.proxy.address, amountInBaseUnits, {
             from: this.userAddress,
             gas,
