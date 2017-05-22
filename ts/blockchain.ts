@@ -70,8 +70,13 @@ export class Blockchain {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, token.address);
+        // Hack: for some reason default estimated gas amount causes `base fee exceeds gas limit` exception
+        // on testrpc. Probably related to https://github.com/ethereumjs/testrpc/issues/294
+        // TODO: Debug issue in testrpc and submit a PR, then remove this hack
+        const gas = this.networkId === constants.TESTRPC_NETWORK_ID ? 45730 : undefined;
         await tokenContract.approve(this.proxy.address, amountInBaseUnits, {
             from: this.userAddress,
+            gas,
         });
         const allowance = amountInBaseUnits;
         this.dispatcher.replaceTokenAllowanceByAddress(token.address, allowance);
