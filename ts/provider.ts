@@ -15,7 +15,7 @@ export class Provider {
     private unusedLocalWebProviderObj: any;
     constructor() {
         this.providerTypesToNames = {
-            [ProviderTypes.publicNode]: 'Infura.io',
+            [ProviderTypes.publicNode]: '0xProject',
             [ProviderTypes.injectedWeb3]: '',
         };
         // When a user switches from a local provider to the public node, we keep a copy of the unused
@@ -78,7 +78,7 @@ export class Provider {
         utils.assert(!_.isUndefined(ProviderTypes[providerType]),
             'Can only set provider to a valid provider type listed in ProviderTypes');
     }
-    // Defaults to Infura.io Testnet
+    // Defaults to our Kovan node
     private getPublicNodeProvider() {
         const providerObj = this.getClientSideFilteringProvider(constants.HOSTED_TESTNET_URL);
         return providerObj;
