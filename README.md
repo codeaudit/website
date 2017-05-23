@@ -44,7 +44,7 @@ Start dev server:
 npm run dev
 ```
 
-Visit [0xproject.dev:8080](http://0xproject.dev:8080) in your browser.
+Visit [0xproject.dev:3572](http://0xproject.dev:3572) in your browser.
 
 
 ##### Recommended Atom packages:
