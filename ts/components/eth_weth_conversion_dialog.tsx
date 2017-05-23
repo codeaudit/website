@@ -116,6 +116,9 @@ export class EthWethConversionDialog extends
             });
         } else {
             this.props.onComplete(this.state.direction, this.state.value);
+            this.setState({
+                value: undefined,
+            });
         }
     }
     private onCancel() {
