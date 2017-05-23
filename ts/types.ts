@@ -31,12 +31,6 @@ export const BlockchainErrs = strEnum([
 ]);
 export type BlockchainErrs = keyof typeof BlockchainErrs;
 
-export const ProviderTypes = strEnum([
-  'injectedWeb3',
-  'publicNode',
-]);
-export type ProviderTypes = keyof typeof ProviderTypes;
-
 export const Direction = strEnum([
   'forward',
   'backward',
@@ -266,5 +260,10 @@ export const BlockchainCallErrs = strEnum([
   'INVALID_SIGNATURE',
 ]);
 export type BlockchainCallErrs = keyof typeof BlockchainCallErrs;
+
+export enum Environments {
+    DEVELOPMENT,
+    PRODUCTION,
+}
 
 export type ContractInstance = any; // TODO: add type definition for Contract

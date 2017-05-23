@@ -11,7 +11,7 @@ export const constants = {
     ETHER_SCAN_ENDPOINT: 'https://kovan.etherscan.io',
     ETHER_FAUCET_ENDPOINT: 'https://faucet.0xproject.com/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',
-    INFURA_TESTNET_URL: 'https://kovan.infura.io/T5WSC8cautR4KXyYgsRs',
+    HOSTED_TESTNET_URL: 'https://kovan.0xproject.com',
     MAKER_FEE: new BigNumber(0),
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',

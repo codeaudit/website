@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
+import promisify = require('es6-promisify');
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Provider} from 'ts/provider';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
@@ -36,7 +36,6 @@ export class Blockchain {
     public networkId: number;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
-    private provider: Provider;
     private exchange: ContractInstance;
     private exchangeLogFillEvents: any[];
     private proxy: ContractInstance;
@@ -151,7 +150,7 @@ export class Blockchain {
     }
     public isValidAddress(address: string): boolean {
         const lowercaseAddress = address.toLowerCase();
-        return this.web3Wrapper.call('isAddress', [lowercaseAddress]);
+        return this.web3Wrapper.isAddress(lowercaseAddress);
     }
     public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
         const orderHashBuff = ethUtil.toBuffer(orderHashHex);
@@ -240,7 +239,7 @@ export class Blockchain {
     }
     private async rehydrateStoreWithContractEvents() {
         // Ensure we are only ever listening to one set of events
-        this.stopWatchingExchangeLogFillEvents();
+        await this.stopWatchingExchangeLogFillEventsAsync();
 
         if (!this.doesUserAddressExist()) {
             return; // short-circuit
@@ -269,7 +268,7 @@ export class Blockchain {
                 // errors will be thrown by `watch`. For now, let's log the error
                 // to rollbar and stop watching when one occurs
                 errorReporter.reportAsync(err); // fire and forget
-                this.stopWatchingExchangeLogFillEvents();
+                this.stopWatchingExchangeLogFillEventsAsync(); // fire and forget
                 return;
             } else {
                 const args = result.args;
@@ -310,11 +309,11 @@ export class Blockchain {
         });
         this.exchangeLogFillEvents.push(exchangeLogFillEvent);
     }
-    private stopWatchingExchangeLogFillEvents() {
+    private async stopWatchingExchangeLogFillEventsAsync() {
         if (!_.isEmpty(this.exchangeLogFillEvents)) {
-            _.each(this.exchangeLogFillEvents, (logFillEvent) => {
-                logFillEvent.stopWatching();
-            });
+            for (const logFillEvent of this.exchangeLogFillEvents) {
+                await promisify(logFillEvent.stopWatching, logFillEvent)();
+            }
             this.exchangeLogFillEvents = [];
         }
     }
@@ -377,12 +376,7 @@ export class Blockchain {
     private async onPageLoadInitFireAndForgetAsync() {
         await this.onPageLoadAsync(); // wait for page to load
 
-        // Once page loaded, we can instantiate provider
-        this.provider = new Provider();
-
-        const web3Instance = new Web3();
-        web3Instance.setProvider(this.provider.getProviderObj());
-        this.web3Wrapper = new Web3Wrapper(web3Instance, this.dispatcher);
+        this.web3Wrapper = new Web3Wrapper(this.dispatcher);
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),
@@ -427,7 +421,8 @@ export class Blockchain {
     }
     private async instantiateContractIfExistsAsync(artifact: any, address?: string): Promise<ContractInstance> {
         const c = await contract(artifact);
-        c.setProvider(this.provider.getProviderObj());
+        const providerObj = this.web3Wrapper.getProviderObj();
+        c.setProvider(providerObj);
 
         const artifactNetworkConfigs = artifact.networks[this.networkId];
         let contractAddress;

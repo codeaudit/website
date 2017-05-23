@@ -1,6 +1,7 @@
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
+import {Environments} from 'ts/types';
 
 // Suggested way to include Rollbar with Webpack
 // https://github.com/rollbar/rollbar.js/tree/master/examples/webpack
@@ -23,7 +24,7 @@ const rollbarConfig = {
         'Exchange has not been deployed to detected network (network/artifact mismatch)',
         // Source: https://groups.google.com/a/chromium.org/forum/#!topic/chromium-discuss/7VU0_VvC7mE
         'undefined is not an object (evaluating \'__gCrWeb.autofill.extractForms\')',
-        // Source: http://stackoverflow.com/questions/43399818/securityerror-from-facebook-and-cross-domain-messaging/43400129
+        // Source: http://stackoverflow.com/questions/43399818/securityerror-from-facebook-and-cross-domain-messaging
         'SecurityError (DOM Exception 18)',
     ],
 };
@@ -32,7 +33,7 @@ const rollbar = Rollbar.init(rollbarConfig);
 
 export const errorReporter = {
     reportAsync(err: Error): Promise<any> {
-        if (configs.ENVIRONMENT === 'development') {
+        if (configs.ENVIRONMENT === Environments.DEVELOPMENT) {
             return; // Let's not log development errors to rollbar
         }
 

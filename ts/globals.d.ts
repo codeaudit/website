@@ -46,7 +46,6 @@ declare module 'bignumber.js' {
         public eq(value: BigNumber|number): BigNumber;
         public minus(value: BigNumber): BigNumber;
         public round(numDecimals?: BigNumber|number): BigNumber;
-        public toFixed(decimals: number): string;
     }
 
     // A standalone class is not exportable, so there is an empty module
@@ -66,6 +65,10 @@ declare module 'web3' {
     class Web3 {
         // It's weird that the providers are in an instance, instead of in the librairy
         public static providers: typeof providers;
+
+        public version: {
+            getNetwork(): number;
+        };
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3eth
         public eth: {
@@ -97,12 +100,20 @@ declare module 'web3' {
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter
             filter(value: string|IFilterObject): IFilterResult;
+
+            getAccounts(callback: (err: Error, value: any) => void): string[];
+
+            sendTransaction(txData: any, callback: (err: Error, value: any) => void): void;
         };
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3setprovider
         public setProvider(provider: providers.IProvider): void;
 
+        public currentProvider(): any;
+
         public fromWei(amount: BigNumber, unit: string): BigNumber;
+
+        public isAddress(address: string): boolean;
     }
 
     // I usally start interface namesby an I but do as you want
