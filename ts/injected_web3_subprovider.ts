@@ -13,7 +13,7 @@ export class InjectedWeb3SubProvider {
     constructor(injectedWeb3: Web3) {
         this.injectedWeb3 = injectedWeb3;
     }
-    public handleRequest(payload: any, next: any, end: any) {
+    public handleRequest(payload: any, next: () => void, end: (err: Error, result: any) => void) {
         switch (payload.method) {
             case 'eth_accounts':
                 this.injectedWeb3.eth.getAccounts(end);
