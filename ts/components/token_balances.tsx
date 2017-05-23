@@ -81,6 +81,10 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     }
     public componentWillReceiveProps(nextProps: TokenBalancesProps) {
         if (nextProps.userEtherBalance !== this.props.userEtherBalance) {
+            if (this.state.isBalanceSpinnerVisible) {
+                const receivedAmount = nextProps.userEtherBalance.minus(this.props.userEtherBalance);
+                this.props.dispatcher.showFlashMessage(`Received ${receivedAmount.toString(10)} test Ether`);
+            }
             this.setState({
                 isBalanceSpinnerVisible: false,
             });
@@ -363,6 +367,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
             await this.props.blockchain.mintTestTokensAsync(token);
+            const amount = zeroEx.toUnitAmount(constants.MINT_AMOUNT, token.decimals);
+            this.props.dispatcher.showFlashMessage(`Successfully minted ${amount.toString(10)} ${token.symbol}`);
             return true;
         } catch (err) {
             const errMsg = '' + err;
