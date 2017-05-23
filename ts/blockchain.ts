@@ -120,9 +120,9 @@ export class Blockchain {
             makerFee,
             takerFee,
             expirationUnixTimestampSec,
-            salt.toString(10),
+            salt.toString(),
         ];
-        const fillAmountT = fillAmount.toString(10);
+        const fillAmountT = fillAmount.toString();
         const response: ContractResponse = await this.exchange.fill(
                                  orderAddresses,
                                  orderValues,
