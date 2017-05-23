@@ -22,6 +22,7 @@ export const constants = {
     TAKER_FEE: new BigNumber(0),
     TESTNET_NAME: 'Kovan',
     TESTNET_NETWORK_ID: 42,
+    TESTRPC_NETWORK_ID: 50,
     ETH_DECIMAL_PLACES: 18,
     iconUrlBySymbol: {
         REP: '/images/token_icons/augur.png',

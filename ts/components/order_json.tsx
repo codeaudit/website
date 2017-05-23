@@ -78,7 +78,7 @@ export class OrderJSON extends React.Component<OrderJSONProps, OrderJSONState> {
                     <div>
                         <div className="mx-auto overflow-hidden" style={{width: 152}}>
                             <TextField
-                                id={this.state.shareLink}
+                                id={`${this.state.shareLink}-bitly`}
                                 value={this.state.shareLink}
                             />
                         </div>
