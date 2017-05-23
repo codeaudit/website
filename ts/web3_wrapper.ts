@@ -29,8 +29,7 @@ export class Web3Wrapper {
             // We catch all requests involving a users account and send it to the injectedWeb3
             // instance. All other requests go to the public hosted node.
             provider = new ProviderEngine();
-            const injectedWeb3Subprovider = new InjectedWeb3SubProvider(injectedWeb3);
-            provider.addProvider(injectedWeb3Subprovider);
+            provider.addProvider(new InjectedWeb3SubProvider(injectedWeb3));
             provider.addProvider(new FilterSubprovider());
             provider.addProvider(new RpcSubprovider({
                 rpcUrl: constants.HOSTED_TESTNET_URL,
