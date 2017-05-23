@@ -33,7 +33,7 @@ export class BalanceBoundedInput extends
         super(props);
         const amountString = this.props.amount ? this.props.amount.toString() : '';
         this.state = {
-            errMsg: this.validate(amountString),
+            errMsg: this.validate(amountString, props),
             amountString,
         };
     }
@@ -55,14 +55,14 @@ export class BalanceBoundedInput extends
             if (shouldResetState) {
                 const amountString = nextProps.amount.toString();
                 this.setState({
-                    errMsg: this.validate(amountString),
+                    errMsg: this.validate(amountString, nextProps),
                     amountString,
                 });
             }
         } else if (isCurrentAmountNumeric) {
             const amountString = '';
             this.setState({
-                errMsg: this.validate(amountString),
+                errMsg: this.validate(amountString, nextProps),
                 amountString,
             });
         }
@@ -91,7 +91,7 @@ export class BalanceBoundedInput extends
         );
     }
     private onValueChange(e: any, amountString: string) {
-        const errMsg = this.validate(amountString);
+        const errMsg = this.validate(amountString, this.props);
         this.setState({
             amountString,
             errMsg,
@@ -104,7 +104,7 @@ export class BalanceBoundedInput extends
             }
         });
     }
-    private validate(amountString: string): InputErrMsg {
+    private validate(amountString: string, props: BalanceBoundedInputProps): InputErrMsg {
         if (!utils.isNumeric(amountString)) {
             return amountString !== '' ? 'Must be a number' : '';
         }
@@ -112,7 +112,7 @@ export class BalanceBoundedInput extends
         if (amount.eq(0)) {
             return 'Cannot be zero';
         }
-        if (this.props.shouldCheckBalance && amount.gt(this.props.balance)) {
+        if (this.props.shouldCheckBalance && amount.gt(props.balance)) {
             return (
                 <span>
                     Insufficient balance.{' '}
@@ -120,7 +120,7 @@ export class BalanceBoundedInput extends
                 </span>
             );
         }
-        const errMsg = _.isUndefined(this.props.validate) ? undefined : this.props.validate(amount);
+        const errMsg = _.isUndefined(props.validate) ? undefined : props.validate(amount);
         return errMsg;
     }
     private renderIncreaseBalanceLink() {
