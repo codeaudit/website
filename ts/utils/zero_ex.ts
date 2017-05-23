@@ -48,7 +48,7 @@ export const zeroEx = {
                 argTypes.push(SolidityTypes.uint8);
             } else if (_.isObject(arg) && (arg as BigNumber).isBigNumber) {
                 argTypes.push(SolidityTypes.uint256);
-                args[i] = new BN(arg.toString(10), 10);
+                args[i] = new BN(arg.toString(), 10);
             } else if (ethUtil.isValidAddress(arg)) {
                 argTypes.push(SolidityTypes.address);
             } else if (_.isString(arg)) {

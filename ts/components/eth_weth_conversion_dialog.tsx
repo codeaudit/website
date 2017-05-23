@@ -115,7 +115,11 @@ export class EthWethConversionDialog extends
                 shouldShowIncompleteErrs: true,
             });
         } else {
-            this.props.onComplete(this.state.direction, this.state.value);
+            const value = this.state.value;
+            this.setState({
+                value: undefined,
+            });
+            this.props.onComplete(this.state.direction, value);
         }
     }
     private onCancel() {
