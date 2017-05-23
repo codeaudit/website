@@ -183,15 +183,16 @@ export class Blockchain {
         const [nodeVersionNumber] = findVersions(this.nodeVersion);
         const isVersionBeforeParityFix = compareVersions(nodeVersionNumber, '1.6.6') <= 0;
         if (isParityNode && isVersionBeforeParityFix) {
+            const signatureBuffer = ethUtil.toBuffer(signature);
             // Parity v1.6.6 and earlier returns the signatureData as vrs
-            let v = _.parseInt(signature[0]);
+            let v = signatureBuffer[0];
             if (v < 27) {
                 v += 27;
             }
             signatureData = {
-                v: signature[0],
-                r: signature.slice(1, 33),
-                s: signature.slice(33, 65),
+                v: signatureBuffer[0],
+                r: signatureBuffer.slice(1, 33),
+                s: signatureBuffer.slice(33, 65),
             };
         } else {
             signatureData = ethUtil.fromRpcSig(signature);
