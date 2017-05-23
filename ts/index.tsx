@@ -2,6 +2,7 @@ import * as React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, Store as ReduxStore} from 'redux';
+import * as BigNumber from 'bignumber.js';
 import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
@@ -12,6 +13,12 @@ import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
+
+// By default BigNumber's `toString` method converts to exponential notation if the value has
+// more then 20 digits. We want to avoid this behavior, so we set EXPONENTIAL_AT to a high number
+BigNumber.config({
+    EXPONENTIAL_AT: 1000,
+});
 
 const CUSTOM_GREY = 'rgb(39, 39, 39)';
 const CUSTOM_GREEN = 'rgb(102, 222, 117)';
