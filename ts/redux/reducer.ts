@@ -30,6 +30,7 @@ export interface State {
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
     orderSalt: BigNumber;
+    nodeVersion: string;
     screenWidth: ScreenWidths;
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
@@ -56,6 +57,7 @@ const INITIAL_STATE: State = {
     },
     orderTakerAddress: '',
     orderSalt: zeroEx.generateSalt(),
+    nodeVersion: undefined,
     screenWidth: utils.getScreenWidth(),
     shouldBlockchainErrDialogBeOpen: false,
     sideToAssetToken: {
@@ -77,6 +79,12 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case ActionTypes.UPDATE_ORDER_SALT: {
             return _.assign({}, state, {
                 orderSalt: action.data,
+            });
+        }
+
+        case ActionTypes.UPDATE_NODE_VERSION: {
+            return _.assign({}, state, {
+                nodeVersion: action.data,
             });
         }
 

@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
 import promisify = require('es6-promisify');
+import findVersions = require('find-versions');
+import compareVersions = require('compare-versions');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -34,6 +36,7 @@ const ALLOWANCE_TO_ZERO_GAS_AMOUNT = 45730;
 
 export class Blockchain {
     public networkId: number;
+    public nodeVersion: string;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private exchange: ContractInstance;
@@ -64,6 +67,11 @@ export class Blockchain {
         if (this.userAddress !== newUserAddress) {
             this.userAddress = newUserAddress;
             await this.rehydrateStoreWithContractEvents();
+        }
+    }
+    public async nodeVersionUpdatedFireAndForgetAsync(nodeVersion: string) {
+        if (this.nodeVersion !== nodeVersion) {
+            this.nodeVersion = nodeVersion;
         }
     }
     public async setExchangeAllowanceAsync(token: Token, amountInBaseUnits: BigNumber) {
@@ -153,9 +161,17 @@ export class Blockchain {
         return this.web3Wrapper.isAddress(lowercaseAddress);
     }
     public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
-        const orderHashBuff = ethUtil.toBuffer(orderHashHex);
-        const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuff);
-        const msgHashHex = ethUtil.bufferToHex(msgHashBuff);
+        let msgHashHex;
+        // Parity node adds the personalMessage prefix itself
+        const isParityNode = _.includes(this.nodeVersion, 'Parity');
+        if (isParityNode) {
+            msgHashHex = orderHashHex;
+        } else {
+            const orderHashBuff = ethUtil.toBuffer(orderHashHex);
+            const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuff);
+            msgHashHex = ethUtil.bufferToHex(msgHashBuff);
+        }
+
         const makerAddress = this.userAddress;
         // If makerAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
@@ -163,7 +179,25 @@ export class Blockchain {
             throw new Error('Tried to send a sign request but user has no associated addresses');
         }
         const signature = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
-        const signatureData = ethUtil.fromRpcSig(signature);
+
+        let signatureData;
+        const [nodeVersionNumber] = findVersions(this.nodeVersion);
+        const isVersionBeforeParityFix = compareVersions(nodeVersionNumber, '1.6.6') <= 0;
+        if (isParityNode && isVersionBeforeParityFix) {
+            // Parity v1.6.6 and earlier returns the signatureData as vrs
+            let v = _.parseInt(signature[0]);
+            if (v < 27) {
+                v += 27;
+            }
+            signatureData = {
+                v: signature[0],
+                r: signature.slice(1, 33),
+                s: signature.slice(33, 65),
+            };
+        } else {
+            signatureData = ethUtil.fromRpcSig(signature);
+        }
+
         const {v, r, s} = signatureData;
         signatureData.hash = orderHashHex;
         signatureData.r = ethUtil.bufferToHex(signatureData.r);

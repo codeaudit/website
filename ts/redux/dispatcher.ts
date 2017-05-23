@@ -24,6 +24,12 @@ export class Dispatcher {
             type: ActionTypes.RESET_STATE,
         });
     }
+    public updateNodeVersion(nodeVersion: string) {
+        this.dispatch({
+            data: nodeVersion,
+            type: ActionTypes.UPDATE_NODE_VERSION,
+        });
+    }
     public updateScreenWidth(screenWidth: ScreenWidths) {
         this.dispatch({
             data: screenWidth,

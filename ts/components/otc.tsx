@@ -42,6 +42,7 @@ export interface OTCAllProps {
     dispatcher: Dispatcher;
     hashData: HashData;
     networkId: number;
+    nodeVersion: string;
     orderFillAmount: BigNumber;
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
@@ -55,6 +56,7 @@ export interface OTCAllProps {
 
 interface OTCAllState {
     prevNetworkId: number;
+    prevNodeVersion: string;
     prevUserAddress: string;
 }
 
@@ -90,6 +92,7 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
         this.throttledScreenWidthUpdate = _.throttle(this.updateScreenWidth.bind(this), THROTTLE_TIMEOUT);
         this.state = {
             prevNetworkId: this.props.networkId,
+            prevNodeVersion: this.props.nodeVersion,
             prevUserAddress: this.props.userAddress,
         };
     }
@@ -124,6 +127,9 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
             this.setState({
                 prevUserAddress: nextProps.userAddress,
             });
+        }
+        if (nextProps.nodeVersion !== this.state.prevNodeVersion) {
+            this.blockchain.nodeVersionUpdatedFireAndForgetAsync(nextProps.nodeVersion);
         }
     }
     public render() {
