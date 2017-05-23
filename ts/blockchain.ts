@@ -29,7 +29,6 @@ import contract = require('truffle-contract');
 import * as BigNumber from 'bignumber.js';
 import ethUtil = require('ethereumjs-util');
 
-const MINT_AMOUNT = new BigNumber('100000000000000000000');
 const ALLOWANCE_TO_ZERO_GAS_AMOUNT = 45730;
 
 export class Blockchain {
@@ -179,10 +178,10 @@ export class Blockchain {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         const mintableContract = await this.instantiateContractIfExistsAsync(MintableArtifacts, token.address);
-        await mintableContract.mint(MINT_AMOUNT, {
+        await mintableContract.mint(constants.MINT_AMOUNT, {
             from: this.userAddress,
         });
-        const balanceDelta = MINT_AMOUNT;
+        const balanceDelta = constants.MINT_AMOUNT;
         this.dispatcher.updateTokenBalanceByAddress(token.address, balanceDelta);
     }
     public async convertEthToWrappedEthTokensAsync(amount: BigNumber) {

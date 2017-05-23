@@ -40,7 +40,7 @@ export class EthWethConversionButton extends
                 <RaisedButton
                     style={{width: '100%'}}
                     disabled={this.state.isEthConversionHappening}
-                    label="Convert"
+                    label={this.state.isEthConversionHappening ? 'Converting...' : 'Convert'}
                     onClick={this.toggleConversionDialog.bind(this)}
                 />
                 <EthWethConversionDialog
