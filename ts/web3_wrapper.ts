@@ -81,7 +81,10 @@ export class Web3Wrapper {
     }
     public async doesContractExistAtAddressAsync(address: string): Promise<boolean> {
         const code = await promisify(this.web3.eth.getCode)(address);
-        return code !== '0x0';
+        // Regex matches 0x0, 0x00, 0x in order to accomodate poorly implemented clients
+        const zeroHexAddressRegex = /^0[xX][0]*$/;
+        const didFindCode = _.isNull(code.match(zeroHexAddressRegex));
+        return didFindCode;
     }
     // Note: since `sign` is overloaded to be both a sync and async method, it doesn't play nice
     // with our callAsync method. We therefore handle it here as a special case.
