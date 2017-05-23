@@ -161,9 +161,9 @@ export class Blockchain {
     }
     public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
         let msgHashHex;
-        // Parity node adds the personalMessage prefix itself
         const isParityNode = _.includes(this.nodeVersion, 'Parity');
         if (isParityNode) {
+            // Parity node adds the personalMessage prefix itself
             msgHashHex = orderHashHex;
         } else {
             const orderHashBuff = ethUtil.toBuffer(orderHashHex);
@@ -181,10 +181,14 @@ export class Blockchain {
 
         let signatureData;
         const [nodeVersionNumber] = findVersions(this.nodeVersion);
-        const isVersionBeforeParityFix = compareVersions(nodeVersionNumber, '1.6.6') <= 0;
+        // Parity v1.6.6 and earlier returns the signatureData as vrs instead of rsv as Geth does
+        // Since this version they have updated it to rsv but for the time being we still want to
+        // support version < 1.6.6
+        // Date: May 23rd 2017
+        const latestParityVersionWithVRS = '1.6.6';
+        const isVersionBeforeParityFix = compareVersions(nodeVersionNumber, latestParityVersionWithVRS) <= 0;
         if (isParityNode && isVersionBeforeParityFix) {
             const signatureBuffer = ethUtil.toBuffer(signature);
-            // Parity v1.6.6 and earlier returns the signatureData as vrs
             let v = signatureBuffer[0];
             if (v < 27) {
                 v += 27;
