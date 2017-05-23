@@ -93,8 +93,8 @@ export class Web3Wrapper {
         return signData;
     }
     public async getBlockTimestampAsync(blockHash: string): Promise<number> {
-        const blockObj = await promisify(this.web3.eth.getBlock)(blockHash);
-        return blockObj.timestamp;
+        const {timestamp} = await promisify(this.web3.eth.getBlock)(blockHash);
+        return timestamp;
     }
     public destroy() {
         this.stopEmittingNetworkConnectionAndUserBalanceStateAsync();
