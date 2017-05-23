@@ -22,7 +22,7 @@ export class Web3Wrapper {
         const doesInjectedWeb3Exist = !_.isUndefined(injectedWeb3);
 
         const networkId = doesInjectedWeb3Exist ? _.parseInt(injectedWeb3.version.network) : undefined;
-        const isPublicNodeAvailable = networkId === 42;
+        const isPublicNodeAvailable = networkId === constants.TESTNET_NETWORK_ID;
 
         let provider;
         if (doesInjectedWeb3Exist && isPublicNodeAvailable) {
