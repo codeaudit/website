@@ -33,7 +33,7 @@ export class BalanceBoundedInput extends
         super(props);
         const amountString = this.props.amount ? this.props.amount.toString() : '';
         this.state = {
-            errMsg: this.validate(amountString),
+            errMsg: this.validate(amountString, props.balance),
             amountString,
         };
     }
@@ -55,14 +55,14 @@ export class BalanceBoundedInput extends
             if (shouldResetState) {
                 const amountString = nextProps.amount.toString();
                 this.setState({
-                    errMsg: this.validate(amountString),
+                    errMsg: this.validate(amountString, nextProps.balance),
                     amountString,
                 });
             }
         } else if (isCurrentAmountNumeric) {
             const amountString = '';
             this.setState({
-                errMsg: this.validate(amountString),
+                errMsg: this.validate(amountString, nextProps.balance),
                 amountString,
             });
         }
@@ -91,7 +91,7 @@ export class BalanceBoundedInput extends
         );
     }
     private onValueChange(e: any, amountString: string) {
-        const errMsg = this.validate(amountString);
+        const errMsg = this.validate(amountString, this.props.balance);
         this.setState({
             amountString,
             errMsg,
@@ -104,7 +104,7 @@ export class BalanceBoundedInput extends
             }
         });
     }
-    private validate(amountString: string): InputErrMsg {
+    private validate(amountString: string, balance: BigNumber): InputErrMsg {
         if (!utils.isNumeric(amountString)) {
             return amountString !== '' ? 'Must be a number' : '';
         }
@@ -112,7 +112,7 @@ export class BalanceBoundedInput extends
         if (amount.eq(0)) {
             return 'Cannot be zero';
         }
-        if (this.props.shouldCheckBalance && amount.gt(this.props.balance)) {
+        if (this.props.shouldCheckBalance && amount.gt(balance)) {
             return (
                 <span>
                     Insufficient balance.{' '}
