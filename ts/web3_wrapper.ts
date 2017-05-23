@@ -15,13 +15,12 @@ export class Web3Wrapper {
     private web3: Web3;
     private networkId: number;
     private watchNetworkAndBalanceIntervalId: number;
-    constructor(dispatcher: Dispatcher) {
+    constructor(dispatcher: Dispatcher, networkId: number) {
         this.dispatcher = dispatcher;
 
         const injectedWeb3 = (window as any).web3;
         const doesInjectedWeb3Exist = !_.isUndefined(injectedWeb3);
 
-        const networkId = doesInjectedWeb3Exist ? _.parseInt(injectedWeb3.version.network) : undefined;
         const isPublicNodeAvailable = networkId === constants.TESTNET_NETWORK_ID;
 
         let provider;
@@ -62,6 +61,10 @@ export class Web3Wrapper {
             return '';
         }
         return (addresses as string[])[0];
+    }
+    public async getNodeVersionAsync() {
+        const nodeVersion = await promisify(this.web3.version.getNode)();
+        return nodeVersion;
     }
     public getProviderObj() {
         return this.web3.currentProvider;
@@ -109,6 +112,7 @@ export class Web3Wrapper {
         }
 
         let prevNetworkId: number;
+        let prevNodeVersion: string;
         let prevUserEtherBalanceInWei = new BigNumber(0);
         let prevUserAddress: string;
         this.dispatcher.updateNetworkId(prevNetworkId);
@@ -118,6 +122,13 @@ export class Web3Wrapper {
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
                 this.dispatcher.updateNetworkId(currentNetworkId);
+            }
+
+            // Check for node version changes
+            const currentNodeVersion = await this.getNodeVersionAsync();
+            if (currentNodeVersion !== prevNodeVersion) {
+                prevNodeVersion = currentNodeVersion;
+                this.dispatcher.updateNodeVersion(currentNodeVersion);
             }
 
             const userAddressIfExists = await this.getFirstAccountIfExistsAsync();

@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
 import promisify = require('es6-promisify');
+import findVersions = require('find-versions');
+import compareVersions = require('compare-versions');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -33,6 +35,7 @@ const ALLOWANCE_TO_ZERO_GAS_AMOUNT = 45730;
 
 export class Blockchain {
     public networkId: number;
+    public nodeVersion: string;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private exchange: ContractInstance;
@@ -63,6 +66,11 @@ export class Blockchain {
         if (this.userAddress !== newUserAddress) {
             this.userAddress = newUserAddress;
             await this.rehydrateStoreWithContractEvents();
+        }
+    }
+    public async nodeVersionUpdatedFireAndForgetAsync(nodeVersion: string) {
+        if (this.nodeVersion !== nodeVersion) {
+            this.nodeVersion = nodeVersion;
         }
     }
     public async setExchangeAllowanceAsync(token: Token, amountInBaseUnits: BigNumber) {
@@ -152,9 +160,17 @@ export class Blockchain {
         return this.web3Wrapper.isAddress(lowercaseAddress);
     }
     public async sendSignRequestAsync(orderHashHex: string): Promise<SignatureData> {
-        const orderHashBuff = ethUtil.toBuffer(orderHashHex);
-        const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuff);
-        const msgHashHex = ethUtil.bufferToHex(msgHashBuff);
+        let msgHashHex;
+        const isParityNode = _.includes(this.nodeVersion, 'Parity');
+        if (isParityNode) {
+            // Parity node adds the personalMessage prefix itself
+            msgHashHex = orderHashHex;
+        } else {
+            const orderHashBuff = ethUtil.toBuffer(orderHashHex);
+            const msgHashBuff = ethUtil.hashPersonalMessage(orderHashBuff);
+            msgHashHex = ethUtil.bufferToHex(msgHashBuff);
+        }
+
         const makerAddress = this.userAddress;
         // If makerAddress is undefined, this means they have a web3 instance injected into their browser
         // but no account addresses associated with it.
@@ -162,7 +178,30 @@ export class Blockchain {
             throw new Error('Tried to send a sign request but user has no associated addresses');
         }
         const signature = await this.web3Wrapper.signTransactionAsync(makerAddress, msgHashHex);
-        const signatureData = ethUtil.fromRpcSig(signature);
+
+        let signatureData;
+        const [nodeVersionNumber] = findVersions(this.nodeVersion);
+        // Parity v1.6.6 and earlier returns the signatureData as vrs instead of rsv as Geth does
+        // Since this version they have updated it to rsv but for the time being we still want to
+        // support version < 1.6.6
+        // Date: May 23rd 2017
+        const latestParityVersionWithVRS = '1.6.6';
+        const isVersionBeforeParityFix = compareVersions(nodeVersionNumber, latestParityVersionWithVRS) <= 0;
+        if (isParityNode && isVersionBeforeParityFix) {
+            const signatureBuffer = ethUtil.toBuffer(signature);
+            let v = signatureBuffer[0];
+            if (v < 27) {
+                v += 27;
+            }
+            signatureData = {
+                v: signatureBuffer[0],
+                r: signatureBuffer.slice(1, 33),
+                s: signatureBuffer.slice(33, 65),
+            };
+        } else {
+            signatureData = ethUtil.fromRpcSig(signature);
+        }
+
         const {v, r, s} = signatureData;
         signatureData.hash = orderHashHex;
         signatureData.r = ethUtil.bufferToHex(signatureData.r);
@@ -375,7 +414,14 @@ export class Blockchain {
     private async onPageLoadInitFireAndForgetAsync() {
         await this.onPageLoadAsync(); // wait for page to load
 
-        this.web3Wrapper = new Web3Wrapper(this.dispatcher);
+        const injectedWeb3 = (window as any).web3;
+        // Hack: We need to know the networkId the injectedWeb3 is connected to (if it is defined) in
+        // order to properly instantiate the web3Wrapper. Since we must use the async call, we cannot
+        // retrieve it from within the web3Wrapper constructor. This is and should remain the only
+        // call to a web3 instance outside of web3Wrapper in the entire dapp.
+        const networkId = !_.isUndefined(injectedWeb3) ? await promisify(injectedWeb3.version.getNetwork)() :
+                                                             undefined;
+        this.web3Wrapper = new Web3Wrapper(this.dispatcher, networkId);
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),

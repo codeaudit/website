@@ -132,6 +132,7 @@ export enum BalanceErrs {
 
 export const ActionTypes = strEnum([
     'UPDATE_SCREEN_WIDTH',
+    'UPDATE_NODE_VERSION',
     'RESET_STATE',
     'ADD_TOKEN_TO_TOKEN_BY_ADDRESS',
     'BLOCKCHAIN_ERR_ENCOUNTERED',

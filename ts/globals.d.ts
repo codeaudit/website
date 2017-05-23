@@ -13,6 +13,8 @@ declare module 'react-html5video';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
+declare module 'find-versions';
+declare module 'compare-versions';
 
 declare module '*.json' {
     const json: any;
@@ -68,6 +70,8 @@ declare module 'web3' {
 
         public version: {
             getNetwork(): number;
+
+            getNode(): string;
         };
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3eth

@@ -18,6 +18,7 @@ interface MapStateToProps {
     blockchainIsLoaded: boolean;
     hashData: HashData;
     networkId: number;
+    nodeVersion: string;
     orderFillAmount: number;
     tokenByAddress: TokenByAddress;
     userEtherBalance: number;
@@ -61,6 +62,7 @@ const mapStateToProps = (state: State, ownProps: OTCComponentAllProps): Connecte
         blockchainErr: state.blockchainErr,
         blockchainIsLoaded: state.blockchainIsLoaded,
         networkId: state.networkId,
+        nodeVersion: state.nodeVersion,
         orderFillAmount: state.orderFillAmount,
         hashData,
         screenWidth: state.screenWidth,
