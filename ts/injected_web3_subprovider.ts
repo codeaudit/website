@@ -20,13 +20,12 @@ export class InjectedWeb3SubProvider {
                 return;
 
             case 'eth_sendTransaction':
-                const txParams = payload.params[0];
+                const [txParams] = payload.params;
                 this.injectedWeb3.eth.sendTransaction(txParams, end);
                 return;
 
             case 'eth_sign':
-                const address = payload.params[0];
-                const message = payload.params[1];
+                const [address, message] = payload.params;
                 this.injectedWeb3.eth.sign(address, message, end);
                 return;
 
