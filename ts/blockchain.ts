@@ -414,9 +414,7 @@ export class Blockchain {
     }
     private async instantiateContractIfExistsAsync(artifact: any, address?: string): Promise<ContractInstance> {
         const c = await contract(artifact);
-        const contractName: string = artifact.contract_name;
-        const doesPreferInjectedWeb3 = !!constants.contractsThatPreferInjectedWeb3[contractName];
-        const providerObj = this.web3Wrapper.getPreferredProviderObj(doesPreferInjectedWeb3);
+        const providerObj = this.web3Wrapper.getProviderObj();
         c.setProvider(providerObj);
 
         const artifactNetworkConfigs = artifact.networks[this.networkId];

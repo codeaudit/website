@@ -101,7 +101,9 @@ declare module 'web3' {
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter
             filter(value: string|IFilterObject): IFilterResult;
 
-            getAccounts(): string[];
+            getAccounts(callback: (err: Error, value: any) => void): string[];
+
+            sendTransaction(txData: any, callback: (err: Error, value: any) => void): void;
         };
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3setprovider

@@ -12,6 +12,7 @@ export const constants = {
     ETHER_FAUCET_ENDPOINT: 'https://faucet.0xproject.com/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',
     HOSTED_TESTNET_URL: 'https://kovan.0xproject.com',
+    JSON_RPC_VERSION: '2.0',
     MAKER_FEE: new BigNumber(0),
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
@@ -46,10 +47,4 @@ export const constants = {
         4: 'Rinkeby',
         42: 'Kovan',
     } as {[symbol: number]: string},
-    contractsThatPreferInjectedWeb3: {
-        Exchange: true,
-        Mintable: true,
-        Token: true,
-        EtherToken: true,
-    } as {[contractName: string]: boolean},
 };
