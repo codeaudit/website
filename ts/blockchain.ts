@@ -376,7 +376,14 @@ export class Blockchain {
     private async onPageLoadInitFireAndForgetAsync() {
         await this.onPageLoadAsync(); // wait for page to load
 
-        this.web3Wrapper = new Web3Wrapper(this.dispatcher);
+        const injectedWeb3 = (window as any).web3;
+        // Hack: We need to know the networkId the injectedWeb3 is connected to (if it is defined) in
+        // order to properly instantiate the web3Wrapper. Since we must use the async call, we cannot
+        // retrieve it from within the web3Wrapper constructor. This is and should remain the only
+        // call to a web3 instance outside of web3Wrapper in the entire dapp.
+        const networkId = !_.isUndefined(injectedWeb3) ? await promisify(injectedWeb3.version.getNetwork)() :
+                                                             undefined;
+        this.web3Wrapper = new Web3Wrapper(this.dispatcher, networkId);
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),

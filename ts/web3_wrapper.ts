@@ -15,13 +15,12 @@ export class Web3Wrapper {
     private web3: Web3;
     private networkId: number;
     private watchNetworkAndBalanceIntervalId: number;
-    constructor(dispatcher: Dispatcher) {
+    constructor(dispatcher: Dispatcher, networkId: number) {
         this.dispatcher = dispatcher;
 
         const injectedWeb3 = (window as any).web3;
         const doesInjectedWeb3Exist = !_.isUndefined(injectedWeb3);
 
-        const networkId = doesInjectedWeb3Exist ? _.parseInt(injectedWeb3.version.network) : undefined;
         const isPublicNodeAvailable = networkId === constants.TESTNET_NETWORK_ID;
 
         let provider;

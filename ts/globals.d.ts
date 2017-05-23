@@ -68,6 +68,8 @@ declare module 'web3' {
 
         public version: {
             getNetwork(): number;
+
+            getNode(): string;
         };
 
         // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3eth
