@@ -35,10 +35,12 @@ export class EthWethConversionButton extends
         };
     }
     public render() {
+        const labelStyle = this.state.isEthConversionHappening ? {fontSize: 10} : {};
         return (
             <div>
                 <RaisedButton
                     style={{width: '100%'}}
+                    labelStyle={labelStyle}
                     disabled={this.state.isEthConversionHappening}
                     label={this.state.isEthConversionHappening ? 'Converting...' : 'Convert'}
                     onClick={this.toggleConversionDialog.bind(this)}
