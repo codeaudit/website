@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as Web3 from 'web3';
+import promisify = require('es6-promisify');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
 import {zeroEx} from 'ts/utils/zero_ex';
@@ -232,7 +233,7 @@ export class Blockchain {
     }
     private async rehydrateStoreWithContractEvents() {
         // Ensure we are only ever listening to one set of events
-        this.stopWatchingExchangeLogFillEvents();
+        await this.stopWatchingExchangeLogFillEventsAsync();
 
         if (!this.doesUserAddressExist()) {
             return; // short-circuit
@@ -261,7 +262,7 @@ export class Blockchain {
                 // errors will be thrown by `watch`. For now, let's log the error
                 // to rollbar and stop watching when one occurs
                 errorReporter.reportAsync(err); // fire and forget
-                this.stopWatchingExchangeLogFillEvents();
+                this.stopWatchingExchangeLogFillEventsAsync(); // fire and forget
                 return;
             } else {
                 const args = result.args;
@@ -302,11 +303,11 @@ export class Blockchain {
         });
         this.exchangeLogFillEvents.push(exchangeLogFillEvent);
     }
-    private stopWatchingExchangeLogFillEvents() {
+    private async stopWatchingExchangeLogFillEventsAsync() {
         if (!_.isEmpty(this.exchangeLogFillEvents)) {
-            _.each(this.exchangeLogFillEvents, (logFillEvent) => {
-                logFillEvent.stopWatching();
-            });
+            for (const logFillEvent of this.exchangeLogFillEvents) {
+                await promisify(logFillEvent.stopWatching, logFillEvent)();
+            }
             this.exchangeLogFillEvents = [];
         }
     }
