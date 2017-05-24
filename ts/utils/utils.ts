@@ -34,11 +34,11 @@ export const utils = {
     // It is a fixed constant so that both the redux store's INITIAL_STATE and components can check for
     // whether a user has set an expiry date or not. It is set unrealistically high so as not to collide
     // with actual values a user would select.
-    initialOrderExpiryUnixTimestampSec(): BigNumber {
+    initialOrderExpiryUnixTimestampSec(): BigNumber.BigNumber {
         const m = moment('2050-01-01');
         return new BigNumber(m.unix());
     },
-    convertToUnixTimestampSeconds(date: moment.Moment, time?: moment.Moment): BigNumber {
+    convertToUnixTimestampSeconds(date: moment.Moment, time?: moment.Moment): BigNumber.BigNumber {
         const finalMoment = date;
         if (!_.isUndefined(time)) {
             finalMoment.hours(time.hours());
@@ -46,18 +46,18 @@ export const utils = {
         }
         return new BigNumber(finalMoment.unix());
     },
-    convertToMomentFromUnixTimestamp(unixTimestampSec: BigNumber): moment.Moment {
+    convertToMomentFromUnixTimestamp(unixTimestampSec: BigNumber.BigNumber): moment.Moment {
         return moment.unix(unixTimestampSec.toNumber());
     },
-    convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: BigNumber): string {
+    convertToReadableDateTimeFromUnixTimestamp(unixTimestampSec: BigNumber.BigNumber): string {
         const m = this.convertToMomentFromUnixTimestamp(unixTimestampSec);
         const formattedDate: string = m.format('h:MMa MMMM D YYYY');
         return formattedDate;
     },
     generateOrder(networkId: number, exchangeContract: string, sideToAssetToken: SideToAssetToken,
-                  orderExpiryTimestamp: BigNumber, orderTakerAddress: string, orderMakerAddress: string,
-                  makerFee: BigNumber, takerFee: BigNumber, feeRecipient: string, signatureData: SignatureData,
-                  tokenByAddress: TokenByAddress, orderSalt: BigNumber): Order {
+                  orderExpiryTimestamp: BigNumber.BigNumber, orderTakerAddress: string, orderMakerAddress: string,
+                  makerFee: BigNumber.BigNumber, takerFee: BigNumber.BigNumber, feeRecipient: string,
+                  signatureData: SignatureData, tokenByAddress: TokenByAddress, orderSalt: BigNumber.BigNumber): Order {
         const makerToken = tokenByAddress[sideToAssetToken[Side.deposit].address];
         const takerToken = tokenByAddress[sideToAssetToken[Side.receive].address];
         const order = {

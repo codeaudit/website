@@ -6,8 +6,8 @@ import * as BigNumber from 'bignumber.js';
 import * as moment from 'moment';
 
 interface ExpirationInputProps {
-    orderExpiryTimestamp: BigNumber;
-    updateOrderExpiry: (unixTimestampSec: BigNumber) => void;
+    orderExpiryTimestamp: BigNumber.BigNumber;
+    updateOrderExpiry: (unixTimestampSec: BigNumber.BigNumber) => void;
 }
 
 interface ExpirationInputState {

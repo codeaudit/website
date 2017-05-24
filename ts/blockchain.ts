@@ -73,7 +73,7 @@ export class Blockchain {
             this.nodeVersion = nodeVersion;
         }
     }
-    public async setExchangeAllowanceAsync(token: Token, amountInBaseUnits: BigNumber) {
+    public async setExchangeAllowanceAsync(token: Token, amountInBaseUnits: BigNumber.BigNumber) {
         utils.assert(this.isValidAddress(token.address), BlockchainCallErrs.TOKEN_ADDRESS_IS_INVALID);
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
@@ -105,10 +105,11 @@ export class Blockchain {
         return isValidSignature;
     }
     public async fillOrderAsync(maker: string, taker: string, makerTokenAddress: string,
-                                takerTokenAddress: string, makerTokenAmount: BigNumber,
-                                takerTokenAmount: BigNumber, makerFee: BigNumber, takerFee: BigNumber,
-                                expirationUnixTimestampSec: BigNumber, feeRecipient: string,
-                                fillAmount: BigNumber, signatureData: SignatureData, salt: BigNumber) {
+                                takerTokenAddress: string, makerTokenAmount: BigNumber.BigNumber,
+                                takerTokenAmount: BigNumber.BigNumber, makerFee: BigNumber.BigNumber,
+                                takerFee: BigNumber.BigNumber, expirationUnixTimestampSec: BigNumber.BigNumber,
+                                feeRecipient: string, fillAmount: BigNumber.BigNumber,
+                                signatureData: SignatureData, salt: BigNumber.BigNumber) {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         taker = taker === '' ? constants.NULL_ADDRESS : taker;
@@ -147,7 +148,7 @@ export class Blockchain {
         }
         return response;
     }
-    public async getFillAmountAsync(orderHash: string): Promise<BigNumber> {
+    public async getFillAmountAsync(orderHash: string): Promise<BigNumber.BigNumber> {
         utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
         const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
         return fillAmount;
@@ -223,7 +224,7 @@ export class Blockchain {
         const balanceDelta = constants.MINT_AMOUNT;
         this.dispatcher.updateTokenBalanceByAddress(token.address, balanceDelta);
     }
-    public async convertEthToWrappedEthTokensAsync(amount: BigNumber) {
+    public async convertEthToWrappedEthTokensAsync(amount: BigNumber.BigNumber) {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
@@ -232,7 +233,7 @@ export class Blockchain {
             value: amount,
         });
     }
-    public async convertWrappedEthTokensToEthAsync(amount: BigNumber) {
+    public async convertWrappedEthTokensToEthAsync(amount: BigNumber.BigNumber) {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
         const wethContract = await this.instantiateContractIfExistsAsync(EtherTokenArtifacts);
@@ -243,10 +244,11 @@ export class Blockchain {
     public async doesContractExistAtAddressAsync(address: string) {
         return await this.web3Wrapper.doesContractExistAtAddressAsync(address);
     }
-    public async getCurrentUserTokenBalanceAndAllowanceAsync(tokenAddress: string): Promise<BigNumber[]> {
+    public async getCurrentUserTokenBalanceAndAllowanceAsync(tokenAddress: string): Promise<BigNumber.BigNumber[]> {
       return await this.getTokenBalanceAndAllowanceAsync(this.userAddress, tokenAddress);
     }
-    public async getTokenBalanceAndAllowanceAsync(ownerAddress: string, tokenAddress: string): Promise<BigNumber[]> {
+    public async getTokenBalanceAndAllowanceAsync(ownerAddress: string, tokenAddress: string):
+                    Promise<BigNumber.BigNumber[]> {
         const tokenContract = await this.instantiateContractIfExistsAsync(TokenArtifacts, tokenAddress);
         let balance;
         let allowance;

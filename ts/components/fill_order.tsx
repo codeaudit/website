@@ -32,7 +32,7 @@ import * as moment from 'moment';
 interface FillOrderProps {
     blockchain: Blockchain;
     blockchainErr: BlockchainErrs;
-    orderFillAmount: BigNumber;
+    orderFillAmount: BigNumber.BigNumber;
     networkId: number;
     userAddress: string;
     tokenByAddress: TokenByAddress;
@@ -47,7 +47,7 @@ interface FillOrderState {
     orderJSONErrMsg: string;
     parsedOrder: Order;
     didFillOrderSucceed: boolean;
-    amountAlreadyFilled: BigNumber;
+    amountAlreadyFilled: BigNumber.BigNumber;
 }
 
 export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
@@ -217,7 +217,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             </div>
         );
     }
-    private onFillAmountChange(isValid: boolean, amount?: BigNumber) {
+    private onFillAmountChange(isValid: boolean, amount?: BigNumber.BigNumber) {
         this.props.dispatcher.updateOrderFillAmount(amount);
     }
     private onFillOrderChanged(e: any) {

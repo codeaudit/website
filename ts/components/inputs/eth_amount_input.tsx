@@ -8,8 +8,8 @@ import {constants} from 'ts/utils/constants';
 
 interface EthAmountInputProps {
     label: string;
-    balance: BigNumber;
-    amount?: BigNumber;
+    balance: BigNumber.BigNumber;
+    amount?: BigNumber.BigNumber;
     onChange: ValidatedBigNumberCallback;
     shouldShowIncompleteErrs: boolean;
     onVisitBalancesPageClick?: () => void;
@@ -39,7 +39,7 @@ export class EthAmountInput extends React.Component<EthAmountInputProps, EthAmou
             </div>
         );
     }
-    private onChange(isValid: boolean, amount?: BigNumber) {
+    private onChange(isValid: boolean, amount?: BigNumber.BigNumber) {
         const baseUnitAmountIfExists = _.isUndefined(amount) ?
             undefined :
             zeroEx.toBaseUnitAmount(amount, constants.ETH_DECIMAL_PLACES);

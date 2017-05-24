@@ -10,7 +10,7 @@ import {Link} from 'react-router-dom';
 interface TokenAmountInputProps {
     label: string;
     token: Token;
-    amount?: BigNumber;
+    amount?: BigNumber.BigNumber;
     shouldShowIncompleteErrs: boolean;
     shouldCheckBalance: boolean;
     shouldCheckAllowance: boolean;
@@ -43,14 +43,14 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
             </div>
         );
     }
-    private onChange(isValid: boolean, amount?: BigNumber) {
+    private onChange(isValid: boolean, amount?: BigNumber.BigNumber) {
         let baseUnitAmount;
         if (!_.isUndefined(amount)) {
             baseUnitAmount = zeroEx.toBaseUnitAmount(amount, this.props.token.decimals);
         }
         this.props.onChange(isValid, baseUnitAmount);
     }
-    private validate(amount: BigNumber): InputErrMsg {
+    private validate(amount: BigNumber.BigNumber): InputErrMsg {
         if (this.props.shouldCheckAllowance && amount.gt(this.props.token.allowance)) {
             return (
                 <span>

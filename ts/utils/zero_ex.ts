@@ -11,8 +11,9 @@ const MAX_DIGITS_IN_UNSIGNED_256_INT = 78;
 export const zeroEx = {
     getOrderHash(exchangeContractAddr: string, makerAddr: string, takerAddr: string,
                  depositTokenAddr: string, receiveTokenAddr: string, feeRecipient: string,
-                 depositAmt: BigNumber, receiveAmt: BigNumber, makerFee: BigNumber, takerFee: BigNumber,
-                 expiration: BigNumber, salt: BigNumber): string {
+                 depositAmt: BigNumber.BigNumber, receiveAmt: BigNumber.BigNumber,
+                 makerFee: BigNumber.BigNumber, takerFee: BigNumber.BigNumber,
+                 expiration: BigNumber.BigNumber, salt: BigNumber.BigNumber): string {
         takerAddr = takerAddr !== '' ? takerAddr : constants.NULL_ADDRESS;
         const orderParts = [
             exchangeContractAddr,
@@ -46,7 +47,7 @@ export const zeroEx = {
             const isNumber = _.isFinite(arg);
             if (isNumber) {
                 argTypes.push(SolidityTypes.uint8);
-            } else if (_.isObject(arg) && (arg as BigNumber).isBigNumber) {
+            } else if (_.isObject(arg) && (arg as BigNumber.BigNumber).isBigNumber) {
                 argTypes.push(SolidityTypes.uint256);
                 args[i] = new BN(arg.toString(), 10);
             } else if (ethUtil.isValidAddress(arg)) {
@@ -65,7 +66,7 @@ export const zeroEx = {
     // A unit amount is defined as the amount of a currency just above the decimal places.
     // E.g: If a currency has 18 decimal places, 1e18 or one quintillion of the currency is equivalent
     // to 1 unit.
-    toUnitAmount(amount: BigNumber, decimals: number): BigNumber {
+    toUnitAmount(amount: BigNumber.BigNumber, decimals: number): BigNumber.BigNumber {
       const aUnit = new BigNumber(10).pow(decimals);
       const unit = amount.div(aUnit);
       return unit;
@@ -73,7 +74,7 @@ export const zeroEx = {
     // A baseUnit is defined as the smallest denomination of a currency. An amount expressed in baseUnits
     // is the amount expressed in the smallest denomination.
     // E.g: 1 unit of a currency with 18 decimal places is expressed in baseUnits as 1000000000000000000
-    toBaseUnitAmount(amount: BigNumber, decimals: number): BigNumber {
+    toBaseUnitAmount(amount: BigNumber.BigNumber, decimals: number): BigNumber.BigNumber {
       const unit = new BigNumber(10).pow(decimals);
       const baseUnitAmount = amount.times(unit);
       return baseUnitAmount;
@@ -97,7 +98,7 @@ export const zeroEx = {
             return false;
         }
     },
-    generateSalt(): BigNumber {
+    generateSalt(): BigNumber.BigNumber {
         // BigNumber.random returns a random number between 0 & 1 with a passed in number of decimal
         // places. Source: https://mikemcl.github.io/bignumber.js/#random
         const randomNumber = BigNumber.random(MAX_DIGITS_IN_UNSIGNED_256_INT);

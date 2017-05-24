@@ -23,40 +23,6 @@ declare module '*.json' {
     /* tslint:enable */
 }
 
-// Bignumber.js interface
-declare module 'bignumber.js' {
-
-    class BigNumber {
-        // Those static attributes could have been in the module, a few lines beneath
-        public static ROUND_DOWN: any;
-        public isBigNumber: boolean;
-        public static config(arg: any): void;
-        public static random(numDecimals: number): BigNumber;
-
-        constructor(value: number|string);
-        public toNumber(): number;
-        public toString(base?: number): string;
-        public toFixed(dp?: number, rm?: number): string;
-        public div(value: BigNumber): BigNumber;
-        public pow(exponent: BigNumber|number): BigNumber;
-        public times(value: BigNumber|number): BigNumber;
-        public plus(value: BigNumber|number): BigNumber;
-        public lt(value: BigNumber|number): BigNumber;
-        public lte(value: BigNumber|number): BigNumber;
-        public gte(value: BigNumber|number): BigNumber;
-        public gt(value: BigNumber|number): BigNumber;
-        public eq(value: BigNumber|number): BigNumber;
-        public minus(value: BigNumber): BigNumber;
-        public round(numDecimals?: BigNumber|number): BigNumber;
-    }
-
-    // A standalone class is not exportable, so there is an empty module
-    namespace BigNumber { }
-
-    // The exported values is the merge of the BigNumber class and the BigNumber module
-    export = BigNumber;
-}
-
 // Web3 interface
 // modules that you require must be in quotes, or they'll be considered as ambient global variables.
 declare module 'web3' {
@@ -89,14 +55,14 @@ declare module 'web3' {
 
             sign(address: string, message: string, callback: (err: Error, signData: string) => void): string;
 
-            getBlock(blockHash: string, callback: (err: Error, blockObj: any) => void): BigNumber;
+            getBlock(blockHash: string, callback: (err: Error, blockObj: any) => void): BigNumber.BigNumber;
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethcontract
             contract(abi: IAbiDefinition[]): IContract;
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethgetbalance
             getBalance(addressHexString: string,
-                callback?: (err: any, result: BigNumber) => void): BigNumber;
+                callback?: (err: any, result: BigNumber.BigNumber) => void): BigNumber.BigNumber;
 
             // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethgetcode
             getCode(addressHexString: string,
@@ -115,7 +81,7 @@ declare module 'web3' {
 
         public currentProvider(): any;
 
-        public fromWei(amount: BigNumber, unit: string): BigNumber;
+        public fromWei(amount: BigNumber.BigNumber, unit: string): BigNumber.BigNumber;
 
         public isAddress(address: string): boolean;
     }

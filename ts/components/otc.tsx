@@ -43,10 +43,10 @@ export interface OTCAllProps {
     hashData: HashData;
     networkId: number;
     nodeVersion: string;
-    orderFillAmount: BigNumber;
+    orderFillAmount: BigNumber.BigNumber;
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
-    userEtherBalance: BigNumber;
+    userEtherBalance: BigNumber.BigNumber;
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
     userSuppliedOrderCache: Order;
