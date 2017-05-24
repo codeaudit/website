@@ -24,11 +24,11 @@ interface GenerateOrderFormProps {
 interface ConnectedState {
     blockchainErr: BlockchainErrs;
     blockchainIsLoaded: boolean;
-    orderExpiryTimestamp: BigNumber;
+    orderExpiryTimestamp: BigNumber.BigNumber;
     orderSignatureData: SignatureData;
     userAddress: string;
     orderTakerAddress: string;
-    orderSalt: BigNumber;
+    orderSalt: BigNumber.BigNumber;
     networkId: number;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;

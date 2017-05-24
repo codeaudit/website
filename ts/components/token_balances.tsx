@@ -62,7 +62,7 @@ interface TokenBalancesProps {
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
     userAddress: string;
-    userEtherBalance: BigNumber;
+    userEtherBalance: BigNumber.BigNumber;
     networkId: number;
 }
 
@@ -278,7 +278,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
             errorType: BalanceErrs.wethConversionFailed,
         });
     }
-    private renderAmount(amount: BigNumber, decimals: number) {
+    private renderAmount(amount: BigNumber.BigNumber, decimals: number) {
       const unitAmount = zeroEx.toUnitAmount(amount, decimals);
       return unitAmount.toNumber().toFixed(PRECISION);
     }

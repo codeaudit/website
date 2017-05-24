@@ -47,7 +47,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_GENERATE_ORDER_STEP,
         });
     }
-    public updateOrderSalt(salt: BigNumber) {
+    public updateOrderSalt(salt: BigNumber.BigNumber) {
         this.dispatch({
             data: salt,
             type: ActionTypes.UPDATE_ORDER_SALT,
@@ -95,7 +95,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_USER_ADDRESS,
         });
     }
-    public updateOrderExpiry(unixTimestampSec: BigNumber) {
+    public updateOrderExpiry(unixTimestampSec: BigNumber.BigNumber) {
         this.dispatch({
             data: unixTimestampSec,
             type: ActionTypes.UPDATE_ORDER_EXPIRY,
@@ -130,7 +130,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_TOKEN_BY_ADDRESS,
          });
     }
-    public replaceTokenAllowanceByAddress(address: string, allowance: BigNumber) {
+    public replaceTokenAllowanceByAddress(address: string, allowance: BigNumber.BigNumber) {
         this.dispatch({
             data: {
               address,
@@ -139,7 +139,7 @@ export class Dispatcher {
             type: ActionTypes.REPLACE_TOKEN_ALLOWANCE_BY_ADDRESS,
         });
     }
-    public updateTokenBalanceByAddress(address: string, balanceDelta: BigNumber) {
+    public updateTokenBalanceByAddress(address: string, balanceDelta: BigNumber.BigNumber) {
         this.dispatch({
             data: {
                 address,
@@ -154,7 +154,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_ORDER_SIGNATURE_DATA,
          });
     }
-    public updateUserEtherBalance(balance: BigNumber) {
+    public updateUserEtherBalance(balance: BigNumber.BigNumber) {
         this.dispatch({
              data: balance,
             type: ActionTypes.UPDATE_USER_ETHER_BALANCE,
@@ -166,7 +166,7 @@ export class Dispatcher {
             type: ActionTypes.UPDATE_NETWORK_ID,
          });
     }
-    public updateOrderFillAmount(amount: BigNumber) {
+    public updateOrderFillAmount(amount: BigNumber.BigNumber) {
         this.dispatch({
             data: amount,
             type: ActionTypes.UPDATE_ORDER_FILL_AMOUNT,

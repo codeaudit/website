@@ -185,7 +185,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
             </div>
         );
     }
-    private renderAmount(amount: BigNumber, symbol: string, decimals: number) {
+    private renderAmount(amount: BigNumber.BigNumber, symbol: string, decimals: number) {
         const unitAmount = zeroEx.toUnitAmount(amount, decimals);
         return (
             <span>

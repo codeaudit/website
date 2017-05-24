@@ -43,12 +43,12 @@ interface GenerateOrderFormProps {
     blockchainIsLoaded: boolean;
     dispatcher: Dispatcher;
     hashData: HashData;
-    orderExpiryTimestamp: BigNumber;
+    orderExpiryTimestamp: BigNumber.BigNumber;
     networkId: number;
     userAddress: string;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
-    orderSalt: BigNumber;
+    orderSalt: BigNumber.BigNumber;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
 }
@@ -221,7 +221,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             </div>
         );
     }
-    private onTokenAmountChange(token: Token, side: Side, isValid: boolean, amount?: BigNumber) {
+    private onTokenAmountChange(token: Token, side: Side, isValid: boolean, amount?: BigNumber.BigNumber) {
         this.props.dispatcher.updateChosenAssetToken(side, {address: token.address, amount});
     }
     private onCloseOrderJSONDialog() {

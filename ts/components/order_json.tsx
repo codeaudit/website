@@ -12,13 +12,13 @@ import BigNumber = require('bignumber.js');
 
 interface OrderJSONProps {
     exchangeContractIfExists: string;
-    orderExpiryTimestamp: BigNumber;
+    orderExpiryTimestamp: BigNumber.BigNumber;
     orderSignatureData: SignatureData;
     orderTakerAddress: string;
     orderMakerAddress: string;
-    orderSalt: BigNumber;
-    orderMakerFee: BigNumber;
-    orderTakerFee: BigNumber;
+    orderSalt: BigNumber.BigNumber;
+    orderMakerFee: BigNumber.BigNumber;
+    orderTakerFee: BigNumber.BigNumber;
     orderFeeRecipient: string;
     networkId: number;
     sideToAssetToken: SideToAssetToken;

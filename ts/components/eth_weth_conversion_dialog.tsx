@@ -7,15 +7,15 @@ import {EthAmountInput} from 'ts/components/inputs/eth_amount_input';
 import * as BigNumber from 'bignumber.js';
 
 interface EthWethConversionDialogProps {
-    onComplete: (direction: Side, value: BigNumber) => void;
+    onComplete: (direction: Side, value: BigNumber.BigNumber) => void;
     onCancelled: () => void;
     isOpen: boolean;
     token: Token;
-    etherBalance: BigNumber;
+    etherBalance: BigNumber.BigNumber;
 }
 
 interface EthWethConversionDialogState {
-    value?: BigNumber;
+    value?: BigNumber.BigNumber;
     direction: Side;
     shouldShowIncompleteErrs: boolean;
     hasErrors: boolean;
@@ -103,7 +103,7 @@ export class EthWethConversionDialog extends
             hasErrors: true,
         });
     }
-    private onValueChange(isValid: boolean, amount?: BigNumber) {
+    private onValueChange(isValid: boolean, amount?: BigNumber.BigNumber) {
         this.setState({
             value: amount,
             hasErrors: !isValid,
