@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import * as Web3 from 'web3';
 import promisify = require('es6-promisify');
 import findVersions = require('find-versions');
 import compareVersions = require('compare-versions');
