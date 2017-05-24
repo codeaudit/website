@@ -293,7 +293,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 <div
                     style={{backgroundColor: '#272727'}}
                 >
-                    <div className="clearfix mx-auto max-width-4" style={{color: 'white'}}>
+                    <div className="clearfix mx-auto max-width-4 pb2" style={{color: 'white'}}>
                         <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb4">
                             <h1
                                 className="pt4 sm-center md-pl3 lg-pl0"

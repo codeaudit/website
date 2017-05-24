@@ -4,6 +4,7 @@ import {TextField} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
+import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
 
 const ENTER_KEY_CODE = 13;
 
@@ -30,27 +31,41 @@ export class NewsletterInput extends React.Component<NewsletterInputProps, Newsl
         const errMsg = this.state.didAttemptSubmit ? this.state.errMsg : '';
         return (
             <div>
-                <TextField
-                    fullWidth={true}
-                    hintText="Email address"
-                    hintStyle={{color: '#e6e6e6'}}
-                    inputStyle={{color: '#e6e6e6'}}
-                    floatingLabelFixed={true}
-                    floatingLabelStyle={{color: colors.grey500, display: 'hidden'}}
-                    errorText={errMsg}
-                    value={this.state.email}
-                    onChange={this.onEmailUpdated.bind(this)}
-                    onKeyPress={this.onEmailSubmit.bind(this)}
-                />
+                <div className="clearfix">
+                    <div className="col lg-col-9 md-col-9 col-12">
+                        <div className="lg-pr2 md-pr2 mb1" style={{height: 74}}>
+                            <TextField
+                                fullWidth={true}
+                                hintText="Email address"
+                                hintStyle={{color: '#e6e6e6'}}
+                                inputStyle={{color: '#e6e6e6'}}
+                                floatingLabelFixed={true}
+                                floatingLabelStyle={{color: colors.grey500, display: 'hidden'}}
+                                errorText={errMsg}
+                                value={this.state.email}
+                                onChange={this.onEmailUpdated.bind(this)}
+                                onKeyPress={this.onTextFieldKeyPress.bind(this)}
+                            />
+                        </div>
+                    </div>
+                    <div className="col lg-col-3 md-col-3 col-12">
+                        <LifeCycleRaisedButton
+                            labelReady="Subscribe"
+                            labelLoading="Subscribing..."
+                            labelComplete="Subscribed!"
+                            onClickAsyncFn={this.submitEmailAsync.bind(this)}
+                        />
+                    </div>
+                </div>
                 {this.state.wasSuccessfullySubscribed && 'Subscription successful!'}
             </div>
         );
     }
-    private onEmailSubmit(e: any) {
+    private async onSubscribeClickAsync() {
+        return await this.submitEmailAsync();
+    }
+    private onTextFieldKeyPress(e: any) {
         if (e.charCode === ENTER_KEY_CODE) {
-            this.setState({
-                didAttemptSubmit: true,
-            });
             this.submitEmailAsync();
         }
     }
@@ -66,9 +81,16 @@ export class NewsletterInput extends React.Component<NewsletterInputProps, Newsl
             wasSuccessfullySubscribed: false,
         });
     }
-    private async submitEmailAsync() {
-        if (!this.isValidEmail(this.state.email)) {
-            return;
+    private async submitEmailAsync(): Promise<boolean> {
+        this.setState({
+            didAttemptSubmit: true,
+        });
+
+        if (!this.isValidEmail(this.state.email) || _.isEmpty(this.state.email)) {
+            this.setState({
+                errMsg: 'Must be a valid email address',
+            });
+            return false;
         }
 
         const endpoint = `${constants.BACKEND_BASE_URL}/newsletter_subscriber/${this.state.email}`;
@@ -78,7 +100,7 @@ export class NewsletterInput extends React.Component<NewsletterInputProps, Newsl
             this.setState({
                 wasSuccessfullySubscribed: true,
             });
-            return;
+            return true;
         } else {
             let errMsg;
             switch (responseText) {
@@ -100,6 +122,7 @@ export class NewsletterInput extends React.Component<NewsletterInputProps, Newsl
             this.setState({
                 errMsg,
             });
+            return false;
         }
     }
     private isValidEmail(email: string): boolean {
