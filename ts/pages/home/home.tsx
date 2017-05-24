@@ -112,16 +112,11 @@ const partnerships: Partner[] = [
     },
 ];
 
-const investors: Partner[] = [
+const investorsRow1: Partner[] = [
     {
         name: 'Polychain Capital',
         logo: '/images/logos/polychain_capital.png',
         url: 'http://polychain.capital/',
-    },
-    {
-        name: 'Blockchain Capital',
-        logo: '/images/logos/blockchain_capital.png',
-        url: 'http://blockchain.capital/',
     },
     {
         name: 'Fintech Blockchain Group',
@@ -132,6 +127,19 @@ const investors: Partner[] = [
         name: 'Pantera Capital',
         logo: '/images/logos/pantera_capital.png',
         url: 'https://panteracapital.com/',
+    },
+];
+
+const investorsRow2: Partner[] = [
+    {
+        name: 'Jen Advisors',
+        logo: '/images/logos/jen_advisors.png',
+        url: 'https://www.jenadvisors.com/',
+    },
+    {
+        name: 'Blockchain Capital',
+        logo: '/images/logos/blockchain_capital.png',
+        url: 'http://blockchain.capital/',
     },
 ];
 
@@ -375,8 +383,15 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         >
                             Backed by
                         </h1>
-                        <div className="clearfix pt4 mx-auto md-pl3">
-                            {this.renderPartners(investors)}
+                        <div className="pt4 mx-auto md-pl3">
+                            <div className="clearfix center">
+                                {this.renderPartners(investorsRow1)}
+                            </div>
+                            <div className="lg-px4 md-px4 mx2 mx-auto">
+                                <div className="clearfix lg-px4 md-px4 lg-mx4 md-mx4 pt2 center">
+                                    {this.renderPartners(investorsRow2)}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
