@@ -27,10 +27,10 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     public render() {
         const fill = this.props.fill;
         const tokens = _.values(this.props.tokenByAddress);
-        const tokenT = _.find(tokens, (token) => {
+        const tokenT = _.find(tokens, token => {
             return token.address === fill.tokenT;
         });
-        const tokenM = _.find(tokens, (token) => {
+        const tokenM = _.find(tokens, token => {
             return token.address === fill.tokenM;
         });
         // For now we don't show history items for orders using custom ERC20
