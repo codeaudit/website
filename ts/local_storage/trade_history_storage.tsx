@@ -19,7 +19,7 @@ export const tradeHistoryStorage = {
         if (lastForceClearDate !== configs.lastForcedLocalStorageFillClearanceDate) {
             const localStorageKeys = localStorage.getAllKeys();
             _.each(localStorageKeys, key => {
-                if (_.startsWith(key, 'fills-') || _.startsWith(key, 'fillsLatestBlock-')) {
+                if (_.startsWith(key, `${FILLS_KEY}-`) || _.startsWith(key, `${FILLS_LATEST_BLOCK}-`)) {
                     localStorage.removeItem(key);
                 }
             });
