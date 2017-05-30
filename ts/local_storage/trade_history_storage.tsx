@@ -11,8 +11,9 @@ const GENESIS_BLOCK_NUMBER = 0;
 const FORCE_CLEAR_KEY = 'lastForceClearDate';
 
 export const tradeHistoryStorage = {
-    // Force clear all fill related localstorage if we've updated the config variable in an update
-    // that introduces changes where we need the user to re-fetch the fills from the blockchain
+    // Force clear all fill related localStorage if we've updated the config variable in an update
+    // that introduced a backward incompatible change requiring the user to re-fetch the fills from
+    // the blockchain
     forceClearIfRequired() {
         const lastForceClearDate = localStorage.getItemIfExists(FORCE_CLEAR_KEY);
         if (lastForceClearDate !== configs.lastForcedLocalStorageFillClearanceDate) {
