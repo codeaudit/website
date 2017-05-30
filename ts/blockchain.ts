@@ -323,24 +323,23 @@ export class Blockchain {
                     tradeHistoryStorage.setFillsLatestBlock(this.userAddress, this.networkId, blockNumberToSet);
                 }
                 const isUserMakerOrTaker = args.maker === this.userAddress ||
-                                           args.taker === this.userAddress ||
-                                           args.filledBy === this.userAddress;
+                                           args.taker === this.userAddress;
                 if (!isUserMakerOrTaker) {
                     return; // We aren't interested in the fill event
                 }
                 const blockTimestamp = await this.web3Wrapper.getBlockTimestampAsync(result.blockHash);
                 const fill = {
-                    expiration: args.expiration.toNumber(),
                     filledValueT: args.filledValueT,
+                    filledValueM: args.filledValueM,
                     logIndex: result.logIndex,
                     maker: args.maker,
                     orderHash: args.orderHash,
-                    taker: args.filledBy,
+                    taker: args.taker,
                     tokenM: args.tokenM,
                     tokenT: args.tokenT,
+                    feeMPaid: args.feeMPaid,
+                    feeTPaid: args.feeTPaid,
                     transactionHash: result.transactionHash,
-                    valueM: args.valueM,
-                    valueT: args.valueT,
                     blockTimestamp,
                 };
                 tradeHistoryStorage.addFillToUser(this.userAddress, this.networkId, fill);
