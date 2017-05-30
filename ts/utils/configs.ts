@@ -12,5 +12,5 @@ export const configs = {
     ENVIRONMENT: isDevelopment ? Environments.DEVELOPMENT : Environments.PRODUCTION,
     symbolsOfMintableTokens: ['MKR', 'MLN', 'GNT', 'DGD', 'REP', 'ZRX'],
     mostPopularTradingPairSymbols: ['WETH', 'GNT'],
-    lastForcedLocalStorageFillClearanceDate: '2017-05-30',
+    lastLocalStorageFillClearanceDate: '2017-05-30',
 };

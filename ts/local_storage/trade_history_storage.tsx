@@ -8,15 +8,15 @@ import * as BigNumber from 'bignumber.js';
 const FILLS_KEY = 'fills';
 const FILLS_LATEST_BLOCK = 'fillsLatestBlock';
 const GENESIS_BLOCK_NUMBER = 0;
-const FORCE_CLEAR_KEY = 'lastForceClearDate';
+const FILL_CLEAR_KEY = 'lastClearFillDate';
 
 export const tradeHistoryStorage = {
-    // Force clear all fill related localStorage if we've updated the config variable in an update
+    // Clear all fill related localStorage if we've updated the config variable in an update
     // that introduced a backward incompatible change requiring the user to re-fetch the fills from
     // the blockchain
-    forceClearIfRequired() {
-        const lastForceClearDate = localStorage.getItemIfExists(FORCE_CLEAR_KEY);
-        if (lastForceClearDate !== configs.lastForcedLocalStorageFillClearanceDate) {
+    clearIfRequired() {
+        const lastClearFillDate = localStorage.getItemIfExists(FILL_CLEAR_KEY);
+        if (lastClearFillDate !== configs.lastLocalStorageFillClearanceDate) {
             const localStorageKeys = localStorage.getAllKeys();
             _.each(localStorageKeys, key => {
                 if (_.startsWith(key, `${FILLS_KEY}-`) || _.startsWith(key, `${FILLS_LATEST_BLOCK}-`)) {
@@ -24,7 +24,7 @@ export const tradeHistoryStorage = {
                 }
             });
         }
-        localStorage.setItem(FORCE_CLEAR_KEY, configs.lastForcedLocalStorageFillClearanceDate);
+        localStorage.setItem(FILL_CLEAR_KEY, configs.lastLocalStorageFillClearanceDate);
     },
     addFillToUser(userAddress: string, networkId: number, fill: Fill) {
         const fillsByHash = this.getUserFillsByHash(userAddress, networkId);

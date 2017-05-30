@@ -21,8 +21,8 @@ BigNumber.config({
     EXPONENTIAL_AT: 1000,
 });
 
-// Check if we need to force clear the tradeHistory local storage entries
-tradeHistoryStorage.forceClearIfRequired();
+// Check if we've introduced an update that requires us to clear the tradeHistory local storage entries
+tradeHistoryStorage.clearIfRequired();
 
 const CUSTOM_GREY = 'rgb(39, 39, 39)';
 const CUSTOM_GREEN = 'rgb(102, 222, 117)';
