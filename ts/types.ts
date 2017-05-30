@@ -112,10 +112,10 @@ export interface Fill {
     taker: string;
     tokenM: string;
     tokenT: string;
-    valueM: BigNumber.BigNumber;
-    valueT: BigNumber.BigNumber;
-    expiration: BigNumber.BigNumber;
+    filledValueM: BigNumber.BigNumber;
     filledValueT: BigNumber.BigNumber;
+    feeMPaid: BigNumber.BigNumber;
+    feeTPaid: BigNumber.BigNumber;
     orderHash: string;
     transactionHash: string;
     blockTimestamp: number;

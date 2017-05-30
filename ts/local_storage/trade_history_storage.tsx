@@ -29,9 +29,10 @@ export const tradeHistoryStorage = {
         }
         const userFillsByHash = JSON.parse(userFillsJSONString);
         _.each(userFillsByHash, (fill, hash) => {
-          fill.valueT = new BigNumber(fill.valueT);
-          fill.valueM = new BigNumber(fill.valueM);
+          fill.feeMPaid = new BigNumber(fill.feeMPaid);
+          fill.feeTPaid = new BigNumber(fill.feeTPaid);
           fill.filledValueT = new BigNumber(fill.filledValueT);
+          fill.filledValueM = new BigNumber(fill.filledValueM);
         });
         return userFillsByHash;
     },
