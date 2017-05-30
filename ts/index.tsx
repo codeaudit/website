@@ -11,6 +11,7 @@ import {OTC} from 'ts/containers/otc';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import {tradeHistoryStorage} from 'ts/local_storage/trade_history_storage';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
@@ -19,6 +20,9 @@ injectTapEventPlugin();
 BigNumber.config({
     EXPONENTIAL_AT: 1000,
 });
+
+// Check if we need to force clear the tradeHistory local storage entries
+tradeHistoryStorage.forceClearIfRequired();
 
 const CUSTOM_GREY = 'rgb(39, 39, 39)';
 const CUSTOM_GREEN = 'rgb(102, 222, 117)';

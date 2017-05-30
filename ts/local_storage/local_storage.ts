@@ -26,4 +26,10 @@ export const localStorage = {
         }
         window.localStorage.removeItem(key);
     },
+    getAllKeys(): string[] {
+        if (!this.doesExist) {
+            return [];
+        }
+        return _.keys(window.localStorage);
+    },
 };
