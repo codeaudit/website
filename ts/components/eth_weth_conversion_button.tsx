@@ -16,7 +16,7 @@ interface EthWethConversionButtonProps {
     ethToken: Token;
     dispatcher: Dispatcher;
     blockchain: Blockchain;
-    userEtherBalance: BigNumber;
+    userEtherBalance: BigNumber.BigNumber;
     onError: () => void;
 }
 
@@ -60,7 +60,7 @@ export class EthWethConversionButton extends
             isEthConversionDialogVisible: !this.state.isEthConversionDialogVisible,
         });
     }
-    private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber) {
+    private async onConversionAmountSelectedAsync(direction: Side, value: BigNumber.BigNumber) {
         this.setState({
             isEthConversionHappening: true,
         });

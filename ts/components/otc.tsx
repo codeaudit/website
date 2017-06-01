@@ -43,10 +43,10 @@ export interface OTCAllProps {
     hashData: HashData;
     networkId: number;
     nodeVersion: string;
-    orderFillAmount: BigNumber;
+    orderFillAmount: BigNumber.BigNumber;
     screenWidth: ScreenWidths;
     tokenByAddress: TokenByAddress;
-    userEtherBalance: BigNumber;
+    userEtherBalance: BigNumber.BigNumber;
     userAddress: string;
     shouldBlockchainErrDialogBeOpen: boolean;
     userSuppliedOrderCache: Order;
@@ -244,7 +244,7 @@ export class OTC extends React.Component<OTCAllProps, OTCAllState> {
             return;
         }
         const queryParams = queryString.substring(1).split('&');
-        const orderQueryParam = _.find(queryParams, (queryParam) => {
+        const orderQueryParam = _.find(queryParams, queryParam => {
             const queryPair = queryParam.split('=');
             return queryPair[0] === 'order';
         });

@@ -25,18 +25,18 @@ export interface State {
     blockchainIsLoaded: boolean;
     generateOrderStep: GenerateOrderSteps;
     networkId: number;
-    orderExpiryTimestamp: BigNumber;
-    orderFillAmount: BigNumber;
+    orderExpiryTimestamp: BigNumber.BigNumber;
+    orderFillAmount: BigNumber.BigNumber;
     orderTakerAddress: string;
     orderSignatureData: SignatureData;
-    orderSalt: BigNumber;
+    orderSalt: BigNumber.BigNumber;
     nodeVersion: string;
     screenWidth: ScreenWidths;
     shouldBlockchainErrDialogBeOpen: boolean;
     sideToAssetToken: SideToAssetToken;
     tokenByAddress: TokenByAddress;
     userAddress: string;
-    userEtherBalance: BigNumber;
+    userEtherBalance: BigNumber.BigNumber;
     // Note: cache of supplied orderJSON in fill order step. Do not use for anything else.
     userSuppliedOrderCache: Order;
     flashMessage: string;

@@ -42,8 +42,8 @@ export interface Token {
     name: string;
     address: string;
     symbol: string;
-    balance: BigNumber;
-    allowance: BigNumber;
+    balance: BigNumber.BigNumber;
+    allowance: BigNumber.BigNumber;
     decimals: number;
 };
 
@@ -53,7 +53,7 @@ export interface TokenByAddress {
 
 export interface AssetToken {
     address?: string;
-    amount?: BigNumber;
+    amount?: BigNumber.BigNumber;
 }
 
 export interface SideToAssetToken {
@@ -68,17 +68,17 @@ export interface SignatureData {
 };
 
 export interface HashData {
-    depositAmount: BigNumber;
+    depositAmount: BigNumber.BigNumber;
     depositTokenContractAddr: string;
     feeRecipientAddress: string;
-    makerFee: BigNumber;
-    orderExpiryTimestamp: BigNumber;
+    makerFee: BigNumber.BigNumber;
+    orderExpiryTimestamp: BigNumber.BigNumber;
     orderMakerAddress: string;
     orderTakerAddress: string;
-    receiveAmount: BigNumber;
+    receiveAmount: BigNumber.BigNumber;
     receiveTokenContractAddr: string;
-    takerFee: BigNumber;
-    orderSalt: BigNumber;
+    takerFee: BigNumber.BigNumber;
+    orderSalt: BigNumber.BigNumber;
 }
 
 export interface OrderToken {
@@ -112,10 +112,10 @@ export interface Fill {
     taker: string;
     tokenM: string;
     tokenT: string;
-    valueM: BigNumber;
-    valueT: BigNumber;
-    expiration: BigNumber;
-    filledValueT: BigNumber;
+    filledValueM: BigNumber.BigNumber;
+    filledValueT: BigNumber.BigNumber;
+    feeMPaid: BigNumber.BigNumber;
+    feeTPaid: BigNumber.BigNumber;
     orderHash: string;
     transactionHash: string;
     blockTimestamp: number;
@@ -234,7 +234,7 @@ export interface ContractEvent {
 }
 
 export type InputErrMsg = React.ReactNode | string | undefined;
-export type ValidatedBigNumberCallback = (isValid: boolean, amount?: BigNumber) => void;
+export type ValidatedBigNumberCallback = (isValid: boolean, amount?: BigNumber.BigNumber) => void;
 export const ScreenWidths = strEnum([
   'SM',
   'MD',

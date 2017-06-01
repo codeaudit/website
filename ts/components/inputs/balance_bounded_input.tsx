@@ -10,12 +10,12 @@ import {Link} from 'react-router-dom';
 
 interface BalanceBoundedInputProps {
     label: string;
-    balance: BigNumber;
-    amount?: BigNumber;
+    balance: BigNumber.BigNumber;
+    amount?: BigNumber.BigNumber;
     onChange: ValidatedBigNumberCallback;
     shouldShowIncompleteErrs?: boolean;
     shouldCheckBalance: boolean;
-    validate?: (amount: BigNumber) => InputErrMsg;
+    validate?: (amount: BigNumber.BigNumber) => InputErrMsg;
     onVisitBalancesPageClick?: () => void;
 }
 
@@ -104,7 +104,7 @@ export class BalanceBoundedInput extends
             }
         });
     }
-    private validate(amountString: string, balance: BigNumber): InputErrMsg {
+    private validate(amountString: string, balance: BigNumber.BigNumber): InputErrMsg {
         if (!utils.isNumeric(amountString)) {
             return amountString !== '' ? 'Must be a number' : '';
         }

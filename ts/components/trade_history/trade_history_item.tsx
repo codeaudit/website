@@ -27,10 +27,10 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     public render() {
         const fill = this.props.fill;
         const tokens = _.values(this.props.tokenByAddress);
-        const tokenT = _.find(tokens, (token) => {
+        const tokenT = _.find(tokens, token => {
             return token.address === fill.tokenT;
         });
-        const tokenM = _.find(tokens, (token) => {
+        const tokenM = _.find(tokens, token => {
             return token.address === fill.tokenM;
         });
         // For now we don't show history items for orders using custom ERC20
@@ -113,12 +113,10 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     }
     private renderAmounts(tokenM: Token, tokenT: Token) {
         const fill = this.props.fill;
-        const valueTInUnits = zeroEx.toUnitAmount(fill.valueT, tokenT.decimals);
-        const valueMInUnits = zeroEx.toUnitAmount(fill.valueM, tokenM.decimals);
-        let exchangeRate = valueTInUnits.div(valueMInUnits);
         const filledValueTInUnits = zeroEx.toUnitAmount(fill.filledValueT, tokenT.decimals);
-        const fillValueMInUnits = filledValueTInUnits.div(exchangeRate);
-        const fillValueM = zeroEx.toBaseUnitAmount(fillValueMInUnits, tokenM.decimals);
+        const filledValueMInUnits = zeroEx.toUnitAmount(fill.filledValueM, tokenT.decimals);
+        let exchangeRate = filledValueTInUnits.div(filledValueMInUnits);
+        const fillValueM = zeroEx.toBaseUnitAmount(filledValueMInUnits, tokenM.decimals);
 
         let receiveAmount;
         let receiveToken;
@@ -185,7 +183,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
             </div>
         );
     }
-    private renderAmount(amount: BigNumber, symbol: string, decimals: number) {
+    private renderAmount(amount: BigNumber.BigNumber, symbol: string, decimals: number) {
         const unitAmount = zeroEx.toUnitAmount(amount, decimals);
         return (
             <span>

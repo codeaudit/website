@@ -21,7 +21,7 @@ interface AllowanceToggleProps {
 
 interface AllowanceToggleState {
     isSpinnerVisible: boolean;
-    prevAllowance: BigNumber;
+    prevAllowance: BigNumber.BigNumber;
 }
 
 export class AllowanceToggle extends React.Component<AllowanceToggleProps, AllowanceToggleState> {
