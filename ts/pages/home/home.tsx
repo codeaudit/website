@@ -46,6 +46,17 @@ const team: Profile[] = [
         image: '/images/team/fabio.jpg',
         linkedIn: 'https://www.linkedin.com/in/fabio-berger-03ab261a/',
         github: 'https://github.com/fabioberger',
+        medium: 'https://medium.com/@fabioberger',
+    },
+    {
+        name: 'Leonid Logvinov',
+        title: 'Engineer',
+        description: `Full-stack & blockchain engineer. Previously blockchain engineer at Neufund,
+                      software engineer intern at Quora and competitive programmer. Computer science
+                      at University of Warsaw.`,
+        image: '/images/team/leonid.png',
+        linkedIn: 'https://www.linkedin.com/in/leonidlogvinov/',
+        github: 'https://github.com/LogvinovLeon',
         medium: '',
     },
 ];
@@ -352,7 +363,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             >
                                 Team
                             </h1>
-                            <div className="clearfix pt3 mx-auto" style={{maxWidth: 780}}>
+                            <div className="clearfix pt3 mx-auto" style={{maxWidth: 1022}}>
                                 {this.renderProfiles(team)}
                             </div>
                         </div>
