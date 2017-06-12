@@ -255,9 +255,9 @@ export class Blockchain {
             balance = await tokenContract.balanceOf.call(ownerAddress);
             allowance = await tokenContract.allowance.call(ownerAddress, this.proxy.address);
         }
-        // We rewrap BigNumbers from web3 int our BigNumber cause the version that they're using is too old
-        balance = _.isUndefined(balance) ? new BigNumber(0) : new BigNumber(balance);
-        allowance = _.isUndefined(allowance) ? new BigNumber(0) : new BigNumber(allowance);
+        // We rewrap BigNumbers from web3 into our BigNumber because the version that they're using is too old
+        balance = new BigNumber(balance);
+        allowance = new BigNumber(allowance);
         return [balance, allowance];
     }
     public async updateTokenBalancesAndAllowancesAsync(tokens: Token[]) {
