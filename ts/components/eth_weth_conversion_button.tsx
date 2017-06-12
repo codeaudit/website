@@ -5,7 +5,8 @@ import {RaisedButton} from 'material-ui';
 import {BlockchainCallErrs} from 'ts/types';
 import {EthWethConversionDialog} from 'ts/components/eth_weth_conversion_dialog';
 import {Side, Token} from 'ts/types';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
+
 import {constants} from 'ts/utils/constants';
 import {utils} from 'ts/utils/utils';
 import {Dispatcher} from 'ts/redux/dispatcher';
@@ -70,12 +71,12 @@ export class EthWethConversionButton extends
         try {
             if (direction === Side.deposit) {
                 await this.props.blockchain.convertEthToWrappedEthTokensAsync(value);
-                const ethAmount = zeroEx.toUnitAmount(value, constants.ETH_DECIMAL_PLACES);
+                const ethAmount = ZeroEx.toUnitAmount(value, constants.ETH_DECIMAL_PLACES);
                 this.props.dispatcher.showFlashMessage(`Successfully converted ${ethAmount.toString()} ETH to WETH`);
                 balance = balance.plus(value);
             } else {
                 await this.props.blockchain.convertWrappedEthTokensToEthAsync(value);
-                const tokenAmount = zeroEx.toUnitAmount(value, token.decimals);
+                const tokenAmount = ZeroEx.toUnitAmount(value, token.decimals);
                 this.props.dispatcher.showFlashMessage(`Successfully converted ${tokenAmount.toString()} WETH to ETH`);
                 balance = balance.minus(value);
             }

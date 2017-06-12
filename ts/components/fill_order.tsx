@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {TextField, Paper, Divider} from 'material-ui';
 import {
     Side,
@@ -92,7 +93,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             s: '937862111edcba395f8a9e0cc1b2c5e12320...',
             v: 27,
         };
-        const hintSalt = zeroEx.generateSalt();
+        const hintSalt = ZeroEx.generatePseudoRandomSalt();
         const exchangeContract = this.props.blockchain.getExchangeContractAddressIfExists();
         const hintOrder = utils.generateOrder(this.props.networkId, exchangeContract, hintSideToAssetToken,
                                               hintOrderExpiryTimestamp, '', '', constants.MAKER_FEE,
@@ -254,9 +255,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                             expiration, salt);
 
             const signature = parsedOrder.signature;
-            const isValidSignature = zeroEx.isValidSignature(signature.hash, signature.v,
-                                                       signature.r, signature.s,
-                                                       parsedOrder.maker.address);
+            const isValidSignature = ZeroEx.isValidSignature(signature.hash, signature, parsedOrder.maker.address);
             if (this.props.networkId !== parsedOrder.networkId) {
                 orderJSONErrMsg = `This order was made on another Ethereum network
                                    (id: ${parsedOrder.networkId}). Connect to this network to fill.`;
@@ -332,9 +331,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         let isValidSignature = false;
         if (this.props.userAddress === '') {
             const signatureData = parsedOrder.signature;
-            isValidSignature = zeroEx.isValidSignature(signatureData.hash, signatureData.v,
-                                                   signatureData.r, signatureData.s,
-                                                   parsedOrder.maker.address);
+            isValidSignature = ZeroEx.isValidSignature(signatureData.hash, signatureData, parsedOrder.maker.address);
         } else {
             isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker.address,
                                                               parsedOrder.signature);
@@ -364,7 +361,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         } else if (amountLeftToFill.eq(0)) {
             globalErrMsg = 'This order has already been completely filled';
         } else if (takerFillAmount.gt(amountLeftToFill)) {
-            const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
+            const amountLeftToFillInUnits = ZeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
             globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits} ${takerToken.symbol}`;
         } else if (makerBalance.lt(makerFillAmount)) {
             globalErrMsg = 'Maker no longer has a sufficient balance to complete this order';

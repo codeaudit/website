@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as React from 'react';
 import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';

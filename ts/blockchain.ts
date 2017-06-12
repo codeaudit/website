@@ -4,7 +4,7 @@ import findVersions = require('find-versions');
 import compareVersions = require('compare-versions');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {
@@ -148,7 +148,7 @@ export class Blockchain {
         return response;
     }
     public async getFillAmountAsync(orderHash: string): Promise<BigNumber.BigNumber> {
-        utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
+        utils.assert(ZeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
         const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
         return fillAmount;
     }
@@ -206,7 +206,7 @@ export class Blockchain {
         signatureData.hash = orderHashHex;
         signatureData.r = ethUtil.bufferToHex(signatureData.r);
         signatureData.s = ethUtil.bufferToHex(signatureData.s);
-        const isValidSignature = zeroEx.isValidSignature(orderHashHex, v, r, s, makerAddress);
+        const isValidSignature = ZeroEx.isValidSignature(orderHashHex, signatureData, makerAddress);
         if (!isValidSignature) {
             throw new Error(BlockchainCallErrs.INVALID_SIGNATURE);
         }
@@ -255,8 +255,9 @@ export class Blockchain {
             balance = await tokenContract.balanceOf.call(ownerAddress);
             allowance = await tokenContract.allowance.call(ownerAddress, this.proxy.address);
         }
-        balance = _.isUndefined(balance) ? new BigNumber(0) : balance;
-        allowance = _.isUndefined(allowance) ? new BigNumber(0) : allowance;
+        // We rewrap BigNumbers from web3 int our BigNumber cause the version that they're using is too old
+        balance = _.isUndefined(balance) ? new BigNumber(0) : new BigNumber(balance);
+        allowance = _.isUndefined(allowance) ? new BigNumber(0) : new BigNumber(allowance);
         return [balance, allowance];
     }
     public async updateTokenBalancesAndAllowancesAsync(tokens: Token[]) {

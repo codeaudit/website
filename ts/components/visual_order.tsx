@@ -1,10 +1,7 @@
-import * as _ from 'lodash';
 import * as React from 'react';
-import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
-import {Direction, SideToAssetToken, Side, AssetToken, Token} from 'ts/types';
+import {AssetToken, Token} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 
 const PRECISION = 5;
 const IDENTICON_DIAMETER = 100;
@@ -55,7 +52,7 @@ export class VisualOrder extends React.Component<VisualOrderProps, VisualOrderSt
         );
     }
     private renderAmount(assetToken: AssetToken, token: Token) {
-        const unitAmount = zeroEx.toUnitAmount(assetToken.amount, token.decimals);
+        const unitAmount = ZeroEx.toUnitAmount(assetToken.amount, token.decimals);
         return (
             <div style={{fontSize: 13}}>
                 {unitAmount.toNumber().toFixed(PRECISION)} {token.symbol}

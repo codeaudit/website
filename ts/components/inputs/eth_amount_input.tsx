@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {ValidatedBigNumberCallback} from 'ts/types';
 import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {constants} from 'ts/utils/constants';
 
 interface EthAmountInputProps {
@@ -20,7 +20,7 @@ interface EthAmountInputState {}
 export class EthAmountInput extends React.Component<EthAmountInputProps, EthAmountInputState> {
     public render() {
         const amount = this.props.amount ?
-            zeroEx.toUnitAmount(this.props.amount, constants.ETH_DECIMAL_PLACES) :
+            ZeroEx.toUnitAmount(this.props.amount, constants.ETH_DECIMAL_PLACES) :
             undefined;
         return (
             <div className="flex overflow-hidden" style={{height: 84}}>
@@ -42,7 +42,7 @@ export class EthAmountInput extends React.Component<EthAmountInputProps, EthAmou
     private onChange(isValid: boolean, amount?: BigNumber.BigNumber) {
         const baseUnitAmountIfExists = _.isUndefined(amount) ?
             undefined :
-            zeroEx.toBaseUnitAmount(amount, constants.ETH_DECIMAL_PLACES);
+            ZeroEx.toBaseUnitAmount(amount, constants.ETH_DECIMAL_PLACES);
         this.props.onChange(isValid, baseUnitAmountIfExists);
     }
 }

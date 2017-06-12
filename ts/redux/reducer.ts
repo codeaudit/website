@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {
     GenerateOrderSteps,
     Side,
@@ -53,7 +52,7 @@ const INITIAL_STATE: State = {
         v: 27,
     },
     orderTakerAddress: '',
-    orderSalt: zeroEx.generateSalt(),
+    orderSalt: ZeroEx.generatePseudoRandomSalt(),
     nodeVersion: undefined,
     screenWidth: utils.getScreenWidth(),
     shouldBlockchainErrDialogBeOpen: false,
@@ -126,7 +125,7 @@ export function reducer(state: State = INITIAL_STATE, action: Action) {
         case ActionTypes.UPDATE_TOKEN_BY_ADDRESS: {
             const tokenByAddress = state.tokenByAddress;
             const tokens = action.data;
-            _.each(tokens, (token) => {
+            _.each(tokens, token => {
                 const updatedToken = _.assign({}, tokenByAddress[token.address], token);
                 tokenByAddress[token.address] = updatedToken;
             });

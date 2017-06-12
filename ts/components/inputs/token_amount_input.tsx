@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
 import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {colors} from 'material-ui/styles';
 import {Link} from 'react-router-dom';
 
@@ -23,14 +23,14 @@ interface  TokenAmountInputState {}
 export class TokenAmountInput extends React.Component<TokenAmountInputProps, TokenAmountInputState> {
     public render() {
         const amount = this.props.amount ?
-            zeroEx.toUnitAmount(this.props.amount, this.props.token.decimals) :
+            ZeroEx.toUnitAmount(this.props.amount, this.props.token.decimals) :
             undefined;
         return (
             <div className="flex overflow-hidden" style={{height: 84}}>
                 <BalanceBoundedInput
                     label={this.props.label}
                     amount={amount}
-                    balance={zeroEx.toUnitAmount(this.props.token.balance, this.props.token.decimals)}
+                    balance={ZeroEx.toUnitAmount(this.props.token.balance, this.props.token.decimals)}
                     onChange={this.onChange.bind(this)}
                     validate={this.validate.bind(this)}
                     shouldCheckBalance={this.props.shouldCheckBalance}
@@ -46,7 +46,7 @@ export class TokenAmountInput extends React.Component<TokenAmountInputProps, Tok
     private onChange(isValid: boolean, amount?: BigNumber.BigNumber) {
         let baseUnitAmount;
         if (!_.isUndefined(amount)) {
-            baseUnitAmount = zeroEx.toBaseUnitAmount(amount, this.props.token.decimals);
+            baseUnitAmount = ZeroEx.toBaseUnitAmount(amount, this.props.token.decimals);
         }
         this.props.onChange(isValid, baseUnitAmount);
     }

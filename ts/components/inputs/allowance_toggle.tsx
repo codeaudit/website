@@ -6,7 +6,7 @@ import {Toggle} from 'material-ui';
 import {Token, BalanceErrs} from 'ts/types';
 import {utils} from 'ts/utils/utils';
 import {errorReporter} from 'ts/utils/error_reporter';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import * as BigNumber from 'bignumber.js';
 
 const DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS = 1000000;
@@ -74,7 +74,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
         }
         try {
             const allowanceInUnits = new BigNumber(newAllowanceAmountInUnits);
-            const amountInBaseUnits = zeroEx.toBaseUnitAmount(allowanceInUnits, this.props.token.decimals);
+            const amountInBaseUnits = ZeroEx.toBaseUnitAmount(allowanceInUnits, this.props.token.decimals);
             await this.props.blockchain.setExchangeAllowanceAsync(this.props.token, amountInBaseUnits);
         } catch (err) {
             this.setState({
@@ -92,7 +92,7 @@ export class AllowanceToggle extends React.Component<AllowanceToggleProps, Allow
     }
     private isAllowanceSet() {
         const token = this.props.token;
-        const allowanceInUnits = zeroEx.toUnitAmount(token.allowance, token.decimals);
+        const allowanceInUnits = ZeroEx.toUnitAmount(token.allowance, token.decimals);
         return !allowanceInUnits.eq(0);
     }
 }

@@ -13,7 +13,7 @@ import {
 } from 'ts/types';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
-import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
@@ -279,8 +279,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         });
     }
     private renderAmount(amount: BigNumber.BigNumber, decimals: number) {
-      const unitAmount = zeroEx.toUnitAmount(amount, decimals);
-      return unitAmount.toNumber().toFixed(PRECISION);
+        const unitAmount = ZeroEx.toUnitAmount(amount, decimals);
+        return unitAmount.toNumber().toFixed(PRECISION);
     }
     private renderTokenName(token: Token) {
         const tooltipId = `tooltip-${token.address}`;
@@ -367,7 +367,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
             await this.props.blockchain.mintTestTokensAsync(token);
-            const amount = zeroEx.toUnitAmount(constants.MINT_AMOUNT, token.decimals);
+            const amount = ZeroEx.toUnitAmount(constants.MINT_AMOUNT, token.decimals);
             this.props.dispatcher.showFlashMessage(`Successfully minted ${amount.toString(10)} ${token.symbol}`);
             return true;
         } catch (err) {

@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Blockchain} from 'ts/blockchain';
-import {Paper, Divider, Dialog} from 'material-ui';
+import {Divider, Dialog} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {zeroEx} from 'ts/utils/zero_ex';
+import {ZeroEx} from '@0xproject/0x.js';
 import {utils} from 'ts/utils/utils';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
@@ -228,7 +229,7 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
         // Upon closing the order JSON dialog, we update the orderSalt stored in the Redux store
         // with a new value so that if a user signs the identical order again, the newly signed
         // orderHash will not collide with the previously generated orderHash.
-        this.props.dispatcher.updateOrderSalt(zeroEx.generateSalt());
+        this.props.dispatcher.updateOrderSalt(ZeroEx.generatePseudoRandomSalt());
         this.setState({
             signingState: SigningState.UNSIGNED,
         });
