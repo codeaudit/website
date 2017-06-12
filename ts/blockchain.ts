@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
+import {ZeroEx} from '@0xproject/0x.js';
 import promisify = require('es6-promisify');
 import findVersions = require('find-versions');
 import compareVersions = require('compare-versions');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
-import {ZeroEx} from '@0xproject/0x.js';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {

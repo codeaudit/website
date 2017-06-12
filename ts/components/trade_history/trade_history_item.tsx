@@ -5,10 +5,10 @@ import * as ReactTooltip from 'react-tooltip';
 import * as moment from 'moment';
 import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {ZeroEx} from '@0xproject/0x.js';
 import {utils} from 'ts/utils/utils';
 import {TokenByAddress, Fill, Token, EtherscanLinkSuffixes} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
-import {ZeroEx} from '@0xproject/0x.js';
 
 const PRECISION = 5;
 const IDENTICON_DIAMETER = 40;

@@ -1,27 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Dispatcher} from 'ts/redux/dispatcher';
-import {
-    TokenByAddress,
-    Token,
-    BlockchainErrs,
-    BalanceErrs,
-    Styles,
-    ScreenWidths,
-    EtherscanLinkSuffixes,
-    BlockchainCallErrs,
-} from 'ts/types';
-import {colors} from 'material-ui/styles';
-import {Blockchain} from 'ts/blockchain';
 import {ZeroEx} from '@0xproject/0x.js';
-import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
-import {configs} from 'ts/utils/configs';
-import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
-import {HelpTooltip} from 'ts/components/ui/help_tooltip';
-import {errorReporter} from 'ts/utils/error_reporter';
-import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
-import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
+import {colors} from 'material-ui/styles';
 import {
     Dialog,
     Divider,
@@ -36,6 +16,26 @@ import {
 import ReactTooltip = require('react-tooltip');
 import * as BigNumber from 'bignumber.js';
 import firstBy = require('thenby');
+import {Dispatcher} from 'ts/redux/dispatcher';
+import {
+    TokenByAddress,
+    Token,
+    BlockchainErrs,
+    BalanceErrs,
+    Styles,
+    ScreenWidths,
+    EtherscanLinkSuffixes,
+    BlockchainCallErrs,
+} from 'ts/types';
+import {Blockchain} from 'ts/blockchain';
+import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
+import {configs} from 'ts/utils/configs';
+import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
+import {HelpTooltip} from 'ts/components/ui/help_tooltip';
+import {errorReporter} from 'ts/utils/error_reporter';
+import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
+import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
 
 const ETHER_ICON_PATH = '/images/ether.png';
 const ETHER_TOKEN_SYMBOL = 'WETH';

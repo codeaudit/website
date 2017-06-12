@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {ZeroEx} from '@0xproject/0x.js';
+import * as BigNumber from 'bignumber.js';
+import {Toggle} from 'material-ui';
 import {Blockchain} from 'ts/blockchain';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Toggle} from 'material-ui';
 import {Token, BalanceErrs} from 'ts/types';
 import {utils} from 'ts/utils/utils';
 import {errorReporter} from 'ts/utils/error_reporter';
-import {ZeroEx} from '@0xproject/0x.js';
-import * as BigNumber from 'bignumber.js';
 
 const DEFAULT_ALLOWANCE_AMOUNT_IN_UNITS = 1000000;
 

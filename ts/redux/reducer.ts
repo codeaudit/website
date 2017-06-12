@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
-import {utils} from 'ts/utils/utils';
 import {ZeroEx} from '@0xproject/0x.js';
+import * as BigNumber from 'bignumber.js';
+import {utils} from 'ts/utils/utils';
 import {
     GenerateOrderSteps,
     Side,
@@ -14,7 +15,6 @@ import {
     ActionTypes,
     ScreenWidths,
 } from 'ts/types';
-import * as BigNumber from 'bignumber.js';
 
 export interface State {
     blockchainErr: BlockchainErrs;

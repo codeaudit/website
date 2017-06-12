@@ -1,11 +1,12 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {ZeroEx} from '@0xproject/0x.js';
+import * as BigNumber from 'bignumber.js';
 import {Blockchain} from 'ts/blockchain';
 import {Divider, Dialog} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {zeroEx} from 'ts/utils/zero_ex';
-import {ZeroEx} from '@0xproject/0x.js';
 import {utils} from 'ts/utils/utils';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
@@ -30,7 +31,6 @@ import {
     Token,
     AlertTypes,
 } from 'ts/types';
-import * as BigNumber from 'bignumber.js';
 
 enum SigningState {
     UNSIGNED,

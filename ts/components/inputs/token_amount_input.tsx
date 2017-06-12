@@ -1,11 +1,11 @@
-import {Token, InputErrMsg, ValidatedBigNumberCallback} from 'ts/types';
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as BigNumber from 'bignumber.js';
-import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
 import {ZeroEx} from '@0xproject/0x.js';
-import {colors} from 'material-ui/styles';
 import {Link} from 'react-router-dom';
+import {colors} from 'material-ui/styles';
+import {Token, InputErrMsg, ValidatedBigNumberCallback} from 'ts/types';
+import {BalanceBoundedInput} from 'ts/components/inputs/balance_bounded_input';
 
 interface TokenAmountInputProps {
     label: string;

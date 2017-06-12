@@ -1,7 +1,7 @@
 import * as React from 'react';
+import {ZeroEx} from '@0xproject/0x.js';
 import {AssetToken, Token} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
-import {ZeroEx} from '@0xproject/0x.js';
 
 const PRECISION = 5;
 const IDENTICON_DIAMETER = 100;
