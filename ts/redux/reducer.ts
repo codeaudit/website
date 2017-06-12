@@ -15,9 +15,6 @@ import {
     ActionTypes,
     ScreenWidths,
 } from 'ts/types';
-import * as DummyTokenAArtifacts from '../contracts/DummyTokenA.json';
-import * as DummyTokenBArtifacts from '../contracts/DummyTokenB.json';
-import * as DummyEtherTokenArtifacts from '../contracts/DummyEtherToken.json';
 import * as BigNumber from 'bignumber.js';
 
 export interface State {
