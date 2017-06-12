@@ -1,27 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Dispatcher} from 'ts/redux/dispatcher';
-import {
-    TokenByAddress,
-    Token,
-    BlockchainErrs,
-    BalanceErrs,
-    Styles,
-    ScreenWidths,
-    EtherscanLinkSuffixes,
-    BlockchainCallErrs,
-} from 'ts/types';
+import {ZeroEx} from '@0xproject/0x.js';
 import {colors} from 'material-ui/styles';
-import {Blockchain} from 'ts/blockchain';
-import {zeroEx} from 'ts/utils/zero_ex';
-import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
-import {configs} from 'ts/utils/configs';
-import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
-import {HelpTooltip} from 'ts/components/ui/help_tooltip';
-import {errorReporter} from 'ts/utils/error_reporter';
-import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
-import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
 import {
     Dialog,
     Divider,
@@ -36,6 +16,26 @@ import {
 import ReactTooltip = require('react-tooltip');
 import * as BigNumber from 'bignumber.js';
 import firstBy = require('thenby');
+import {Dispatcher} from 'ts/redux/dispatcher';
+import {
+    TokenByAddress,
+    Token,
+    BlockchainErrs,
+    BalanceErrs,
+    Styles,
+    ScreenWidths,
+    EtherscanLinkSuffixes,
+    BlockchainCallErrs,
+} from 'ts/types';
+import {Blockchain} from 'ts/blockchain';
+import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
+import {configs} from 'ts/utils/configs';
+import {LifeCycleRaisedButton} from 'ts/components/ui/lifecycle_raised_button';
+import {HelpTooltip} from 'ts/components/ui/help_tooltip';
+import {errorReporter} from 'ts/utils/error_reporter';
+import {AllowanceToggle} from 'ts/components/inputs/allowance_toggle';
+import {EthWethConversionButton} from 'ts/components/eth_weth_conversion_button';
 
 const ETHER_ICON_PATH = '/images/ether.png';
 const ETHER_TOKEN_SYMBOL = 'WETH';
@@ -279,8 +279,8 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
         });
     }
     private renderAmount(amount: BigNumber.BigNumber, decimals: number) {
-      const unitAmount = zeroEx.toUnitAmount(amount, decimals);
-      return unitAmount.toNumber().toFixed(PRECISION);
+        const unitAmount = ZeroEx.toUnitAmount(amount, decimals);
+        return unitAmount.toNumber().toFixed(PRECISION);
     }
     private renderTokenName(token: Token) {
         const tooltipId = `tooltip-${token.address}`;
@@ -367,7 +367,7 @@ export class TokenBalances extends React.Component<TokenBalancesProps, TokenBala
     private async onMintTestTokensAsync(token: Token): Promise<boolean> {
         try {
             await this.props.blockchain.mintTestTokensAsync(token);
-            const amount = zeroEx.toUnitAmount(constants.MINT_AMOUNT, token.decimals);
+            const amount = ZeroEx.toUnitAmount(constants.MINT_AMOUNT, token.decimals);
             this.props.dispatcher.showFlashMessage(`Successfully minted ${amount.toString(10)} ${token.symbol}`);
             return true;
         } catch (err) {

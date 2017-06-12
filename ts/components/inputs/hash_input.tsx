@@ -1,8 +1,5 @@
-import * as _ from 'lodash';
 import * as React from 'react';
-import {TextField} from 'material-ui';
 import {Blockchain} from 'ts/blockchain';
-import {constants} from 'ts/utils/constants';
 import {zeroEx} from 'ts/utils/zero_ex';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import ReactTooltip = require('react-tooltip');

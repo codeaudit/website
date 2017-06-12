@@ -1,6 +1,5 @@
 import * as React from 'react';
-import * as _ from 'lodash';
-import {Dialog, FlatButton, RadioButtonGroup, RadioButton, TextField} from 'material-ui';
+import {Dialog, FlatButton, RadioButtonGroup, RadioButton} from 'material-ui';
 import {Side, Token} from 'ts/types';
 import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
 import {EthAmountInput} from 'ts/components/inputs/eth_amount_input';
