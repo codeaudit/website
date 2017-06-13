@@ -53,7 +53,9 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
     private async onNewPropsReceivedFireAndForgetAsync(nextProps: HashInputProps): Promise<void> {
         if (nextProps.blockchainIsLoaded) {
             const orderHash = await this.generateMessageHashHexAsync();
-            this.setState({orderHash});
+            this.setState({
+                orderHash,
+            });
         }
     }
     private async generateMessageHashHexAsync(): Promise<string> {

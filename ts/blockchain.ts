@@ -424,7 +424,7 @@ export class Blockchain {
         const networkId = !_.isUndefined(injectedWeb3) ? await promisify(injectedWeb3.version.getNetwork)() :
                                                              undefined;
         this.web3Wrapper = new Web3Wrapper(this.dispatcher, networkId);
-        this.zeroEx = new ZeroEx(this.web3Wrapper.getInternalWeb3());
+        this.zeroEx = new ZeroEx(this.web3Wrapper.getInternalWeb3Instance());
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),
