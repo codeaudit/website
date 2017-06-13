@@ -32,11 +32,7 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
         };
     }
     public componentWillReceiveProps(nextProps: HashInputProps) {
-        if (nextProps.blockchainIsLoaded) {
-            this.generateMessageHashHexAsync().then(orderHash => {
-               this.setState({orderHash});
-            });
-        }
+        this.onNewPropsReceivedFireAndForgetAsync(nextProps);
     }
     public render() {
         return (
@@ -53,6 +49,12 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
                 <ReactTooltip id="hashTooltip">{this.state.orderHash}</ReactTooltip>
             </div>
         );
+    }
+    private async onNewPropsReceivedFireAndForgetAsync(nextProps: HashInputProps): Promise<void> {
+        if (nextProps.blockchainIsLoaded) {
+            const orderHash = await this.generateMessageHashHexAsync();
+            this.setState({orderHash});
+        }
     }
     private async generateMessageHashHexAsync(): Promise<string> {
         const hashData = this.props.hashData;
