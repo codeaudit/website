@@ -230,7 +230,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
     private orderToZeroExOrder(parsedOrder: Order): ZeroExOrder {
         const zeroExOrder = {
             maker: parsedOrder.maker.address,
-            taker: parsedOrder.taker.address,
+            taker: _.isEmpty(parsedOrder.taker.address) ? ZeroEx.NULL_ADDRESS : parsedOrder.taker.address,
             makerFee: new BigNumber(parsedOrder.maker.feeAmount),
             takerFee: new BigNumber(parsedOrder.taker.feeAmount),
             makerTokenAmount: new BigNumber(parsedOrder.maker.amount),
