@@ -1,13 +1,12 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Link} from 'react-router-dom';
-import {ZeroEx} from '@0xproject/0x.js';
+import {ZeroEx, Order as ZeroExOrder} from '@0xproject/0x.js';
 import * as moment from 'moment';
 import * as BigNumber from 'bignumber.js';
 import {TextField, Paper, Divider} from 'material-ui';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {zeroEx} from 'ts/utils/zero_ex';
 import {
     Side,
     TokenByAddress,
@@ -228,6 +227,22 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const orderJSON = e.target.value;
         this.validateFillOrderFireAndForgetAsync(orderJSON);
     }
+    private orderToZeroExOrder(parsedOrder: Order): ZeroExOrder {
+        const zeroExOrder = {
+            maker: parsedOrder.maker.address,
+            taker: parsedOrder.taker.address,
+            makerFee: new BigNumber(parsedOrder.maker.feeAmount),
+            takerFee: new BigNumber(parsedOrder.taker.feeAmount),
+            makerTokenAmount: new BigNumber(parsedOrder.maker.amount),
+            takerTokenAmount: new BigNumber(parsedOrder.taker.amount),
+            makerTokenAddress: parsedOrder.maker.token.address,
+            takerTokenAddress: parsedOrder.taker.token.address,
+            salt: new BigNumber(parsedOrder.salt),
+            feeRecipient: parsedOrder.feeRecipient,
+            expirationUnixTimestampSec: new BigNumber(parsedOrder.expiration),
+        };
+        return zeroExOrder;
+    }
     private async validateFillOrderFireAndForgetAsync(orderJSON: string) {
         let orderJSONErrMsg = '';
         let parsedOrder: Order;
@@ -240,19 +255,9 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 return;
             }
             parsedOrder = order;
-
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
-            const makerAmount = new BigNumber(parsedOrder.maker.amount);
-            const takerAmount = new BigNumber(parsedOrder.taker.amount);
-            const expiration = new BigNumber(parsedOrder.expiration);
-            const salt = new BigNumber(parsedOrder.salt);
-            const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
-            const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
-            const orderHash = zeroEx.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
-                            parsedOrder.taker.address, parsedOrder.maker.token.address,
-                            parsedOrder.taker.token.address, parsedOrder.feeRecipient,
-                            makerAmount, takerAmount, parsedMakerFee, parsedTakerFee,
-                            expiration, salt);
+            const zeroExOrder = this.orderToZeroExOrder(parsedOrder);
+            const orderHash = await this.props.blockchain.zeroEx.getOrderHashHexAsync(zeroExOrder);
 
             const signature = parsedOrder.signature;
             const isValidSignature = ZeroEx.isValidSignature(signature.hash, signature, parsedOrder.maker.address);
