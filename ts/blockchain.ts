@@ -112,7 +112,7 @@ export class Blockchain {
                                 signatureData: SignatureData, salt: BigNumber.BigNumber) {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
-        taker = taker === '' ? constants.NULL_ADDRESS : taker;
+        taker = taker === '' ? ZeroEx.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
         const orderAddresses = [
             maker,
