@@ -5,11 +5,10 @@ import * as ReactTooltip from 'react-tooltip';
 import * as moment from 'moment';
 import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import {ZeroEx} from '@0xproject/0x.js';
 import {utils} from 'ts/utils/utils';
-import {constants} from 'ts/utils/constants';
-import {Direction, Side, AssetToken, TokenByAddress, Fill, Token, EtherscanLinkSuffixes} from 'ts/types';
+import {TokenByAddress, Fill, Token, EtherscanLinkSuffixes} from 'ts/types';
 import {Party} from 'ts/components/ui/party';
-import {zeroEx} from 'ts/utils/zero_ex';
 
 const PRECISION = 5;
 const IDENTICON_DIAMETER = 40;
@@ -113,10 +112,10 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
     }
     private renderAmounts(tokenM: Token, tokenT: Token) {
         const fill = this.props.fill;
-        const filledValueTInUnits = zeroEx.toUnitAmount(fill.filledValueT, tokenT.decimals);
-        const filledValueMInUnits = zeroEx.toUnitAmount(fill.filledValueM, tokenT.decimals);
+        const filledValueTInUnits = ZeroEx.toUnitAmount(fill.filledValueT, tokenT.decimals);
+        const filledValueMInUnits = ZeroEx.toUnitAmount(fill.filledValueM, tokenT.decimals);
         let exchangeRate = filledValueTInUnits.div(filledValueMInUnits);
-        const fillValueM = zeroEx.toBaseUnitAmount(filledValueMInUnits, tokenM.decimals);
+        const fillValueM = ZeroEx.toBaseUnitAmount(filledValueMInUnits, tokenM.decimals);
 
         let receiveAmount;
         let receiveToken;
@@ -184,7 +183,7 @@ export class TradeHistoryItem extends React.Component<TradeHistoryItemProps, Tra
         );
     }
     private renderAmount(amount: BigNumber.BigNumber, symbol: string, decimals: number) {
-        const unitAmount = zeroEx.toUnitAmount(amount, decimals);
+        const unitAmount = ZeroEx.toUnitAmount(amount, decimals);
         return (
             <span>
                 {unitAmount.toFixed(PRECISION)} {symbol}

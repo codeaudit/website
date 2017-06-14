@@ -1,10 +1,12 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Link} from 'react-router-dom';
+import {ZeroEx, Order as ZeroExOrder} from '@0xproject/0x.js';
+import * as moment from 'moment';
+import * as BigNumber from 'bignumber.js';
+import {TextField, Paper, Divider} from 'material-ui';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {zeroEx} from 'ts/utils/zero_ex';
-import {TextField, Paper, Divider} from 'material-ui';
 import {
     Side,
     TokenByAddress,
@@ -26,8 +28,6 @@ import {Dispatcher} from 'ts/redux/dispatcher';
 import {Blockchain} from 'ts/blockchain';
 import {errorReporter} from 'ts/utils/error_reporter';
 import {customTokenStorage} from 'ts/local_storage/custom_token_storage';
-import * as BigNumber from 'bignumber.js';
-import * as moment from 'moment';
 
 interface FillOrderProps {
     blockchain: Blockchain;
@@ -92,7 +92,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
             s: '937862111edcba395f8a9e0cc1b2c5e12320...',
             v: 27,
         };
-        const hintSalt = zeroEx.generateSalt();
+        const hintSalt = ZeroEx.generatePseudoRandomSalt();
         const exchangeContract = this.props.blockchain.getExchangeContractAddressIfExists();
         const hintOrder = utils.generateOrder(this.props.networkId, exchangeContract, hintSideToAssetToken,
                                               hintOrderExpiryTimestamp, '', '', constants.MAKER_FEE,
@@ -227,6 +227,22 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         const orderJSON = e.target.value;
         this.validateFillOrderFireAndForgetAsync(orderJSON);
     }
+    private orderToZeroExOrder(parsedOrder: Order): ZeroExOrder {
+        const zeroExOrder = {
+            maker: parsedOrder.maker.address,
+            taker: _.isEmpty(parsedOrder.taker.address) ? ZeroEx.NULL_ADDRESS : parsedOrder.taker.address,
+            makerFee: new BigNumber(parsedOrder.maker.feeAmount),
+            takerFee: new BigNumber(parsedOrder.taker.feeAmount),
+            makerTokenAmount: new BigNumber(parsedOrder.maker.amount),
+            takerTokenAmount: new BigNumber(parsedOrder.taker.amount),
+            makerTokenAddress: parsedOrder.maker.token.address,
+            takerTokenAddress: parsedOrder.taker.token.address,
+            salt: new BigNumber(parsedOrder.salt),
+            feeRecipient: parsedOrder.feeRecipient,
+            expirationUnixTimestampSec: new BigNumber(parsedOrder.expiration),
+        };
+        return zeroExOrder;
+    }
     private async validateFillOrderFireAndForgetAsync(orderJSON: string) {
         let orderJSONErrMsg = '';
         let parsedOrder: Order;
@@ -239,24 +255,12 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
                 return;
             }
             parsedOrder = order;
-
             const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
-            const makerAmount = new BigNumber(parsedOrder.maker.amount);
-            const takerAmount = new BigNumber(parsedOrder.taker.amount);
-            const expiration = new BigNumber(parsedOrder.expiration);
-            const salt = new BigNumber(parsedOrder.salt);
-            const parsedMakerFee = new BigNumber(parsedOrder.maker.feeAmount);
-            const parsedTakerFee = new BigNumber(parsedOrder.taker.feeAmount);
-            const orderHash = zeroEx.getOrderHash(exchangeContractAddr, parsedOrder.maker.address,
-                            parsedOrder.taker.address, parsedOrder.maker.token.address,
-                            parsedOrder.taker.token.address, parsedOrder.feeRecipient,
-                            makerAmount, takerAmount, parsedMakerFee, parsedTakerFee,
-                            expiration, salt);
+            const zeroExOrder = this.orderToZeroExOrder(parsedOrder);
+            const orderHash = await this.props.blockchain.zeroEx.getOrderHashHexAsync(zeroExOrder);
 
             const signature = parsedOrder.signature;
-            const isValidSignature = zeroEx.isValidSignature(signature.hash, signature.v,
-                                                       signature.r, signature.s,
-                                                       parsedOrder.maker.address);
+            const isValidSignature = ZeroEx.isValidSignature(signature.hash, signature, parsedOrder.maker.address);
             if (this.props.networkId !== parsedOrder.networkId) {
                 orderJSONErrMsg = `This order was made on another Ethereum network
                                    (id: ${parsedOrder.networkId}). Connect to this network to fill.`;
@@ -332,9 +336,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         let isValidSignature = false;
         if (this.props.userAddress === '') {
             const signatureData = parsedOrder.signature;
-            isValidSignature = zeroEx.isValidSignature(signatureData.hash, signatureData.v,
-                                                   signatureData.r, signatureData.s,
-                                                   parsedOrder.maker.address);
+            isValidSignature = ZeroEx.isValidSignature(signatureData.hash, signatureData, parsedOrder.maker.address);
         } else {
             isValidSignature = await this.props.blockchain.isValidSignatureAsync(parsedOrder.maker.address,
                                                               parsedOrder.signature);
@@ -364,7 +366,7 @@ export class FillOrder extends React.Component<FillOrderProps, FillOrderState> {
         } else if (amountLeftToFill.eq(0)) {
             globalErrMsg = 'This order has already been completely filled';
         } else if (takerFillAmount.gt(amountLeftToFill)) {
-            const amountLeftToFillInUnits = zeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
+            const amountLeftToFillInUnits = ZeroEx.toUnitAmount(amountLeftToFill, parsedOrder.taker.token.decimals);
             globalErrMsg = `Cannot fill more then remaining ${amountLeftToFillInUnits} ${takerToken.symbol}`;
         } else if (makerBalance.lt(makerFillAmount)) {
             globalErrMsg = 'Maker no longer has a sufficient balance to complete this order';
