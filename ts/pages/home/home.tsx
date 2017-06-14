@@ -412,7 +412,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     }
     private renderPartners(partners: Partner[]) {
         const colSize = utils.getColSize(partners.length);
-        return _.map(partners, (partner) => {
+        return _.map(partners, partner => {
             return (
                 <div
                     key={partner.name}
@@ -428,7 +428,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     private renderProfiles(profiles: Profile[]) {
         const numIndiv = profiles.length;
         const colSize = utils.getColSize(profiles.length);
-        return _.map(profiles, (profile) => {
+        return _.map(profiles, profile => {
             return (
                 <div
                     key={profile.name}

@@ -102,7 +102,7 @@ export const utils = {
         /* tslint:enable */
     },
     sleepAsync(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+        return new Promise(resolve => setTimeout(resolve, ms));
     },
     deepEqual(actual: any, expected: any, opts?: {strict: boolean}) {
         return deepEqual(actual, expected, opts);
