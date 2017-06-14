@@ -262,9 +262,80 @@ export const BlockchainCallErrs = strEnum([
 ]);
 export type BlockchainCallErrs = keyof typeof BlockchainCallErrs;
 
+export const KindString = strEnum([
+  'Constructor',
+  'Property',
+  'Method',
+  'Interface',
+  'Type alias',
+  'Variable',
+  'Function',
+]);
+export type KindString = keyof typeof KindString;
+
 export enum Environments {
     DEVELOPMENT,
     PRODUCTION,
 }
 
 export type ContractInstance = any; // TODO: add type definition for Contract
+
+export interface TypeDocType {
+    type: string;
+    value: string;
+    name: string;
+    types: TypeDocType[];
+    typeArguments?: TypeDocType[];
+    declaration: TypeDocNode;
+    elementType?: TypeDocType;
+}
+
+export interface TypeDocFlags {
+    isStatic?: boolean;
+    isOptional?: boolean;
+}
+
+export interface TypeDocNode {
+    id?: string;
+    name?: string;
+    kind?: string;
+    defaultValue?: string;
+    kindString?: string;
+    type?: TypeDocType;
+    fileName?: string;
+    line?: number;
+    comment?: TypeDocNode;
+    text?: string;
+    shortText?: string;
+    returns?: string;
+    declaration: TypeDocNode;
+    flags?: TypeDocFlags;
+    indexSignature?: TypeDocNode[];
+    signatures?: TypeDocNode[];
+    parameters?: TypeDocNode[];
+    sources?: TypeDocNode[];
+    children?: TypeDocNode[];
+}
+
+export const TypeDocTypes = strEnum([
+  'intrinsic',
+  'reference',
+  'array',
+  'stringLiteral',
+  'reflection',
+  'union',
+]);
+export type TypeDocTypes = keyof typeof TypeDocTypes;
+
+export const DocSections = strEnum([
+  'introduction',
+  'async',
+  'errors',
+  'versioning',
+  'zeroEx',
+  'exchange',
+  'token',
+  'tokenRegistry',
+  'types',
+]);
+export type DocSections = keyof typeof DocSections;

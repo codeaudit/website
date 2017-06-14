@@ -1,0 +1,312 @@
+import * as _ from 'lodash';
+import * as React from 'react';
+import {colors} from 'material-ui/styles';
+import {MenuItem} from 'material-ui';
+import * as ReactMarkdown from 'react-markdown';
+import * as scrollToElement from 'scroll-to-element';
+import {Styles, KindString, TypeDocTypes, TypeDocNode, DocSections} from 'ts/types';
+import {TopBar} from 'ts/components/top_bar';
+import {utils} from 'ts/utils/utils';
+import {MethodBlock} from 'ts/pages/documentation/method_block';
+import {SourceLink} from 'ts/pages/documentation/source_link';
+import {Type} from 'ts/pages/documentation/type';
+import {TypeDefinition} from 'ts/pages/documentation/type_definition';
+import {CodeBlock} from 'ts/pages/documentation/code_block';
+import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
+/* tslint:disable:no-var-requires */
+const IntroMarkdown = require('md/docs/0xjs/introduction');
+const AsyncMarkdown = require('md/docs/0xjs/async');
+const ErrorsMarkdown = require('md/docs/0xjs/errors');
+const versioningMarkdown = require('md/docs/0xjs/versioning');
+/* tslint:disable:no-var-requires */
+
+const sectionNameToMarkdown = {
+    [DocSections.introduction]: IntroMarkdown,
+    [DocSections.async]: AsyncMarkdown,
+    [DocSections.errors]: ErrorsMarkdown,
+    [DocSections.versioning]: versioningMarkdown,
+};
+
+const menu = {
+    introduction: [
+        DocSections.introduction,
+    ],
+    topics: [
+        DocSections.async,
+        DocSections.errors,
+        DocSections.versioning,
+    ],
+    zeroEx: [
+        DocSections.zeroEx,
+    ],
+    contracts: [
+        DocSections.exchange,
+        DocSections.token,
+        DocSections.tokenRegistry,
+    ],
+    types: [
+        DocSections.types,
+    ],
+};
+
+const sectionNameToPackageName: {[name: string]: string} = {
+    [DocSections.zeroEx]: '"src/0x"',
+    [DocSections.exchange]: '"src/contract_wrappers/exchange_wrapper"',
+    [DocSections.tokenRegistry]: '"src/contract_wrappers/token_registry_wrapper"',
+    [DocSections.token]: '"src/contract_wrappers/token_wrapper"',
+    [DocSections.types]: '"src/types"',
+};
+
+export interface APIProps {
+    source: string;
+    location: Location;
+}
+
+interface APIState {}
+
+export class API extends React.Component<APIProps, APIState> {
+    public componentDidMount() {
+        let hash = this.props.location.hash;
+        if (_.isEmpty(hash)) {
+            hash = '#pageTop'; // scroll to top
+        }
+        this.scrollToHash(hash);
+    }
+    public render() {
+        return (
+            <div id="pageTop">
+                <TopBar
+                    blockchainIsLoaded={false}
+                    location={this.props.location}
+                />
+                <div
+                    className="mx-auto flex"
+                    style={{color: colors.grey800, paddingTop: 44}}
+                >
+                    <div className="col col-2">
+                        <div
+                            className="col col-2 border-right pl2 fixed overflow-hidden"
+                            style={{borderColor: colors.grey300, minHeight: '100vh'}}
+                        >
+                            <div
+                                className="py2"
+                                style={{fontSize: 20}}
+                            >
+                                0x.js
+                            </div>
+                            {this.renderNavigation()}
+                        </div>
+                    </div>
+                    <div className="col col-10">
+                        {this.renderDocumentation()}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    private renderDocumentation() {
+        const orderedSectionNames = _.flatten(_.values(menu));
+        const sections = _.map(orderedSectionNames, sectionName => {
+            const packageDefinitionIfExists: TypeDocNode = this.getPackageDefinitionBySectionNameIfExists(sectionName);
+
+            const markdownFile = sectionNameToMarkdown[sectionName];
+            if (_.isUndefined(packageDefinitionIfExists) && !_.isUndefined(markdownFile)) {
+                return (
+                    <div
+                        key={`markdown-section-${sectionName}`}
+                        className="py2 px3"
+                    >
+                        <h2
+                            id={sectionName}
+                            className="hashLinkPaddingFix"
+                            style={{textTransform: 'capitalize'}}
+                        >
+                            {sectionName}
+                        </h2>
+                        <div className="py3">
+                            <ReactMarkdown
+                                source={markdownFile}
+                            />
+                        </div>
+                    </div>
+                );
+            }
+
+            let entities;
+            if (sectionName === 'types') {
+                entities = packageDefinitionIfExists.children;
+            } else {
+                entities = packageDefinitionIfExists.children[0].children;
+            }
+
+            const constructors = _.filter(entities, e => e.kindString === KindString.Constructor);
+
+            const properties = _.filter(entities, e => e.kindString === KindString.Property);
+            const propertyDefs = _.compact(_.map(properties, property => this.renderProperty(property)));
+
+            const methods = _.filter(entities, e => e.kindString === KindString.Method);
+            const isConstructor = false;
+            const methodDefs = _.compact(_.map(methods, method => {
+                return this.renderMethodBlocks(method, sectionName, isConstructor);
+            }));
+
+            const types = _.filter(entities, e => {
+                return e.kindString === KindString.Interface || e.kindString === KindString.Function ||
+                       e.kindString === KindString['Type alias'] || e.kindString === KindString.Variable;
+            });
+            const typeDefs = _.compact(_.map(types, type => {
+                return (
+                    <TypeDefinition
+                        key={`type-${type.name}`}
+                        type={type}
+                    />
+                );
+            }));
+            return (
+                <div
+                    key={`section-${sectionName}`}
+                    className="py2 px3"
+                >
+                    <h2
+                        id={sectionName}
+                        className="pb2 hashLinkPaddingFix"
+                        style={{textTransform: 'capitalize'}}
+                    >
+                        {sectionName}
+                    </h2>
+                    {sectionName === DocSections.zeroEx && constructors.length > 0 &&
+                        <div>
+                            <h2 className="thin">Constructors</h2>
+                            {this.renderZeroExConstructors(constructors)}
+                        </div>
+                    }
+                    {propertyDefs.length > 0 &&
+                        <div>
+                            <h2 className="thin">Properties</h2>
+                            <div>{propertyDefs}</div>
+                        </div>
+                    }
+                    {methodDefs.length > 0 &&
+                        <div>
+                            <h2 className="thin">Methods</h2>
+                            <div>{methodDefs}</div>
+                        </div>
+                    }
+                    {typeDefs.length > 0 &&
+                        <div>
+                            <div>{typeDefs}</div>
+                        </div>
+                    }
+                </div>
+            );
+        });
+
+        return sections;
+    }
+    private renderZeroExConstructors(constructors: TypeDocNode[]) {
+        const isConstructor = true;
+        const constructorDefs = _.compact(_.map(constructors, constructor => {
+            return this.renderMethodBlocks(constructor, DocSections.zeroEx, isConstructor);
+        }));
+        return (
+            <div>
+                {constructorDefs}
+            </div>
+        );
+    }
+    private renderProperty(property: TypeDocNode) {
+        if (utils.isPrivateOrProtectedProperty(property.name)) {
+            return null; // skip
+        }
+
+        const source = property.sources[0];
+        return (
+            <div
+                key={`property-${property.name}-${property.type.name}`}
+                className="pb3"
+            >
+                <CodeBlock>
+                    {property.name}: <Type type={property.type} />
+                </CodeBlock>
+                <SourceLink source={source} />
+                {property.comment &&
+                    <div className="py2">
+                        {property.comment.shortText}
+                    </div>
+                }
+            </div>
+        );
+    }
+    private renderMethodBlocks(method: TypeDocNode, sectionName: string, isConstructor: boolean) {
+        const signatures = method.signatures;
+        const renderedSignatures = _.map(signatures, (signature, i) => {
+            const source = method.sources[i];
+            let entity = method.flags.isStatic ? 'ZeroEx.' : 'zeroEx.';
+            // Hack: currently the section names are identical as the property names on the ZeroEx class
+            // For now we reply on this mapping to construct the method entity. In the future, we should
+            // do this differently.
+            entity = (sectionName !== DocSections.zeroEx) ? `${entity}${sectionName}.` : entity;
+            entity = isConstructor ? '' : entity;
+            return (
+                <MethodBlock
+                    key={`method-${source.name}-${source.line}`}
+                    isConstructor={isConstructor}
+                    isStatic={method.flags.isStatic}
+                    methodSignature={signature}
+                    source={source}
+                    entity={entity}
+                />
+            );
+        });
+        return renderedSignatures;
+    }
+    private renderNavigation() {
+        const navigation = _.map(menu, (menuItems, sectionName) => {
+            return (
+                <div
+                    key={`section-${sectionName}`}
+                    className="py2"
+                >
+                    <div
+                        style={{color: colors.grey500}}
+                        className="pb1"
+                    >
+                        {sectionName.toUpperCase()}
+                    </div>
+                    {this.renderMenuItems(menuItems)}
+                </div>
+            );
+        });
+        return navigation;
+    }
+    private renderMenuItems(menuItemNames: string[]) {
+        const menuItems = _.map(menuItemNames, menuItemName => {
+            return (
+                <MenuItem
+                    key={`menuItem-${menuItemName}`}
+                    onTouchTap={utils.navigateToAnchorId.bind(this, menuItemName)}
+                    style={{minHeight: 0}}
+                    innerDivStyle={{lineHeight: 2}}
+                >
+                    <span style={{textTransform: 'capitalize'}}>
+                        {menuItemName}
+                    </span>
+                </MenuItem>
+            );
+        });
+        return menuItems;
+    }
+    private getPackageDefinitionBySectionNameIfExists(sectionName: string) {
+        const packageName = sectionNameToPackageName[sectionName];
+        const packages: TypeDocNode[] = (ZeroExLibraryDocumentation as any).children;
+        const packageWithName = _.find(packages, (p: TypeDocNode) => {
+            return p.name === packageName;
+        });
+        return packageWithName;
+    }
+    private scrollToHash(hash: string) {
+        if (!_.isEmpty(hash)) {
+            scrollToElement(hash, {duration: 0});
+        }
+    }
+}

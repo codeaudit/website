@@ -15,6 +15,7 @@ declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
 declare module 'find-versions';
 declare module 'compare-versions';
+declare module 'scroll-to-element';
 
 declare module '*.json' {
     const json: any;

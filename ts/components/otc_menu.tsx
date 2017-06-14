@@ -19,6 +19,7 @@ export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
             <div>
                 <MenuItem
                     style={this.props.menuItemStyle}
+                    className="py2"
                     to="/otc"
                     onClick={this.props.onClick.bind(this)}
                 >
@@ -26,6 +27,7 @@ export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
+                    className="py2"
                     to="/otc/fill"
                     onClick={this.props.onClick.bind(this)}
                 >
@@ -33,6 +35,7 @@ export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
+                    className="py2"
                     to="/otc/balances"
                     onClick={this.props.onClick.bind(this)}
                 >
@@ -40,6 +43,7 @@ export class OTCMenu extends React.Component<OTCMenuProps, OTCMenuState> {
                 </MenuItem>
                 <MenuItem
                     style={this.props.menuItemStyle}
+                    className="py2"
                     to="/otc/trades"
                     onClick={this.props.onClick.bind(this)}
                 >
