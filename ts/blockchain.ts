@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
+import {ZeroEx} from '@0xproject/0x.js';
 import promisify = require('es6-promisify');
 import findVersions = require('find-versions');
 import compareVersions = require('compare-versions');
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {utils} from 'ts/utils/utils';
-import {zeroEx} from 'ts/utils/zero_ex';
 import {constants} from 'ts/utils/constants';
 import {configs} from 'ts/utils/configs';
 import {
@@ -35,6 +35,7 @@ const ALLOWANCE_TO_ZERO_GAS_AMOUNT = 45730;
 export class Blockchain {
     public networkId: number;
     public nodeVersion: string;
+    public zeroEx: ZeroEx;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private exchange: ContractInstance;
@@ -111,7 +112,7 @@ export class Blockchain {
                                 signatureData: SignatureData, salt: BigNumber.BigNumber) {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
-        taker = taker === '' ? constants.NULL_ADDRESS : taker;
+        taker = taker === '' ? ZeroEx.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
         const orderAddresses = [
             maker,
@@ -148,7 +149,7 @@ export class Blockchain {
         return response;
     }
     public async getFillAmountAsync(orderHash: string): Promise<BigNumber.BigNumber> {
-        utils.assert(zeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
+        utils.assert(ZeroEx.isValidOrderHash(orderHash), 'Must be valid orderHash');
         const fillAmount = await this.exchange.getUnavailableValueT.call(orderHash);
         return fillAmount;
     }
@@ -206,7 +207,7 @@ export class Blockchain {
         signatureData.hash = orderHashHex;
         signatureData.r = ethUtil.bufferToHex(signatureData.r);
         signatureData.s = ethUtil.bufferToHex(signatureData.s);
-        const isValidSignature = zeroEx.isValidSignature(orderHashHex, v, r, s, makerAddress);
+        const isValidSignature = ZeroEx.isValidSignature(orderHashHex, signatureData, makerAddress);
         if (!isValidSignature) {
             throw new Error(BlockchainCallErrs.INVALID_SIGNATURE);
         }
@@ -255,8 +256,9 @@ export class Blockchain {
             balance = await tokenContract.balanceOf.call(ownerAddress);
             allowance = await tokenContract.allowance.call(ownerAddress, this.proxy.address);
         }
-        balance = _.isUndefined(balance) ? new BigNumber(0) : balance;
-        allowance = _.isUndefined(allowance) ? new BigNumber(0) : allowance;
+        // We rewrap BigNumbers from web3 into our BigNumber because the version that they're using is too old
+        balance = new BigNumber(balance);
+        allowance = new BigNumber(allowance);
         return [balance, allowance];
     }
     public async updateTokenBalancesAndAllowancesAsync(tokens: Token[]) {
@@ -422,6 +424,7 @@ export class Blockchain {
         const networkId = !_.isUndefined(injectedWeb3) ? await promisify(injectedWeb3.version.getNetwork)() :
                                                              undefined;
         this.web3Wrapper = new Web3Wrapper(this.dispatcher, networkId);
+        this.zeroEx = new ZeroEx(this.web3Wrapper.getInternalWeb3Instance());
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),
