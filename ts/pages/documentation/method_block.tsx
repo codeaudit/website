@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import * as ReactMarkdown from 'react-markdown';
 import {Chip} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {TypeDocNode} from 'ts/types';
@@ -7,6 +8,7 @@ import {utils} from 'ts/utils/utils';
 import {SourceLink} from 'ts/pages/documentation/source_link';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
+import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
 
 interface MethodBlockProps {
     isConstructor: boolean;
@@ -68,7 +70,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                 <SourceLink source={this.props.source} />
                 {methodSignature.comment &&
                     <div className="py2">
-                        {methodSignature.comment.shortText}
+                        <ReactMarkdown
+                            source={methodSignature.comment.shortText}
+                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                        />
                     </div>
                 }
                 {methodSignature.parameters &&
@@ -90,7 +95,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                         >
                             RETURNS
                         </h4>
-                        {methodSignature.comment.returns}
+                        <ReactMarkdown
+                            source={methodSignature.comment.returns}
+                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                        />
                     </div>
                 }
             </div>
@@ -121,7 +129,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                         </div>
                     </div>
                     <div className="col col-8">
-                        {comment}
+                        <ReactMarkdown
+                            source={comment}
+                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                        />
                     </div>
                 </div>
             );

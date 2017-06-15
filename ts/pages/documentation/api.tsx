@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import * as ReactMarkdown from 'react-markdown';
 import {colors} from 'material-ui/styles';
 import {MenuItem} from 'material-ui';
 import scrollToElement = require('scroll-to-element');
@@ -11,6 +12,7 @@ import {SourceLink} from 'ts/pages/documentation/source_link';
 import {Type} from 'ts/pages/documentation/type';
 import {TypeDefinition} from 'ts/pages/documentation/type_definition';
 import {MarkdownSection} from 'ts/pages/documentation/markdown_section';
+import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
@@ -225,7 +227,10 @@ export class API extends React.Component<APIProps, APIState> {
                 <SourceLink source={source} />
                 {property.comment &&
                     <div className="py2">
-                        {property.comment.shortText}
+                        <ReactMarkdown
+                            source={property.comment.shortText}
+                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                        />
                     </div>
                 }
             </div>
