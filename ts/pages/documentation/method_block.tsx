@@ -44,7 +44,7 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
                 {!this.props.isConstructor &&
-                    <div className="flex">
+                    <div className="flex relative">
                         <AnchorTitle
                             title={methodSignature.name}
                             id={methodSignature.name}
@@ -52,9 +52,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                         />
                         {this.props.isStatic &&
                             <Chip
+                                className="absolute"
                                 backgroundColor={colors.cyanA700}
                                 labelColor={colors.white}
-                                style={{margin: 14}}
+                                style={{margin: 14, right: -5}}
                             >
                                 Static
                             </Chip>

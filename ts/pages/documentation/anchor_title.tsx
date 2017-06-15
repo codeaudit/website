@@ -31,6 +31,14 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
         };
     }
     public render() {
+        let opacity = 0;
+        if (this.props.shouldShowAnchor) {
+            if (this.state.isHovering) {
+                opacity = 0.6;
+            } else {
+                opacity = 1;
+            }
+        }
         return (
             <h3 className="relative flex">
                 <div
@@ -47,8 +55,7 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
                     <i
                         className="zmdi zmdi-link"
                         onClick={utils.navigateToAnchorId.bind(utils, this.props.id)}
-                        style={{...styles.anchor, opacity: this.state.isHovering ? 0.6 : 1,
-                                display: this.props.shouldShowAnchor ? 'block' : 'none'}}
+                        style={{...styles.anchor, opacity}}
                         onMouseOver={this.setHoverState.bind(this, true)}
                         onMouseOut={this.setHoverState.bind(this, false)}
                     />
