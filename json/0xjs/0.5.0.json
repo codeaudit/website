@@ -72,7 +72,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 123,
+									"line": 132,
 									"character": 5
 								}
 							]
@@ -86,10 +86,13 @@
 								"isExported": true,
 								"isPublic": true
 							},
+							"comment": {
+								"shortText": "An object containing all methods related to the 0x Exchange smart contract."
+							},
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 33,
+									"line": 36,
 									"character": 19
 								}
 							],
@@ -108,10 +111,13 @@
 								"isExported": true,
 								"isPublic": true
 							},
+							"comment": {
+								"shortText": "An object containing all methods related to interacting with ERC20 token smart contracts."
+							},
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 35,
+									"line": 44,
 									"character": 16
 								}
 							],
@@ -130,10 +136,13 @@
 								"isExported": true,
 								"isPublic": true
 							},
+							"comment": {
+								"shortText": "An object containing all methods related to the 0x TokenRegistry smart contract."
+							},
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 34,
+									"line": 40,
 									"character": 24
 								}
 							],
@@ -207,7 +216,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 151,
+									"line": 160,
 									"character": 43
 								}
 							]
@@ -274,7 +283,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 160,
+									"line": 169,
 									"character": 37
 								}
 							]
@@ -329,7 +338,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 141,
+									"line": 150,
 									"character": 33
 								}
 							]
@@ -400,7 +409,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 175,
+									"line": 184,
 									"character": 35
 								}
 							]
@@ -435,7 +444,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 70,
+									"line": 79,
 									"character": 42
 								}
 							]
@@ -486,7 +495,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 85,
+									"line": 94,
 									"character": 34
 								}
 							]
@@ -566,7 +575,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 45,
+									"line": 54,
 									"character": 34
 								}
 							]
@@ -631,7 +640,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 116,
+									"line": 125,
 									"character": 34
 								}
 							]
@@ -696,7 +705,7 @@
 							"sources": [
 								{
 									"fileName": "src/0x.ts",
-									"line": 100,
+									"line": 109,
 									"character": 30
 								}
 							]
