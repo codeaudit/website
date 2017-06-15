@@ -329,6 +329,7 @@ export type TypeDocTypes = keyof typeof TypeDocTypes;
 
 export const DocSections = strEnum([
   'introduction',
+  'installation',
   'async',
   'errors',
   'versioning',

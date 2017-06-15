@@ -15,6 +15,7 @@ import {CodeBlock} from 'ts/pages/documentation/code_block';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
+const InstallationMarkdown = require('md/docs/0xjs/installation');
 const AsyncMarkdown = require('md/docs/0xjs/async');
 const ErrorsMarkdown = require('md/docs/0xjs/errors');
 const versioningMarkdown = require('md/docs/0xjs/versioning');
@@ -22,6 +23,7 @@ const versioningMarkdown = require('md/docs/0xjs/versioning');
 
 const sectionNameToMarkdown = {
     [DocSections.introduction]: IntroMarkdown,
+    [DocSections.installation]: InstallationMarkdown,
     [DocSections.async]: AsyncMarkdown,
     [DocSections.errors]: ErrorsMarkdown,
     [DocSections.versioning]: versioningMarkdown,
@@ -30,6 +32,9 @@ const sectionNameToMarkdown = {
 const menu = {
     introduction: [
         DocSections.introduction,
+    ],
+    install: [
+        DocSections.installation,
     ],
     topics: [
         DocSections.async,
