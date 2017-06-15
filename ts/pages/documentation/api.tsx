@@ -137,27 +137,29 @@ export class API extends React.Component<APIProps, APIState> {
 
             const constructors = _.filter(entities, e => e.kindString === KindString.Constructor);
 
-            const properties = _.filter(entities, e => e.kindString === KindString.Property);
-            const propertyDefs = _.compact(_.map(properties, property => this.renderProperty(property)));
+            const publicProperties = _.filter(entities, e => {
+                return e.kindString === KindString.Property && !utils.isPrivateOrProtectedProperty(e.name);
+            });
+            const publicPropertyDefs = _.map(publicProperties, property => this.renderProperty(property));
 
             const methods = _.filter(entities, e => e.kindString === KindString.Method);
             const isConstructor = false;
-            const methodDefs = _.compact(_.map(methods, method => {
+            const methodDefs = _.map(methods, method => {
                 return this.renderMethodBlocks(method, sectionName, isConstructor);
-            }));
+            });
 
             const types = _.filter(entities, e => {
                 return e.kindString === KindString.Interface || e.kindString === KindString.Function ||
                        e.kindString === KindString['Type alias'] || e.kindString === KindString.Variable;
             });
-            const typeDefs = _.compact(_.map(types, type => {
+            const typeDefs = _.map(types, type => {
                 return (
                     <TypeDefinition
                         key={`type-${type.name}`}
                         type={type}
                     />
                 );
-            }));
+            });
             return (
                 <div
                     key={`section-${sectionName}`}
@@ -176,10 +178,10 @@ export class API extends React.Component<APIProps, APIState> {
                             {this.renderZeroExConstructors(constructors)}
                         </div>
                     }
-                    {propertyDefs.length > 0 &&
+                    {publicPropertyDefs.length > 0 &&
                         <div>
                             <h2 className="thin">Properties</h2>
-                            <div>{propertyDefs}</div>
+                            <div>{publicPropertyDefs}</div>
                         </div>
                     }
                     {methodDefs.length > 0 &&
@@ -201,9 +203,9 @@ export class API extends React.Component<APIProps, APIState> {
     }
     private renderZeroExConstructors(constructors: TypeDocNode[]) {
         const isConstructor = true;
-        const constructorDefs = _.compact(_.map(constructors, constructor => {
+        const constructorDefs = _.map(constructors, constructor => {
             return this.renderMethodBlocks(constructor, DocSections.zeroEx, isConstructor);
-        }));
+        });
         return (
             <div>
                 {constructorDefs}
@@ -211,10 +213,6 @@ export class API extends React.Component<APIProps, APIState> {
         );
     }
     private renderProperty(property: TypeDocNode) {
-        if (utils.isPrivateOrProtectedProperty(property.name)) {
-            return null; // skip
-        }
-
         const source = property.sources[0];
         return (
             <div
