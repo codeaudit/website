@@ -102,7 +102,7 @@ export const utils = {
         /* tslint:enable */
     },
     sleepAsync(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+        return new Promise(resolve => setTimeout(resolve, ms));
     },
     deepEqual(actual: any, expected: any, opts?: {strict: boolean}) {
         return deepEqual(actual, expected, opts);
@@ -148,5 +148,11 @@ export const utils = {
         }
         const etherScanPrefix = networkName === 'Frontier' ? '' : `${networkName.toLowerCase()}.`;
         return `https://${etherScanPrefix}etherscan.io/${suffix}/${address}`;
+    },
+    isPrivateOrProtectedProperty(propertyName: string): boolean {
+        return _.startsWith(propertyName, '_');
+    },
+    navigateToAnchorId(anchorId: string) {
+        window.location.hash = anchorId;
     },
 };

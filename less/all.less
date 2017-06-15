@@ -10,6 +10,12 @@ body {
     }
 }
 
+#zeroExJSDocs {
+    p {
+        line-height: 1.5;
+    }
+}
+
 a {
     color: rgb(66, 66, 66);
 }
@@ -37,4 +43,30 @@ a {
     -moz-backface-visibility: hidden;
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
+}
+
+// Hack: Setting the paddingTop, marginTop and display to the following values adjusts where
+// a hash link scrolls to, such that the element is not hidden behind the fixed topBar.
+// Source: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+.hashLinkPaddingFix {
+    padding-top: 60px;
+    margin-top: -60px;
+    display: inline-block;
+}
+
+.thin {
+    font-weight: 100;
+}
+
+code {
+    font-family: 'Roboto';
+    background-color: #f3f4f4;
+    color: rgb(36, 41, 46);
+    padding: 3px;
+
+    &.hljs {
+        background-color: #dde4e9 !important; // blue gray
+        border-left: 5px solid #00b8d4 !important; // colors.cyanA700
+        padding: 30px;
+    }
 }

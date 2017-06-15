@@ -15,10 +15,16 @@ declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
 declare module 'find-versions';
 declare module 'compare-versions';
+declare module 'react-highlight';
 
 declare module '*.json' {
     const json: any;
     /* tslint:disable */
     export default json;
     /* tslint:enable */
+}
+
+declare function scrollToElement(hash: string, scrollOpts: {[option: string]: any}): void;
+declare module 'scroll-to-element' {
+    export = scrollToElement;
 }

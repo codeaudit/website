@@ -4,6 +4,7 @@ import {AppBar, Drawer, MenuItem} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
 import {configs} from 'ts/utils/configs';
+import {constants} from 'ts/utils/constants';
 import {Identicon} from 'ts/components/ui/identicon';
 import {OTCMenu} from 'ts/components/otc_menu';
 import {Styles} from 'ts/types';
@@ -98,20 +99,23 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                     target="_blank"
                     href="/pdfs/0x_white_paper.pdf"
                 >
-                    <MenuItem>Whitepaper</MenuItem>
+                    <MenuItem className="py2">Whitepaper</MenuItem>
                 </a>
                 {this.renderHomepageMenuItem('partners')}
                 {this.renderHomepageMenuItem('team')}
                 {this.renderHomepageMenuItem('advisors')}
                 {this.renderHomepageMenuItem('investors')}
                 <Link to="/faq" className="text-decoration-none">
-                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                    <MenuItem
+                        className="py2"
+                        onTouchTap={this.onMenuButtonClick.bind(this)}
+                    >
                         FAQ
                     </MenuItem>
                 </Link>
                 {!this.isViewingOTC() &&
                     <Link to="/otc" className="text-decoration-none">
-                        <MenuItem>OTC DApp</MenuItem>
+                        <MenuItem className="py2">OTC DApp</MenuItem>
                     </Link>
                 }
             </Drawer>
@@ -142,7 +146,10 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                     offset={0}
                     duration={SCROLL_DURATION_SECONDS}
                 >
-                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                    <MenuItem
+                        className="py2"
+                        onTouchTap={this.onMenuButtonClick.bind(this)}
+                    >
                         {_.capitalize(location)}
                     </MenuItem>
                 </ScrollLink>
@@ -150,7 +157,10 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
         } else {
             return (
                 <HashLink to={`/#${location}`} className="text-decoration-none">
-                    <MenuItem onTouchTap={this.onMenuButtonClick.bind(this)}>
+                    <MenuItem
+                        className="py2"
+                        onTouchTap={this.onMenuButtonClick.bind(this)}
+                    >
                         {_.capitalize(location)}
                     </MenuItem>
                 </HashLink>

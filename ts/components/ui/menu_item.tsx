@@ -7,8 +7,9 @@ import {colors} from 'material-ui/styles';
 
 interface MenuItemProps {
     to: string;
-    style: React.CSSProperties;
+    style?: React.CSSProperties;
     onClick?: () => void;
+    className?: string;
 }
 
 interface MenuItemState {
@@ -18,6 +19,7 @@ interface MenuItemState {
 export class MenuItem extends React.Component<MenuItemProps, MenuItemState> {
     public static defaultProps: Partial<MenuItemProps> = {
         onClick: _.noop,
+        className: '',
     };
     public constructor(props: MenuItemProps) {
         super(props);
@@ -34,7 +36,7 @@ export class MenuItem extends React.Component<MenuItemProps, MenuItemState> {
             <Link to={this.props.to} style={{textDecoration: 'none', ...this.props.style}}>
                 <div
                     onClick={this.props.onClick.bind(this)}
-                    className="mx-auto py2"
+                    className={`mx-auto ${this.props.className}`}
                     style={menuItemStyles}
                     onMouseEnter={this.onToggleHover.bind(this, true)}
                     onMouseLeave={this.onToggleHover.bind(this, false)}

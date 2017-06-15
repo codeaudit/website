@@ -6,6 +6,7 @@ import * as BigNumber from 'bignumber.js';
 import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
+import {ZeroExJSDocumentation} from 'ts/pages/documentation/zero_ex_js_documentation';
 import {NotFound} from 'ts/pages/not_found';
 import {OTC} from 'ts/containers/otc';
 import {State, reducer} from 'ts/redux/reducer';
@@ -75,6 +76,7 @@ render(
                             <Route exact={true} path="/" component={Home as any} />
                             <Route path="/otc" component={OTC as any} />
                             <Route path="/faq" component={FAQ as any} />
+                            <Route path="/docs/0xjs" component={ZeroExJSDocumentation as any} />
                             <Route component={NotFound as any} />
                         </Switch>
                     </div>

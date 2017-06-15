@@ -13,10 +13,12 @@ module.exports = {
             path.join(__dirname, '/ts'),
             'node_modules',
         ],
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.md'],
         alias: {
             ts: path.join(__dirname, '/ts'),
             less: path.join(__dirname, '/less'),
+            md: path.join(__dirname, '/md'),
+            json: path.join(__dirname, '/json'),
         },
     },
     module: {
@@ -28,6 +30,10 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'awesome-typescript-loader',
+            },
+            {
+                test: /\.md$/,
+                use: 'raw-loader',
             },
             {
                 test: /\.less$/,

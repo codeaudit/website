@@ -4,10 +4,11 @@ import {RaisedButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {Styles} from 'ts/types';
 import * as ReactMarkdown from 'react-markdown';
-const FAQMarkdown = require('raw-loader!./../../md/faq.md');
 import {Link} from 'react-router-dom';
 import {Footer} from 'ts/components/footer';
 import {TopBar} from 'ts/components/top_bar';
+// tslint:disable-next-line:no-var-requires
+const FAQMarkdown = require('md/faq');
 
 export interface FAQProps {
     source: string;
