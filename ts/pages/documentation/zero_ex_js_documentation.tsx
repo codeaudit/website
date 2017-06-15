@@ -63,14 +63,14 @@ const sectionNameToModulePath: {[name: string]: string} = {
     [DocSections.types]: '"src/types"',
 };
 
-export interface APIProps {
+export interface ZeroExJSDocumentationProps {
     source: string;
     location: Location;
 }
 
-interface APIState {}
+interface ZeroExJSDocumentationState {}
 
-export class API extends React.Component<APIProps, APIState> {
+export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentationProps, ZeroExJSDocumentationState> {
     public componentDidMount() {
         let hash = this.props.location.hash;
         if (_.isEmpty(hash)) {
