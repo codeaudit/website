@@ -109,7 +109,8 @@ export class API extends React.Component<APIProps, APIState> {
         );
     }
     private renderDocumentation() {
-        const orderedSectionNames = _.flatten(_.values(menu));
+        const subMenus = _.values(menu);
+        const orderedSectionNames = _.flatten(subMenus);
         const sections = _.map(orderedSectionNames, sectionName => {
             const packageDefinitionIfExists: TypeDocNode = this.getPackageDefinitionBySectionNameIfExists(sectionName);
 
