@@ -235,7 +235,7 @@ export class API extends React.Component<APIProps, APIState> {
     }
     private renderMethodBlocks(method: TypeDocNode, sectionName: string, isConstructor: boolean) {
         const signatures = method.signatures;
-        const renderedSignatures = _.map(signatures, (signature, i) => {
+        const renderedSignatures = _.map(signatures, (signature: TypeDocNode, i: number) => {
             const source = method.sources[i];
             let entity = method.flags.isStatic ? 'ZeroEx.' : 'zeroEx.';
             // Hack: currently the section names are identical as the property names on the ZeroEx class
@@ -257,7 +257,7 @@ export class API extends React.Component<APIProps, APIState> {
         return renderedSignatures;
     }
     private renderNavigation() {
-        const navigation = _.map(menu, (menuItems, sectionName) => {
+        const navigation = _.map(menu, (menuItems: string[], sectionName: string) => {
             return (
                 <div
                     key={`section-${sectionName}`}

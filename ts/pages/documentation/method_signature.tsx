@@ -18,7 +18,9 @@ const defaultProps = {
 
 export const MethodSignature: React.SFC<MethodSignatureProps> = (props: MethodSignatureProps) => {
     const parameters = renderParameters(props.signature);
-    const paramString = _.reduce(parameters, (prev, curr) => [prev, ', ', curr]);
+    const paramString = _.reduce(parameters, (prev: React.ReactNode, curr: React.ReactNode) => {
+        return [prev, ', ', curr];
+    });
     const methodName = props.shouldHideMethodName ? '' : props.signature.name;
     return (
         <span>

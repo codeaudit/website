@@ -42,7 +42,9 @@ export function Interface(props: InterfaceProps) {
             ));
         });
     }
-    const propertyList = _.reduce(properties, (prev, curr) => [prev, '\n\t', curr]);
+    const propertyList = _.reduce(properties, (prev: React.ReactNode, curr: React.ReactNode) => {
+        return [prev, '\n\t', curr];
+    });
     return (
         <span>
             {`{`}

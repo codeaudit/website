@@ -65,9 +65,13 @@ export function Type(props: TypeProps): any {
                 />
             );
         });
-        typeName = _.reduce(unionTypes, (prev, curr) => [prev, '|', curr]);
+        typeName = _.reduce(unionTypes, (prev: React.ReactNode, curr: React.ReactNode) => {
+            return [prev, '|', curr];
+        });
     }
-    const commaSeparatedTypeArgs = _.reduce(typeArgs, (prev, curr) => [prev, ', ', curr]);
+    const commaSeparatedTypeArgs = _.reduce(typeArgs, (prev: React.ReactNode, curr: React.ReactNode) => {
+        return [prev, ', ', curr];
+    });
 
     const typeNameUrlIfExists = typeToUrl[(typeName as string)];
     if (!_.isUndefined(typeNameUrlIfExists)) {
