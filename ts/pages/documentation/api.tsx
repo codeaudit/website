@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {MenuItem} from 'material-ui';
-import * as ReactMarkdown from 'react-markdown';
 import * as scrollToElement from 'scroll-to-element';
 import {Styles, KindString, TypeDocTypes, TypeDocNode, DocSections} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
@@ -12,6 +11,7 @@ import {SourceLink} from 'ts/pages/documentation/source_link';
 import {Type} from 'ts/pages/documentation/type';
 import {TypeDefinition} from 'ts/pages/documentation/type_definition';
 import {CodeBlock} from 'ts/pages/documentation/code_block';
+import {MarkdownSection} from 'ts/pages/documentation/markdown_section';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
@@ -85,13 +85,13 @@ export class API extends React.Component<APIProps, APIState> {
                     location={this.props.location}
                 />
                 <div
-                    className="mx-auto flex"
+                    className="mx-auto max-width-4 flex"
                     style={{color: colors.grey800, paddingTop: 44}}
                 >
                     <div className="col col-2">
                         <div
-                            className="col col-2 border-right pl2 fixed overflow-hidden"
-                            style={{borderColor: colors.grey300, minHeight: '100vh'}}
+                            className="border-right fixed overflow-hidden"
+                            style={{borderColor: colors.grey300, minHeight: '100vh', width: 170}}
                         >
                             <div
                                 className="py2"
@@ -102,7 +102,7 @@ export class API extends React.Component<APIProps, APIState> {
                             {this.renderNavigation()}
                         </div>
                     </div>
-                    <div className="col col-10">
+                    <div className="col col-10 mt3 pt2">
                         {this.renderDocumentation()}
                     </div>
                 </div>
@@ -117,23 +117,11 @@ export class API extends React.Component<APIProps, APIState> {
             const markdownFile = sectionNameToMarkdown[sectionName];
             if (_.isUndefined(packageDefinitionIfExists) && !_.isUndefined(markdownFile)) {
                 return (
-                    <div
+                    <MarkdownSection
                         key={`markdown-section-${sectionName}`}
-                        className="py2 px3"
-                    >
-                        <h2
-                            id={sectionName}
-                            className="hashLinkPaddingFix"
-                            style={{textTransform: 'capitalize'}}
-                        >
-                            {sectionName}
-                        </h2>
-                        <div className="py3">
-                            <ReactMarkdown
-                                source={markdownFile}
-                            />
-                        </div>
-                    </div>
+                        sectionName={sectionName}
+                        markdownContent={markdownFile}
+                    />
                 );
             }
 

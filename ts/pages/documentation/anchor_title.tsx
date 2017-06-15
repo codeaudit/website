@@ -30,22 +30,21 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
     }
     public render() {
         return (
-            <h3 className="relative">
+            <h3 className="relative flex">
+                <div
+                    className="inline-block"
+                    style={{paddingRight: 4}}
+                >
+                    {this.props.title}
+                </div>
                 <i
-                    className="absolute zmdi zmdi-link"
+                    className="zmdi zmdi-link"
                     onClick={utils.navigateToAnchorId.bind(this, this.props.id)}
                     style={{...styles.anchor, opacity: this.state.isHovering ? 0.6 : 1,
                             display: this.props.shouldShowAnchor ? 'block' : 'none'}}
                     onMouseOver={this.setHoverState.bind(this, true)}
                     onMouseOut={this.setHoverState.bind(this, false)}
                 />
-                {' '}
-                <div
-                    className="inline-block"
-                    style={{paddingLeft: 22}}
-                >
-                    {this.props.title}
-                </div>
             </h3>
         );
     }
