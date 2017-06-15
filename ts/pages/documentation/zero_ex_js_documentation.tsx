@@ -231,7 +231,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                 </code>
                 <SourceLink source={source} />
                 {property.comment &&
-                    <div className="py2">
+                    <div className="py2 comment">
                         <ReactMarkdown
                             source={property.comment.shortText}
                             renderers={{CodeBlock: MarkdownCodeBlock}}
@@ -287,12 +287,12 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
         const menuItems = _.map(menuItemNames, menuItemName => {
             return (
                 <ScrollLink
+                    key={`menuItem-${menuItemName}`}
                     to={menuItemName}
                     offset={-60}
                     duration={0}
                 >
                     <MenuItem
-                        key={`menuItem-${menuItemName}`}
                         onTouchTap={utils.navigateToAnchorId.bind(utils, menuItemName)}
                         style={{minHeight: 0}}
                         innerDivStyle={{lineHeight: 2}}

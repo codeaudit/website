@@ -69,7 +69,7 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                 </code>
                 <SourceLink source={this.props.source} />
                 {methodSignature.comment &&
-                    <div className="py2">
+                    <div className="py2 comment">
                         <ReactMarkdown
                             source={methodSignature.comment.shortText}
                             renderers={{CodeBlock: MarkdownCodeBlock}}
@@ -88,7 +88,7 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                     </div>
                 }
                 {methodSignature.comment && methodSignature.comment.returns &&
-                    <div className="pt1">
+                    <div className="pt1 comment">
                         <h4
                             className="pb1 thin"
                             style={{borderBottom: '1px solid #e1e8ed'}}
@@ -128,7 +128,7 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                             {isOptional && 'optional'}
                         </div>
                     </div>
-                    <div className="col col-8">
+                    <div className="col col-8 comment">
                         <ReactMarkdown
                             source={comment}
                             renderers={{CodeBlock: MarkdownCodeBlock}}
