@@ -76,7 +76,7 @@ render(
                             <Route exact={true} path="/" component={Home as any} />
                             <Route path="/otc" component={OTC as any} />
                             <Route path="/faq" component={FAQ as any} />
-                            <Route path="/docs/js" component={API as any} />
+                            <Route path="/docs/0xjs" component={API as any} />
                             <Route component={NotFound as any} />
                         </Switch>
                     </div>
