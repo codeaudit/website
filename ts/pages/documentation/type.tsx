@@ -15,6 +15,12 @@ const typeToUrl: {[typeName: string]: string} = {
     BigNumber: constants.BIGNUMBERJS_GITHUB_URL,
 };
 
+const typeToSection: {[typeName: string]: string} = {
+    ExchangeWrapper: 'exchange',
+    TokenWrapper: 'token',
+    TokenRegistryWrapper: 'tokenRegistry',
+};
+
 interface TypeProps {
     type: TypeDocType;
 }
@@ -74,6 +80,7 @@ export function Type(props: TypeProps): any {
     });
 
     const typeNameUrlIfExists = typeToUrl[(typeName as string)];
+    const sectionNameIfExists = typeToSection[(typeName as string)];
     if (!_.isUndefined(typeNameUrlIfExists)) {
         typeName = (
             <a
@@ -86,8 +93,9 @@ export function Type(props: TypeProps): any {
             </a>
         );
     } else if ((isReference || isArray) &&
-                _.includes(constants.public0xjsTypes, typeName)) {
-        const typeDefinitionAnchorId = typeName;
+                (_.includes(constants.public0xjsTypes, typeName) ||
+                !_.isUndefined(sectionNameIfExists))) {
+        const typeDefinitionAnchorId = _.isUndefined(sectionNameIfExists) ? typeName : sectionNameIfExists;
         typeName = (
             <span
                 onClick={utils.navigateToAnchorId.bind(null, typeDefinitionAnchorId)}
