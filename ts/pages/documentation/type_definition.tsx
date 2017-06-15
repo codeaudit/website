@@ -78,7 +78,7 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
         return (
             <div
                 id={typeDefinitionAnchorId}
-                className="pb2 hashLinkPaddingFix"
+                className="pb2"
                 style={{overflow: 'hidden', width: '100%'}}
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}

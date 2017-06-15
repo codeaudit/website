@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {Styles} from 'ts/types';
 import {utils} from 'ts/utils/utils';
+import {
+    Link as ScrollLink,
+} from 'react-scroll';
 
 interface AnchorTitleProps {
     title: string;
@@ -36,14 +39,20 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
                 >
                     {this.props.title}
                 </div>
-                <i
-                    className="zmdi zmdi-link"
-                    onClick={utils.navigateToAnchorId.bind(this, this.props.id)}
-                    style={{...styles.anchor, opacity: this.state.isHovering ? 0.6 : 1,
-                            display: this.props.shouldShowAnchor ? 'block' : 'none'}}
-                    onMouseOver={this.setHoverState.bind(this, true)}
-                    onMouseOut={this.setHoverState.bind(this, false)}
-                />
+                <ScrollLink
+                    to={this.props.id}
+                    offset={-30}
+                    duration={0}
+                >
+                    <i
+                        className="zmdi zmdi-link"
+                        onClick={utils.navigateToAnchorId.bind(utils, this.props.id)}
+                        style={{...styles.anchor, opacity: this.state.isHovering ? 0.6 : 1,
+                                display: this.props.shouldShowAnchor ? 'block' : 'none'}}
+                        onMouseOver={this.setHoverState.bind(this, true)}
+                        onMouseOut={this.setHoverState.bind(this, false)}
+                    />
+                </ScrollLink>
             </h3>
         );
     }

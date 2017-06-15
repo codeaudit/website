@@ -4,6 +4,11 @@ import * as ReactMarkdown from 'react-markdown';
 import {colors} from 'material-ui/styles';
 import {MenuItem} from 'material-ui';
 import scrollToElement = require('scroll-to-element');
+import {
+    Link as ScrollLink,
+    Element as ScrollElement,
+    animateScroll,
+} from 'react-scroll';
 import {KindString, TypeDocNode, DocSections} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
 import {utils} from 'ts/utils/utils';
@@ -91,19 +96,18 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                 >
                     <div className="col col-2">
                         <div
-                            className="border-right fixed overflow-hidden"
+                            className="border-right fixed overflow-hidden pt3"
                             style={{borderColor: colors.grey300, minHeight: '100vh', width: 170}}
                         >
-                            <div
-                                className="py2"
-                                style={{fontSize: 20}}
-                            >
-                                0x.js
-                            </div>
                             {this.renderNavigation()}
                         </div>
                     </div>
-                    <div className="col col-10 mt3 pt2">
+                    <div className="col col-10 mt2 pt2">
+                        <h1 className="pl3">
+                            <a href="https://github.com/0xProject/0x.js" target="_blank">
+                                0x.js
+                            </a>
+                        </h1>
                         {this.renderDocumentation()}
                     </div>
                 </div>
@@ -167,13 +171,14 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     key={`section-${sectionName}`}
                     className="py2 px3"
                 >
-                    <h2
-                        id={sectionName}
-                        className="pb2 hashLinkPaddingFix"
-                        style={{textTransform: 'capitalize'}}
-                    >
-                        {sectionName}
-                    </h2>
+                    <ScrollElement name={sectionName}>
+                        <h2
+                            className="pb2"
+                            style={{textTransform: 'capitalize'}}
+                        >
+                            {sectionName}
+                        </h2>
+                    </ScrollElement>
                     {sectionName === DocSections.zeroEx && constructors.length > 0 &&
                         <div>
                             <h2 className="thin">Constructors</h2>
@@ -281,16 +286,22 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     private renderMenuItems(menuItemNames: string[]) {
         const menuItems = _.map(menuItemNames, menuItemName => {
             return (
-                <MenuItem
-                    key={`menuItem-${menuItemName}`}
-                    onTouchTap={utils.navigateToAnchorId.bind(this, menuItemName)}
-                    style={{minHeight: 0}}
-                    innerDivStyle={{lineHeight: 2}}
+                <ScrollLink
+                    to={menuItemName}
+                    offset={-60}
+                    duration={0}
                 >
-                    <span style={{textTransform: 'capitalize'}}>
-                        {menuItemName}
-                    </span>
-                </MenuItem>
+                    <MenuItem
+                        key={`menuItem-${menuItemName}`}
+                        onTouchTap={utils.navigateToAnchorId.bind(utils, menuItemName)}
+                        style={{minHeight: 0}}
+                        innerDivStyle={{lineHeight: 2}}
+                    >
+                        <span style={{textTransform: 'capitalize'}}>
+                            {menuItemName}
+                        </span>
+                    </MenuItem>
+                </ScrollLink>
             );
         });
         return menuItems;
@@ -303,7 +314,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     }
     private scrollToHash(hash: string) {
         if (!_.isEmpty(hash)) {
-            scrollToElement(hash, {duration: 0});
+            scrollToElement(hash, {duration: 0, offset: -30});
         }
     }
 }

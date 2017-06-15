@@ -25,7 +25,7 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
         return (
             <div
                 id={sectionName}
-                className="py2 px3 hashLinkPaddingFix"
+                className="py2 px3"
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >

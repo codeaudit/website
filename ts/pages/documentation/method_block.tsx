@@ -39,7 +39,7 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
             <div
                 id={methodSignature.name}
                 style={{overflow: 'hidden', width: '100%'}}
-                className="pb4 hashLinkPaddingFix"
+                className="pb4"
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
