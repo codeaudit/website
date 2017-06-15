@@ -53,7 +53,7 @@ const menu = {
     ],
 };
 
-const sectionNameToPackageName: {[name: string]: string} = {
+const sectionNameToModulePath: {[name: string]: string} = {
     [DocSections.zeroEx]: '"src/0x"',
     [DocSections.exchange]: '"src/contract_wrappers/exchange_wrapper"',
     [DocSections.tokenRegistry]: '"src/contract_wrappers/token_registry_wrapper"',
@@ -289,12 +289,10 @@ export class API extends React.Component<APIProps, APIState> {
         return menuItems;
     }
     private getPackageDefinitionBySectionNameIfExists(sectionName: string) {
-        const packageName = sectionNameToPackageName[sectionName];
-        const packages: TypeDocNode[] = (ZeroExLibraryDocumentation as any).children;
-        const packageWithName = _.find(packages, (p: TypeDocNode) => {
-            return p.name === packageName;
-        });
-        return packageWithName;
+        const modulePathName = sectionNameToModulePath[sectionName];
+        const modules: TypeDocNode[] = (ZeroExLibraryDocumentation as any).children;
+        const moduleWithName = _.find(modules, {name: modulePathName});
+        return moduleWithName;
     }
     private scrollToHash(hash: string) {
         if (!_.isEmpty(hash)) {
