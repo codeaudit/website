@@ -18,7 +18,7 @@ const InstallationMarkdown = require('md/docs/0xjs/installation');
 const AsyncMarkdown = require('md/docs/0xjs/async');
 const ErrorsMarkdown = require('md/docs/0xjs/errors');
 const versioningMarkdown = require('md/docs/0xjs/versioning');
-/* tslint:disable:no-var-requires */
+/* tslint:enable:no-var-requires */
 
 const sectionNameToMarkdown = {
     [DocSections.introduction]: IntroMarkdown,
