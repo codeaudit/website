@@ -1,1 +1,1 @@
-TODO
+In 0x.js, errors are thrown by the offending function. All error messages are part of a documented string enum, where each error message is in all-caps, snake-case format. This makes the error messages easily identifiable, unique and grep-able. The error enums listing all possible errors the library could throw can be found in the `Types` section.

@@ -1,1 +1,1 @@
-TODO
+This project adheres to [Semantic Versioning 2.0.0](http://semver.org/). The library's public interface includes all the methods, properties and types included in this documentation page. As the library is still in Alpha, it's public interface is not yet stable and we reserve the right to introduce backward incompatible changes to the interface before the `1.0.0` release.
