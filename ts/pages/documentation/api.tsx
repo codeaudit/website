@@ -114,13 +114,13 @@ export class API extends React.Component<APIProps, APIState> {
         const sections = _.map(orderedSectionNames, sectionName => {
             const packageDefinitionIfExists: TypeDocNode = this.getPackageDefinitionBySectionNameIfExists(sectionName);
 
-            const markdownFile = sectionNameToMarkdown[sectionName];
-            if (_.isUndefined(packageDefinitionIfExists) && !_.isUndefined(markdownFile)) {
+            const markdownFileIfExists = sectionNameToMarkdown[sectionName];
+            if (!_.isUndefined(markdownFileIfExists)) {
                 return (
                     <MarkdownSection
                         key={`markdown-section-${sectionName}`}
                         sectionName={sectionName}
-                        markdownContent={markdownFile}
+                        markdownContent={markdownFileIfExists}
                     />
                 );
             }
