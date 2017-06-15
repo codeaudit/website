@@ -153,7 +153,6 @@ export const utils = {
         return _.startsWith(propertyName, '_');
     },
     navigateToAnchorId(anchorId: string) {
-        const location = window.location;
-        window.location.href = `${location.protocol}//${location.host}${location.pathname}#${anchorId}`;
+        window.location.hash = anchorId;
     },
 };
