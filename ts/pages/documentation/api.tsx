@@ -72,7 +72,7 @@ export class API extends React.Component<APIProps, APIState> {
     public componentDidMount() {
         let hash = this.props.location.hash;
         if (_.isEmpty(hash)) {
-            hash = '#pageTop'; // scroll to top
+            hash = '#pageTop'; // scroll to the top
         }
         this.scrollToHash(hash);
     }
@@ -124,6 +124,9 @@ export class API extends React.Component<APIProps, APIState> {
                 );
             }
 
+            // Since the `types.ts` file is the only file that does not export a module/class but
+            // instead has each type export itself, we do not need to go down two levels of nesting
+            // for it.
             let entities;
             if (sectionName === 'types') {
                 entities = packageDefinitionIfExists.children;
