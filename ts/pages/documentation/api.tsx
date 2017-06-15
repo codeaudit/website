@@ -74,13 +74,13 @@ export class API extends React.Component<APIProps, APIState> {
     public componentDidMount() {
         let hash = this.props.location.hash;
         if (_.isEmpty(hash)) {
-            hash = '#pageTop'; // scroll to the top
+            hash = '#zeroExJSDocs'; // scroll to the top
         }
         this.scrollToHash(hash);
     }
     public render() {
         return (
-            <div id="pageTop">
+            <div id="zeroExJSDocs">
                 <TopBar
                     blockchainIsLoaded={false}
                     location={this.props.location}
