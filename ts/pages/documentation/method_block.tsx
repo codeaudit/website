@@ -7,7 +7,6 @@ import {utils} from 'ts/utils/utils';
 import {SourceLink} from 'ts/pages/documentation/source_link';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
-import {CodeBlock} from 'ts/pages/documentation/code_block';
 
 interface MethodBlockProps {
     isConstructor: boolean;
@@ -60,12 +59,12 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                          }
                     </div>
                 }
-                <CodeBlock>
+                <code className="hljs">
                     <MethodSignature
                         signature={methodSignature}
                         entity={this.props.entity}
                     />
-                </CodeBlock>
+                </code>
                 <SourceLink source={this.props.source} />
                 {methodSignature.comment &&
                     <div className="py2">

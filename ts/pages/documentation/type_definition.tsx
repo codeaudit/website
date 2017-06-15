@@ -8,7 +8,6 @@ import {Interface} from 'ts/pages/documentation/interface';
 import {Enum} from 'ts/pages/documentation/enum';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
-import {CodeBlock} from 'ts/pages/documentation/code_block';
 
 const KEYWORD_COLOR = '#a81ca6';
 
@@ -34,11 +33,11 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
         }
 
         let typePrefix: string;
-        let code: React.ReactNode;
+        let codeSnippet: React.ReactNode;
         switch (type.kindString) {
             case KindString.Interface:
                 typePrefix = 'Interface';
-                code = (
+                codeSnippet = (
                     <Interface
                         type={type}
                     />
@@ -47,7 +46,7 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
 
             case KindString.Variable:
                 typePrefix = 'Enum';
-                code = (
+                codeSnippet = (
                     <Enum
                         type={type}
                     />
@@ -56,7 +55,7 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
 
             case KindString['Type alias']:
                 typePrefix = 'Type Alias';
-                code = (
+                codeSnippet = (
                     <span>
                         <span style={{color: KEYWORD_COLOR}}>type</span> {type.name} ={' '}
                         {type.type.type !== TypeDocTypes.reflection ?
@@ -91,9 +90,9 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
                 />
                 <div style={{fontSize: 16}}>
                     <pre>
-                        <CodeBlock>
-                            {code}
-                        </CodeBlock>
+                        <code className="hljs">
+                            {codeSnippet}
+                        </code>
                     </pre>
                 </div>
             </div>

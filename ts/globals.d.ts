@@ -16,6 +16,7 @@ declare module 'thenby';
 declare module 'find-versions';
 declare module 'compare-versions';
 declare module 'scroll-to-element';
+declare module 'react-highlight';
 
 declare module '*.json' {
     const json: any;

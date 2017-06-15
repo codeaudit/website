@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
+import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
 
 interface MarkdownSectionProps {
     sectionName: string;
@@ -23,7 +24,8 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
         const sectionName = this.props.sectionName;
         return (
             <div
-                className="py2 px3"
+                id={sectionName}
+                className="py2 px3 hashLinkPaddingFix"
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
@@ -37,6 +39,7 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
                 <div className="pb2">
                     <ReactMarkdown
                         source={this.props.markdownContent}
+                        renderers={{CodeBlock: MarkdownCodeBlock}}
                     />
                 </div>
             </div>

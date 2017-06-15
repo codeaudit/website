@@ -10,7 +10,6 @@ import {MethodBlock} from 'ts/pages/documentation/method_block';
 import {SourceLink} from 'ts/pages/documentation/source_link';
 import {Type} from 'ts/pages/documentation/type';
 import {TypeDefinition} from 'ts/pages/documentation/type_definition';
-import {CodeBlock} from 'ts/pages/documentation/code_block';
 import {MarkdownSection} from 'ts/pages/documentation/markdown_section';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
@@ -218,9 +217,9 @@ export class API extends React.Component<APIProps, APIState> {
                 key={`property-${property.name}-${property.type.name}`}
                 className="pb3"
             >
-                <CodeBlock>
+                <code className="hljs">
                     {property.name}: <Type type={property.type} />
-                </CodeBlock>
+                </code>
                 <SourceLink source={source} />
                 {property.comment &&
                     <div className="py2">
