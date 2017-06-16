@@ -1,15 +1,6 @@
-0x.js is a promise-based library. This means that whenever an asynchronous call is required, the library method will return a Javascript promise. You can therefore use a `promise` syntax or an `async/await` syntax with such methods as shown below:
+0x.js is a promise-based library. This means that whenever an asynchronous call is required, the library method will return a native Javascript promise. You can therefore choose between using a `promise` or `async/await` syntax with each async methods as shown below.
 
-```javascript
-zeroEx.getAvailableAddressesAsync()
-    .then(function(availableAddresses) {
-        console.log('Got:', availableAddresses);
-    })
-    .catch(function(error) {
-        console.log('Caught error: ', error);
-    });
-```
-
+*Async/await syntax (recommended):*
 ```javascript
 try {
     var availableAddresses = await zeroEx.getAvailableAddressesAsync();    
@@ -18,4 +9,15 @@ try {
 }
 ```
 
-As is the convention with promise-based libraries, if an error occurs, it is thrown by the method. It is the callers responsibility to catch thrown errors are handle these scenarios properly.
+*Promise syntax:*
+```javascript
+zeroEx.getAvailableAddressesAsync()
+    .then(function(availableAddresses) {
+        console.log(availableAddresses);
+    })
+    .catch(function(error) {
+        console.log('Caught error: ', error);
+    });
+```
+
+As is the convention with promise-based libraries, if an error occurs, it is thrown. It is the callers responsibility to catch thrown errors and to handle them appropriately.
