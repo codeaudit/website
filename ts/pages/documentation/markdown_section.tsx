@@ -25,7 +25,7 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
         return (
             <div
                 id={sectionName}
-                className="py2 px3"
+                className="pt2 px3"
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
@@ -36,12 +36,10 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
                         shouldShowAnchor={this.state.shouldShowAnchor}
                     />
                 </span>
-                <div className="pb2">
-                    <ReactMarkdown
-                        source={this.props.markdownContent}
-                        renderers={{CodeBlock: MarkdownCodeBlock}}
-                    />
-                </div>
+                <ReactMarkdown
+                    source={this.props.markdownContent}
+                    renderers={{CodeBlock: MarkdownCodeBlock}}
+                />
             </div>
         );
     }

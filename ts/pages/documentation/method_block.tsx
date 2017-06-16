@@ -3,12 +3,12 @@ import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
 import {Chip} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {TypeDocNode} from 'ts/types';
+import {TypeDocNode, Styles} from 'ts/types';
 import {utils} from 'ts/utils/utils';
 import {SourceLink} from 'ts/pages/documentation/source_link';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
-import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
+import {Comment} from 'ts/pages/documentation/comment';
 
 interface MethodBlockProps {
     isConstructor: boolean;
@@ -21,6 +21,17 @@ interface MethodBlockProps {
 interface MethodBlockState {
     shouldShowAnchor: boolean;
 }
+
+const styles: Styles = {
+    chip: {
+        fontSize: 14,
+        backgroundColor: colors.cyanA700,
+        color: 'white',
+        height: 16,
+        borderRadius: 14,
+        marginTop: 13,
+    },
+};
 
 export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockState> {
     constructor(props: MethodBlockProps) {
@@ -44,22 +55,20 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
                 {!this.props.isConstructor &&
-                    <div className="flex relative">
+                    <div className="flex">
+                        {this.props.isStatic &&
+                            <div
+                                className="p1 mr1"
+                                style={styles.chip}
+                            >
+                                Static
+                            </div>
+                         }
                         <AnchorTitle
                             title={methodSignature.name}
                             id={methodSignature.name}
                             shouldShowAnchor={this.state.shouldShowAnchor}
                         />
-                        {this.props.isStatic &&
-                            <Chip
-                                className="absolute"
-                                backgroundColor={colors.cyanA700}
-                                labelColor={colors.white}
-                                style={{margin: 14, right: -5}}
-                            >
-                                Static
-                            </Chip>
-                         }
                     </div>
                 }
                 <code className="hljs">
@@ -70,12 +79,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                 </code>
                 <SourceLink source={this.props.source} />
                 {methodSignature.comment &&
-                    <div className="py2 comment">
-                        <ReactMarkdown
-                            source={methodSignature.comment.shortText}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
-                        />
-                    </div>
+                    <Comment
+                        comment={methodSignature.comment.shortText}
+                        className="py2"
+                    />
                 }
                 {methodSignature.parameters &&
                     <div>
@@ -96,9 +103,8 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                         >
                             RETURNS
                         </h4>
-                        <ReactMarkdown
-                            source={methodSignature.comment.returns}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                        <Comment
+                            comment={methodSignature.comment.returns}
                         />
                     </div>
                 }
@@ -129,10 +135,9 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                             {isOptional && 'optional'}
                         </div>
                     </div>
-                    <div className="col col-8 comment">
-                        <ReactMarkdown
-                            source={comment}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                    <div className="col col-8">
+                        <Comment
+                            comment={comment}
                         />
                     </div>
                 </div>

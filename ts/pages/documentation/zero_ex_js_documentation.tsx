@@ -17,7 +17,7 @@ import {SourceLink} from 'ts/pages/documentation/source_link';
 import {Type} from 'ts/pages/documentation/type';
 import {TypeDefinition} from 'ts/pages/documentation/type_definition';
 import {MarkdownSection} from 'ts/pages/documentation/markdown_section';
-import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
+import {Comment} from 'ts/pages/documentation/comment';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
@@ -135,10 +135,13 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             // instead has each type export itself, we do not need to go down two levels of nesting
             // for it.
             let entities;
+            let packageComment = '';
             if (sectionName === 'types') {
                 entities = packageDefinitionIfExists.children;
             } else {
                 entities = packageDefinitionIfExists.children[0].children;
+                const commentObj = packageDefinitionIfExists.children[0].comment;
+                packageComment = !_.isUndefined(commentObj) ? commentObj.shortText : packageComment;
             }
 
             const constructors = _.filter(entities, e => e.kindString === KindString.Constructor);
@@ -179,9 +182,12 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                             {sectionName}
                         </h2>
                     </ScrollElement>
+                    <Comment
+                        comment={packageComment}
+                    />
                     {sectionName === DocSections.zeroEx && constructors.length > 0 &&
                         <div>
-                            <h2 className="thin">Constructors</h2>
+                            <h2 className="thin">Constructor</h2>
                             {this.renderZeroExConstructors(constructors)}
                         </div>
                     }
@@ -231,12 +237,10 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                 </code>
                 <SourceLink source={source} />
                 {property.comment &&
-                    <div className="py2 comment">
-                        <ReactMarkdown
-                            source={property.comment.shortText}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
-                        />
-                    </div>
+                    <Comment
+                        comment={property.comment.shortText}
+                        className="py2"
+                    />
                 }
             </div>
         );
@@ -314,6 +318,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     }
     private scrollToHash(hash: string) {
         if (!_.isEmpty(hash)) {
+            // TODO: This is not working with ScrollElement... We need to find another way.
             scrollToElement(hash, {duration: 0, offset: -30});
         }
     }
