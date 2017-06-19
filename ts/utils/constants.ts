@@ -75,5 +75,10 @@ export const constants = {
         'OrderCancellationRequest',
         'OrderFillRequest',
         'ContractEventEmitter',
+        'Web3Provider',
+        'ContractEventArgs',
+        'LogCancelArgs',
+        'LogFillArgs',
+        'LogErrorContractEventArgs',
     ],
 };
