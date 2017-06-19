@@ -48,7 +48,6 @@ const styles: Styles = {
     menuItemInnerDivWithHeaders: {
         lineHeight: 2,
     },
-    menuItemInnerDivWithoutHeaders: {},
 };
 
 export class Docs0xjsMenu extends React.Component<Docs0xjsMenuProps, Docs0xjsMenuState> {
@@ -92,8 +91,7 @@ export class Docs0xjsMenu extends React.Component<Docs0xjsMenuProps, Docs0xjsMen
                                     styles.menuItemWithHeaders :
                                     styles.menuItemWithoutHeaders;
         const menuItemInnerDivStyles = this.props.shouldDisplaySectionHeaders ?
-                                    styles.menuItemInnerDivWithHeaders :
-                                    styles.menuItemInnerDivWithoutHeaders;
+                                    styles.menuItemInnerDivWithHeaders : {};
         const menuItems = _.map(menuItemNames, menuItemName => {
             return (
                 <ScrollLink
