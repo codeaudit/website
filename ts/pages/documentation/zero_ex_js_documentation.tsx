@@ -7,7 +7,6 @@ import scrollToElement = require('scroll-to-element');
 import {
     Link as ScrollLink,
     Element as ScrollElement,
-    animateScroll,
 } from 'react-scroll';
 import {KindString, TypeDocNode, DocSections} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
@@ -18,6 +17,8 @@ import {Type} from 'ts/pages/documentation/type';
 import {TypeDefinition} from 'ts/pages/documentation/type_definition';
 import {MarkdownSection} from 'ts/pages/documentation/markdown_section';
 import {Comment} from 'ts/pages/documentation/comment';
+import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
+import {SectionHeader} from 'ts/pages/documentation/section_header';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
@@ -174,14 +175,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     key={`section-${sectionName}`}
                     className="py2 px3"
                 >
-                    <ScrollElement name={sectionName}>
-                        <h2
-                            className="pb2"
-                            style={{textTransform: 'capitalize'}}
-                        >
-                            {sectionName}
-                        </h2>
-                    </ScrollElement>
+                    <SectionHeader sectionName={sectionName} />
                     <Comment
                         comment={packageComment}
                     />
