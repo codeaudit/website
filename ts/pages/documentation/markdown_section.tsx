@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
+import {Element as ScrollElement} from 'react-scroll';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
 import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
 
@@ -24,24 +25,24 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
         const sectionName = this.props.sectionName;
         return (
             <div
-                id={sectionName}
-                className="py2 px3 hashLinkPaddingFix"
+                className="pt2 px3"
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
-                <span style={{textTransform: 'capitalize'}}>
-                    <AnchorTitle
-                        title={sectionName}
-                        id={sectionName}
-                        shouldShowAnchor={this.state.shouldShowAnchor}
-                    />
-                </span>
-                <div className="pb2">
+                <ScrollElement name={sectionName}>
+                    <span style={{textTransform: 'capitalize'}}>
+                        <AnchorTitle
+                            headerType="h3"
+                            title={sectionName}
+                            id={sectionName}
+                            shouldShowAnchor={this.state.shouldShowAnchor}
+                        />
+                    </span>
                     <ReactMarkdown
                         source={this.props.markdownContent}
                         renderers={{CodeBlock: MarkdownCodeBlock}}
                     />
-                </div>
+                </ScrollElement>
             </div>
         );
     }

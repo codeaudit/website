@@ -23,8 +23,3 @@ declare module '*.json' {
     export default json;
     /* tslint:enable */
 }
-
-declare function scrollToElement(hash: string, scrollOpts: {[option: string]: any}): void;
-declare module 'scroll-to-element' {
-    export = scrollToElement;
-}

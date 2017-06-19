@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import {Link as ScrollLink} from 'react-scroll';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
 import {TypeDocType, TypeDocTypes} from 'ts/types';
@@ -97,12 +98,18 @@ export function Type(props: TypeProps): any {
                 !_.isUndefined(sectionNameIfExists))) {
         const typeDefinitionAnchorId = _.isUndefined(sectionNameIfExists) ? typeName : sectionNameIfExists;
         typeName = (
-            <span
-                onClick={utils.navigateToAnchorId.bind(null, typeDefinitionAnchorId)}
-                style={{color: colors.cyanA700, cursor: 'pointer'}}
+            <ScrollLink
+                to={typeDefinitionAnchorId}
+                offset={-45}
+                duration={constants.DOCS_SCROLL_DURATION_MS}
             >
-                {typeName}
-            </span>
+                <span
+                    onClick={utils.setUrlHash.bind(null, typeDefinitionAnchorId)}
+                    style={{color: colors.cyanA700, cursor: 'pointer'}}
+                >
+                    {typeName}
+                </span>
+            </ScrollLink>
         );
     }
     let typeNameColor = 'inherit';

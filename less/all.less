@@ -14,6 +14,12 @@ body {
     p {
         line-height: 1.5;
     }
+
+    .comment {
+        p {
+            margin: 0px;
+        }
+    }
 }
 
 a {
@@ -43,15 +49,6 @@ a {
     -moz-backface-visibility: hidden;
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
-}
-
-// Hack: Setting the paddingTop, marginTop and display to the following values adjusts where
-// a hash link scrolls to, such that the element is not hidden behind the fixed topBar.
-// Source: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
-.hashLinkPaddingFix {
-    padding-top: 60px;
-    margin-top: -60px;
-    display: inline-block;
 }
 
 .thin {
