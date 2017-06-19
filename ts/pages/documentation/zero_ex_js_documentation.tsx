@@ -31,6 +31,47 @@ const versioningMarkdown = require('md/docs/0xjs/versioning');
 
 const SCROLL_TO_TIMEOUT = 500;
 
+const contractMethodOrder: {[sectionName: string]: string[]} = {
+    zeroEx: [
+        'signOrderHashAsync',
+        'getOrderHashHexAsync',
+        'getAvailableAddressesAsync',
+        'setProviderAsync',
+        'isValidOrderHash',
+        'isValidSignature',
+        'generatePseudoRandomSalt',
+        'toBaseUnitAmount',
+        'toUnitAmount',
+    ],
+    exchange: [
+        'fillOrderAsync',
+        'batchFillOrderAsync',
+        'cancelOrderAsync',
+        'batchCancelOrderAsync',
+        'fillOrKillOrderAsync',
+        'batchFillOrKillAsync',
+        'fillOrdersUpToAsync',
+        'getFilledTakerAmountAsync',
+        'getCanceledTakerAmountAsync',
+        'getUnavailableTakerAmountAsync',
+        'subscribeAsync',
+        'stopWatchingAllEventsAsync',
+        'getContractAddressAsync',
+    ],
+    token: [
+        'getAllowanceAsync',
+        'getBalanceAsync',
+        'getProxyAllowanceAsync',
+        'setAllowanceAsync',
+        'setProxyAllowanceAsync',
+        'transferAsync',
+        'transferFromAsync',
+    ],
+    tokenRegistry: [
+        'getTokensAsync',
+    ],
+};
+
 const sectionNameToMarkdown = {
     [DocSections.introduction]: IntroMarkdown,
     [DocSections.installation]: InstallationMarkdown,
@@ -131,8 +172,9 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             const publicPropertyDefs = _.map(publicProperties, property => this.renderProperty(property));
 
             const methods = _.filter(entities, e => e.kindString === KindString.Method);
+            const orderedMethods = this.orderMethods(sectionName, methods);
             const isConstructor = false;
-            const methodDefs = _.map(methods, method => {
+            const methodDefs = _.map(orderedMethods, method => {
                 return this.renderMethodBlocks(method, sectionName, isConstructor);
             });
 
@@ -239,6 +281,17 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             );
         });
         return renderedSignatures;
+    }
+    private orderMethods(sectionName: string, methods: TypeDocNode[]) {
+        const methodByName: {[name: string]: TypeDocNode} = {};
+        _.each(methods, method => {
+            methodByName[method.name] = method;
+        });
+        const sectionMethodOrder = contractMethodOrder[sectionName];
+        const orderedMethods = _.map(sectionMethodOrder, methodName => {
+            return methodByName[methodName];
+        });
+        return orderedMethods;
     }
     private getPackageDefinitionBySectionNameIfExists(sectionName: string) {
         const modulePathName = sectionNameToModulePath[sectionName];
