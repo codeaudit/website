@@ -4,11 +4,11 @@ import {Provider} from 'react-redux';
 import {createStore, Store as ReduxStore} from 'redux';
 import * as BigNumber from 'bignumber.js';
 import {configs} from 'ts/utils/configs';
+import {utils} from 'ts/utils/utils';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
-import {ZeroExJSDocumentation} from 'ts/pages/documentation/zero_ex_js_documentation';
 import {NotFound} from 'ts/pages/not_found';
-import {OTC} from 'ts/containers/otc';
+import {LazyComponent} from 'ts/lazy_component';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
@@ -65,6 +65,24 @@ const muiTheme = getMuiTheme({
     },
 });
 
+const createLazyComponent = (componentName: string, lazyImport: () => Promise<any>) => {
+    return (props: any) => {
+        const componentPromise = utils.asyncMap(mod => mod[componentName], lazyImport());
+        return (
+            <LazyComponent
+                componentPromise={componentPromise}
+                componentProps={props}
+            />
+        );
+    };
+};
+
+const LazyOTC = createLazyComponent('OTC', () => System.import<any>('ts/containers/otc'));
+const LazyZeroExJSDocumentation = createLazyComponent(
+    'ZeroExJSDocumentation',
+    () => System.import<any>('ts/pages/documentation/zero_ex_js_documentation'),
+);
+
 const store: ReduxStore<State> = createStore(reducer);
 render(
     <Router>
@@ -74,9 +92,9 @@ render(
                     <div>
                         <Switch>
                             <Route exact={true} path="/" component={Home as any} />
-                            <Route path="/otc" component={OTC as any} />
+                            <Route path="/otc" component={LazyOTC}/>
                             <Route path="/faq" component={FAQ as any} />
-                            <Route path="/docs/0xjs" component={ZeroExJSDocumentation as any} />
+                            <Route path="/docs/0xjs" component={LazyZeroExJSDocumentation}/>
                             <Route component={NotFound as any} />
                         </Switch>
                     </div>

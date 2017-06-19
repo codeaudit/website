@@ -28,3 +28,11 @@ declare function scrollToElement(hash: string, scrollOpts: {[option: string]: an
 declare module 'scroll-to-element' {
     export = scrollToElement;
 }
+
+// This will be defined by default in TS 2.4
+// Source: https://github.com/Microsoft/TypeScript/issues/12364
+interface System {
+  import<T>(module: string): Promise<T>;
+}
+
+declare var System: System;
