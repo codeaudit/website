@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {Styles} from 'ts/types';
 import {utils} from 'ts/utils/utils';
-import {
-    Link as ScrollLink,
-} from 'react-scroll';
+import {Link as ScrollLink} from 'react-scroll';
 
 const headerTypeToScrollOffset = {
     h2: -60,
