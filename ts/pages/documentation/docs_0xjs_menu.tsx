@@ -115,7 +115,7 @@ export class Docs0xjsMenu extends React.Component<Docs0xjsMenuProps, Docs0xjsMen
         return menuItems;
     }
     private onMenuItemClick(menuItemName: string) {
-        utils.navigateToAnchorId(menuItemName);
+        utils.setUrlHash(menuItemName);
         this.props.onMenuItemClick();
     }
 }

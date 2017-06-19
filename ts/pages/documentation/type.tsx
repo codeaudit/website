@@ -104,7 +104,7 @@ export function Type(props: TypeProps): any {
                 duration={0}
             >
                 <span
-                    onClick={utils.navigateToAnchorId.bind(null, typeDefinitionAnchorId)}
+                    onClick={utils.setUrlHash.bind(null, typeDefinitionAnchorId)}
                     style={{color: colors.cyanA700, cursor: 'pointer'}}
                 >
                     {typeName}

@@ -74,7 +74,7 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
                 >
                     <i
                         className="zmdi zmdi-link"
-                        onClick={utils.navigateToAnchorId.bind(utils, this.props.id)}
+                        onClick={utils.setUrlHash.bind(utils, this.props.id)}
                         style={{...styles.anchor, opacity}}
                         onMouseOver={this.setHoverState.bind(this, true)}
                         onMouseOut={this.setHoverState.bind(this, false)}

@@ -152,7 +152,7 @@ export const utils = {
     isPrivateOrProtectedProperty(propertyName: string): boolean {
         return _.startsWith(propertyName, '_');
     },
-    navigateToAnchorId(anchorId: string) {
+    setUrlHash(anchorId: string) {
         window.location.hash = anchorId;
     },
 };
