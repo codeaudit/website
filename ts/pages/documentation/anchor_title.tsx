@@ -5,9 +5,15 @@ import {
     Link as ScrollLink,
 } from 'react-scroll';
 
+const headerTypeToScrollOffset = {
+    h2: -60,
+    h3: -30,
+};
+
 interface AnchorTitleProps {
-    title: string;
+    title: string|React.ReactNode;
     id: string;
+    headerType: 'h2'|'h3';
     shouldShowAnchor: boolean;
 }
 
@@ -20,6 +26,22 @@ const styles: Styles = {
         fontSize: 20,
         transform: 'rotate(45deg)',
         cursor: 'pointer',
+    },
+    headers: {
+        webkitMarginStart: 0,
+        webkitMarginEnd: 0,
+        fontWeight: 'bold',
+        display: 'block',
+    },
+    h2: {
+        fontSize: '1.5em',
+        webkitMarginBefore: '0.83em',
+        webkitMarginAfter: '0.83em',
+    },
+    h3: {
+        fontSize: '1.17em',
+        webkitMarginBefore: '1em',
+        webkitMarginAfter: '1em',
     },
 };
 
@@ -40,7 +62,7 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
             }
         }
         return (
-            <h3 className="relative flex">
+            <div className="relative flex" style={{...styles[this.props.headerType], ...styles.headers}}>
                 <div
                     className="inline-block"
                     style={{paddingRight: 4}}
@@ -49,7 +71,7 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
                 </div>
                 <ScrollLink
                     to={this.props.id}
-                    offset={-30}
+                    offset={headerTypeToScrollOffset[this.props.headerType]}
                     duration={0}
                 >
                     <i
@@ -60,7 +82,7 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
                         onMouseOut={this.setHoverState.bind(this, false)}
                     />
                 </ScrollLink>
-            </h3>
+            </div>
         );
     }
     private setHoverState(isHovering: boolean) {

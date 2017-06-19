@@ -31,6 +31,7 @@ export class MarkdownSection extends React.Component<MarkdownSectionProps, Markd
             >
                 <span style={{textTransform: 'capitalize'}}>
                     <AnchorTitle
+                        headerType="h3"
                         title={sectionName}
                         id={sectionName}
                         shouldShowAnchor={this.state.shouldShowAnchor}

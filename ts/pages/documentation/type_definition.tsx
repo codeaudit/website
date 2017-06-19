@@ -84,6 +84,7 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
                 <AnchorTitle
+                    headerType="h3"
                     title={`${typePrefix} ${type.name}`}
                     id={typeDefinitionAnchorId}
                     shouldShowAnchor={this.state.shouldShowAnchor}

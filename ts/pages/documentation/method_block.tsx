@@ -65,6 +65,7 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                             </div>
                          }
                         <AnchorTitle
+                            headerType="h3"
                             title={methodSignature.name}
                             id={methodSignature.name}
                             shouldShowAnchor={this.state.shouldShowAnchor}
