@@ -11,6 +11,7 @@ import {
 import {KindString, TypeDocNode, DocSections} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {MethodBlock} from 'ts/pages/documentation/method_block';
 import {SourceLink} from 'ts/pages/documentation/source_link';
 import {Type} from 'ts/pages/documentation/type';
@@ -125,7 +126,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     </div>
                     <div className="col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
                         <h1 className="pl3">
-                            <a href="https://github.com/0xProject/0x.js" target="_blank">
+                            <a href={constants.GITHUB_0X_JS_URL} target="_blank">
                                 0x.js
                             </a>
                         </h1>

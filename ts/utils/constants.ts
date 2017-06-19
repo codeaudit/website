@@ -14,7 +14,7 @@ export const constants = {
     ETHER_FAUCET_ENDPOINT: 'https://faucet.0xproject.com/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',
     HOSTED_TESTNET_URL: 'https://kovan.0xproject.com',
-    GITHUB_0X_JS_URL: 'https://github.com/0xProject/0x.js/blob',
+    GITHUB_0X_JS_URL: 'https://github.com/0xProject/0x.js',
     MAKER_FEE: new BigNumber(0),
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
