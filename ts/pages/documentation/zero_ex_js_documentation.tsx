@@ -3,10 +3,10 @@ import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
 import {colors} from 'material-ui/styles';
 import {MenuItem} from 'material-ui';
-import scrollToElement = require('scroll-to-element');
 import {
     Link as ScrollLink,
     Element as ScrollElement,
+    scroller,
 } from 'react-scroll';
 import {KindString, TypeDocNode, DocSections} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
@@ -28,6 +28,8 @@ const AsyncMarkdown = require('md/docs/0xjs/async');
 const ErrorsMarkdown = require('md/docs/0xjs/errors');
 const versioningMarkdown = require('md/docs/0xjs/versioning');
 /* tslint:enable:no-var-requires */
+
+const SCROLL_TO_TIMEOUT = 500;
 
 const sectionNameToMarkdown = {
     [DocSections.introduction]: IntroMarkdown,
@@ -54,9 +56,9 @@ interface ZeroExJSDocumentationState {}
 
 export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentationProps, ZeroExJSDocumentationState> {
     public componentDidMount() {
-        let hash = this.props.location.hash;
+        let hash = this.props.location.hash.slice(1);
         if (_.isEmpty(hash)) {
-            hash = '#zeroExJSDocs'; // scroll to the top
+            hash = 'zeroExJSDocs'; // scroll to the top
         }
         this.scrollToHash(hash);
     }
@@ -246,8 +248,11 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     }
     private scrollToHash(hash: string) {
         if (!_.isEmpty(hash)) {
-            // TODO: This is not working with ScrollElement... We need to find another way.
-            scrollToElement(hash, {duration: 0, offset: -30});
+            // HACK: For some reason calling scroller.scrollTo immediately from componentDidMount does
+            // not work. Waiting 500ms however, gives the page enough time for the call to succeed.
+            window.setTimeout(() => {
+                scroller.scrollTo(hash, {duration: 0, offset: -60});
+            }, SCROLL_TO_TIMEOUT);
         }
     }
 }

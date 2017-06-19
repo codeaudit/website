@@ -8,7 +8,6 @@ import {Styles, Profile, Partner} from 'ts/types';
 import {
     Link as ScrollLink,
     Element as ScrollElement,
-    animateScroll,
 } from 'react-scroll';
 import {utils} from 'ts/utils/utils';
 import {Footer} from 'ts/components/footer';

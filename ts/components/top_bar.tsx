@@ -11,7 +11,6 @@ import {Docs0xjsMenu} from 'ts/pages/documentation/docs_0xjs_menu';
 import {Styles} from 'ts/types';
 import {
     Link as ScrollLink,
-    Element as ScrollElement,
     animateScroll,
 } from 'react-scroll';
 import {Link} from 'react-router-dom';
