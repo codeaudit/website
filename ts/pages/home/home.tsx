@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {RaisedButton, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {configs} from 'ts/utils/configs';
+import {constants} from 'ts/utils/constants';
 import {Styles, Profile, Partner} from 'ts/types';
 import {
     Link as ScrollLink,
@@ -228,7 +229,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                         to="team"
                                         smooth={true}
                                         offset={0}
-                                        duration={500}
+                                        duration={constants.HOME_SCROLL_DURATION_MS}
                                     >
                                         <FlatButton
                                             label="Team"
@@ -238,7 +239,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                         to="partners"
                                         smooth={true}
                                         offset={0}
-                                        duration={500}
+                                        duration={constants.HOME_SCROLL_DURATION_MS}
                                     >
                                         <FlatButton
                                             label="Partners"

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {MenuItem} from 'material-ui';
 import {DocSections, Styles} from 'ts/types';
 import {Link as ScrollLink} from 'react-scroll';
@@ -98,7 +99,7 @@ export class Docs0xjsMenu extends React.Component<Docs0xjsMenuProps, Docs0xjsMen
                     key={`menuItem-${menuItemName}`}
                     to={menuItemName}
                     offset={-50}
-                    duration={0}
+                    duration={constants.DOCS_SCROLL_DURATION_MS}
                 >
                     <MenuItem
                         onTouchTap={this.onMenuItemClick.bind(this, menuItemName)}

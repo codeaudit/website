@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Styles} from 'ts/types';
 import {utils} from 'ts/utils/utils';
+import {constants} from 'ts/utils/constants';
 import {Link as ScrollLink} from 'react-scroll';
 
 const headerTypeToScrollOffset = {
@@ -70,7 +71,7 @@ export class AnchorTitle extends React.Component<AnchorTitleProps, AnchorTitleSt
                 <ScrollLink
                     to={this.props.id}
                     offset={headerTypeToScrollOffset[this.props.headerType]}
-                    duration={0}
+                    duration={constants.DOCS_SCROLL_DURATION_MS}
                 >
                     <i
                         className="zmdi zmdi-link"

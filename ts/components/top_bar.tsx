@@ -16,8 +16,6 @@ import {
 import {Link} from 'react-router-dom';
 import {HashLink} from 'react-router-hash-link';
 
-const SCROLL_DURATION_SECONDS = 500;
-
 interface TopBarProps {
     userAddress?: string;
     blockchainIsLoaded: boolean;
@@ -165,7 +163,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                     to={location}
                     smooth={true}
                     offset={0}
-                    duration={SCROLL_DURATION_SECONDS}
+                    duration={constants.HOME_SCROLL_DURATION_MS}
                 >
                     <MenuItem
                         className="py2"

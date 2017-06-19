@@ -19,6 +19,8 @@ export const constants = {
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
     ROLLBAR_ACCESS_TOKEN: 'a6619002b51c4464928201e6ea94de65',
+    DOCS_SCROLL_DURATION_MS: 0,
+    HOME_SCROLL_DURATION_MS: 500,
     SUCCESS_STATUS: 200,
     UNAVAILABLE_STATUS: 503,
     TAKER_FEE: new BigNumber(0),

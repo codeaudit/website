@@ -101,7 +101,7 @@ export function Type(props: TypeProps): any {
             <ScrollLink
                 to={typeDefinitionAnchorId}
                 offset={-30}
-                duration={0}
+                duration={constants.DOCS_SCROLL_DURATION_MS}
             >
                 <span
                     onClick={utils.setUrlHash.bind(null, typeDefinitionAnchorId)}
