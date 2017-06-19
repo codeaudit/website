@@ -121,6 +121,11 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                         <MenuItem className="py2">OTC DApp</MenuItem>
                     </Link>
                 }
+                {!this.isViewing0xjsDocs() &&
+                    <Link to="/docs/0xjs" className="text-decoration-none">
+                        <MenuItem className="py2">0x.js Documentation</MenuItem>
+                    </Link>
+                }
             </Drawer>
         );
     }

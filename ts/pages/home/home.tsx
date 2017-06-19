@@ -252,7 +252,12 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                     </Link>
                                     <Link to="/otc">
                                         <FlatButton
-                                            label="OTC DApp"
+                                            label="OTC"
+                                        />
+                                    </Link>
+                                    <Link to="/docs/0xjs">
+                                        <FlatButton
+                                            label="0x.js"
                                         />
                                     </Link>
                                 </div>
