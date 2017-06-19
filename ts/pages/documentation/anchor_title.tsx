@@ -7,7 +7,7 @@ import {
 
 const headerTypeToScrollOffset = {
     h2: -60,
-    h3: -30,
+    h3: -40,
 };
 
 interface AnchorTitleProps {
@@ -28,20 +28,20 @@ const styles: Styles = {
         cursor: 'pointer',
     },
     headers: {
-        webkitMarginStart: 0,
-        webkitMarginEnd: 0,
+        WebkitMarginStart: 0,
+        WebkitMarginEnd: 0,
         fontWeight: 'bold',
         display: 'block',
     },
     h2: {
         fontSize: '1.5em',
-        webkitMarginBefore: '0.83em',
-        webkitMarginAfter: '0.83em',
+        WebkitMarginBefore: '0.83em',
+        WebkitMarginAfter: '0.83em',
     },
     h3: {
         fontSize: '1.17em',
-        webkitMarginBefore: '1em',
-        webkitMarginAfter: '1em',
+        WebkitMarginBefore: '1em',
+        WebkitMarginAfter: '1em',
     },
 };
 
