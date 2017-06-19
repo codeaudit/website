@@ -1,4 +1,4 @@
-0x.js is a promise-based library. This means that whenever an asynchronous call is required, the library method will return a native Javascript promise. You can therefore choose between using a `promise` or `async/await` syntax with each async methods as shown below.
+0x.js is a promise-based library. This means that whenever an asynchronous call is required, the library method will return a native Javascript promise. You can therefore choose between using `promise` or `async/await` syntax when calling our async methods.
 
 *Async/await syntax (recommended):*
 ```javascript
