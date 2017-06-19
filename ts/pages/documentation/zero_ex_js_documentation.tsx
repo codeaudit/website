@@ -116,7 +116,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     className="mx-auto max-width-4 flex"
                     style={{color: colors.grey800, paddingTop: 44}}
                 >
-                    <div className="col md-col-2 lg-col-2 sm-hide xs-hide">
+                    <div className="col md-col-2 lg-col-2 lg-pl0 md-pl1 sm-hide xs-hide">
                         <div
                             className="border-right fixed overflow-hidden pt3"
                             style={{borderColor: colors.grey300, minHeight: '100vh', width: 170}}
