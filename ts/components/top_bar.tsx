@@ -16,6 +16,8 @@ import {
 import {Link} from 'react-router-dom';
 import {HashLink} from 'react-router-hash-link';
 
+const SECTION_HEADER_COLOR = 'rgb(234, 234, 234)';
+
 interface TopBarProps {
     userAddress?: string;
     blockchainIsLoaded: boolean;
@@ -92,7 +94,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             >
                 {this.renderOTCMenu()}
                 {this.render0xjsDocMenu()}
-                <div className="pl1 py1 mt3" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Website</div>
+                <div className="pl1 py1 mt3" style={{backgroundColor: SECTION_HEADER_COLOR}}>Website</div>
                 {this.renderHomepageMenuItem('home')}
                 <a
                     className="text-decoration-none"
@@ -133,7 +135,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
         return (
             <div className="lg-hide md-hide">
-                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>0x.js Docs</div>
+                <div className="pl1 py1" style={{backgroundColor: SECTION_HEADER_COLOR}}>0x.js Docs</div>
                 <Docs0xjsMenu
                     shouldDisplaySectionHeaders={false}
                     onMenuItemClick={this.onMenuButtonClick.bind(this)}
@@ -148,7 +150,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
         return (
             <div className="lg-hide md-hide">
-                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>OTC DApp</div>
+                <div className="pl1 py1" style={{backgroundColor: SECTION_HEADER_COLOR}}>OTC DApp</div>
                 <OTCMenu
                     menuItemStyle={{color: 'black'}}
                     onClick={this.onMenuButtonClick.bind(this)}
