@@ -100,7 +100,7 @@ export function Type(props: TypeProps): any {
         typeName = (
             <ScrollLink
                 to={typeDefinitionAnchorId}
-                offset={-30}
+                offset={-45}
                 duration={constants.DOCS_SCROLL_DURATION_MS}
             >
                 <span
