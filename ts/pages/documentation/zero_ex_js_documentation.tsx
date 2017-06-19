@@ -97,7 +97,8 @@ interface ZeroExJSDocumentationState {}
 
 export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentationProps, ZeroExJSDocumentationState> {
     public componentDidMount() {
-        let hash = this.props.location.hash.slice(1);
+        const hashWithPrefix = this.props.location.hash;
+        let hash = hashWithPrefix.slice(1);
         if (_.isEmpty(hash)) {
             hash = 'zeroExJSDocs'; // scroll to the top
         }
