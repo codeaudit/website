@@ -8,6 +8,7 @@ import {Interface} from 'ts/pages/documentation/interface';
 import {Enum} from 'ts/pages/documentation/enum';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
+import {Comment} from 'ts/pages/documentation/comment';
 
 const KEYWORD_COLOR = '#a81ca6';
 
@@ -96,6 +97,12 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
                         </code>
                     </pre>
                 </div>
+                {type.comment &&
+                    <Comment
+                        comment={type.comment.shortText}
+                        className="py2"
+                    />
+                }
             </div>
         );
     }
