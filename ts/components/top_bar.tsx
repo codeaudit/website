@@ -7,6 +7,7 @@ import {configs} from 'ts/utils/configs';
 import {constants} from 'ts/utils/constants';
 import {Identicon} from 'ts/components/ui/identicon';
 import {OTCMenu} from 'ts/components/otc_menu';
+import {Docs0xjsMenu} from 'ts/pages/documentation/docs_0xjs_menu';
 import {Styles} from 'ts/types';
 import {
     Link as ScrollLink,
@@ -93,6 +94,8 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 onRequestChange={this.onMenuButtonClick.bind(this)}
             >
                 {this.renderOTCMenu()}
+                {this.render0xjsDocMenu()}
+                <div className="pl1 py1 mt3" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Website</div>
                 {this.renderHomepageMenuItem('home')}
                 <a
                     className="text-decoration-none"
@@ -121,6 +124,21 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             </Drawer>
         );
     }
+    private render0xjsDocMenu() {
+        if (!this.isViewing0xjsDocs()) {
+            return;
+        }
+
+        return (
+            <div className="lg-hide md-hide">
+                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>0x.js Docs</div>
+                <Docs0xjsMenu
+                    shouldDisplaySectionHeaders={false}
+                    onMenuItemClick={this.onMenuButtonClick.bind(this)}
+                />
+            </div>
+        );
+    }
     private renderOTCMenu() {
         if (!this.isViewingOTC()) {
             return;
@@ -133,7 +151,6 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                     menuItemStyle={{color: 'black'}}
                     onClick={this.onMenuButtonClick.bind(this)}
                 />
-                <div className="pl1 py1 mt3" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Website</div>
             </div>
         );
     }
@@ -197,5 +214,8 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
     }
     private isViewingOTC() {
         return _.includes(this.props.location.pathname, '/otc');
+    }
+    private isViewing0xjsDocs() {
+        return _.includes(this.props.location.pathname, '/docs/0xjs');
     }
 }

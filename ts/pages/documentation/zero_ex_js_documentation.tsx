@@ -19,6 +19,7 @@ import {MarkdownSection} from 'ts/pages/documentation/markdown_section';
 import {Comment} from 'ts/pages/documentation/comment';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
 import {SectionHeader} from 'ts/pages/documentation/section_header';
+import {Docs0xjsMenu, menu} from 'ts/pages/documentation/docs_0xjs_menu';
 import * as ZeroExLibraryDocumentation from 'json/0xjs/0.5.0.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
@@ -34,31 +35,6 @@ const sectionNameToMarkdown = {
     [DocSections.async]: AsyncMarkdown,
     [DocSections.errors]: ErrorsMarkdown,
     [DocSections.versioning]: versioningMarkdown,
-};
-
-const menu = {
-    introduction: [
-        DocSections.introduction,
-    ],
-    install: [
-        DocSections.installation,
-    ],
-    topics: [
-        DocSections.async,
-        DocSections.errors,
-        DocSections.versioning,
-    ],
-    zeroEx: [
-        DocSections.zeroEx,
-    ],
-    contracts: [
-        DocSections.exchange,
-        DocSections.token,
-        DocSections.tokenRegistry,
-    ],
-    types: [
-        DocSections.types,
-    ],
 };
 
 const sectionNameToModulePath: {[name: string]: string} = {
@@ -95,15 +71,15 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     className="mx-auto max-width-4 flex"
                     style={{color: colors.grey800, paddingTop: 44}}
                 >
-                    <div className="col col-2">
+                    <div className="col md-col-2 lg-col-2 sm-hide xs-hide">
                         <div
                             className="border-right fixed overflow-hidden pt3"
                             style={{borderColor: colors.grey300, minHeight: '100vh', width: 170}}
                         >
-                            {this.renderNavigation()}
+                            <Docs0xjsMenu />
                         </div>
                     </div>
-                    <div className="col col-10 mt2 pt2">
+                    <div className="col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
                         <h1 className="pl3">
                             <a href="https://github.com/0xProject/0x.js" target="_blank">
                                 0x.js
@@ -261,48 +237,6 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             );
         });
         return renderedSignatures;
-    }
-    private renderNavigation() {
-        const navigation = _.map(menu, (menuItems: string[], sectionName: string) => {
-            return (
-                <div
-                    key={`section-${sectionName}`}
-                    className="py2"
-                >
-                    <div
-                        style={{color: colors.grey500}}
-                        className="pb1"
-                    >
-                        {sectionName.toUpperCase()}
-                    </div>
-                    {this.renderMenuItems(menuItems)}
-                </div>
-            );
-        });
-        return navigation;
-    }
-    private renderMenuItems(menuItemNames: string[]) {
-        const menuItems = _.map(menuItemNames, menuItemName => {
-            return (
-                <ScrollLink
-                    key={`menuItem-${menuItemName}`}
-                    to={menuItemName}
-                    offset={-60}
-                    duration={0}
-                >
-                    <MenuItem
-                        onTouchTap={utils.navigateToAnchorId.bind(utils, menuItemName)}
-                        style={{minHeight: 0}}
-                        innerDivStyle={{lineHeight: 2}}
-                    >
-                        <span style={{textTransform: 'capitalize'}}>
-                            {menuItemName}
-                        </span>
-                    </MenuItem>
-                </ScrollLink>
-            );
-        });
-        return menuItems;
     }
     private getPackageDefinitionBySectionNameIfExists(sectionName: string) {
         const modulePathName = sectionNameToModulePath[sectionName];
