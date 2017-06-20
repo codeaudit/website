@@ -124,7 +124,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     }
     public render() {
         return (
-            <div id="zeroExJSDocs">
+            <div>
                 <TopBar
                     blockchainIsLoaded={false}
                     location={this.props.location}
@@ -147,6 +147,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                             style={styles.mainContainers}
                             className="absolute"
                         >
+                            <div id="zeroExJSDocs" />
                             <h1 className="pl3">
                                 <a href={constants.GITHUB_0X_JS_URL} target="_blank">
                                     0x.js
