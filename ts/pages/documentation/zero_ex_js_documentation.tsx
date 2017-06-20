@@ -8,7 +8,7 @@ import {
     Element as ScrollElement,
     scroller,
 } from 'react-scroll';
-import {KindString, TypeDocNode, DocSections} from 'ts/types';
+import {KindString, TypeDocNode, DocSections, Styles} from 'ts/types';
 import {TopBar} from 'ts/components/top_bar';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
@@ -96,6 +96,28 @@ export interface ZeroExJSDocumentationProps {
 
 interface ZeroExJSDocumentationState {}
 
+const styles: Styles = {
+    menuContainer: {
+        borderColor: colors.grey300,
+        minHeight: 'calc(100vh - 77px)',
+        width: 170,
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        overflow: 'scroll',
+    },
+    documentationContainer: {
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        overflowZ: 'hidden',
+        overflowY: 'scroll',
+        minHeight: 'calc(100vh - 77px)',
+    },
+};
+
 export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentationProps, ZeroExJSDocumentationState> {
     public componentDidMount() {
         const hashWithPrefix = this.props.location.hash;
@@ -116,21 +138,27 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     className="mx-auto max-width-4 flex"
                     style={{color: colors.grey800, paddingTop: 44}}
                 >
-                    <div className="col md-col-2 lg-col-2 lg-pl0 md-pl1 sm-hide xs-hide">
+                    <div className="relative col md-col-2 lg-col-2 lg-pl0 md-pl1 sm-hide xs-hide">
                         <div
-                            className="border-right fixed overflow-hidden pt3"
-                            style={{borderColor: colors.grey300, minHeight: '100vh', width: 170}}
+                            className="border-right absolute pt3"
+                            style={styles.menuContainer}
                         >
                             <Docs0xjsMenu />
                         </div>
                     </div>
-                    <div className="col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
-                        <h1 className="pl3">
-                            <a href={constants.GITHUB_0X_JS_URL} target="_blank">
-                                0x.js
-                            </a>
-                        </h1>
-                        {this.renderDocumentation()}
+                    <div className="relative col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
+                        <div
+                            id="documentation"
+                            style={styles.documentationContainer}
+                            className="absolute"
+                        >
+                            <h1 className="pl3">
+                                <a href={constants.GITHUB_0X_JS_URL} target="_blank">
+                                    0x.js
+                                </a>
+                            </h1>
+                            {this.renderDocumentation()}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -306,7 +334,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             // HACK: For some reason calling scroller.scrollTo immediately from componentDidMount does
             // not work. Waiting 500ms however, gives the page enough time for the call to succeed.
             window.setTimeout(() => {
-                scroller.scrollTo(hash, {duration: 0, offset: -60});
+                scroller.scrollTo(hash, {duration: 0, offset: 0, containerId: 'documentation'});
             }, SCROLL_TO_TIMEOUT);
         }
     }
