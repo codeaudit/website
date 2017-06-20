@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-interface LazyreactComponentProps {
+interface LazyComponentProps {
     reactComponentPromise: Promise<React.ComponentClass<any>>;
     reactComponentProps: any;
 }
@@ -14,8 +14,8 @@ interface LazyComponentState {
  * This component is used for rendering components that are lazily loaded from other chunks.
  * Source: https://reacttraining.com/react-router/web/guides/code-splitting
  */
-export class LazyComponent extends React.Component<LazyreactComponentProps, LazyComponentState> {
-    constructor(props: LazyreactComponentProps) {
+export class LazyComponent extends React.Component<LazyComponentProps, LazyComponentState> {
+    constructor(props: LazyComponentProps) {
         super(props);
         this.state = {
             component: undefined,
@@ -24,7 +24,7 @@ export class LazyComponent extends React.Component<LazyreactComponentProps, Lazy
     public componentWillMount() {
         this.loadComponentFireAndForgetAsync(this.props);
     }
-    public componentWillReceiveProps(nextProps: LazyreactComponentProps) {
+    public componentWillReceiveProps(nextProps: LazyComponentProps) {
         if (nextProps.reactComponentPromise !== this.props.reactComponentPromise) {
           this.loadComponentFireAndForgetAsync(nextProps);
         }
@@ -34,7 +34,7 @@ export class LazyComponent extends React.Component<LazyreactComponentProps, Lazy
                 null :
                 React.createElement(this.state.component, this.props.reactComponentProps);
     }
-    private async loadComponentFireAndForgetAsync(props: LazyreactComponentProps) {
+    private async loadComponentFireAndForgetAsync(props: LazyComponentProps) {
         this.setState({
             component: undefined,
         });
@@ -44,3 +44,26 @@ export class LazyComponent extends React.Component<LazyreactComponentProps, Lazy
         });
     }
 }
+
+/**
+ * [createLazyComponent description]
+ * @param  componentName - name of exported component
+ * @param  lazyImport    - lambda returning module promise
+ *                         we pass a lambda because we only want to require a module if it's used
+ * @example `const LazyOTC = createLazyComponent('OTC', () => System.import<any>('ts/containers/otc'));``
+ */
+export const createLazyComponent = (componentName: string, lazyImport: () => Promise<any>) => {
+    return (props: any) => {
+        const reactComponentPromise = new Promise<React.ComponentClass<any>>((resolve, reject) => {
+            lazyImport()
+                .then(mod => resolve(mod[componentName]))
+                .catch(reject);
+        });
+        return (
+            <LazyComponent
+                reactComponentPromise={reactComponentPromise}
+                reactComponentProps={props}
+            />
+        );
+    };
+};

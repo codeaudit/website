@@ -7,7 +7,7 @@ import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
 import {NotFound} from 'ts/pages/not_found';
-import {LazyComponent} from 'ts/lazy_component';
+import {LazyComponent, createLazyComponent} from 'ts/lazy_component';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
@@ -63,22 +63,6 @@ const muiTheme = getMuiTheme({
         trackOnColor: CUSTOM_DARKER_GREEN,
     },
 });
-
-const createLazyComponent = (componentName: string, lazyImport: () => Promise<any>) => {
-    return (props: any) => {
-        const reactComponentPromise = new Promise<React.ComponentClass<any>>((resolve, reject) => {
-            lazyImport()
-                .then(mod => resolve(mod[componentName]))
-                .catch(reject);
-        });
-        return (
-            <LazyComponent
-                reactComponentPromise={reactComponentPromise}
-                reactComponentProps={props}
-            />
-        );
-    };
-};
 
 // We pass modulePromise returning lambda instead of module promise,
 // cause we only want to import the module when the user navigates to the page.
