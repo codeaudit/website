@@ -105,6 +105,7 @@ const styles: Styles = {
         overflowZ: 'hidden',
         overflowY: 'scroll',
         minHeight: 'calc(100vh - 77px)',
+        WebkitOverflowScrolling: 'touch',
     },
     menuContainer: {
         borderColor: colors.grey300,
