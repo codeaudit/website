@@ -97,17 +97,7 @@ export interface ZeroExJSDocumentationProps {
 interface ZeroExJSDocumentationState {}
 
 const styles: Styles = {
-    menuContainer: {
-        borderColor: colors.grey300,
-        minHeight: 'calc(100vh - 77px)',
-        width: 170,
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        overflow: 'scroll',
-    },
-    documentationContainer: {
+    mainContainers: {
         top: 0,
         left: 0,
         bottom: 0,
@@ -115,6 +105,10 @@ const styles: Styles = {
         overflowZ: 'hidden',
         overflowY: 'scroll',
         minHeight: 'calc(100vh - 77px)',
+    },
+    menuContainer: {
+        borderColor: colors.grey300,
+        width: 170,
     },
 };
 
@@ -141,7 +135,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     <div className="relative col md-col-2 lg-col-2 lg-pl0 md-pl1 sm-hide xs-hide">
                         <div
                             className="border-right absolute pt3"
-                            style={styles.menuContainer}
+                            style={{...styles.menuContainer, ...styles.mainContainers}}
                         >
                             <Docs0xjsMenu />
                         </div>
@@ -149,7 +143,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     <div className="relative col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
                         <div
                             id="documentation"
-                            style={styles.documentationContainer}
+                            style={styles.mainContainers}
                             className="absolute"
                         >
                             <h1 className="pl3">
