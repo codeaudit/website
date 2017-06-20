@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {Link} from 'react-router-dom';
-import {RaisedButton, FlatButton} from 'material-ui';
+import {RaisedButton} from 'material-ui/RaisedButton';
+import {FlatButton} from 'material-ui/FlatButton';
 import {colors} from 'material-ui/styles';
 import {configs} from 'ts/utils/configs';
 import {constants} from 'ts/utils/constants';

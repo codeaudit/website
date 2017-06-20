@@ -3,9 +3,7 @@ import * as React from 'react';
 import {utils} from 'ts/utils/utils';
 import {Token} from 'ts/types';
 import {Blockchain} from 'ts/blockchain';
-import {
-    RaisedButton,
-} from 'material-ui';
+import {RaisedButton} from 'material-ui/RaisedButton';
 
 const COMPLETE_STATE_SHOW_LENGTH_MS = 2000;
 

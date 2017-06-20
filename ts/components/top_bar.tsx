@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {AppBar, Drawer, MenuItem} from 'material-ui';
+import {AppBar} from 'material-ui/AppBar';
+import {Drawer} from 'material-ui/Drawer';
+import {MenuItem} from 'material-ui/MenuItem';
 import {colors} from 'material-ui/styles';
 import ReactTooltip = require('react-tooltip');
 import {configs} from 'ts/utils/configs';

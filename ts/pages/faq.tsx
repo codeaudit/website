@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {RaisedButton} from 'material-ui';
+import {RaisedButton} from 'material-ui/RaisedButton';
 import {colors} from 'material-ui/styles';
 import {Styles} from 'ts/types';
 import * as ReactMarkdown from 'react-markdown';

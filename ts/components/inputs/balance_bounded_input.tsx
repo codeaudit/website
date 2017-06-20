@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as BigNumber from 'bignumber.js';
 import {ValidatedBigNumberCallback, InputErrMsg} from 'ts/types';
-import {TextField} from 'material-ui';
+import {TextField} from 'material-ui/TextField';
 import {RequiredLabel} from 'ts/components/ui/required_label';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
