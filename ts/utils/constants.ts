@@ -20,6 +20,7 @@ export const constants = {
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
     ROLLBAR_ACCESS_TOKEN: 'a6619002b51c4464928201e6ea94de65',
     DOCS_SCROLL_DURATION_MS: 0,
+    DOCS_CONTAINER_ID: 'documentation',
     HOME_SCROLL_DURATION_MS: 500,
     SUCCESS_STATUS: 200,
     UNAVAILABLE_STATUS: 503,
