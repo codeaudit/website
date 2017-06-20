@@ -79,7 +79,8 @@ const createLazyComponent = (componentName: string, lazyImport: () => Promise<an
 
 // We pass modulePromise returning lambda instead of module promise,
 // cause we only want to import the module when the user navigates to the page.
-// At the same time webpack statically parses for System.import() to determine chunks split points.
+// At the same time webpack statically parses for System.import() to determine bundle chunk split points
+// so each lazy import needs it's own `System.import()` declaration.
 const LazyOTC = createLazyComponent('OTC', () => System.import<any>('ts/containers/otc'));
 const LazyZeroExJSDocumentation = createLazyComponent(
     'ZeroExJSDocumentation',
