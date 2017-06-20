@@ -4,11 +4,11 @@ import {Link} from 'react-router-dom';
 import {RaisedButton, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {configs} from 'ts/utils/configs';
+import {constants} from 'ts/utils/constants';
 import {Styles, Profile, Partner} from 'ts/types';
 import {
     Link as ScrollLink,
     Element as ScrollElement,
-    animateScroll,
 } from 'react-scroll';
 import {utils} from 'ts/utils/utils';
 import {Footer} from 'ts/components/footer';
@@ -229,7 +229,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                         to="team"
                                         smooth={true}
                                         offset={0}
-                                        duration={500}
+                                        duration={constants.HOME_SCROLL_DURATION_MS}
                                     >
                                         <FlatButton
                                             label="Team"
@@ -239,7 +239,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                         to="partners"
                                         smooth={true}
                                         offset={0}
-                                        duration={500}
+                                        duration={constants.HOME_SCROLL_DURATION_MS}
                                     >
                                         <FlatButton
                                             label="Partners"
@@ -250,9 +250,14 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             label="FAQ"
                                         />
                                     </Link>
+                                    <Link to="/docs/0xjs">
+                                        <FlatButton
+                                            label="Docs"
+                                        />
+                                    </Link>
                                     <Link to="/otc">
                                         <FlatButton
-                                            label="OTC DApp"
+                                            label="OTC"
                                         />
                                     </Link>
                                 </div>

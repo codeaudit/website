@@ -7,16 +7,16 @@ import {configs} from 'ts/utils/configs';
 import {constants} from 'ts/utils/constants';
 import {Identicon} from 'ts/components/ui/identicon';
 import {OTCMenu} from 'ts/components/otc_menu';
+import {Docs0xjsMenu} from 'ts/pages/documentation/docs_0xjs_menu';
 import {Styles} from 'ts/types';
 import {
     Link as ScrollLink,
-    Element as ScrollElement,
     animateScroll,
 } from 'react-scroll';
 import {Link} from 'react-router-dom';
 import {HashLink} from 'react-router-hash-link';
 
-const SCROLL_DURATION_SECONDS = 500;
+const SECTION_HEADER_COLOR = 'rgb(234, 234, 234)';
 
 interface TopBarProps {
     userAddress?: string;
@@ -93,6 +93,8 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 onRequestChange={this.onMenuButtonClick.bind(this)}
             >
                 {this.renderOTCMenu()}
+                {this.render0xjsDocMenu()}
+                <div className="pl1 py1 mt3" style={{backgroundColor: SECTION_HEADER_COLOR}}>Website</div>
                 {this.renderHomepageMenuItem('home')}
                 <a
                     className="text-decoration-none"
@@ -113,12 +115,32 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                         FAQ
                     </MenuItem>
                 </Link>
+                {!this.isViewing0xjsDocs() &&
+                    <Link to="/docs/0xjs" className="text-decoration-none">
+                        <MenuItem className="py2">Documentation</MenuItem>
+                    </Link>
+                }
                 {!this.isViewingOTC() &&
                     <Link to="/otc" className="text-decoration-none">
                         <MenuItem className="py2">OTC DApp</MenuItem>
                     </Link>
                 }
             </Drawer>
+        );
+    }
+    private render0xjsDocMenu() {
+        if (!this.isViewing0xjsDocs()) {
+            return;
+        }
+
+        return (
+            <div className="lg-hide md-hide">
+                <div className="pl1 py1" style={{backgroundColor: SECTION_HEADER_COLOR}}>0x.js Docs</div>
+                <Docs0xjsMenu
+                    shouldDisplaySectionHeaders={false}
+                    onMenuItemClick={this.onMenuButtonClick.bind(this)}
+                />
+            </div>
         );
     }
     private renderOTCMenu() {
@@ -128,12 +150,11 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
         return (
             <div className="lg-hide md-hide">
-                <div className="pl1 py1" style={{backgroundColor: 'rgb(234, 234, 234)'}}>OTC DApp</div>
+                <div className="pl1 py1" style={{backgroundColor: SECTION_HEADER_COLOR}}>OTC DApp</div>
                 <OTCMenu
                     menuItemStyle={{color: 'black'}}
                     onClick={this.onMenuButtonClick.bind(this)}
                 />
-                <div className="pl1 py1 mt3" style={{backgroundColor: 'rgb(234, 234, 234)'}}>Website</div>
             </div>
         );
     }
@@ -144,7 +165,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                     to={location}
                     smooth={true}
                     offset={0}
-                    duration={SCROLL_DURATION_SECONDS}
+                    duration={constants.HOME_SCROLL_DURATION_MS}
                 >
                     <MenuItem
                         className="py2"
@@ -197,5 +218,8 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
     }
     private isViewingOTC() {
         return _.includes(this.props.location.pathname, '/otc');
+    }
+    private isViewing0xjsDocs() {
+        return _.includes(this.props.location.pathname, '/docs/0xjs');
     }
 }

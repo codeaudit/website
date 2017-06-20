@@ -11,7 +11,7 @@ export function SourceLink(props: SourceLinkProps) {
     const source = props.source;
     const version = constants.ZERO_EX_JS_LIBRARY_VERSION;
     const githubUrl = constants.GITHUB_0X_JS_URL;
-    const sourceCodeUrl = `${githubUrl}/${version}/${source.fileName}#L${source.line}`;
+    const sourceCodeUrl = `${githubUrl}/blob/${version}/${source.fileName}#L${source.line}`;
     return (
         <div className="pt2" style={{fontSize: 14}}>
             <a

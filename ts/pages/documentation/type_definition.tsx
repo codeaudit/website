@@ -8,6 +8,7 @@ import {Interface} from 'ts/pages/documentation/interface';
 import {Enum} from 'ts/pages/documentation/enum';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
+import {Comment} from 'ts/pages/documentation/comment';
 
 const KEYWORD_COLOR = '#a81ca6';
 
@@ -78,12 +79,13 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
         return (
             <div
                 id={typeDefinitionAnchorId}
-                className="pb2 hashLinkPaddingFix"
+                className="pb2"
                 style={{overflow: 'hidden', width: '100%'}}
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
                 <AnchorTitle
+                    headerType="h3"
                     title={`${typePrefix} ${type.name}`}
                     id={typeDefinitionAnchorId}
                     shouldShowAnchor={this.state.shouldShowAnchor}
@@ -95,6 +97,12 @@ export class TypeDefinition extends React.Component<TypeDefinitionProps, TypeDef
                         </code>
                     </pre>
                 </div>
+                {type.comment &&
+                    <Comment
+                        comment={type.comment.shortText}
+                        className="py2"
+                    />
+                }
             </div>
         );
     }

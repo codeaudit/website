@@ -3,12 +3,12 @@ import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
 import {Chip} from 'material-ui';
 import {colors} from 'material-ui/styles';
-import {TypeDocNode} from 'ts/types';
+import {TypeDocNode, Styles} from 'ts/types';
 import {utils} from 'ts/utils/utils';
 import {SourceLink} from 'ts/pages/documentation/source_link';
 import {MethodSignature} from 'ts/pages/documentation/method_signature';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
-import {MarkdownCodeBlock} from 'ts/pages/documentation/markdown_code_block';
+import {Comment} from 'ts/pages/documentation/comment';
 
 interface MethodBlockProps {
     isConstructor: boolean;
@@ -21,6 +21,17 @@ interface MethodBlockProps {
 interface MethodBlockState {
     shouldShowAnchor: boolean;
 }
+
+const styles: Styles = {
+    chip: {
+        fontSize: 14,
+        backgroundColor: colors.cyanA700,
+        color: 'white',
+        height: 16,
+        borderRadius: 14,
+        marginTop: 13,
+    },
+};
 
 export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockState> {
     constructor(props: MethodBlockProps) {
@@ -39,26 +50,26 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
             <div
                 id={methodSignature.name}
                 style={{overflow: 'hidden', width: '100%'}}
-                className="pb4 hashLinkPaddingFix"
+                className="pb4"
                 onMouseOver={this.setAnchorVisibility.bind(this, true)}
                 onMouseOut={this.setAnchorVisibility.bind(this, false)}
             >
                 {!this.props.isConstructor &&
                     <div className="flex">
+                        {this.props.isStatic &&
+                            <div
+                                className="p1 mr1"
+                                style={styles.chip}
+                            >
+                                Static
+                            </div>
+                         }
                         <AnchorTitle
+                            headerType="h3"
                             title={methodSignature.name}
                             id={methodSignature.name}
                             shouldShowAnchor={this.state.shouldShowAnchor}
                         />
-                        {this.props.isStatic &&
-                            <Chip
-                                backgroundColor={colors.cyanA700}
-                                labelColor={colors.white}
-                                style={{margin: 14}}
-                            >
-                                Static
-                            </Chip>
-                         }
                     </div>
                 }
                 <code className="hljs">
@@ -69,12 +80,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                 </code>
                 <SourceLink source={this.props.source} />
                 {methodSignature.comment &&
-                    <div className="py2">
-                        <ReactMarkdown
-                            source={methodSignature.comment.shortText}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
-                        />
-                    </div>
+                    <Comment
+                        comment={methodSignature.comment.shortText}
+                        className="py2"
+                    />
                 }
                 {methodSignature.parameters &&
                     <div>
@@ -88,16 +97,15 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                     </div>
                 }
                 {methodSignature.comment && methodSignature.comment.returns &&
-                    <div className="pt1">
+                    <div className="pt1 comment">
                         <h4
                             className="pb1 thin"
                             style={{borderBottom: '1px solid #e1e8ed'}}
                         >
                             RETURNS
                         </h4>
-                        <ReactMarkdown
-                            source={methodSignature.comment.returns}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                        <Comment
+                            comment={methodSignature.comment.returns}
                         />
                     </div>
                 }
@@ -119,8 +127,8 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                     className="flex pb1 mb2"
                     style={{borderBottom: '1px solid #f0f4f7'}}
                 >
-                    <div className="col col-1" />
-                    <div className="col col-3">
+                    <div className="col lg-col-1 md-col-1 sm-hide xs-hide" />
+                    <div className="col lg-col-3 md-col-3 sm-col-12 col-12">
                         <div className="bold">
                             {parameter.name}
                         </div>
@@ -128,10 +136,9 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                             {isOptional && 'optional'}
                         </div>
                     </div>
-                    <div className="col col-8">
-                        <ReactMarkdown
-                            source={comment}
-                            renderers={{CodeBlock: MarkdownCodeBlock}}
+                    <div className="col lg-col-8 md-col-8 sm-col-12 col-12">
+                        <Comment
+                            comment={comment}
                         />
                     </div>
                 </div>
