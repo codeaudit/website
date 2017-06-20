@@ -4,7 +4,6 @@ import {Provider} from 'react-redux';
 import {createStore, Store as ReduxStore} from 'redux';
 import * as BigNumber from 'bignumber.js';
 import {configs} from 'ts/utils/configs';
-import {utils} from 'ts/utils/utils';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
 import {NotFound} from 'ts/pages/not_found';
@@ -67,11 +66,15 @@ const muiTheme = getMuiTheme({
 
 const createLazyComponent = (componentName: string, lazyImport: () => Promise<any>) => {
     return (props: any) => {
-        const componentPromise = utils.asyncMap(mod => mod[componentName], lazyImport());
+        const reactComponentPromise = new Promise<React.ComponentClass<any>>((resolve, reject) => {
+            lazyImport()
+                .then(mod => resolve(mod[componentName]))
+                .catch(reject);
+        });
         return (
             <LazyComponent
-                componentPromise={componentPromise}
-                componentProps={props}
+                reactComponentPromise={reactComponentPromise}
+                reactComponentProps={props}
             />
         );
     };

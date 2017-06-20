@@ -155,9 +155,4 @@ export const utils = {
     setUrlHash(anchorId: string) {
         window.location.hash = anchorId;
     },
-    async asyncMap<T, TResult>(fn: (arg: T) => TResult, promise: Promise<T>): Promise<TResult> {
-        return new Promise<TResult>((resolve, reject) => {
-            promise.then(data => resolve(fn(data))).catch(reject);
-        });
-    },
 };

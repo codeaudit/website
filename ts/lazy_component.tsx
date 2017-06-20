@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-interface LazyComponentProps {
-    componentPromise: Promise<React.ComponentClass<any>>;
-    componentProps: any;
+interface LazyreactComponentProps {
+    reactComponentPromise: Promise<React.ComponentClass<any>>;
+    reactComponentProps: any;
 }
 
 interface LazyComponentState {
@@ -14,8 +14,8 @@ interface LazyComponentState {
  * This component is used for rendering components that are lazily loaded from other chunks.
  * Source: https://reacttraining.com/react-router/web/guides/code-splitting
  */
-export class LazyComponent extends React.Component<LazyComponentProps, LazyComponentState> {
-    constructor(props: LazyComponentProps) {
+export class LazyComponent extends React.Component<LazyreactComponentProps, LazyComponentState> {
+    constructor(props: LazyreactComponentProps) {
         super(props);
         this.state = {
             component: undefined,
@@ -24,21 +24,21 @@ export class LazyComponent extends React.Component<LazyComponentProps, LazyCompo
     public componentWillMount() {
         this.loadComponentFireAndForgetAsync(this.props);
     }
-    public componentWillReceiveProps(nextProps: LazyComponentProps) {
-        if (nextProps.componentPromise !== this.props.componentPromise) {
+    public componentWillReceiveProps(nextProps: LazyreactComponentProps) {
+        if (nextProps.reactComponentPromise !== this.props.reactComponentPromise) {
           this.loadComponentFireAndForgetAsync(nextProps);
         }
     }
     public render() {
         return _.isUndefined(this.state.component) ?
                 null :
-                React.createElement(this.state.component, this.props.componentProps);
+                React.createElement(this.state.component, this.props.reactComponentProps);
     }
-    private async loadComponentFireAndForgetAsync(props: LazyComponentProps) {
+    private async loadComponentFireAndForgetAsync(props: LazyreactComponentProps) {
         this.setState({
             component: undefined,
         });
-        const component = await props.componentPromise;
+        const component = await props.reactComponentPromise;
         this.setState({
             component,
         });
