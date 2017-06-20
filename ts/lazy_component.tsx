@@ -17,12 +17,12 @@ export class LazyComponent extends React.Component<LazyComponentProps, LazyCompo
             component: undefined,
         };
     }
-    public async componentWillMount() {
-        await this.loadComponentAsync(this.props);
+    public componentWillMount() {
+        this.loadComponentFireAndForgetAsync(this.props);
     }
-    public async componentWillReceiveProps(nextProps: LazyComponentProps) {
+    public componentWillReceiveProps(nextProps: LazyComponentProps) {
         if (nextProps.componentPromise !== this.props.componentPromise) {
-          await this.loadComponentAsync(nextProps);
+          this.loadComponentFireAndForgetAsync(nextProps);
         }
     }
     public render() {
@@ -30,7 +30,7 @@ export class LazyComponent extends React.Component<LazyComponentProps, LazyCompo
                 null :
                 React.createElement(this.state.component, this.props.componentProps);
     }
-    private async loadComponentAsync(props: LazyComponentProps) {
+    private async loadComponentFireAndForgetAsync(props: LazyComponentProps) {
         this.setState({
             component: undefined,
         });
