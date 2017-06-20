@@ -57,4 +57,7 @@ module.exports = {
       },
       disableHostCheck: true,
     },
+    plugins: [
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    ],
 };
