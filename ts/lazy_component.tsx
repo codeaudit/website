@@ -10,6 +10,10 @@ interface LazyComponentState {
     component?: React.ComponentClass<any>;
 }
 
+/**
+ * This component is used for rendering components that are lazily loaded from other chunks.
+ * Source: https://reacttraining.com/react-router/web/guides/code-splitting
+ */
 export class LazyComponent extends React.Component<LazyComponentProps, LazyComponentState> {
     constructor(props: LazyComponentProps) {
         super(props);
