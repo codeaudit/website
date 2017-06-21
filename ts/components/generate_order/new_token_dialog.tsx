@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {colors} from 'material-ui/styles';
-import {TextField, Dialog} from 'material-ui';
+import {TextField} from 'material-ui/TextField';
+import {Dialog} from 'material-ui/Dialog';
 import {constants} from 'ts/utils/constants';
 import {Blockchain} from 'ts/blockchain';
 import {Token, TokenByAddress, AlertTypes} from 'ts/types';

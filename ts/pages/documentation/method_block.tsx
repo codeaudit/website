@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
-import {Chip} from 'material-ui';
+import {Chip} from 'material-ui/Chip';
 import {colors} from 'material-ui/styles';
 import {TypeDocNode, Styles} from 'ts/types';
 import {utils} from 'ts/utils/utils';

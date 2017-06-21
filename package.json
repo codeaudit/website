@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "Website and 0x OTC dapp",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && npm run minify",
+    "minify": "for f in public/bundle*.js; do ./node_modules/uglify-es/bin/uglifyjs $f -o $f -m; done",
     "dev": "webpack-dev-server --content-base public",
     "update_contracts": "copyfiles -u 4 ./../contracts/build/contracts/*.json ./contracts;",
     "deploy_staging": "npm run build; aws s3 sync ./public/. s3://staging-0xproject --profile 0xproject --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
@@ -31,7 +32,7 @@
     "moment": "^2.18.1",
     "react": "15.4.x",
     "react-copy-to-clipboard": "^4.2.3",
-    "react-dom": "15.4.x",
+    "react-dom": "^15.6.1",
     "react-highlight": "^0.10.0",
     "react-html5video": "^2.1.0",
     "react-inlinesvg": "^0.5.5",
@@ -47,6 +48,7 @@
     "thenby": "^1.2.3",
     "truffle-contract": "2.0.1",
     "tslint-config-0xproject": "^0.0.2",
+    "uglify-es": "^3.0.18",
     "web3": "^0.18.2",
     "web3-provider-engine": "^11.0.0",
     "whatwg-fetch": "^2.0.3"

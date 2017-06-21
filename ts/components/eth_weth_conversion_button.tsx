@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {ZeroEx} from '@0xproject/0x.js';
 import * as React from 'react';
 import * as BigNumber from 'bignumber.js';
-import {RaisedButton} from 'material-ui';
+import {RaisedButton} from 'material-ui/RaisedButton';
 import {BlockchainCallErrs} from 'ts/types';
 import {EthWethConversionDialog} from 'ts/components/eth_weth_conversion_dialog';
 import {Side, Token} from 'ts/types';

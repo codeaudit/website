@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Dialog, GridList, GridTile} from 'material-ui';
+import {Dialog} from 'material-ui/Dialog';
+import {GridList} from 'material-ui/GridList/GridList';
+import {GridTile} from 'material-ui/GridList/GridTile';
 import {Token, Side, AssetToken, TokenByAddress, Styles} from 'ts/types';
 
 const TILE_DIMENSION = 146;

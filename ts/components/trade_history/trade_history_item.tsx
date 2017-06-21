@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as BigNumber from 'bignumber.js';
 import * as ReactTooltip from 'react-tooltip';
 import * as moment from 'moment';
-import {Paper} from 'material-ui';
+import {Paper} from 'material-ui/Paper';
 import {colors} from 'material-ui/styles';
 import {ZeroEx} from '@0xproject/0x.js';
 import {utils} from 'ts/utils/utils';

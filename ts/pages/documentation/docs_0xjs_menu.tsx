@@ -3,7 +3,7 @@ import * as React from 'react';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import {MenuItem} from 'material-ui';
+import {MenuItem} from 'material-ui/MenuItem';
 import {DocSections, Styles} from 'ts/types';
 import {Link as ScrollLink} from 'react-scroll';
 

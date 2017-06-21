@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Dialog, FlatButton} from 'material-ui';
+import {Dialog} from 'material-ui/Dialog';
+import {FlatButton} from 'material-ui/FlatButton';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';
 import {Blockchain} from 'ts/blockchain';
