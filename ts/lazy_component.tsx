@@ -54,11 +54,11 @@ export class LazyComponent extends React.Component<LazyComponentProps, LazyCompo
  */
 export const createLazyComponent = (componentName: string, lazyImport: () => Promise<any>) => {
     return (props: any) => {
-        const reactComponentPromise = new Promise<React.ComponentClass<any>>((resolve, reject) => {
-            lazyImport()
-                .then(mod => resolve(mod[componentName]))
-                .catch(reject);
-        });
+        const reactComponentPromise = (async (): Promise<React.ComponentClass<any>> => {
+            const mod = await lazyImport();
+            const component = mod[componentName];
+            return component;
+        })();
         return (
             <LazyComponent
                 reactComponentPromise={reactComponentPromise}
