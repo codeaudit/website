@@ -58,6 +58,8 @@ module.exports = {
       disableHostCheck: true,
     },
     plugins: [
+        // Since we do not use moment's locale feature, we exclude them from the bundle.
+        // This reduces the bundle size by 0.4MB.
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     ],
 };
