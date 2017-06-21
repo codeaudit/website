@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {Dialog} from 'material-ui/Dialog';
-import {FlatButton} from 'material-ui/FlatButton';
-import {RadioButtonGroup} from 'material-ui/RadioButton/RadioButtonGroup';
-import {RadioButton} from 'material-ui/RadioButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RadioButtonGroup from 'material-ui/RadioButton/RadioButtonGroup';
+import RadioButton from 'material-ui/RadioButton';
 import {Side, Token} from 'ts/types';
 import {TokenAmountInput} from 'ts/components/inputs/token_amount_input';
 import {EthAmountInput} from 'ts/components/inputs/eth_amount_input';

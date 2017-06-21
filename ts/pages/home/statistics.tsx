@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Paper} from 'material-ui/Paper';
+import Paper from 'material-ui/Paper';
 import {utils} from 'ts/utils/utils';
 import {colors} from 'material-ui/styles';
 import {constants} from 'ts/utils/constants';

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {TextField} from 'material-ui/TextField';
+import TextField from 'material-ui/TextField';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {RequiredLabel} from 'ts/components/ui/required_label';

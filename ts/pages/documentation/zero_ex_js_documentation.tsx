@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
 import {colors} from 'material-ui/styles';
-import {MenuItem} from 'material-ui/MenuItem';
+import MenuItem from 'material-ui/MenuItem';
 import {
     Link as ScrollLink,
     Element as ScrollElement,

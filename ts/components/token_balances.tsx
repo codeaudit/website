@@ -2,9 +2,9 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {ZeroEx} from '@0xproject/0x.js';
 import {colors} from 'material-ui/styles';
-import {Dialog} from 'material-ui/Dialog';
-import {Divider} from 'material-ui/Divider';
-import {FlatButton} from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import Divider from 'material-ui/Divider';
+import FlatButton from 'material-ui/FlatButton';
 import {
     Table,
     TableBody,

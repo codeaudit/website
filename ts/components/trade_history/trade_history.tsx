@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {Paper} from 'material-ui/Paper';
-import {Divider} from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
 import {utils} from 'ts/utils/utils';
 import {Fill, TokenByAddress} from 'ts/types';
 import {TradeHistoryItem} from 'ts/components/trade_history/trade_history_item';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Paper} from 'material-ui/Paper';
+import Paper from 'material-ui/Paper';
 import {colors} from 'material-ui/styles';
 import {Blockchain} from 'ts/blockchain';
 import {Dispatcher} from 'ts/redux/dispatcher';

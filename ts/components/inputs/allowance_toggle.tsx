@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import {ZeroEx} from '@0xproject/0x.js';
 import * as BigNumber from 'bignumber.js';
-import {Toggle} from 'material-ui/Toggle';
+import Toggle from 'material-ui/Toggle';
 import {Blockchain} from 'ts/blockchain';
 import {Dispatcher} from 'ts/redux/dispatcher';
 import {Token, BalanceErrs} from 'ts/types';

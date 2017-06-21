@@ -4,9 +4,9 @@ import {Link} from 'react-router-dom';
 import {ZeroEx, Order as ZeroExOrder} from '@0xproject/0x.js';
 import * as moment from 'moment';
 import * as BigNumber from 'bignumber.js';
-import {Paper} from 'material-ui/Paper';
-import {Divider} from 'material-ui/Divider';
-import {TextField} from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
+import TextField from 'material-ui/TextField';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
 import {
