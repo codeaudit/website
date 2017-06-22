@@ -13,8 +13,6 @@ declare module 'react-html5video';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
-declare module 'semver-sort';
-declare module 'compare-versions';
 declare module 'react-highlight';
 declare module 'xml-js';
 
@@ -35,4 +33,10 @@ declare module 'find-versions' {
 declare function compareVersions(firstVersion: string, secondVersion: string): number;
 declare module 'compare-versions' {
     export = compareVersions;
+}
+
+// semver-sort declarations
+declare module 'semver-sort' {
+    const desc: (versions: string[]) => string[];
+    const asc: (versions: string[]) => string[];
 }
