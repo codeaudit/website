@@ -14,7 +14,6 @@ declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
 declare module 'semver-sort';
-declare module 'find-versions';
 declare module 'compare-versions';
 declare module 'react-highlight';
 declare module 'xml-js';
@@ -24,4 +23,16 @@ declare module '*.json' {
     /* tslint:disable */
     export default json;
     /* tslint:enable */
+}
+
+// find-version declarations
+declare function findVersions(version: string): string[];
+declare module 'find-versions' {
+    export = findVersions;
+}
+
+// compare-version declarations
+declare function compareVersions(firstVersion: string, secondVersion: string): number;
+declare module 'compare-versions' {
+    export = compareVersions;
 }

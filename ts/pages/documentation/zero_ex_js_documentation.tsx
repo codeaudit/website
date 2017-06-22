@@ -361,7 +361,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
         const versionFileNames = await this.getVersionFileNamesAsync();
         const versionToFileName: {[version: string]: string} = {};
         _.each(versionFileNames, fileName => {
-            const version = findVersions(fileName);
+            const [version] = findVersions(fileName);
             versionToFileName[version] = fileName;
         });
 
