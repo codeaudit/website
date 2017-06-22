@@ -1,6 +1,10 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
+import convert = require('xml-js');
+import findVersions = require('find-versions');
+import compareVersions = require('compare-versions');
+import semverSort = require('semver-sort');
 import {colors} from 'material-ui/styles';
 import MenuItem from 'material-ui/MenuItem';
 import {
@@ -21,7 +25,6 @@ import {Comment} from 'ts/pages/documentation/comment';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
 import {SectionHeader} from 'ts/pages/documentation/section_header';
 import {Docs0xjsMenu, menu} from 'ts/pages/documentation/docs_0xjs_menu';
-import * as ZeroExLibraryDocumentation from 'json/0xjs/0.6.1.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
 const InstallationMarkdown = require('md/docs/0xjs/installation');
@@ -94,7 +97,11 @@ export interface ZeroExJSDocumentationProps {
     location: Location;
 }
 
-interface ZeroExJSDocumentationState {}
+interface ZeroExJSDocumentationState {
+    libraryVersion: string;
+    versions: string[];
+    versionDocObj: string;
+}
 
 const styles: Styles = {
     mainContainers: {
@@ -114,13 +121,23 @@ const styles: Styles = {
 };
 
 export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentationProps, ZeroExJSDocumentationState> {
+    constructor(props: ZeroExJSDocumentationProps) {
+        super(props);
+        this.state = {
+            libraryVersion: '',
+            versions: [],
+            versionDocObj: undefined,
+        };
+    }
+    public componentWillMount() {
+        const pathName = this.props.location.pathname;
+        const lastSegment = pathName.substr(pathName.lastIndexOf('/') + 1);
+        const versions = findVersions(lastSegment);
+        const preferredVersionIfExists = versions.length > 0 ? versions[0] : undefined;
+        this.fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists);
+    }
     public componentDidMount() {
-        const hashWithPrefix = this.props.location.hash;
-        let hash = hashWithPrefix.slice(1);
-        if (_.isEmpty(hash)) {
-            hash = 'zeroExJSDocs'; // scroll to the top
-        }
-        this.scrollToHash(hash);
+        this.scrollToHash();
     }
     public render() {
         return (
@@ -129,34 +146,39 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     blockchainIsLoaded={false}
                     location={this.props.location}
                 />
-                <div
-                    className="mx-auto max-width-4 flex"
-                    style={{color: colors.grey800, paddingTop: 44}}
-                >
-                    <div className="relative col md-col-2 lg-col-2 lg-pl0 md-pl1 sm-hide xs-hide">
-                        <div
-                            className="border-right absolute pt3"
-                            style={{...styles.menuContainer, ...styles.mainContainers}}
-                        >
-                            <Docs0xjsMenu />
+                {!_.isUndefined(this.state.versionDocObj) &&
+                    <div
+                        className="mx-auto max-width-4 flex"
+                        style={{color: colors.grey800, paddingTop: 44}}
+                    >
+                        <div className="relative col md-col-2 lg-col-2 lg-pl0 md-pl1 sm-hide xs-hide">
+                            <div
+                                className="border-right absolute"
+                                style={{...styles.menuContainer, ...styles.mainContainers}}
+                            >
+                                <Docs0xjsMenu
+                                    selectedVersion={this.state.libraryVersion}
+                                    versions={this.state.versions}
+                                />
+                            </div>
+                        </div>
+                        <div className="relative col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
+                            <div
+                                id="documentation"
+                                style={styles.mainContainers}
+                                className="absolute"
+                            >
+                                <div id="zeroExJSDocs" />
+                                <h1 className="pl3">
+                                    <a href={constants.GITHUB_0X_JS_URL} target="_blank">
+                                        0x.js
+                                    </a>
+                                </h1>
+                                {this.renderDocumentation()}
+                            </div>
                         </div>
                     </div>
-                    <div className="relative col lg-col-10 md-col-10 sm-col-12 col-12 mt2 pt2">
-                        <div
-                            id="documentation"
-                            style={styles.mainContainers}
-                            className="absolute"
-                        >
-                            <div id="zeroExJSDocs" />
-                            <h1 className="pl3">
-                                <a href={constants.GITHUB_0X_JS_URL} target="_blank">
-                                    0x.js
-                                </a>
-                            </h1>
-                            {this.renderDocumentation()}
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         );
     }
@@ -275,7 +297,10 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                 <code className="hljs">
                     {property.name}: <Type type={property.type} />
                 </code>
-                <SourceLink source={source} />
+                <SourceLink
+                    version={this.state.libraryVersion}
+                    source={source}
+                />
                 {property.comment &&
                     <Comment
                         comment={property.comment.shortText}
@@ -303,6 +328,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                     methodSignature={signature}
                     source={source}
                     entity={entity}
+                    libraryVersion={this.state.libraryVersion}
                 />
             );
         });
@@ -321,17 +347,74 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     }
     private getPackageDefinitionBySectionNameIfExists(sectionName: string) {
         const modulePathName = sectionNameToModulePath[sectionName];
-        const modules: TypeDocNode[] = (ZeroExLibraryDocumentation as any).children;
+        const modules: TypeDocNode[] = (this.state.versionDocObj as any).children;
         const moduleWithName = _.find(modules, {name: modulePathName});
         return moduleWithName;
     }
-    private scrollToHash(hash: string) {
-        if (!_.isEmpty(hash)) {
-            // HACK: For some reason calling scroller.scrollTo immediately from componentDidMount does
-            // not work. Waiting 500ms however, gives the page enough time for the call to succeed.
-            window.setTimeout(() => {
-                scroller.scrollTo(hash, {duration: 0, offset: 0, containerId: 'documentation'});
-            }, SCROLL_TO_TIMEOUT);
+    private scrollToHash() {
+        const hashWithPrefix = this.props.location.hash;
+        let hash = hashWithPrefix.slice(1);
+        if (_.isEmpty(hash)) {
+            hash = 'zeroExJSDocs'; // scroll to the top
         }
+
+        // HACK: For some reason calling scroller.scrollTo immediately from componentDidMount does
+        // not work. Waiting 500ms however, gives the page enough time for the call to succeed.
+        window.setTimeout(() => {
+            scroller.scrollTo(hash, {duration: 0, offset: 0, containerId: 'documentation'});
+        }, SCROLL_TO_TIMEOUT);
+    }
+    private async fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists: string) {
+        const response = await fetch(constants.S3_DOCUMENTATION_JSON_ROOT);
+        if (response.status !== 200) {
+            return; // fail silently
+        }
+        const responseXML = await response.text();
+        const responseJSONString: any = convert.xml2json(responseXML, {
+            compact: true,
+        });
+        const responseObj = JSON.parse(responseJSONString);
+        const fileObjs = responseObj.ListBucketResult.Contents;
+        const versionFileNames = _.map(fileObjs, (fileObj: any) => {
+            return fileObj.Key._text;
+        });
+        const versionToFileName: {[version: string]: string} = {};
+        _.each(versionFileNames, fileName => {
+            const version = findVersions(fileName);
+            versionToFileName[version] = fileName;
+        });
+
+        const versions = _.keys(versionToFileName);
+        const sortedVersions = semverSort.desc(versions);
+        const latestVersion = sortedVersions[0];
+
+        let versionToFetch = latestVersion;
+        if (!_.isUndefined(preferredVersionIfExists)) {
+            const preferredVersionFileNameIfExists = versionToFileName[preferredVersionIfExists];
+            if (!_.isUndefined(preferredVersionFileNameIfExists)) {
+                versionToFetch = preferredVersionIfExists;
+            }
+        }
+
+        const versionFileNameToFetch = versionToFileName[versionToFetch];
+        const versionDocObj = await this.getJSONDocFileAsync(versionFileNameToFetch);
+
+        this.setState({
+            libraryVersion: versionToFetch,
+            versions,
+            versionDocObj,
+        });
+
+        this.scrollToHash();
+    }
+    private async getJSONDocFileAsync(fileName: string) {
+        const endpoint = `${constants.S3_DOCUMENTATION_JSON_ROOT}/${fileName}`;
+        const response = await fetch(endpoint);
+        if (response.status !== 200) {
+            return; // fail silently
+        }
+        const responseText = await response.text();
+        const jsonDocObj = JSON.parse(responseText);
+        return jsonDocObj;
     }
 }

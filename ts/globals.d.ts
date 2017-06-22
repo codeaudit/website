@@ -13,9 +13,11 @@ declare module 'react-html5video';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
+declare module 'semver-sort';
 declare module 'find-versions';
 declare module 'compare-versions';
 declare module 'react-highlight';
+declare module 'xml-js';
 
 declare module '*.json' {
     const json: any;
