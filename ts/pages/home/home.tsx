@@ -332,7 +332,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             className="pt4 sm-center md-pl3 lg-pl0"
                             style={{...styles.subheader, ...styles.thin}}
                         >
-                            Partners
+                            Companies Building on 0x
                         </h1>
                         <div
                             className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
