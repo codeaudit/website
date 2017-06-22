@@ -65,7 +65,7 @@ const teamRow2: Profile[] = [
     },
     {
         name: 'Alex Xu',
-        title: 'Operations',
+        title: 'Director of Operations',
         description: `End-to-end business operations. Previously digital marketing consultant at
                       Google and vendor management at Amazon. Economics at UC San Diego.`,
         image: '/images/team/alex.jpg',
@@ -361,14 +361,8 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             className="pt4 sm-center md-pl3 lg-pl0"
                             style={{...styles.subheader, ...styles.thin}}
                         >
-                            Companies Building on 0x
+                            Projects Building on 0x
                         </h1>
-                        <div
-                            className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
-                            style={{...styles.paragraph, ...styles.thin}}
-                        >
-                            {`The following projects have agreed to be early adopters of the 0x
-                              protocol and will be using it in their respective applications.`}
                         <div className="clearfix pt3 mx-auto md-pl3 lg-pl0">
                             {this.renderPartners(partnershipsRow1)}
                         </div>
