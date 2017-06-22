@@ -136,9 +136,6 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
         const preferredVersionIfExists = versions.length > 0 ? versions[0] : undefined;
         this.fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists);
     }
-    public componentDidMount() {
-        this.scrollToHash();
-    }
     public render() {
         return (
             <div>
@@ -358,11 +355,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             hash = 'zeroExJSDocs'; // scroll to the top
         }
 
-        // HACK: For some reason calling scroller.scrollTo immediately from componentDidMount does
-        // not work. Waiting 500ms however, gives the page enough time for the call to succeed.
-        window.setTimeout(() => {
-            scroller.scrollTo(hash, {duration: 0, offset: 0, containerId: 'documentation'});
-        }, SCROLL_TO_TIMEOUT);
+        scroller.scrollTo(hash, {duration: 0, offset: 0, containerId: 'documentation'});
     }
     private async fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists: string) {
         const response = await fetch(constants.S3_DOCUMENTATION_JSON_ROOT);
