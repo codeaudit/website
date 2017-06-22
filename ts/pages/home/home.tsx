@@ -124,7 +124,7 @@ const advisors: Profile[] = [
     },
 ];
 
-const partnerships: Partner[] = [
+const partnershipsRow1: Partner[] = [
     {
         name: 'Augur',
         logo: '/images/logos/augur.png',
@@ -141,10 +141,25 @@ const partnerships: Partner[] = [
         url: 'https://aragon.one/',
     },
     {
+        name: 'Chronobank.io',
+        logo: '/images/logos/chronobank.png',
+        url: 'https://chronobank.io/',
+    },
+];
+
+const partnershipsRow2: Partner[] = [
+    {
+        name: 'OpenANX',
+        logo: '/images/logos/OpenANX.png',
+        url: 'https://anxintl.com/',
+    },
+    {
         name: 'Melonport',
         logo: '/images/logos/melonport.jpg',
         url: 'https://melonport.com/',
     },
+    undefined,
+    undefined,
 ];
 
 const investorsRow1: Partner[] = [
@@ -176,6 +191,7 @@ const investorsRow2: Partner[] = [
         logo: '/images/logos/blockchain_capital.png',
         url: 'http://blockchain.capital/',
     },
+    undefined,
 ];
 
 export interface HomeProps {
@@ -353,9 +369,11 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         >
                             {`The following projects have agreed to be early adopters of the 0x
                               protocol and will be using it in their respective applications.`}
+                        <div className="clearfix pt3 mx-auto md-pl3 lg-pl0">
+                            {this.renderPartners(partnershipsRow1)}
                         </div>
-                        <div className="clearfix pt3 mx-auto md-pl3">
-                            {this.renderPartners(partnerships)}
+                        <div className="clearfix lg-pt3 md-pt3 mx-auto md-pl3 lg-pl0">
+                            {this.renderPartners(partnershipsRow2)}
                         </div>
                     </div>
                 </div>
@@ -406,12 +424,12 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         >
                             Backed by
                         </h1>
-                        <div className="pt4 mx-auto md-pl3">
+                        <div className="pt4 mx-auto md-pl3 lg-pl0">
                             <div className="clearfix center">
                                 {this.renderPartners(investorsRow1)}
                             </div>
-                            <div className="lg-px4 md-px4 mx2 mx-auto">
-                                <div className="clearfix lg-px4 md-px4 lg-mx4 md-mx4 pt2 center">
+                            <div className="mx-auto">
+                                <div className="clearfix pt2 center">
                                     {this.renderPartners(investorsRow2)}
                                 </div>
                             </div>
@@ -424,15 +442,18 @@ export class Home extends React.Component<HomeProps, HomeState> {
     }
     private renderPartners(partners: Partner[]) {
         const colSize = utils.getColSize(partners.length);
-        return _.map(partners, partner => {
+        return _.map(partners, (partner, i) => {
             return (
                 <div
-                    key={partner.name}
-                    className={`sm-col sm-col-${colSize} sm-center sm-pb3`}
+                    key={!_.isUndefined(partner) ? partner.name : `anonymous-partner-${i}`}
+                    className={`sm-col sm-col-${colSize} center sm-pb3`}
                 >
-                    <a href={partner.url} target="_blank">
-                        <img src={partner.logo} style={{maxWidth: 200, maxHeight: 120}} />
-                    </a>
+                    {_.isUndefined(partner) ?
+                        null :
+                        <a href={partner.url} target="_blank">
+                            <img src={partner.logo} style={{maxWidth: 200, maxHeight: 120}} />
+                        </a>
+                    }
                 </div>
             );
         });
