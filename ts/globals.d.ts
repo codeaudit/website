@@ -37,7 +37,6 @@ declare module 'compare-versions' {
 // semver-sort declarations
 declare module 'semver-sort' {
     const desc: (versions: string[]) => string[];
-    const asc: (versions: string[]) => string[];
 }
 
 // xml-js declarations
