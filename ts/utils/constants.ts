@@ -18,6 +18,7 @@ export const constants = {
     MAKER_FEE: new BigNumber(0),
     METAMASK_CHROME_STORE_URL: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
     MIST_DOWNLOAD_URL: 'https://github.com/ethereum/mist/releases',
+    NULL_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROLLBAR_ACCESS_TOKEN: 'a6619002b51c4464928201e6ea94de65',
     DOCS_SCROLL_DURATION_MS: 0,
     DOCS_CONTAINER_ID: 'documentation',
