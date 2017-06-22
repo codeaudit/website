@@ -73,6 +73,16 @@ const teamRow2: Profile[] = [
         github: '',
         medium: '',
     },
+    {
+        name: 'We\'re hiring',
+        title: 'Designer/UI/UX/Blockchain Engineer',
+        description: `We are looking for talented, self-starters who are passionate about decentralization
+                      to join the team! Apply at jobs@0xproject.com`,
+        image: '/images/team/anyone.png',
+        linkedIn: 'https://www.linkedin.com/company-beta/17942619/',
+        github: '',
+        medium: '',
+    },
 ];
 
 const advisors: Profile[] = [
