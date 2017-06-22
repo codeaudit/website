@@ -266,7 +266,35 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         </div>
                     </div>
                 </div>
-                <div className="mt4 relative" style={{backgroundColor: '#eaeaea'}}>
+                <div
+                    style={{backgroundColor: '#272727'}}
+                >
+                    <div className="clearfix mx-auto max-width-4 pb2" style={{color: 'white'}}>
+                        <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb4">
+                            <h1
+                                className="pt4 sm-center md-pl3 lg-pl0"
+                                style={{...styles.subheader, ...styles.thin}}
+                            >
+                                Newsletter
+                            </h1>
+                            <div
+                                className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
+                                style={{...styles.paragraph, ...styles.thin}}
+                            >
+                                Stay up to date with the latest 0x developments
+                            </div>
+                            <div className="pt1 md-pl3 lg-pl0 sm-center sm-px4">
+                                <NewsletterInput />
+                            </div>
+                        </div>
+                        <div className="sm-col sm-col-6 p4 sm-hide xs-hide">
+                            <div className="center">
+                                <img src="/images/paper_airplane.png" style={{width: 120}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="relative" style={{backgroundColor: '#eaeaea'}}>
                     <div className="mx-auto max-width-4 pt2 relative" style={{zIndex: 2}}>
                         <h1
                             className="pt4 lg-h0 xm-center sm-center md-pl3 lg-pl0"
@@ -306,34 +334,6 @@ export class Home extends React.Component<HomeProps, HomeState> {
                         src="/images/0x_city_globe.png"
                         style={{bottom: 0, right: 0, zIndex: 0, width: 550}}
                     />
-                </div>
-                <div
-                    style={{backgroundColor: '#272727'}}
-                >
-                    <div className="clearfix mx-auto max-width-4 pb2" style={{color: 'white'}}>
-                        <div className="col lg-col-6 md-col-6 sm-col-12 sm-px2 sm-pb4">
-                            <h1
-                                className="pt4 sm-center md-pl3 lg-pl0"
-                                style={{...styles.subheader, ...styles.thin}}
-                            >
-                                Newsletter
-                            </h1>
-                            <div
-                                className="pt2 sm-center sm-px3 md-pl3 lg-pl0"
-                                style={{...styles.paragraph, ...styles.thin}}
-                            >
-                                Stay up to date with the latest 0x developments
-                            </div>
-                            <div className="pt1 md-pl3 lg-pl0 sm-center sm-px4">
-                                <NewsletterInput />
-                            </div>
-                        </div>
-                        <div className="sm-col sm-col-6 p4 sm-hide xs-hide">
-                            <div className="center">
-                                <img src="/images/paper_airplane.png" style={{width: 120}} />
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div style={{backgroundColor: 'white'}}>
                     <div className="mx-auto max-width-4 pb4">
