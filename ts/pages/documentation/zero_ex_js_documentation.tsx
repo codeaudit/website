@@ -412,8 +412,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             // TODO: Show the user an error message when the docs fail to load
             return;
         }
-        const responseText = await response.text();
-        const jsonDocObj = JSON.parse(responseText);
+        const jsonDocObj = await response.json();
         return jsonDocObj;
     }
 }
