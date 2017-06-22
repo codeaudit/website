@@ -61,7 +61,7 @@ export class Statistics extends React.Component<StatisticsProps, StatisticsState
         );
     }
     private renderStats() {
-        return _.map(_.values(this.state.stats), (stat) => {
+        return _.map(_.values(this.state.stats), stat => {
             return (
                 <div
                     key={stat.title}
