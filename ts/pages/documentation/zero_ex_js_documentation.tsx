@@ -357,21 +357,8 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
 
         scroller.scrollTo(hash, {duration: 0, offset: 0, containerId: 'documentation'});
     }
-    private async fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists: string) {
-        const response = await fetch(constants.S3_DOCUMENTATION_JSON_ROOT);
-        if (response.status !== 200) {
-            // TODO: Show the user an error message when the docs fail to load
-            return;
-        }
-        const responseXML = await response.text();
-        const responseJSONString: any = convert.xml2json(responseXML, {
-            compact: true,
-        });
-        const responseObj = JSON.parse(responseJSONString);
-        const fileObjs = responseObj.ListBucketResult.Contents;
-        const versionFileNames = _.map(fileObjs, (fileObj: any) => {
-            return fileObj.Key._text;
-        });
+    private async fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists?: string) {
+        const versionFileNames = await this.getVersionFileNamesAsync();
         const versionToFileName: {[version: string]: string} = {};
         _.each(versionFileNames, fileName => {
             const version = findVersions(fileName);
@@ -400,6 +387,23 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
         }, () => {
             this.scrollToHash();
         });
+    }
+    private async getVersionFileNamesAsync() {
+        const response = await fetch(constants.S3_DOCUMENTATION_JSON_ROOT);
+        if (response.status !== 200) {
+            // TODO: Show the user an error message when the docs fail to load
+            return;
+        }
+        const responseXML = await response.text();
+        const responseJSONString: any = convert.xml2json(responseXML, {
+            compact: true,
+        });
+        const responseObj = JSON.parse(responseJSONString);
+        const fileObjs = responseObj.ListBucketResult.Contents;
+        const versionFileNames = _.map(fileObjs, (fileObj: any) => {
+            return fileObj.Key._text;
+        });
+        return versionFileNames;
     }
     private async getJSONDocFileAsync(fileName: string) {
         const endpoint = `${constants.S3_DOCUMENTATION_JSON_ROOT}/${fileName}`;
