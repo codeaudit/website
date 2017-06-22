@@ -9,7 +9,7 @@ export const constants = {
     BITLY_ACCESS_TOKEN: 'ffc4c1a31e5143848fb7c523b39f91b9b213d208',
     BITLY_ENDPOINT: 'https://api-ssl.bitly.com',
     DEFAULT_TOKEN_ICON_URL: '/images/token_icons/default.png',
-    ZERO_EX_JS_LIBRARY_VERSION: 'v0.6.1',
+    ZERO_EX_JS_LIBRARY_VERSION: 'v0.6.2',
     ETHER_SCAN_ENDPOINT: 'https://kovan.etherscan.io',
     ETHER_FAUCET_ENDPOINT: 'https://faucet.0xproject.com/rain',
     FEE_RECIPIENT_ADDRESS: '0x0000000000000000000000000000000000000000',

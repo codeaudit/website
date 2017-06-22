@@ -21,7 +21,7 @@ import {Comment} from 'ts/pages/documentation/comment';
 import {AnchorTitle} from 'ts/pages/documentation/anchor_title';
 import {SectionHeader} from 'ts/pages/documentation/section_header';
 import {Docs0xjsMenu, menu} from 'ts/pages/documentation/docs_0xjs_menu';
-import * as ZeroExLibraryDocumentation from 'json/0xjs/0.6.1.json';
+import * as ZeroExLibraryDocumentation from 'json/0xjs/0.6.2.json';
 /* tslint:disable:no-var-requires */
 const IntroMarkdown = require('md/docs/0xjs/introduction');
 const InstallationMarkdown = require('md/docs/0xjs/installation');
