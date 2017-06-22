@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import MenuItem from 'material-ui/MenuItem';
 import {colors} from 'material-ui/styles';
 import {utils} from 'ts/utils/utils';
 import {constants} from 'ts/utils/constants';
-import MenuItem from 'material-ui/MenuItem';
+import {VersionDropDown} from 'ts/pages/documentation/version_drop_down';
 import {DocSections, Styles} from 'ts/types';
 import {Link as ScrollLink} from 'react-scroll';
 
@@ -35,6 +36,8 @@ export const menu = {
 interface Docs0xjsMenuProps {
     shouldDisplaySectionHeaders?: boolean;
     onMenuItemClick?: () => void;
+    versions?: string[];
+    selectedVersion?: string;
 }
 
 interface Docs0xjsMenuState {}
@@ -62,7 +65,7 @@ export class Docs0xjsMenu extends React.Component<Docs0xjsMenuProps, Docs0xjsMen
                 return (
                     <div
                         key={`section-${sectionName}`}
-                        className="py2"
+                        className="py1"
                     >
                         <div
                             style={{color: colors.grey500}}
@@ -83,6 +86,13 @@ export class Docs0xjsMenu extends React.Component<Docs0xjsMenuProps, Docs0xjsMen
         });
         return (
             <div>
+                {!_.isUndefined(this.props.versions) &&
+                 !_.isUndefined(this.props.selectedVersion) &&
+                    <VersionDropDown
+                        selectedVersion={this.props.selectedVersion}
+                        versions={this.props.versions}
+                    />
+                }
                 {navigation}
             </div>
         );

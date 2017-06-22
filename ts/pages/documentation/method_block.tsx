@@ -16,6 +16,7 @@ interface MethodBlockProps {
     methodSignature: TypeDocNode;
     source: TypeDocNode;
     entity: string;
+    libraryVersion: string;
 }
 
 interface MethodBlockState {
@@ -78,7 +79,10 @@ export class MethodBlock extends React.Component<MethodBlockProps, MethodBlockSt
                         entity={this.props.entity}
                     />
                 </code>
-                <SourceLink source={this.props.source} />
+                <SourceLink
+                    version={this.props.libraryVersion}
+                    source={this.props.source}
+                />
                 {methodSignature.comment &&
                     <Comment
                         comment={methodSignature.comment.shortText}
