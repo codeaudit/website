@@ -436,7 +436,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     }
     private renderPartners(partners: Partner[]) {
         const colSize = utils.getColSize(partners.length);
-        return _.map(partners, (partner, i) => {
+        return _.map(partners, (partner: Partner, i: number) => {
             return (
                 <div
                     key={!_.isUndefined(partner) ? partner.name : `anonymous-partner-${i}`}
