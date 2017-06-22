@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import {ZeroEx} from '@0xproject/0x.js';
+import {constants} from 'ts/utils/constants';
 import jazzicon = require('jazzicon');
 
 interface IdenticonProps {
@@ -14,7 +14,7 @@ export class Identicon extends React.Component<IdenticonProps, IdenticonState> {
     public render() {
         let address = this.props.address;
         if (_.isUndefined(address)) {
-            address = ZeroEx.NULL_ADDRESS;
+            address = constants.NULL_ADDRESS;
         }
         const diameter = this.props.diameter;
         const numericalAddress = this.convertAddressToNumber(address);

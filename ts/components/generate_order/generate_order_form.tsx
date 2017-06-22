@@ -7,6 +7,7 @@ import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
 import {colors} from 'material-ui/styles';
 import {Dispatcher} from 'ts/redux/dispatcher';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {utils} from 'ts/utils/utils';
 import {Validator} from 'ts/schemas/validator';
 import {orderSchema} from 'ts/schemas/order_schema';
@@ -283,19 +284,11 @@ export class GenerateOrderForm extends React.Component<GenerateOrderFormProps, a
             return false;
         }
         const hashData = this.props.hashData;
-        const orderHash = await this.props.blockchain.zeroEx.getOrderHashHexAsync({
-            maker: hashData.orderMakerAddress,
-            taker: hashData.orderTakerAddress,
-            makerFee: hashData.makerFee,
-            takerFee: hashData.takerFee,
-            makerTokenAmount: hashData.depositAmount,
-            takerTokenAmount: hashData.receiveAmount,
-            makerTokenAddress: hashData.depositTokenContractAddr,
-            takerTokenAddress: hashData.receiveTokenContractAddr,
-            salt: hashData.orderSalt,
-            feeRecipient: hashData.feeRecipientAddress,
-            expirationUnixTimestampSec: hashData.orderExpiryTimestamp,
-        });
+        const orderHash = zeroEx.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
+                        hashData.orderTakerAddress, hashData.depositTokenContractAddr,
+                        hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
+                        hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
+                        hashData.takerFee, hashData.orderExpiryTimestamp, hashData.orderSalt);
 
         let globalErrMsg = '';
         try {

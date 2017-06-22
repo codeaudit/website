@@ -1,12 +1,11 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {ZeroEx} from '@0xproject/0x.js';
 import {Store as ReduxStore, Dispatch} from 'redux';
 import {State} from 'ts/redux/reducer';
 import {constants} from 'ts/utils/constants';
 import {Dispatcher} from 'ts/redux/dispatcher';
-import {Side, HashData, TokenByAddress, BlockchainErrs, Order, ScreenWidths} from 'ts/types';
+import {Side, HashData, TokenByAddress, BlockchainErrs, Fill, Order, ScreenWidths} from 'ts/types';
 import {
     OTC as OTCComponent,
     OTCAllProps as OTCComponentAllProps,
@@ -39,9 +38,9 @@ const mapStateToProps = (state: State, ownProps: OTCComponentAllProps): Connecte
     const receiveAssetToken = state.sideToAssetToken[Side.receive];
     const depositAssetToken = state.sideToAssetToken[Side.deposit];
     const receiveAddress = !_.isUndefined(receiveAssetToken.address) ?
-                          receiveAssetToken.address : ZeroEx.NULL_ADDRESS;
+                          receiveAssetToken.address : constants.NULL_ADDRESS;
     const depositAddress = !_.isUndefined(depositAssetToken.address) ?
-                          depositAssetToken.address : ZeroEx.NULL_ADDRESS;
+                          depositAssetToken.address : constants.NULL_ADDRESS;
     const receiveAmount = !_.isUndefined(receiveAssetToken.amount) ?
                           receiveAssetToken.amount : new BigNumber(0);
     const depositAmount = !_.isUndefined(depositAssetToken.amount) ?
@@ -53,7 +52,7 @@ const mapStateToProps = (state: State, ownProps: OTCComponentAllProps): Connecte
         makerFee: constants.MAKER_FEE,
         orderExpiryTimestamp: state.orderExpiryTimestamp,
         orderMakerAddress: state.userAddress,
-        orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : ZeroEx.NULL_ADDRESS,
+        orderTakerAddress: state.orderTakerAddress !== '' ? state.orderTakerAddress : constants.NULL_ADDRESS,
         receiveAmount,
         receiveTokenContractAddr: receiveAddress,
         takerFee: constants.TAKER_FEE,

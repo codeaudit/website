@@ -35,7 +35,6 @@ const ALLOWANCE_TO_ZERO_GAS_AMOUNT = 45730;
 export class Blockchain {
     public networkId: number;
     public nodeVersion: string;
-    public zeroEx: ZeroEx;
     private dispatcher: Dispatcher;
     private web3Wrapper: Web3Wrapper;
     private exchange: ContractInstance;
@@ -112,7 +111,7 @@ export class Blockchain {
                                 signatureData: SignatureData, salt: BigNumber.BigNumber) {
         utils.assert(this.doesUserAddressExist(), BlockchainCallErrs.USER_HAS_NO_ASSOCIATED_ADDRESSES);
 
-        taker = taker === '' ? ZeroEx.NULL_ADDRESS : taker;
+        taker = taker === '' ? constants.NULL_ADDRESS : taker;
         const shouldCheckTransfer = true;
         const orderAddresses = [
             maker,
@@ -424,7 +423,6 @@ export class Blockchain {
         const networkId = !_.isUndefined(injectedWeb3) ? await promisify(injectedWeb3.version.getNetwork)() :
                                                              undefined;
         this.web3Wrapper = new Web3Wrapper(this.dispatcher, networkId);
-        this.zeroEx = new ZeroEx(this.web3Wrapper.getInternalWeb3Instance());
     }
     private async instantiateContractsAsync() {
         utils.assert(!_.isUndefined(this.networkId),
