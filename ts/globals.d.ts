@@ -14,7 +14,6 @@ declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
 declare module 'react-highlight';
-declare module 'xml-js';
 
 declare module '*.json' {
     const json: any;
@@ -39,4 +38,13 @@ declare module 'compare-versions' {
 declare module 'semver-sort' {
     const desc: (versions: string[]) => string[];
     const asc: (versions: string[]) => string[];
+}
+
+// xml-js declarations
+declare interface XML2JSONOpts {
+    compact?: boolean;
+    spaces?: number;
+}
+declare module 'xml-js' {
+    const xml2json: (xml: string, opts: XML2JSONOpts) => string;
 }

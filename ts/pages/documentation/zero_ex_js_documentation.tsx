@@ -395,7 +395,7 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             return;
         }
         const responseXML = await response.text();
-        const responseJSONString: any = convert.xml2json(responseXML, {
+        const responseJSONString = convert.xml2json(responseXML, {
             compact: true,
         });
         const responseObj = JSON.parse(responseJSONString);
