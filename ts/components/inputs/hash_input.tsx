@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Blockchain} from 'ts/blockchain';
+import {zeroEx} from 'ts/utils/zero_ex';
 import {FakeTextField} from 'ts/components/ui/fake_text_field';
 import ReactTooltip = require('react-tooltip');
 import {HashData, Styles} from 'ts/types';
@@ -20,21 +21,11 @@ interface HashInputProps {
     label: string;
 }
 
-interface HashInputState {
-    orderHash: string;
-}
+interface HashInputState {}
 
 export class HashInput extends React.Component<HashInputProps, HashInputState> {
-    constructor(props: HashInputProps) {
-        super(props);
-        this.state = {
-            orderHash: '',
-        };
-    }
-    public componentWillReceiveProps(nextProps: HashInputProps) {
-        this.onNewPropsReceivedFireAndForgetAsync(nextProps);
-    }
     public render() {
+        const msgHashHex = this.props.blockchainIsLoaded ? this.generateMessageHashHex() : '';
         return (
             <div>
                 <FakeTextField label={this.props.label}>
@@ -43,36 +34,21 @@ export class HashInput extends React.Component<HashInputProps, HashInputState> {
                         data-tip={true}
                         data-for="hashTooltip"
                     >
-                        {this.state.orderHash}
+                        {msgHashHex}
                     </div>
                 </FakeTextField>
-                <ReactTooltip id="hashTooltip">{this.state.orderHash}</ReactTooltip>
+                <ReactTooltip id="hashTooltip">{msgHashHex}</ReactTooltip>
             </div>
         );
     }
-    private async onNewPropsReceivedFireAndForgetAsync(nextProps: HashInputProps): Promise<void> {
-        if (nextProps.blockchainIsLoaded) {
-            const orderHash = await this.generateMessageHashHexAsync();
-            this.setState({
-                orderHash,
-            });
-        }
-    }
-    private async generateMessageHashHexAsync(): Promise<string> {
+    private generateMessageHashHex() {
+        const exchangeContractAddr = this.props.blockchain.getExchangeContractAddressIfExists();
         const hashData = this.props.hashData;
-        const orderHash = await this.props.blockchain.zeroEx.getOrderHashHexAsync({
-            maker: hashData.orderMakerAddress,
-            taker: hashData.orderTakerAddress,
-            makerFee: hashData.makerFee,
-            takerFee: hashData.takerFee,
-            makerTokenAmount: hashData.depositAmount,
-            takerTokenAmount: hashData.receiveAmount,
-            makerTokenAddress: hashData.depositTokenContractAddr,
-            takerTokenAddress: hashData.receiveTokenContractAddr,
-            salt: hashData.orderSalt,
-            feeRecipient: hashData.feeRecipientAddress,
-            expirationUnixTimestampSec: hashData.orderExpiryTimestamp,
-        });
+        const orderHash = zeroEx.getOrderHash(exchangeContractAddr, hashData.orderMakerAddress,
+                        hashData.orderTakerAddress, hashData.depositTokenContractAddr,
+                        hashData.receiveTokenContractAddr, hashData.feeRecipientAddress,
+                        hashData.depositAmount, hashData.receiveAmount, hashData.makerFee,
+                        hashData.takerFee, hashData.orderExpiryTimestamp, hashData.orderSalt);
         return orderHash;
     }
 }

@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@0xproject/0x.js@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@0xproject/0x.js/-/0x.js-0.2.3.tgz#9e0cf01b9cec1778a66f3d2e9c37bb28bf893d64"
+"@0xproject/0x.js@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@0xproject/0x.js/-/0x.js-0.2.2.tgz#942cd2b9159cc707e81603f3ef372dbb78a11da1"
   dependencies:
     bignumber.js "^4.0.2"
     compare-versions "^3.0.1"
