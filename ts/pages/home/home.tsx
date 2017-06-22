@@ -236,16 +236,6 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             label="Team"
                                         />
                                     </ScrollLink>
-                                    <ScrollLink
-                                        to="partners"
-                                        smooth={true}
-                                        offset={0}
-                                        duration={constants.HOME_SCROLL_DURATION_MS}
-                                    >
-                                        <FlatButton
-                                            label="Partners"
-                                        />
-                                    </ScrollLink>
                                     <Link to="/faq">
                                         <FlatButton
                                             label="FAQ"

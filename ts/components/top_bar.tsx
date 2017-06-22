@@ -105,7 +105,6 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
                 >
                     <MenuItem className="py2">Whitepaper</MenuItem>
                 </a>
-                {this.renderHomepageMenuItem('partners')}
                 {this.renderHomepageMenuItem('team')}
                 {this.renderHomepageMenuItem('advisors')}
                 {this.renderHomepageMenuItem('investors')}
