@@ -18,7 +18,7 @@ import {NewsletterInput} from 'ts/pages/home/newsletter_input';
 import {Statistics} from 'ts/pages/home/statistics';
 import ReactTooltip = require('react-tooltip');
 
-const team: Profile[] = [
+const teamRow1: Profile[] = [
     {
         name: 'Will Warren',
         title: 'Co-founder & CEO',
@@ -49,6 +49,9 @@ const team: Profile[] = [
         github: 'https://github.com/fabioberger',
         medium: 'https://medium.com/@fabioberger',
     },
+];
+
+const teamRow2: Profile[] = [
     {
         name: 'Leonid Logvinov',
         title: 'Engineer',
@@ -58,6 +61,16 @@ const team: Profile[] = [
         image: '/images/team/leonid.png',
         linkedIn: 'https://www.linkedin.com/in/leonidlogvinov/',
         github: 'https://github.com/LogvinovLeon',
+        medium: '',
+    },
+    {
+        name: 'Alex Xu',
+        title: 'Operations',
+        description: `End-to-end business operations. Previously digital marketing consultant at
+                      Google and vendor management at Amazon. Economics at UC San Diego.`,
+        image: '/images/team/alex.jpg',
+        linkedIn: 'https://www.linkedin.com/in/alex-xu/',
+        github: '',
         medium: '',
     },
 ];
@@ -350,7 +363,10 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                 Team
                             </h1>
                             <div className="clearfix pt3 mx-auto" style={{maxWidth: 1022}}>
-                                {this.renderProfiles(team)}
+                                {this.renderProfiles(teamRow1)}
+                            </div>
+                            <div className="clearfix pt3 mx-auto" style={{maxWidth: 1022}}>
+                                {this.renderProfiles(teamRow2)}
                             </div>
                         </div>
                     </ScrollElement>
