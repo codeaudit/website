@@ -13,8 +13,6 @@ declare module 'react-html5video';
 declare module 'web3-provider-engine/subproviders/filters';
 declare module 'web3-provider-engine/subproviders/rpc';
 declare module 'thenby';
-declare module 'find-versions';
-declare module 'compare-versions';
 declare module 'react-highlight';
 
 declare module '*.json' {
@@ -24,9 +22,28 @@ declare module '*.json' {
     /* tslint:enable */
 }
 
-// This will be defined by default in TS 2.4
-// Source: https://github.com/Microsoft/TypeScript/issues/12364
-interface System {
-  import<T>(module: string): Promise<T>;
+// find-version declarations
+declare function findVersions(version: string): string[];
+declare module 'find-versions' {
+    export = findVersions;
 }
-declare var System: System;
+
+// compare-version declarations
+declare function compareVersions(firstVersion: string, secondVersion: string): number;
+declare module 'compare-versions' {
+    export = compareVersions;
+}
+
+// semver-sort declarations
+declare module 'semver-sort' {
+    const desc: (versions: string[]) => string[];
+}
+
+// xml-js declarations
+declare interface XML2JSONOpts {
+    compact?: boolean;
+    spaces?: number;
+}
+declare module 'xml-js' {
+    const xml2json: (xml: string, opts: XML2JSONOpts) => string;
+}

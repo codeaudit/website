@@ -20,7 +20,6 @@ module.exports = {
             ts: path.join(__dirname, '/ts'),
             less: path.join(__dirname, '/less'),
             md: path.join(__dirname, '/md'),
-            json: path.join(__dirname, '/json'),
         },
     },
     module: {
@@ -55,9 +54,19 @@ module.exports = {
     devServer: {
         port: 3572,
         historyApiFallback: {
-          index: 'index.html',
-      },
-      disableHostCheck: true,
+            // Fixes issue where having dots in URL path that aren't part of fileNames causes webpack-dev-server
+            // to fail. Doc versions have dots in them, therefore we special case these urls to also load index.html.
+            // Source: https://github.com/cvut/fittable/issues/171
+            rewrites: [
+                {
+                    from: /^\/docs\/.*$/,
+                    to: function() {
+                        return 'index.html';
+                    }
+                }
+            ]
+        },
+        disableHostCheck: true,
     },
     plugins: [
         // Since we do not use moment's locale feature, we exclude them from the bundle.
