@@ -52,12 +52,6 @@ export class Web3Wrapper {
 
         this.startEmittingNetworkConnectionAndUserBalanceStateAsync();
     }
-    /**
-     * This method should only be used to instantiate the zeroEx instance
-     */
-    public getInternalWeb3Instance(): Web3 {
-        return this.web3;
-    }
     public isAddress(address: string) {
         return this.web3.isAddress(address);
     }
