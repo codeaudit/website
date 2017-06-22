@@ -360,7 +360,8 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
     private async fetchJSONDocsFireAndForgetAsync(preferredVersionIfExists: string) {
         const response = await fetch(constants.S3_DOCUMENTATION_JSON_ROOT);
         if (response.status !== 200) {
-            return; // fail silently
+            // TODO: Show the user an error message when the docs fail to load
+            return;
         }
         const responseXML = await response.text();
         const responseJSONString: any = convert.xml2json(responseXML, {
@@ -404,7 +405,8 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
         const endpoint = `${constants.S3_DOCUMENTATION_JSON_ROOT}/${fileName}`;
         const response = await fetch(endpoint);
         if (response.status !== 200) {
-            return; // fail silently
+            // TODO: Show the user an error message when the docs fail to load
+            return;
         }
         const responseText = await response.text();
         const jsonDocObj = JSON.parse(responseText);
