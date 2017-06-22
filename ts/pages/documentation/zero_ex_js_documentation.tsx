@@ -397,9 +397,9 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
             libraryVersion: versionToFetch,
             versions,
             versionDocObj,
+        }, () => {
+            this.scrollToHash();
         });
-
-        this.scrollToHash();
     }
     private async getJSONDocFileAsync(fileName: string) {
         const endpoint = `${constants.S3_DOCUMENTATION_JSON_ROOT}/${fileName}`;
