@@ -27,7 +27,7 @@ export class Party extends React.Component<PartyProps, PartyState> {
     public render() {
         const label = this.props.label;
         const address = this.props.address;
-        const tooltipId = `${label}Tooltip`;
+        const tooltipId = `${label}-${address}-tooltip`;
         const identiconDiameter = this.props.identiconDiameter;
         const addressWidth = identiconDiameter > MIN_ADDRESS_WIDTH ?
                              identiconDiameter : MIN_ADDRESS_WIDTH;
