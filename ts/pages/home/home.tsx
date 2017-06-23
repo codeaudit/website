@@ -150,7 +150,7 @@ const partnershipsRow1: Partner[] = [
 const partnershipsRow2: Partner[] = [
     {
         name: 'OpenANX',
-        logo: '/images/logos/OpenANX.png',
+        logo: '/images/logos/openANX.png',
         url: 'https://anxintl.com/',
     },
     {
