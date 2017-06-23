@@ -47,3 +47,10 @@ declare interface XML2JSONOpts {
 declare module 'xml-js' {
     const xml2json: (xml: string, opts: XML2JSONOpts) => string;
 }
+
+// This will be defined by default in TS 2.4
+// Source: https://github.com/Microsoft/TypeScript/issues/12364
+interface System {
+    import<T>(module: string): Promise<T>;
+}
+declare var System: System;

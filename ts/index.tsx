@@ -6,9 +6,8 @@ import * as BigNumber from 'bignumber.js';
 import {configs} from 'ts/utils/configs';
 import {Home} from 'ts/pages/home/home';
 import {FAQ} from 'ts/pages/faq';
-import {ZeroExJSDocumentation} from 'ts/pages/documentation/zero_ex_js_documentation';
 import {NotFound} from 'ts/pages/not_found';
-import {OTC} from 'ts/containers/otc';
+import {LazyComponent, createLazyComponent} from 'ts/lazy_component';
 import {State, reducer} from 'ts/redux/reducer';
 import {colors, getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 import {Switch, BrowserRouter as Router, Route, Link} from 'react-router-dom';
@@ -65,6 +64,16 @@ const muiTheme = getMuiTheme({
     },
 });
 
+// We pass modulePromise returning lambda instead of module promise,
+// cause we only want to import the module when the user navigates to the page.
+// At the same time webpack statically parses for System.import() to determine bundle chunk split points
+// so each lazy import needs it's own `System.import()` declaration.
+const LazyOTC = createLazyComponent('OTC', () => System.import<any>('ts/containers/otc'));
+const LazyZeroExJSDocumentation = createLazyComponent(
+    'ZeroExJSDocumentation',
+    () => System.import<any>('ts/pages/documentation/zero_ex_js_documentation'),
+);
+
 const store: ReduxStore<State> = createStore(reducer);
 render(
     <Router>
@@ -74,9 +83,9 @@ render(
                     <div>
                         <Switch>
                             <Route exact={true} path="/" component={Home as any} />
-                            <Route path="/otc" component={OTC as any} />
+                            <Route path="/otc" component={LazyOTC} />
                             <Route path="/faq" component={FAQ as any} />
-                            <Route path="/docs/0xjs/:version?" component={ZeroExJSDocumentation as any} />
+                            <Route path="/docs/0xjs/:version?" component={LazyZeroExJSDocumentation} />
                             <Route component={NotFound as any} />
                         </Switch>
                     </div>
