@@ -15,7 +15,7 @@ export class Loading extends React.Component<LoadingProps, LoadingState> {
             <div className="pt4 sm-px2 sm-pt2 sm-m1" style={{height: 500}}>
                 <Paper className="mx-auto" style={{maxWidth: 400}}>
                     {utils.isUserOnMobile() ?
-                        <img className="p1" src="/gifs/loading.gif" width="96%" /> :
+                        <img className="p1" src="/gifs/0xAnimation.gif" width="96%" /> :
                         <div style={{pointerEvents: 'none'}}>
                             <Video
                                 autoPlay={true}
@@ -24,7 +24,7 @@ export class Loading extends React.Component<LoadingProps, LoadingState> {
                                 controls={[]}
                                 poster="/images/loading_poster.png"
                             >
-                                <source src="/videos/loading_480p.mov" type="video/mp4" />
+                                <source src="/videos/0xAnimation.mov" type="video/mp4" />
                             </Video>
                         </div>
                     }
