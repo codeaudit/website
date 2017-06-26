@@ -190,10 +190,6 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
         const sections = _.map(orderedSectionNames, sectionName => {
             const packageDefinitionIfExists: TypeDocNode = this.getPackageDefinitionBySectionNameIfExists(sectionName);
 
-            if (_.isUndefined(packageDefinitionIfExists)) {
-                return null;
-            }
-
             const markdownFileIfExists = sectionNameToMarkdown[sectionName];
             if (!_.isUndefined(markdownFileIfExists)) {
                 return (
@@ -203,6 +199,10 @@ export class ZeroExJSDocumentation extends React.Component<ZeroExJSDocumentation
                         markdownContent={markdownFileIfExists}
                     />
                 );
+            }
+
+            if (_.isUndefined(packageDefinitionIfExists)) {
+                return null;
             }
 
             // Since the `types.ts` file is the only file that does not export a module/class but
