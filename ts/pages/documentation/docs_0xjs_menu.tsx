@@ -27,6 +27,7 @@ export const menu = {
         DocSections.exchange,
         DocSections.token,
         DocSections.tokenRegistry,
+        DocSections.etherToken,
     ],
     types: [
         DocSections.types,

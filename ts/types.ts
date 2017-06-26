@@ -337,6 +337,7 @@ export const DocSections = strEnum([
   'exchange',
   'token',
   'tokenRegistry',
+  'etherToken',
   'types',
 ]);
 export type DocSections = keyof typeof DocSections;
