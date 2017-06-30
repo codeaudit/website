@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Website and 0x OTC dapp",
   "scripts": {
-    "build": "webpack && npm run minify",
+    "build": "NODE_ENV=production webpack && npm run minify",
     "minify": "for f in public/bundle*.js; do ./node_modules/uglify-es/bin/uglifyjs $f -o $f -m; done",
     "dev": "webpack-dev-server --content-base public",
     "update_contracts": "copyfiles -u 4 ./../contracts/build/contracts/*.json ./contracts;",
