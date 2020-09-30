@@ -24,7 +24,7 @@ Add the following to your `/etc/hosts` file:
 127.0.0.1 0xproject.dev
 ```
 
-Clone the [0x contracts repo](https://github.com/0xProject/contracts) into the same parent directory as this project.
+Clone the [0x contracts repo](https://github.com/0xProject/contracts) into the same parent directory as this project has been created.
 
 Install dependencies:
 
@@ -41,7 +41,7 @@ npm run update_contracts
 Start dev server:
 
 ```
-npm run dev
+npm run dev ...
 ```
 
 Visit [0xproject.dev:3572](http://0xproject.dev:3572) in your browser.
