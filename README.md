@@ -24,7 +24,7 @@ Add the following to your `/etc/hosts` file:
 127.0.0.1 0xproject.dev
 ```
 
-Clone the [0x contracts repo](https://github.com/0xProject/contracts) into the same parent directory as this project.
+Clone the [0x contracts repo](https://github.com/0xProject/contracts) into the same parent directory as this project has been created.
 
 Install dependencies:
 
