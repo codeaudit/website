@@ -14,7 +14,7 @@ This repository contains our website and [OTC DApp][otc-url] (over-the-counter e
 [![Join the chat at https://gitter.im/0xProject/contracts](https://badges.gitter.im/0xProject/contracts.svg)](https://gitter.im/0xProject/contracts?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-### Local Dev Setup
+### Local Dev Setup.
 
 Requires Node version 6.9.5 or higher.
 
