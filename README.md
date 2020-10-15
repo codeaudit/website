@@ -1,7 +1,3 @@
-<img src="https://github.com/0xProject/branding/blob/master/0x_Black_CMYK.png" width="200px" >
-
----
-
 [0x][website-url] is an open protocol that facilitates trustless, low friction exchange of Ethereum-based assets. A full description of the protocol may be found in our [whitepaper][whitepaper-url].
 
 This repository contains our website and [OTC DApp][otc-url] (over-the-counter exchange), facilitating trustless over-the-counter trading of Ethereum-based tokens using 0x protocol.
